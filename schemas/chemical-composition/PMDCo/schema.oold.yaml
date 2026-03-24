@@ -10,7 +10,7 @@
 #       has_member ──────────────────────────────────────► FractionValueSpecification (PMD_0025997)
 #         value                                            (numeric fraction value)
 #         unit                                             (UO unit IRI)
-#         specifies_value_of ──────────────────────────► PortionOfChemicalElement (PMD_0020140 etc.)
+#         specifies_value_of ──────────────────────────► PortionOfChemicalElement (PMD_0020026 etc.)
 #           part_of ────────────────────────────────────► Material (same as quality_of target)
 #           has_relational_quality ──────────────────────► MassProportion (PMD_0020102 etc.)
 #             relational_quality_of ───────────────────► PortionOfChemicalElement (back-ref)
@@ -76,7 +76,7 @@
 
 $schema: 'https://json-schema.org/draft/2020-12/schema'
 $comment: Schema for a pmdco:ChemicalComposition
-title: ChemicalComposition
+title: Chemical Composition
 type: object
 required:
   - type
@@ -88,7 +88,6 @@ properties:
 
   type:
     title: Type
-    description: Type of this instance
     type: string
     readOnly: true
     enum:
@@ -99,19 +98,19 @@ properties:
 
   id:
     title: ID
+    description: Identifier for this chemical composition instance; managed by the consumer.
     type: string
+    readOnly: true
     default: chem_comp
 
   quality_of:
-    title: Quality Of
-    description: The material this chemical composition is a quality of
+    title: Material
+    description: The material this chemical composition describes
     type: string
-    default: material_no27_14
-    $comment: Reference to material instance (pmdco:PMD_0000000)
 
   concretizes:
-    title: Concretizes
-    description: The chemical composition specification this composition concretizes
+    title: Composition Specification
+    description: The specification containing the element fractions of this composition
     type: object
     required:
       - type
@@ -131,19 +130,19 @@ properties:
 
       id:
         title: ID
+        description: Identifier for this composition specification; managed by the consumer.
         type: string
+        readOnly: true
         default: chem_comp_spec
 
       has_member:
-        title: Has Member
-        description: Fraction value specifications for chemical composition
+        title: Elements
+        description: Chemical elements and their fractions in this composition
         type: array
-        format: tabs
         minItems: 1
         items:
           type: object
-          title: Fraction
-          headerTemplate: '{{ self.element_name }}'
+          title: Element Fraction
           required:
             - type
             - id
@@ -164,26 +163,22 @@ properties:
 
             id:
               title: ID
+              description: Identifier for this fraction entry; managed by the consumer.
               type: string
+              readOnly: true
               default: fraction_1
 
-            element_name:
-              title: Element Name
-              description: Name of the chemical element (for display only)
-              type: string
-              default: Iron
-
             value:
-              title: Value
-              description: Numeric value of the fraction
+              title: Fraction Value
+              description: Amount of this element in the composition
               type: number
-              default: 96.7
+              minimum: 0
+              maximum: 100
 
             unit:
               title: Unit
-              description: Measurement unit for the fraction
+              description: Unit of the fraction value
               type: string
-              format: uri
               enum:
                 - uo:0000163
                 - uo:0000164
@@ -196,8 +191,8 @@ properties:
                   - molar percentage (%)
 
             specifies_value_of:
-              title: Specifies Value Of
-              description: Reference to the portion of chemical element
+              title: Element Reference
+              description: The portion of the chemical element this fraction describes
               type: object
               required:
                 - type
@@ -207,34 +202,40 @@ properties:
               properties:
 
                 type:
-                  title: Type
+                  title: Chemical Element
+                  description: The chemical element this fraction refers to
                   type: string
+                  # Extend this list with additional PMDCo PortionOf* classes as IRIs become
+                  # available. See the PMDCo ontology at https://w3id.org/pmd/co/
                   enum:
-                    - pmdco:PMD_0020140
-                    - pmdco:PMD_0020026
-                    - pmdco:PMD_0020050
+                    - pmdco:PMD_0020026  # PortionOfIron (Fe)
+                    - pmdco:PMD_0020050  # PortionOfSilicon (Si)
                   options:
                     enum_titles:
-                      - pmdco:PortionOfChemicalElement
-                      - pmdco:PortionOfIron
-                      - pmdco:PortionOfSilicon
-                  default: pmdco:PMD_0020140
+                      - Iron (Fe)
+                      - Silicon (Si)
 
                 id:
                   title: ID
+                  description: Identifier for this element reference; managed by the consumer.
                   type: string
-                  default: some_element
+                  readOnly: true
+                  default: element_ref_1
 
                 part_of:
                   title: Part Of
-                  description: The material this portion is part of
+                  description: >-
+                    The material this element portion is part of.
+                    Must match the root quality_of value; set by the consumer.
                   type: string
-                  default: material_no27_14
-                  $comment: Reference to material instance
+                  readOnly: true
+                  $comment: Must match the root quality_of value; set by the consumer.
 
                 has_relational_quality:
-                  title: Has Relational Quality
-                  description: The proportion (mass/molar/volume) of this element
+                  title: Proportion
+                  description: >-
+                    The proportion quality associated with this element portion.
+                    Type and back-reference are managed by the consumer.
                   type: object
                   required:
                     - type
@@ -243,25 +244,30 @@ properties:
                   properties:
 
                     type:
-                      title: Type
+                      title: Proportion Type
                       type: string
+                      readOnly: true
                       enum:
                         - pmdco:PMD_0020101
                         - pmdco:PMD_0020102
+                      default: pmdco:PMD_0020102
                       options:
                         enum_titles:
                           - pmdco:Proportion
                           - pmdco:MassProportion
-                      default: pmdco:PMD_0020102
 
                     id:
                       title: ID
+                      description: Identifier for this proportion instance; managed by the consumer.
                       type: string
-                      default: mass_proportion_1
+                      readOnly: true
+                      default: proportion_1
 
                     relational_quality_of:
                       title: Relational Quality Of
-                      description: Reference back to the portion of chemical element
+                      description: >-
+                        Back-reference to the element reference instance.
+                        Must match specifies_value_of.id; set by the consumer.
                       type: string
-                      default: some_element
-                      $comment: This should match the parent specifies_value_of.id
+                      readOnly: true
+                      $comment: Must match the parent specifies_value_of.id; set by the consumer.

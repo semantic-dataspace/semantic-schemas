@@ -106,6 +106,6 @@ type:
   const: 'pmdco:PMD_0000551'
 ```
 
-- `readOnly: true` causes the webform-builder to skip rendering it as a user input.
+- `readOnly: true` marks the property as a non-editable system value; consumers should not expose it as a user-editable field.
 - The CURIE (`pmdco:PMD_0000551`) is expanded to a full IRI at serialisation time using the `@context` prefix map.
-- This value becomes the `classMapping` of the generated `Webform` object.
+- This value is useful for generating the semantic data representation in RDF of this property.
