@@ -1,0 +1,129 @@
+# OO-LD Schema for Chemical Composition — PMDCo pattern
+# Ontology: Platform MaterialDigital Core Ontology (PMDCo)
+#   https://w3id.org/pmd/co/
+#
+# The full PMDCo graph pattern is:
+#   ChemicalComposition → concretizes → ChemicalCompositionSpecification
+#     → has_member → FractionValueSpecification
+#       ← concretizes ← MassProportion
+#         → relational_quality_of → PortionOfChemicalElement
+#           → part_of → Material
+#
+# This schema uses a pragmatic flattening recommended in the PMDCo community.
+# The intermediate ChemicalCompositionSpecification node and the inverse
+# concretizes / relational_quality_of links are collapsed.
+# The ChemicalComposition root directly references:
+#   - the material it is a quality of (kitem reference)
+#   - an inline array of element fractions (FractionValueSpecification)
+# Full graph reconstruction from this flat form requires a mapping step.
+
+'@context':
+  obo:   'http://purl.obolibrary.org/obo/'
+  pmdco: 'https://w3id.org/pmd/co/'
+  ro:    'http://purl.obolibrary.org/obo/RO_'
+  obi:   'http://purl.obolibrary.org/obo/OBI_'
+  iao:   'http://purl.obolibrary.org/obo/IAO_'
+  uo:    'http://purl.obolibrary.org/obo/UO_'
+  xsd:   'http://www.w3.org/2001/XMLSchema#'
+  rdfs:  'http://www.w3.org/2000/01/rdf-schema#'
+  '@base': 'https://w3id.org/pmd/co/instances#'
+  type: '@type'
+
+  # pmdco:PMD_0000551 (ChemicalComposition) is a quality of a material
+  quality_of:
+    '@id':   'ro:0000080'   # obo:RO_0000080  quality_of
+    '@type': '@id'
+
+  # Fractions modelled directly as has_member of a virtual
+  # ChemicalCompositionSpecification (pmdco:PMD_0025002)
+  fractions:
+    '@id':        'obo:RO_0002351'  # has_member
+    '@type':      '@id'
+    '@container': '@set'
+
+  # Per-fraction properties (FractionValueSpecification pmdco:PMD_0025997)
+  element_symbol:
+    '@id': 'rdfs:label'
+  value:
+    '@id': 'obi:0001937'   # obo:OBI_0001937  has_specified_numeric_value
+  unit:
+    '@id':   'iao:0000039' # obo:IAO_0000039  has_measurement_unit_label
+    '@type': '@id'
+
+$schema: 'https://json-schema.org/draft/2020-12/schema'
+$comment: >-
+  Simplified OO-LD schema for pmdco:ChemicalComposition (PMD_0000551).
+  The ChemicalCompositionSpecification intermediary is collapsed; fractions
+  are represented as a flat array on the root object.
+title: Chemical Composition (PMDCo)
+description: Chemical composition of a material described using the PMDCo ontology
+type: object
+required:
+  - type
+
+properties:
+
+  type:
+    title: Type
+    description: RDF type — ChemicalComposition
+    type: string
+    readOnly: true
+    const: 'pmdco:PMD_0000551'
+    default: 'pmdco:PMD_0000551'
+    options:
+      enum_titles:
+        - 'pmdco:ChemicalComposition'
+
+  quality_of:
+    title: Material
+    description: The material this chemical composition is a quality of
+    type: string
+    format: kitem
+    x-kitem:
+      ktypeIds:
+        - material
+
+  fractions:
+    title: Element Fractions
+    description: >-
+      Mass/volume/molar fractions for each chemical element present.
+      Each entry corresponds to a pmdco:FractionValueSpecification (PMD_0025997).
+    type: array
+    minItems: 1
+    uniqueItems: false
+    items:
+      title: Fraction
+      type: object
+      required:
+        - element_symbol
+        - value
+        - unit
+      properties:
+
+        element_symbol:
+          title: Element Symbol
+          description: Chemical element symbol (e.g. Fe, Cr, Ni, Mo, Si)
+          type: string
+
+        value:
+          title: Value
+          description: Numeric value of the fraction
+          type: number
+          minimum: 0
+          maximum: 100
+
+        unit:
+          title: Unit
+          description: Measurement unit for the fraction value
+          type: string
+          format: uri
+          enum:
+            - 'uo:0000163'
+            - 'uo:0000164'
+            - 'uo:0000165'
+          default: 'uo:0000163'
+          options:
+            enum_titles:
+              - 'mass percentage (%)'
+              - 'volume percentage (%)'
+              - 'molar percentage (%)'

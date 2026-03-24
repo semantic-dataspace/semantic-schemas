@@ -1,0 +1,158 @@
+# OO-LD Schema Template
+# Copy this file to schemas/<domain>/<Ontology>/schema.oold.yaml and fill in the sections below.
+# Lines starting with '#' are comments — remove them in your final schema.
+# See docs/schema-format.md for the full field reference.
+
+# ── JSON-LD context ──────────────────────────────────────────────────────────
+# Maps property keys to ontology IRIs.
+# Scalar entries declare CURIE prefixes (must end with / or #).
+# Object entries map a key to a specific property IRI.
+'@context':
+
+  # Declare your ontology namespace prefixes here:
+  # myonto: 'https://example.org/ontology/'
+  # ro:     'http://purl.obolibrary.org/obo/RO_'
+  # xsd:    'http://www.w3.org/2001/XMLSchema#'
+  # rdfs:   'http://www.w3.org/2000/01/rdf-schema#'
+
+  # Base IRI for instance IRIs generated from this schema:
+  # '@base': 'https://example.org/instances#'
+
+  # Required alias — maps the 'type' key to rdf:type:
+  type: '@type'
+
+  # Map your property names to ontology IRIs:
+  # Data property (literal value):
+  #   my_data_property: 'myonto:hasValue'
+  #
+  # Object property (IRI value):
+  #   my_object_property:
+  #     '@id':  'myonto:hasRelatedThing'
+  #     '@type': '@id'
+  #
+  # Array object property (unordered set of IRIs):
+  #   my_set_property:
+  #     '@id':        'myonto:hasRelatedThing'
+  #     '@type':      '@id'
+  #     '@container': '@set'
+
+# ── JSON Schema ──────────────────────────────────────────────────────────────
+$schema: 'https://json-schema.org/draft/2020-12/schema'
+
+# Provenance note — describe where this schema comes from:
+$comment: 'OO-LD Schema for <ConceptName> based on <Ontology>.'
+
+# Human-readable name (used as the form title):
+title: MySchema
+
+# Longer description shown as a subtitle or tooltip:
+description: ''
+
+type: object
+
+# List the keys that must be present in every valid instance:
+required:
+  - type
+  # - my_required_field
+
+properties:
+
+  # ── RDF type (always present, always hidden) ───────────────────────────────
+  # Replace the const value with the CURIE of your root class.
+  type:
+    title: Type
+    description: RDF type of this instance
+    type: string
+    readOnly: true            # hides this field in the webform
+    const: 'myonto:MyClass'  # replace with your root class CURIE
+    default: 'myonto:MyClass'
+
+  # ── Text field ────────────────────────────────────────────────────────────
+  # my_text:
+  #   title: My Text Field
+  #   description: Short description shown as a tooltip
+  #   type: string
+
+  # ── Textarea ──────────────────────────────────────────────────────────────
+  # my_notes:
+  #   title: Notes
+  #   type: string
+  #   format: textarea
+
+  # ── Number with optional range ────────────────────────────────────────────
+  # my_number:
+  #   title: My Number
+  #   type: number
+  #   minimum: 0
+  #   maximum: 100
+  #   multipleOf: 0.1
+
+  # ── Slider ────────────────────────────────────────────────────────────────
+  # my_slider:
+  #   title: My Slider
+  #   type: number
+  #   format: slider
+  #   minimum: 0
+  #   maximum: 1
+  #   multipleOf: 0.01
+
+  # ── Boolean (checkbox) ────────────────────────────────────────────────────
+  # my_flag:
+  #   title: My Flag
+  #   type: boolean
+
+  # ── Dropdown / Radio (enum) ───────────────────────────────────────────────
+  # Use Radio for ≤ 4 options, Select for more.
+  # my_enum:
+  #   title: My Option
+  #   type: string
+  #   enum:
+  #     - 'myonto:OptionA'
+  #     - 'myonto:OptionB'
+  #     - 'myonto:OptionC'
+  #   options:
+  #     enum_titles:
+  #       - Option A
+  #       - Option B
+  #       - Option C
+
+  # ── Multi-select (array enum) ─────────────────────────────────────────────
+  # my_multi:
+  #   title: My Multi-Select
+  #   type: array
+  #   items:
+  #     type: string
+  #     enum:
+  #       - 'myonto:OptionA'
+  #       - 'myonto:OptionB'
+  #     options:
+  #       enum_titles:
+  #         - Option A
+  #         - Option B
+
+  # ── K-Item (single) ───────────────────────────────────────────────────────
+  # References a single typed entity in the DSMS knowledge graph.
+  # my_kitem:
+  #   title: My K-Item
+  #   description: Pick an instance of <SomeClass> from the knowledge graph
+  #   type: string
+  #   format: kitem
+  #   x-kitem:
+  #     ktypeIds:
+  #       - some_ktype_id   # ktype_id from the target DSMS deployment
+
+  # ── K-Item (multiple) ─────────────────────────────────────────────────────
+  # References a list of typed entities in the DSMS knowledge graph.
+  # my_kitem_list:
+  #   title: My K-Item List
+  #   description: Pick one or more instances of <SomeClass>
+  #   type: array
+  #   format: kitem
+  #   x-kitem:
+  #     ktypeIds:
+  #       - some_ktype_id
+  #   items:
+  #     type: string
+  #     format: uri
+  #   uniqueItems: true
+  #   default: []

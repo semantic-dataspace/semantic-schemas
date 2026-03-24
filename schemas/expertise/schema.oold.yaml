@@ -1,0 +1,153 @@
+# OO-LD Schema for Expert Expertise Profile
+# Format: JSON Schema (draft 2020-12) + JSON-LD @context
+# Reference: https://github.com/OO-LD/oold-python
+#
+# K-item fields use the x-kitem extension (x- prefix = valid JSON Schema extension).
+# Each x-kitem.ktypeIds entry is the ktype_id used to query the DSMS knowledge graph API:
+#   GET /api/knowledge?ktype_id=<ktype_id>
+#
+# Ontology note: property IRIs use a provisional namespace (pmd:expertise/).
+# These should be aligned with an established competency ontology
+# (e.g., ESCO, schema.org, or a future PMDCo extension) when available.
+
+'@context':
+  foaf: 'http://xmlns.com/foaf/0.1/'
+  owl:  'http://www.w3.org/2002/07/owl#'
+  rdf:  'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
+  xsd:  'http://www.w3.org/2001/XMLSchema#'
+  rdfs: 'http://www.w3.org/2000/01/rdf-schema#'
+  exp:  'https://w3id.org/pmd/expertise/'
+  '@base': 'https://w3id.org/pmd/expertise/instances#'
+  type: '@type'
+  materials:
+    '@id':        'exp:hasMaterialExpertise'
+    '@type':      '@id'
+    '@container': '@set'
+  material_modelling:
+    '@id':        'exp:hasMaterialModellingExpertise'
+    '@type':      '@id'
+    '@container': '@set'
+  measurement_devices:
+    '@id':        'exp:hasMeasurementDeviceExpertise'
+    '@type':      '@id'
+    '@container': '@set'
+  production_devices:
+    '@id':        'exp:hasProductionDeviceExpertise'
+    '@type':      '@id'
+    '@container': '@set'
+  application_fields:
+    '@id':        'exp:hasApplicationFieldExpertise'
+    '@type':      '@id'
+    '@container': '@set'
+  methods:
+    '@id':        'exp:hasMethodExpertise'
+    '@type':      '@id'
+    '@container': '@set'
+
+$schema: 'https://json-schema.org/draft/2020-12/schema'
+$comment: >-
+  OO-LD Schema for Expert Expertise Profile.
+  An expert (foaf:Person) is linked to lists of knowledge graph entities
+  representing their areas of expertise. All list fields are k-items:
+  references to typed instances in the DSMS knowledge graph, identified
+  by their IRI. The x-kitem extension carries the ktype_id(s) used to
+  filter candidates in the k-item widget.
+title: Expertise
+description: Expertise profile of a domain expert in materials science
+type: object
+required:
+  - type
+
+properties:
+
+  type:
+    title: Type
+    description: RDF type of this instance
+    type: string
+    readOnly: true
+    const: 'foaf:Person'
+    default: 'foaf:Person'
+
+  materials:
+    title: Materials
+    description: Materials the expert has expertise in
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds:
+        - material
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  material_modelling:
+    title: Material Modelling
+    description: Material modelling and simulation approaches the expert has expertise in
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds:
+        - simulation
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  measurement_devices:
+    title: Measurement Devices
+    description: Measurement and characterisation devices the expert has expertise in
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds:
+        - measurement_device
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  production_devices:
+    title: Production Devices
+    description: Manufacturing and production devices the expert has expertise in
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds:
+        - production_device
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  application_fields:
+    title: Application Fields
+    description: Application domains and industries the expert works in
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds:
+        - application_field
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  methods:
+    title: Methods
+    description: Scientific and engineering methods the expert has expertise in
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds:
+        - method
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
