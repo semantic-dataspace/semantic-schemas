@@ -25,10 +25,14 @@ properties: { ... }      # the fields
 |---|---|
 | `prefix: 'https://...'` | Declares a CURIE prefix for use in `@id` values |
 | `type: '@type'` | Maps the key `type` to `rdf:type` |
-| `id: '@id'` | Maps the key `id` to `@id` (instance IRI) — omit if system-assigned |
 | `prop: 'prefix:local'` | Maps `prop` to a data property IRI |
 | `prop: { '@id': 'prefix:local', '@type': '@id' }` | Maps `prop` to an object property IRI |
 | `prop: { '@id': '...', '@container': '@set' }` | Array property (unordered set) |
+
+> **`@base` must not appear in schemas.**
+> Instance IRIs are assigned by the deploying system, not by the schema.
+> Hardcoding a base IRI would force all deployments to share a namespace they do not own.
+> The deployment injects the correct base at serialisation time when converting form payloads to RDF.
 
 ---
 

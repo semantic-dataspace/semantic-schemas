@@ -26,7 +26,6 @@
   uo:    'http://purl.obolibrary.org/obo/UO_'
   xsd:   'http://www.w3.org/2001/XMLSchema#'
   rdfs:  'http://www.w3.org/2000/01/rdf-schema#'
-  '@base': 'https://w3id.org/pmd/co/instances#'
   type: '@type'
 
   # pmdco:PMD_0000551 (ChemicalComposition) is a quality of a material

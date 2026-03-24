@@ -15,8 +15,11 @@
   # xsd:    'http://www.w3.org/2001/XMLSchema#'
   # rdfs:   'http://www.w3.org/2000/01/rdf-schema#'
 
-  # Base IRI for instance IRIs generated from this schema:
-  # '@base': 'https://example.org/instances#'
+  # DO NOT include '@base' here.
+  # Instance IRIs (the @id of each created record) are assigned by the
+  # deploying system, not by the schema. Hardcoding a base IRI would
+  # couple all deployments to a single namespace. The DSMS injects the
+  # correct base at serialisation time.
 
   # Required alias — maps the 'type' key to rdf:type:
   type: '@type'
