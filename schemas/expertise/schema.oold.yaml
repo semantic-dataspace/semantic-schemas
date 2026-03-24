@@ -5,41 +5,45 @@
 # K-item fields use the x-kitem extension (x- prefix = valid JSON Schema extension).
 # Each x-kitem.ktypeIds entry is the ktype_id used to query the DSMS knowledge graph API:
 #   GET /api/knowledge?ktype_id=<ktype_id>
-#
-# Ontology note: property IRIs use a provisional namespace (pmd:expertise/).
-# These should be aligned with an established competency ontology
-# (e.g., ESCO, schema.org, or a future PMDCo extension) when available.
 
 '@context':
-  foaf: 'http://xmlns.com/foaf/0.1/'
-  owl:  'http://www.w3.org/2002/07/owl#'
-  rdf:  'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
-  xsd:  'http://www.w3.org/2001/XMLSchema#'
-  rdfs: 'http://www.w3.org/2000/01/rdf-schema#'
-  exp:  'https://w3id.org/pmd/expertise/'
+  schema: 'https://schema.org/'
+  foaf:   'http://xmlns.com/foaf/0.1/'
   type: '@type'
+
+  # All six expertise fields map to schema:knowsAbout (schema.org/knowsAbout):
+  #   "Of a Person to indicate a topic that is known about."
+  # The semantic distinction between materials, methods, devices, etc. is carried
+  # by the rdf:type of the referenced k-item, not by a separate property per field.
+  #
+  # Known limitation: because all fields share the same property IRI, a SPARQL
+  # query on raw triples cannot distinguish "expertise in materials" from
+  # "expertise in methods" without joining on the ktype of the referenced entity.
+  # A future schema-store vocabulary will define rdfs:subPropertyOf sub-properties
+  # (e.g. ssv:hasMaterialExpertise rdfs:subPropertyOf schema:knowsAbout) to resolve
+  # this. See: https://github.com/<org>/semantic-schemas/issues/<n>
   materials:
-    '@id':        'exp:hasMaterialExpertise'
+    '@id':        'schema:knowsAbout'
     '@type':      '@id'
     '@container': '@set'
   material_modelling:
-    '@id':        'exp:hasMaterialModellingExpertise'
+    '@id':        'schema:knowsAbout'
     '@type':      '@id'
     '@container': '@set'
   measurement_devices:
-    '@id':        'exp:hasMeasurementDeviceExpertise'
+    '@id':        'schema:knowsAbout'
     '@type':      '@id'
     '@container': '@set'
   production_devices:
-    '@id':        'exp:hasProductionDeviceExpertise'
+    '@id':        'schema:knowsAbout'
     '@type':      '@id'
     '@container': '@set'
   application_fields:
-    '@id':        'exp:hasApplicationFieldExpertise'
+    '@id':        'schema:knowsAbout'
     '@type':      '@id'
     '@container': '@set'
   methods:
-    '@id':        'exp:hasMethodExpertise'
+    '@id':        'schema:knowsAbout'
     '@type':      '@id'
     '@container': '@set'
 
@@ -47,10 +51,11 @@ $schema: 'https://json-schema.org/draft/2020-12/schema'
 $comment: >-
   OO-LD Schema for Expert Expertise Profile.
   An expert (foaf:Person) is linked to lists of knowledge graph entities
-  representing their areas of expertise. All list fields are k-items:
-  references to typed instances in the DSMS knowledge graph, identified
-  by their IRI. The x-kitem extension carries the ktype_id(s) used to
-  filter candidates in the k-item widget.
+  representing their areas of expertise. All list fields are k-items
+  and share the property schema:knowsAbout. Semantic distinction between
+  field types (materials, methods, devices, …) is carried by the rdf:type
+  of the referenced entity, not by distinct property IRIs. Sub-properties
+  of schema:knowsAbout are planned in a future schema-store vocabulary.
 title: Expertise
 description: Expertise profile of a domain expert in materials science
 type: object

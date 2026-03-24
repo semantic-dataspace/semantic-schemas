@@ -2,127 +2,266 @@
 # Ontology: Platform MaterialDigital Core Ontology (PMDCo)
 #   https://w3id.org/pmd/co/
 #
-# The full PMDCo graph pattern is:
-#   ChemicalComposition → concretizes → ChemicalCompositionSpecification
-#     → has_member → FractionValueSpecification
-#       ← concretizes ← MassProportion
-#         → relational_quality_of → PortionOfChemicalElement
-#           → part_of → Material
+# Full graph pattern modelled by this schema:
 #
-# This schema uses a pragmatic flattening recommended in the PMDCo community.
-# The intermediate ChemicalCompositionSpecification node and the inverse
-# concretizes / relational_quality_of links are collapsed.
-# The ChemicalComposition root directly references:
-#   - the material it is a quality of (kitem reference)
-#   - an inline array of element fractions (FractionValueSpecification)
-# Full graph reconstruction from this flat form requires a mapping step.
+#   ChemicalComposition (PMD_0000551)
+#     quality_of ──────────────────────────────────────► Material
+#     concretizes ─────────────────────────────────────► ChemicalCompositionSpecification (PMD_0025002)
+#       has_member ──────────────────────────────────────► FractionValueSpecification (PMD_0025997)
+#         value                                            (numeric fraction value)
+#         unit                                             (UO unit IRI)
+#         specifies_value_of ──────────────────────────► PortionOfChemicalElement (PMD_0020140 etc.)
+#           part_of ────────────────────────────────────► Material (same as quality_of target)
+#           has_relational_quality ──────────────────────► MassProportion (PMD_0020102 etc.)
+#             relational_quality_of ───────────────────► PortionOfChemicalElement (back-ref)
 
 '@context':
-  obo:   'http://purl.obolibrary.org/obo/'
-  pmdco: 'https://w3id.org/pmd/co/'
-  ro:    'http://purl.obolibrary.org/obo/RO_'
-  obi:   'http://purl.obolibrary.org/obo/OBI_'
-  iao:   'http://purl.obolibrary.org/obo/IAO_'
-  uo:    'http://purl.obolibrary.org/obo/UO_'
+  owl:   'http://www.w3.org/2002/07/owl#'
+  rdf:   'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
+  xml:   'http://www.w3.org/XML/1998/namespace'
   xsd:   'http://www.w3.org/2001/XMLSchema#'
   rdfs:  'http://www.w3.org/2000/01/rdf-schema#'
+  obo:
+    '@id':     'http://purl.obolibrary.org/obo/'
+    '@prefix': true
+  bfo:
+    '@id':     'http://purl.obolibrary.org/obo/BFO_'
+    '@prefix': true
+  ro:
+    '@id':     'http://purl.obolibrary.org/obo/RO_'
+    '@prefix': true
+  obi:
+    '@id':     'http://purl.obolibrary.org/obo/OBI_'
+    '@prefix': true
+  iao:
+    '@id':     'http://purl.obolibrary.org/obo/IAO_'
+    '@prefix': true
+  uo:
+    '@id':     'http://purl.obolibrary.org/obo/UO_'
+    '@prefix': true
+  pmdco: 'https://w3id.org/pmd/co/'
+  uqudt: 'https://qudt.org/vocab/unit/'
+  # Instance IRI base — deployment-specific; override when serialising to RDF.
+  # See docs/schema-format.md § "Instance IRI base"
+  '@base': 'https://w3id.org/pmd/co/test/shape_chemical_composition#'
   type: '@type'
+  id:   '@id'
 
-  # pmdco:PMD_0000551 (ChemicalComposition) is a quality of a material
   quality_of:
-    '@id':   'ro:0000080'   # obo:RO_0000080  quality_of
+    '@id':   'ro:0000080'   # RO_0000080  quality_of
     '@type': '@id'
-
-  # Fractions modelled directly as has_member of a virtual
-  # ChemicalCompositionSpecification (pmdco:PMD_0025002)
-  fractions:
-    '@id':        'obo:RO_0002351'  # has_member
-    '@type':      '@id'
-    '@container': '@set'
-
-  # Per-fraction properties (FractionValueSpecification pmdco:PMD_0025997)
-  element_symbol:
-    '@id': 'rdfs:label'
+  concretizes:
+    '@id':   'ro:0000059'   # RO_0000059  concretizes
+    '@type': '@id'
+  has_member:
+    '@id':   'ro:0002351'   # RO_0002351  has_member
+    '@type': '@id'
+  relational_quality_of:
+    '@id':   'pmdco:PMD_0025999'
+    '@type': '@id'
+  has_relational_quality:
+    '@id':   'pmdco:PMD_0025998'
+    '@type': '@id'
+  specifies_value_of:
+    '@id':   'obi:0001927'  # OBI_0001927  is_about / specifies_value_of
+    '@type': '@id'
+  part_of:
+    '@id':   'bfo:0000050'  # BFO_0000050  part_of
+    '@type': '@id'
   value:
-    '@id': 'obi:0001937'   # obo:OBI_0001937  has_specified_numeric_value
+    '@id':   'obi:0001937'  # OBI_0001937  has_specified_numeric_value
   unit:
-    '@id':   'iao:0000039' # obo:IAO_0000039  has_measurement_unit_label
+    '@id':   'iao:0000039'  # IAO_0000039  has_measurement_unit_label
     '@type': '@id'
 
 $schema: 'https://json-schema.org/draft/2020-12/schema'
-$comment: >-
-  Simplified OO-LD schema for pmdco:ChemicalComposition (PMD_0000551).
-  The ChemicalCompositionSpecification intermediary is collapsed; fractions
-  are represented as a flat array on the root object.
-title: Chemical Composition (PMDCo)
-description: Chemical composition of a material described using the PMDCo ontology
+$comment: Schema for a pmdco:ChemicalComposition
+title: ChemicalComposition
 type: object
 required:
   - type
+  - id
+  - quality_of
+  - concretizes
 
 properties:
 
   type:
     title: Type
-    description: RDF type — ChemicalComposition
+    description: Type of this instance
     type: string
     readOnly: true
-    const: 'pmdco:PMD_0000551'
-    default: 'pmdco:PMD_0000551'
+    enum:
+      - pmdco:PMD_0000551
     options:
       enum_titles:
-        - 'pmdco:ChemicalComposition'
+        - pmdco:ChemicalComposition
+
+  id:
+    title: ID
+    type: string
+    default: chem_comp
 
   quality_of:
-    title: Material
+    title: Quality Of
     description: The material this chemical composition is a quality of
     type: string
-    format: kitem
-    x-kitem:
-      ktypeIds:
-        - material
+    default: material_no27_14
+    $comment: Reference to material instance (pmdco:PMD_0000000)
 
-  fractions:
-    title: Element Fractions
-    description: >-
-      Mass/volume/molar fractions for each chemical element present.
-      Each entry corresponds to a pmdco:FractionValueSpecification (PMD_0025997).
-    type: array
-    minItems: 1
-    uniqueItems: false
-    items:
-      title: Fraction
-      type: object
-      required:
-        - element_symbol
-        - value
-        - unit
-      properties:
+  concretizes:
+    title: Concretizes
+    description: The chemical composition specification this composition concretizes
+    type: object
+    required:
+      - type
+      - id
+      - has_member
+    properties:
 
-        element_symbol:
-          title: Element Symbol
-          description: Chemical element symbol (e.g. Fe, Cr, Ni, Mo, Si)
-          type: string
+      type:
+        title: Type
+        type: string
+        readOnly: true
+        enum:
+          - pmdco:PMD_0025002
+        options:
+          enum_titles:
+            - pmdco:ChemicalCompositionSpecification
 
-        value:
-          title: Value
-          description: Numeric value of the fraction
-          type: number
-          minimum: 0
-          maximum: 100
+      id:
+        title: ID
+        type: string
+        default: chem_comp_spec
 
-        unit:
-          title: Unit
-          description: Measurement unit for the fraction value
-          type: string
-          format: uri
-          enum:
-            - 'uo:0000163'
-            - 'uo:0000164'
-            - 'uo:0000165'
-          default: 'uo:0000163'
-          options:
-            enum_titles:
-              - 'mass percentage (%)'
-              - 'volume percentage (%)'
-              - 'molar percentage (%)'
+      has_member:
+        title: Has Member
+        description: Fraction value specifications for chemical composition
+        type: array
+        format: tabs
+        minItems: 1
+        items:
+          type: object
+          title: Fraction
+          headerTemplate: '{{ self.element_name }}'
+          required:
+            - type
+            - id
+            - value
+            - unit
+            - specifies_value_of
+          properties:
+
+            type:
+              title: Type
+              type: string
+              readOnly: true
+              enum:
+                - pmdco:PMD_0025997
+              options:
+                enum_titles:
+                  - pmdco:FractionValueSpecification
+
+            id:
+              title: ID
+              type: string
+              default: fraction_1
+
+            element_name:
+              title: Element Name
+              description: Name of the chemical element (for display only)
+              type: string
+              default: Iron
+
+            value:
+              title: Value
+              description: Numeric value of the fraction
+              type: number
+              default: 96.7
+
+            unit:
+              title: Unit
+              description: Measurement unit for the fraction
+              type: string
+              format: uri
+              enum:
+                - uo:0000163
+                - uo:0000164
+                - uo:0000165
+              default: uo:0000163
+              options:
+                enum_titles:
+                  - mass percentage (%)
+                  - volume percentage (%)
+                  - molar percentage (%)
+
+            specifies_value_of:
+              title: Specifies Value Of
+              description: Reference to the portion of chemical element
+              type: object
+              required:
+                - type
+                - id
+                - part_of
+                - has_relational_quality
+              properties:
+
+                type:
+                  title: Type
+                  type: string
+                  enum:
+                    - pmdco:PMD_0020140
+                    - pmdco:PMD_0020026
+                    - pmdco:PMD_0020050
+                  options:
+                    enum_titles:
+                      - pmdco:PortionOfChemicalElement
+                      - pmdco:PortionOfIron
+                      - pmdco:PortionOfSilicon
+                  default: pmdco:PMD_0020140
+
+                id:
+                  title: ID
+                  type: string
+                  default: some_element
+
+                part_of:
+                  title: Part Of
+                  description: The material this portion is part of
+                  type: string
+                  default: material_no27_14
+                  $comment: Reference to material instance
+
+                has_relational_quality:
+                  title: Has Relational Quality
+                  description: The proportion (mass/molar/volume) of this element
+                  type: object
+                  required:
+                    - type
+                    - id
+                    - relational_quality_of
+                  properties:
+
+                    type:
+                      title: Type
+                      type: string
+                      enum:
+                        - pmdco:PMD_0020101
+                        - pmdco:PMD_0020102
+                      options:
+                        enum_titles:
+                          - pmdco:Proportion
+                          - pmdco:MassProportion
+                      default: pmdco:PMD_0020102
+
+                    id:
+                      title: ID
+                      type: string
+                      default: mass_proportion_1
+
+                    relational_quality_of:
+                      title: Relational Quality Of
+                      description: Reference back to the portion of chemical element
+                      type: string
+                      default: some_element
+                      $comment: This should match the parent specifies_value_of.id
