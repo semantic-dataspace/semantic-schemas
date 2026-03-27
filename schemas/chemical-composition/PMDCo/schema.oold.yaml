@@ -6,75 +6,87 @@
 #
 #   ChemicalComposition (PMD_0000551)
 #     quality_of ──────────────────────────────────────► Material
-#     concretizes ─────────────────────────────────────► ChemicalCompositionSpecification (PMD_0025002)
+#     is_subject_of ───────────────────────────────────► ChemicalCompositionSpecification (PMD_0025002)
 #       has_member ──────────────────────────────────────► FractionValueSpecification (PMD_0025997)
 #         value                                            (numeric fraction value)
 #         unit                                             (UO unit IRI)
-#         specifies_value_of ──────────────────────────► PortionOfChemicalElement (PMD_0020026 etc.)
-#           part_of ────────────────────────────────────► Material (same as quality_of target)
-#           has_relational_quality ──────────────────────► MassProportion (PMD_0020102 etc.)
-#             relational_quality_of ───────────────────► PortionOfChemicalElement (back-ref)
+#   PortionOfChemicalElement (PMD_0020026 etc.)  [grouped under 'element' key for form UX; not an RDF predicate]
+#     part_of ────────────────────────────────────────► Material (same as quality_of target)
+#     has_relational_quality ────────────────────────► MassProportion (PMD_0020102 etc.)
+#       relational_quality_of ──────────────────────► PortionOfChemicalElement (back-ref)
+#       specified_by_value ─────────────────────────► FractionValueSpecification (back-ref)
 
-'@context':
-  owl:   'http://www.w3.org/2002/07/owl#'
-  rdf:   'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
-  xml:   'http://www.w3.org/XML/1998/namespace'
-  xsd:   'http://www.w3.org/2001/XMLSchema#'
-  rdfs:  'http://www.w3.org/2000/01/rdf-schema#'
+"@context":
+  owl: "http://www.w3.org/2002/07/owl#"
+  rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xml: "http://www.w3.org/XML/1998/namespace"
+  xsd: "http://www.w3.org/2001/XMLSchema#"
+  rdfs: "http://www.w3.org/2000/01/rdf-schema#"
   obo:
-    '@id':     'http://purl.obolibrary.org/obo/'
-    '@prefix': true
+    "@id": "http://purl.obolibrary.org/obo/"
+    "@prefix": true
   bfo:
-    '@id':     'http://purl.obolibrary.org/obo/BFO_'
-    '@prefix': true
+    "@id": "http://purl.obolibrary.org/obo/BFO_"
+    "@prefix": true
   ro:
-    '@id':     'http://purl.obolibrary.org/obo/RO_'
-    '@prefix': true
+    "@id": "http://purl.obolibrary.org/obo/RO_"
+    "@prefix": true
   obi:
-    '@id':     'http://purl.obolibrary.org/obo/OBI_'
-    '@prefix': true
+    "@id": "http://purl.obolibrary.org/obo/OBI_"
+    "@prefix": true
   iao:
-    '@id':     'http://purl.obolibrary.org/obo/IAO_'
-    '@prefix': true
+    "@id": "http://purl.obolibrary.org/obo/IAO_"
+    "@prefix": true
   uo:
-    '@id':     'http://purl.obolibrary.org/obo/UO_'
-    '@prefix': true
-  pmdco: 'https://w3id.org/pmd/co/'
-  uqudt: 'https://qudt.org/vocab/unit/'
+    "@id": "http://purl.obolibrary.org/obo/UO_"
+    "@prefix": true
+  pmdco: "https://w3id.org/pmd/co/"
+  uqudt: "https://qudt.org/vocab/unit/"
   # Instance IRI base — deployment-specific; override when serialising to RDF.
   # See docs/schema-format.md § "Instance IRI base"
-  '@base': 'https://w3id.org/pmd/co/test/shape_chemical_composition#'
-  type: '@type'
-  id:   '@id'
+  "@base": "https://w3id.org/pmd/co/test/shape_chemical_composition#"
+  type: "@type"
+  id: "@id"
+  label:
+    "@id": "rdfs:label"
 
   quality_of:
-    '@id':   'ro:0000080'   # RO_0000080  quality_of
-    '@type': '@id'
-  concretizes:
-    '@id':   'ro:0000059'   # RO_0000059  concretizes
-    '@type': '@id'
+    "@id": "ro:0000080" # RO_0000080  quality_of
+    # No "@type": "@id" — the value is an embedded object (blank node with rdfs:label)
+  is_subject_of:
+    "@id": "pmdco:PMD_0000004" # PMD_0000004  is_subject_of
+    "@type": "@id"
   has_member:
-    '@id':   'ro:0002351'   # RO_0002351  has_member
-    '@type': '@id'
+    "@id": "ro:0002351" # RO_0002351  has_member
+    "@type": "@id"
   relational_quality_of:
-    '@id':   'pmdco:PMD_0025999'
-    '@type': '@id'
+    "@id": "pmdco:PMD_0025999"
+    "@type": "@id"
   has_relational_quality:
-    '@id':   'pmdco:PMD_0025998'
-    '@type': '@id'
-  specifies_value_of:
-    '@id':   'obi:0001927'  # OBI_0001927  is_about / specifies_value_of
-    '@type': '@id'
+    "@id": "pmdco:PMD_0025998"
+    "@type": "@id"
+  specified_by_value:
+    "@id": "pmdco:PMD_0000077" # PMD_0000077  specified_by_value
+    "@type": "@id"
   part_of:
-    '@id':   'bfo:0000050'  # BFO_0000050  part_of
-    '@type': '@id'
+    "@id": "bfo:0000050" # BFO_0000050  part_of
+    "@type": "@id"
   value:
-    '@id':   'obi:0001937'  # OBI_0001937  has_specified_numeric_value
+    "@id": "obi:0001937" # OBI_0001937  has_specified_numeric_value
+    "@type": "xsd:double"
   unit:
-    '@id':   'iao:0000039'  # IAO_0000039  has_measurement_unit_label
-    '@type': '@id'
+    "@id": "iao:0000039" # IAO_0000039  has_measurement_unit_label
+    "@type": "@id"
+  # 'element' is a JSON-LD nesting helper that groups the PortionOfChemicalElement
+  # under its fraction row for form UX. It has no canonical counterpart in the
+  # PMDCo pattern; the IRI below is provisional and must not be used as an
+  # ontology assertion. Without this mapping the element subtree is silently
+  # dropped by the JSON-LD processor before SHACL validation.
+  element:
+    "@id": "pmdco:PMD_hasFractionElement" # provisional nesting helper
+    "@type": "@id"
 
-$schema: 'https://json-schema.org/draft/2020-12/schema'
+$schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for a pmdco:ChemicalComposition
 title: Chemical Composition
 type: object
@@ -82,10 +94,9 @@ required:
   - type
   - id
   - quality_of
-  - concretizes
+  - is_subject_of
 
 properties:
-
   type:
     title: Type
     type: string
@@ -105,10 +116,17 @@ properties:
 
   quality_of:
     title: Material
-    description: The material this chemical composition describes
-    type: string
+    description: The material this composition is a quality of.
+    type: object
+    required:
+      - label
+    properties:
+      label:
+        title: Material Name
+        description: Human-readable name or identifier for the material (e.g. "316L stainless steel").
+        type: string
 
-  concretizes:
+  is_subject_of:
     title: Composition Specification
     description: The specification containing the element fractions of this composition
     type: object
@@ -117,7 +135,6 @@ properties:
       - id
       - has_member
     properties:
-
       type:
         title: Type
         type: string
@@ -148,9 +165,8 @@ properties:
             - id
             - value
             - unit
-            - specifies_value_of
+            - element
           properties:
-
             type:
               title: Type
               type: string
@@ -168,29 +184,7 @@ properties:
               readOnly: true
               default: fraction_1
 
-            value:
-              title: Fraction Value
-              description: Amount of this element in the composition
-              type: number
-              minimum: 0
-              maximum: 100
-
-            unit:
-              title: Unit
-              description: Unit of the fraction value
-              type: string
-              enum:
-                - uo:0000163
-                - uo:0000164
-                - uo:0000165
-              default: uo:0000163
-              options:
-                enum_titles:
-                  - mass percentage (%)
-                  - volume percentage (%)
-                  - molar percentage (%)
-
-            specifies_value_of:
+            element:
               title: Element Reference
               description: The portion of the chemical element this fraction describes
               type: object
@@ -200,20 +194,159 @@ properties:
                 - part_of
                 - has_relational_quality
               properties:
-
                 type:
                   title: Chemical Element
                   description: The chemical element this fraction refers to
                   type: string
-                  # Extend this list with additional PMDCo PortionOf* classes as IRIs become
-                  # available. See the PMDCo ontology at https://w3id.org/pmd/co/
+                  # Only elements with confirmed PMDCo PortionOf* IRIs are listed.
+                  # Source: https://materialdigital.github.io/core-ontology/
                   enum:
-                    - pmdco:PMD_0020026  # PortionOfIron (Fe)
-                    - pmdco:PMD_0020050  # PortionOfSilicon (Si)
+                    - pmdco:PMD_0020083 # H   (1)   Hydrogen
+                    - pmdco:PMD_0020049 # He  (2)   Helium
+                    - pmdco:PMD_0020037 # Li  (3)   Lithium
+                    - pmdco:PMD_0020080 # Be  (4)   Beryllium
+                    - pmdco:PMD_0020048 # B   (5)   Boron
+                    - pmdco:PMD_0020030 # C   (6)   Carbon
+                    - pmdco:PMD_0020038 # N   (7)   Nitrogen
+                    - pmdco:PMD_0020091 # O   (8)   Oxygen
+                    - pmdco:PMD_0020056 # F   (9)   Fluorine
+                    - pmdco:PMD_0020063 # Ne  (10)  Neon
+                    - pmdco:PMD_0020072 # Na  (11)  Sodium
+                    - pmdco:PMD_0020067 # Mg  (12)  Magnesium
+                    - pmdco:PMD_0020071 # Al  (13)  Aluminium
+                    - pmdco:PMD_0020050 # Si  (14)  Silicon
+                    - pmdco:PMD_0020047 # P   (15)  Phosphorus
+                    - pmdco:PMD_0020059 # S   (16)  Sulfur
+                    - pmdco:PMD_0020075 # Cl  (17)  Chlorine
+                    - pmdco:PMD_0020041 # Ar  (18)  Argon
+                    - pmdco:PMD_0020046 # K   (19)  Potassium
+                    - pmdco:PMD_0020081 # Ca  (20)  Calcium
+                    - pmdco:PMD_0020094 # Sc  (21)  Scandium
+                    - pmdco:PMD_0020095 # Ti  (22)  Titanium
+                    - pmdco:PMD_0020093 # V   (23)  Vanadium
+                    - pmdco:PMD_0020029 # Cr  (24)  Chromium
+                    - pmdco:PMD_0020078 # Mn  (25)  Manganese
+                    - pmdco:PMD_0020026 # Fe  (26)  Iron
+                    - pmdco:PMD_0020039 # Co  (27)  Cobalt
+                    - pmdco:PMD_0020051 # Ni  (28)  Nickel
+                    - pmdco:PMD_0020054 # Cu  (29)  Copper
+                    - pmdco:PMD_0020068 # Zn  (30)  Zinc
+                    - pmdco:PMD_0020086 # Ga  (31)  Gallium
+                    - pmdco:PMD_0020031 # Ge  (32)  Germanium
+                    - pmdco:PMD_0020079 # As  (33)  Arsenic
+                    - pmdco:PMD_0020065 # Se  (34)  Selenium
+                    - pmdco:PMD_0020087 # Br  (35)  Bromine
+                    - pmdco:PMD_0020061 # Kr  (36)  Krypton
+                    - pmdco:PMD_0020052 # Y   (39)  Yttrium
+                    - pmdco:PMD_0020053 # Zr  (40)  Zirconium
+                    - pmdco:PMD_0020035 # Nb  (41)  Niobium
+                    - pmdco:PMD_0020034 # Mo  (42)  Molybdenum
+                    - pmdco:PMD_0020066 # Ru  (44)  Ruthenium
+                    - pmdco:PMD_0010020 # Rh  (45)  Rhodium
+                    - pmdco:PMD_0020092 # Pd  (46)  Palladium
+                    - pmdco:PMD_0020076 # Ag  (47)  Silver
+                    - pmdco:PMD_0020042 # Cd  (48)  Cadmium
+                    - pmdco:PMD_0020028 # In  (49)  Indium
+                    - pmdco:PMD_0020088 # Sn  (50)  Tin
+                    - pmdco:PMD_0020045 # Sb  (51)  Antimony
+                    - pmdco:PMD_0010021 # Te  (52)  Tellurium
+                    - pmdco:PMD_0020073 # I   (53)  Iodine
+                    - pmdco:PMD_0020070 # Xe  (54)  Xenon
+                    - pmdco:PMD_0020074 # Cs  (55)  Caesium
+                    - pmdco:PMD_0020043 # Ba  (56)  Barium
+                    - pmdco:PMD_0025015 # La  (57)  Lanthanum
+                    - pmdco:PMD_0020058 # Ce  (58)  Cerium
+                    - pmdco:PMD_0020082 # Nd  (60)  Neodymium
+                    - pmdco:PMD_0020077 # Sm  (62)  Samarium
+                    - pmdco:PMD_0020033 # Er  (68)  Erbium
+                    - pmdco:PMD_0020089 # Hf  (72)  Hafnium
+                    - pmdco:PMD_0020044 # Ta  (73)  Tantalum
+                    - pmdco:PMD_0020032 # W   (74)  Tungsten
+                    - pmdco:PMD_0020036 # Re  (75)  Rhenium
+                    - pmdco:PMD_0020084 # Os  (76)  Osmium
+                    - pmdco:PMD_0020085 # Ir  (77)  Iridium
+                    - pmdco:PMD_0020057 # Pt  (78)  Platinum
+                    - pmdco:PMD_0020040 # Au  (79)  Gold
+                    - pmdco:PMD_0020069 # Hg  (80)  Mercury
+                    - pmdco:PMD_0020064 # Tl  (81)  Thallium
+                    - pmdco:PMD_0020060 # Pb  (82)  Lead
+                    - pmdco:PMD_0020062 # Bi  (83)  Bismuth
+                    - pmdco:PMD_0020090 # U   (92)  Uranium
+                    - pmdco:PMD_0020055 # Bh  (107) Bohrium
                   options:
                     enum_titles:
-                      - Iron (Fe)
+                      - Hydrogen (H)
+                      - Helium (He)
+                      - Lithium (Li)
+                      - Beryllium (Be)
+                      - Boron (B)
+                      - Carbon (C)
+                      - Nitrogen (N)
+                      - Oxygen (O)
+                      - Fluorine (F)
+                      - Neon (Ne)
+                      - Sodium (Na)
+                      - Magnesium (Mg)
+                      - Aluminium (Al)
                       - Silicon (Si)
+                      - Phosphorus (P)
+                      - Sulfur (S)
+                      - Chlorine (Cl)
+                      - Argon (Ar)
+                      - Potassium (K)
+                      - Calcium (Ca)
+                      - Scandium (Sc)
+                      - Titanium (Ti)
+                      - Vanadium (V)
+                      - Chromium (Cr)
+                      - Manganese (Mn)
+                      - Iron (Fe)
+                      - Cobalt (Co)
+                      - Nickel (Ni)
+                      - Copper (Cu)
+                      - Zinc (Zn)
+                      - Gallium (Ga)
+                      - Germanium (Ge)
+                      - Arsenic (As)
+                      - Selenium (Se)
+                      - Bromine (Br)
+                      - Krypton (Kr)
+                      - Yttrium (Y)
+                      - Zirconium (Zr)
+                      - Niobium (Nb)
+                      - Molybdenum (Mo)
+                      - Ruthenium (Ru)
+                      - Rhodium (Rh)
+                      - Palladium (Pd)
+                      - Silver (Ag)
+                      - Cadmium (Cd)
+                      - Indium (In)
+                      - Tin (Sn)
+                      - Antimony (Sb)
+                      - Tellurium (Te)
+                      - Iodine (I)
+                      - Xenon (Xe)
+                      - Caesium (Cs)
+                      - Barium (Ba)
+                      - Lanthanum (La)
+                      - Cerium (Ce)
+                      - Neodymium (Nd)
+                      - Samarium (Sm)
+                      - Erbium (Er)
+                      - Hafnium (Hf)
+                      - Tantalum (Ta)
+                      - Tungsten (W)
+                      - Rhenium (Re)
+                      - Osmium (Os)
+                      - Iridium (Ir)
+                      - Platinum (Pt)
+                      - Gold (Au)
+                      - Mercury (Hg)
+                      - Thallium (Tl)
+                      - Lead (Pb)
+                      - Bismuth (Bi)
+                      - Uranium (U)
+                      - Bohrium (Bh)
 
                 id:
                   title: ID
@@ -241,8 +374,8 @@ properties:
                     - type
                     - id
                     - relational_quality_of
+                    - specified_by_value
                   properties:
-
                     type:
                       title: Proportion Type
                       type: string
@@ -267,7 +400,40 @@ properties:
                       title: Relational Quality Of
                       description: >-
                         Back-reference to the element reference instance.
-                        Must match specifies_value_of.id; set by the consumer.
+                        Must match element.id; set by the consumer.
                       type: string
                       readOnly: true
-                      $comment: Must match the parent specifies_value_of.id; set by the consumer.
+                      $comment: Must match the parent element.id; set by the consumer.
+
+                    specified_by_value:
+                      title: Specified By Value
+                      description: >-
+                        Back-reference to the fraction value specification this proportion quantifies.
+                        Must match the parent FractionValueSpecification id; set by the consumer.
+                      type: string
+                      readOnly: true
+                      $comment: Must match the grandparent has_member item id; set by the consumer.
+
+            unit:
+              title: Unit
+              description: Unit of the fraction value
+              type: string
+              enum:
+                - uo:0000163
+                - uo:0000164
+                - uo:0000165
+              default: uo:0000163
+              options:
+                enum_titles:
+                  - mass percentage (%)
+                  - volume percentage (%)
+                  - molar percentage (%)
+
+            value:
+              title: Fraction Value
+              description: Amount of this element in the composition
+              type: number
+              format: slider
+              minimum: 0
+              maximum: 100
+              multipleOf: 0.1

@@ -6,10 +6,10 @@
 # Each x-kitem.ktypeIds entry is the ktype_id used to query the DSMS knowledge graph API:
 #   GET /api/knowledge?ktype_id=<ktype_id>
 
-'@context':
-  schema: 'https://schema.org/'
-  foaf:   'http://xmlns.com/foaf/0.1/'
-  type: '@type'
+"@context":
+  schema: "https://schema.org/"
+  foaf: "http://xmlns.com/foaf/0.1/"
+  type: "@type"
 
   # All six expertise fields map to schema:knowsAbout (schema.org/knowsAbout):
   #   "Of a Person to indicate a topic that is known about."
@@ -23,31 +23,31 @@
   # (e.g. ssv:hasMaterialExpertise rdfs:subPropertyOf schema:knowsAbout) to resolve
   # this. See: https://github.com/<org>/semantic-schemas/issues/<n>
   materials:
-    '@id':        'schema:knowsAbout'
-    '@type':      '@id'
-    '@container': '@set'
+    "@id": "schema:knowsAbout"
+    "@type": "@id"
+    "@container": "@set"
   material_modelling:
-    '@id':        'schema:knowsAbout'
-    '@type':      '@id'
-    '@container': '@set'
+    "@id": "schema:knowsAbout"
+    "@type": "@id"
+    "@container": "@set"
   measurement_devices:
-    '@id':        'schema:knowsAbout'
-    '@type':      '@id'
-    '@container': '@set'
+    "@id": "schema:knowsAbout"
+    "@type": "@id"
+    "@container": "@set"
   production_devices:
-    '@id':        'schema:knowsAbout'
-    '@type':      '@id'
-    '@container': '@set'
+    "@id": "schema:knowsAbout"
+    "@type": "@id"
+    "@container": "@set"
   application_fields:
-    '@id':        'schema:knowsAbout'
-    '@type':      '@id'
-    '@container': '@set'
+    "@id": "schema:knowsAbout"
+    "@type": "@id"
+    "@container": "@set"
   methods:
-    '@id':        'schema:knowsAbout'
-    '@type':      '@id'
-    '@container': '@set'
+    "@id": "schema:knowsAbout"
+    "@type": "@id"
+    "@container": "@set"
 
-$schema: 'https://json-schema.org/draft/2020-12/schema'
+$schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: >-
   OO-LD Schema for Expert Expertise Profile.
   An expert (foaf:Person) is linked to lists of knowledge graph entities
@@ -63,14 +63,13 @@ required:
   - type
 
 properties:
-
   type:
     title: Type
     description: RDF type of this instance
     type: string
     readOnly: true
-    const: 'foaf:Person'
-    default: 'foaf:Person'
+    const: "foaf:Person"
+    default: "foaf:Person"
 
   materials:
     title: Materials
