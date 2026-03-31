@@ -89,7 +89,7 @@ data = json.load(open("my_input.json"))
 oold = jsonata.Jsonata(expr).evaluate(data)
 
 # Convert OO-LD → RDF (rdflib ≥ 7 handles JSON-LD 1.1 natively)
-context = yaml.safe_load(open("schema.oold.yaml"))["@context"]
+context = yaml.safe_load(open("specs/schema.oold.yaml"))["@context"]
 g = rdflib.Dataset()
 g.parse(data=json.dumps({"@context": context, **oold}), format="json-ld")
 g.serialize(destination="my_output.ttl", format="turtle")
@@ -101,7 +101,7 @@ g.serialize(destination="my_output.ttl", format="turtle")
 import pyshacl
 
 data_graph   = rdflib.Graph().parse("my_output.ttl")
-shapes_graph = rdflib.Graph().parse("shape.ttl")
+shapes_graph = rdflib.Graph().parse("specs/shape.ttl")
 conforms, _, report = pyshacl.validate(
     data_graph, shacl_graph=shapes_graph, serialize_report_graph=True
 )
@@ -117,13 +117,13 @@ print(report)
 
 | File | Purpose |
 |---|---|
-| `schema.oold.yaml` | Full OO-LD / JSON-LD schema |
-| `shape.ttl` | SHACL validation shape |
-| `example.oold.json` | Complete OO-LD example (316L stainless steel) |
+| `specs/schema.oold.yaml` | Full OO-LD / JSON-LD schema |
+| `specs/shape.ttl` | SHACL validation shape |
+| `docs/example.oold.json` | Complete OO-LD example (316L stainless steel) |
+| `docs/chemical_composition_workflow.ipynb` | End-to-end Jupyter notebook (transform → RDF → SHACL) |
 | `simplified/schema.simplified.json` | User-friendly JSON Schema |
 | `simplified/example.input.json` | Ready-to-edit simplified example |
 | `simplified/transform.jsonata` | JSONata transform: simplified JSON → OO-LD |
-| `notebooks/chemical_composition_workflow.ipynb` | End-to-end Jupyter notebook (transform → RDF → SHACL) |
 
 ---
 

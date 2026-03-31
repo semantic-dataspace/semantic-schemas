@@ -70,7 +70,7 @@ categories where the expert has no expertise.
 }
 ```
 
-A complete example is in [`example.oold.json`](example.oold.json).
+A complete example is in [`docs/example.oold.json`](docs/example.oold.json).
 
 ---
 
@@ -83,8 +83,8 @@ pip install rdflib pyyaml
 ```python
 import json, yaml, rdflib
 
-context = yaml.safe_load(open("schema.oold.yaml"))["@context"]
-doc     = json.load(open("example.oold.json"))
+context = yaml.safe_load(open("specs/schema.oold.yaml"))["@context"]
+doc     = json.load(open("docs/example.oold.json"))
 
 g = rdflib.Dataset()
 g.parse(data=json.dumps({"@context": context, **doc}), format="json-ld")
@@ -97,9 +97,9 @@ g.serialize(destination="my_output.ttl", format="turtle")
 
 | File | Purpose |
 |---|---|
-| `schema.oold.yaml` | Full OO-LD / JSON-LD schema |
-| `example.oold.json` | Complete example expertise profile |
-| `notebooks/expertise_workflow.ipynb` | Jupyter notebook (OO-LD JSON → RDF) |
+| `specs/schema.oold.yaml` | Full OO-LD / JSON-LD schema |
+| `docs/example.oold.json` | Complete example expertise profile |
+| `docs/expertise_workflow.ipynb` | Jupyter notebook (OO-LD JSON → RDF) |
 
 ---
 
