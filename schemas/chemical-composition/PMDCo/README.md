@@ -137,7 +137,6 @@ print(report)
 | `simplified/example.input.json` | Ready-to-edit simplified example |
 | `simplified/transform.jsonata` | JSONata transform: simplified JSON → OO-LD |
 | `notebooks/chemical_composition_workflow.ipynb` | End-to-end Jupyter notebook (transform → RDF → SHACL) |
-| `notebooks/requirements.txt` | Python dependencies for the notebook |
 
 ---
 

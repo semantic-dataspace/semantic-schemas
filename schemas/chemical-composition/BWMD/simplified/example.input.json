@@ -1,0 +1,14 @@
+{
+  "label": "316L Chemical Composition",
+  "base_element": { "symbol": "Fe" },
+  "fractions": [
+    { "symbol": "Cr", "min_value": 16.0, "max_value": 18.0, "unit": "wt.%" },
+    { "symbol": "Ni", "min_value": 10.0, "max_value": 14.0, "unit": "wt.%" },
+    { "symbol": "Mo", "min_value": 2.0,  "max_value": 3.0,  "unit": "wt.%" },
+    { "symbol": "Mn", "min_value": 0.0,  "max_value": 2.0,  "unit": "wt.%" },
+    { "symbol": "Si", "min_value": 0.0,  "max_value": 0.75, "unit": "wt.%" },
+    { "symbol": "C",  "min_value": 0.0,  "max_value": 0.03, "unit": "wt.%" },
+    { "symbol": "P",  "min_value": 0.0,  "max_value": 0.045,"unit": "wt.%" },
+    { "symbol": "S",  "min_value": 0.0,  "max_value": 0.03, "unit": "wt.%" }
+  ]
+}

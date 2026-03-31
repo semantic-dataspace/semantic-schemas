@@ -1,0 +1,25 @@
+{
+  "type": "foaf:Person",
+  "materials": [
+    "https://dsms.example.org/api/knowledge/mat-steel-316l",
+    "https://dsms.example.org/api/knowledge/mat-alsi10mg"
+  ],
+  "material_modelling": [
+    "https://dsms.example.org/api/knowledge/sim-dft",
+    "https://dsms.example.org/api/knowledge/sim-fem"
+  ],
+  "measurement_devices": [
+    "https://dsms.example.org/api/knowledge/dev-sem",
+    "https://dsms.example.org/api/knowledge/dev-xrd"
+  ],
+  "production_devices": [
+    "https://dsms.example.org/api/knowledge/dev-lpbf"
+  ],
+  "application_fields": [
+    "https://dsms.example.org/api/knowledge/app-aerospace"
+  ],
+  "methods": [
+    "https://dsms.example.org/api/knowledge/method-ebsd",
+    "https://dsms.example.org/api/knowledge/method-tensile-testing"
+  ]
+}
