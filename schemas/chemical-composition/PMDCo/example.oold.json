@@ -1,0 +1,184 @@
+{
+  "@context": "https://w3id.org/pmd/co/test/shape_chemical_composition#",
+  "type": "pmdco:PMD_0000551",
+  "id":   "chem_comp_316L",
+  "quality_of": {
+    "label": "316L Stainless Steel"
+  },
+  "is_subject_of": {
+    "type": "pmdco:PMD_0025002",
+    "id":   "chem_comp_spec_316L",
+    "has_member": [
+      {
+        "type": "pmdco:PMD_0025997",
+        "id":   "frac_Fe",
+        "value": 65.345,
+        "unit":  "uo:0000163",
+        "element": {
+          "type":    "pmdco:PMD_0020026",
+          "id":      "elem_Fe",
+          "part_of": "mat_316L",
+          "has_relational_quality": {
+            "type":                  "pmdco:PMD_0020102",
+            "id":                    "prop_Fe",
+            "relational_quality_of": "elem_Fe",
+            "specified_by_value":    "frac_Fe"
+          }
+        }
+      },
+      {
+        "type": "pmdco:PMD_0025997",
+        "id":   "frac_Cr",
+        "value": 17.0,
+        "unit":  "uo:0000163",
+        "element": {
+          "type":    "pmdco:PMD_0020029",
+          "id":      "elem_Cr",
+          "part_of": "mat_316L",
+          "has_relational_quality": {
+            "type":                  "pmdco:PMD_0020102",
+            "id":                    "prop_Cr",
+            "relational_quality_of": "elem_Cr",
+            "specified_by_value":    "frac_Cr"
+          }
+        }
+      },
+      {
+        "type": "pmdco:PMD_0025997",
+        "id":   "frac_Ni",
+        "value": 12.0,
+        "unit":  "uo:0000163",
+        "element": {
+          "type":    "pmdco:PMD_0020051",
+          "id":      "elem_Ni",
+          "part_of": "mat_316L",
+          "has_relational_quality": {
+            "type":                  "pmdco:PMD_0020102",
+            "id":                    "prop_Ni",
+            "relational_quality_of": "elem_Ni",
+            "specified_by_value":    "frac_Ni"
+          }
+        }
+      },
+      {
+        "type": "pmdco:PMD_0025997",
+        "id":   "frac_Mo",
+        "value": 2.5,
+        "unit":  "uo:0000163",
+        "element": {
+          "type":    "pmdco:PMD_0020034",
+          "id":      "elem_Mo",
+          "part_of": "mat_316L",
+          "has_relational_quality": {
+            "type":                  "pmdco:PMD_0020102",
+            "id":                    "prop_Mo",
+            "relational_quality_of": "elem_Mo",
+            "specified_by_value":    "frac_Mo"
+          }
+        }
+      },
+      {
+        "type": "pmdco:PMD_0025997",
+        "id":   "frac_Mn",
+        "value": 1.8,
+        "unit":  "uo:0000163",
+        "element": {
+          "type":    "pmdco:PMD_0020078",
+          "id":      "elem_Mn",
+          "part_of": "mat_316L",
+          "has_relational_quality": {
+            "type":                  "pmdco:PMD_0020102",
+            "id":                    "prop_Mn",
+            "relational_quality_of": "elem_Mn",
+            "specified_by_value":    "frac_Mn"
+          }
+        }
+      },
+      {
+        "type": "pmdco:PMD_0025997",
+        "id":   "frac_Si",
+        "value": 0.5,
+        "unit":  "uo:0000163",
+        "element": {
+          "type":    "pmdco:PMD_0020050",
+          "id":      "elem_Si",
+          "part_of": "mat_316L",
+          "has_relational_quality": {
+            "type":                  "pmdco:PMD_0020102",
+            "id":                    "prop_Si",
+            "relational_quality_of": "elem_Si",
+            "specified_by_value":    "frac_Si"
+          }
+        }
+      },
+      {
+        "type": "pmdco:PMD_0025997",
+        "id":   "frac_N",
+        "value": 0.1,
+        "unit":  "uo:0000163",
+        "element": {
+          "type":    "pmdco:PMD_0020038",
+          "id":      "elem_N",
+          "part_of": "mat_316L",
+          "has_relational_quality": {
+            "type":                  "pmdco:PMD_0020102",
+            "id":                    "prop_N",
+            "relational_quality_of": "elem_N",
+            "specified_by_value":    "frac_N"
+          }
+        }
+      },
+      {
+        "type": "pmdco:PMD_0025997",
+        "id":   "frac_C",
+        "value": 0.03,
+        "unit":  "uo:0000163",
+        "element": {
+          "type":    "pmdco:PMD_0020030",
+          "id":      "elem_C",
+          "part_of": "mat_316L",
+          "has_relational_quality": {
+            "type":                  "pmdco:PMD_0020102",
+            "id":                    "prop_C",
+            "relational_quality_of": "elem_C",
+            "specified_by_value":    "frac_C"
+          }
+        }
+      },
+      {
+        "type": "pmdco:PMD_0025997",
+        "id":   "frac_P",
+        "value": 0.045,
+        "unit":  "uo:0000163",
+        "element": {
+          "type":    "pmdco:PMD_0020047",
+          "id":      "elem_P",
+          "part_of": "mat_316L",
+          "has_relational_quality": {
+            "type":                  "pmdco:PMD_0020102",
+            "id":                    "prop_P",
+            "relational_quality_of": "elem_P",
+            "specified_by_value":    "frac_P"
+          }
+        }
+      },
+      {
+        "type": "pmdco:PMD_0025997",
+        "id":   "frac_S",
+        "value": 0.03,
+        "unit":  "uo:0000163",
+        "element": {
+          "type":    "pmdco:PMD_0020059",
+          "id":      "elem_S",
+          "part_of": "mat_316L",
+          "has_relational_quality": {
+            "type":                  "pmdco:PMD_0020102",
+            "id":                    "prop_S",
+            "relational_quality_of": "elem_S",
+            "specified_by_value":    "frac_S"
+          }
+        }
+      }
+    ]
+  }
+}

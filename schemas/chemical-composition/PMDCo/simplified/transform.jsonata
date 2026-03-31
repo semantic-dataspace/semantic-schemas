@@ -1,0 +1,141 @@
+(
+  /*
+   * Chemical Composition (PMDCo) — simplified JSON → OO-LD JSON
+   *
+   * Input fields (see schema.simplified.json):
+   *   material_name  string   required
+   *   material_id    string   optional, default "mat_001"
+   *   comp_id        string   optional, default "chem_comp_001"
+   *   elements       array    required
+   *     symbol       string   chemical element symbol (H, Fe, Cr, …)
+   *     value        number   fraction 0–100
+   *     unit         string   "mass%" | "vol%" | "mol%"
+   *
+   * Run with the jsonata-python CLI:
+   *   python -m jsonata -e transform.jsonata -i example.input.json
+   *
+   * Run from Python:
+   *   import jsonata, json
+   *   expr   = open("transform.jsonata").read()
+   *   result = jsonata.Jsonata(expr).evaluate(json.load(open("example.input.json")))
+   */
+
+  /* ── Unit label → Unit Ontology IRI ──────────────────────────────────── */
+  $unitMap := {
+    "mass%": "uo:0000163",
+    "vol%":  "uo:0000164",
+    "mol%":  "uo:0000165"
+  };
+
+  /* ── Element symbol → PMDCo PortionOfChemicalElement IRI ─────────────── */
+  $elementMap := {
+    "H":  "pmdco:PMD_0020083",
+    "He": "pmdco:PMD_0020049",
+    "Li": "pmdco:PMD_0020037",
+    "Be": "pmdco:PMD_0020080",
+    "B":  "pmdco:PMD_0020048",
+    "C":  "pmdco:PMD_0020030",
+    "N":  "pmdco:PMD_0020038",
+    "O":  "pmdco:PMD_0020091",
+    "F":  "pmdco:PMD_0020056",
+    "Ne": "pmdco:PMD_0020063",
+    "Na": "pmdco:PMD_0020072",
+    "Mg": "pmdco:PMD_0020067",
+    "Al": "pmdco:PMD_0020071",
+    "Si": "pmdco:PMD_0020050",
+    "P":  "pmdco:PMD_0020047",
+    "S":  "pmdco:PMD_0020059",
+    "Cl": "pmdco:PMD_0020075",
+    "Ar": "pmdco:PMD_0020041",
+    "K":  "pmdco:PMD_0020046",
+    "Ca": "pmdco:PMD_0020081",
+    "Sc": "pmdco:PMD_0020094",
+    "Ti": "pmdco:PMD_0020095",
+    "V":  "pmdco:PMD_0020093",
+    "Cr": "pmdco:PMD_0020029",
+    "Mn": "pmdco:PMD_0020078",
+    "Fe": "pmdco:PMD_0020026",
+    "Co": "pmdco:PMD_0020039",
+    "Ni": "pmdco:PMD_0020051",
+    "Cu": "pmdco:PMD_0020054",
+    "Zn": "pmdco:PMD_0020068",
+    "Ga": "pmdco:PMD_0020086",
+    "Ge": "pmdco:PMD_0020031",
+    "As": "pmdco:PMD_0020079",
+    "Se": "pmdco:PMD_0020065",
+    "Br": "pmdco:PMD_0020087",
+    "Kr": "pmdco:PMD_0020061",
+    "Y":  "pmdco:PMD_0020052",
+    "Zr": "pmdco:PMD_0020053",
+    "Nb": "pmdco:PMD_0020035",
+    "Mo": "pmdco:PMD_0020034",
+    "Ru": "pmdco:PMD_0020066",
+    "Rh": "pmdco:PMD_0010020",
+    "Pd": "pmdco:PMD_0020092",
+    "Ag": "pmdco:PMD_0020076",
+    "Cd": "pmdco:PMD_0020042",
+    "In": "pmdco:PMD_0020028",
+    "Sn": "pmdco:PMD_0020088",
+    "Sb": "pmdco:PMD_0020045",
+    "Te": "pmdco:PMD_0010021",
+    "I":  "pmdco:PMD_0020073",
+    "Xe": "pmdco:PMD_0020070",
+    "Cs": "pmdco:PMD_0020074",
+    "Ba": "pmdco:PMD_0020043",
+    "La": "pmdco:PMD_0025015",
+    "Ce": "pmdco:PMD_0020058",
+    "Nd": "pmdco:PMD_0020082",
+    "Sm": "pmdco:PMD_0020077",
+    "Er": "pmdco:PMD_0020033",
+    "Hf": "pmdco:PMD_0020089",
+    "Ta": "pmdco:PMD_0020044",
+    "W":  "pmdco:PMD_0020032",
+    "Re": "pmdco:PMD_0020036",
+    "Os": "pmdco:PMD_0020084",
+    "Ir": "pmdco:PMD_0020085",
+    "Pt": "pmdco:PMD_0020057",
+    "Au": "pmdco:PMD_0020040",
+    "Hg": "pmdco:PMD_0020069",
+    "Tl": "pmdco:PMD_0020064",
+    "Pb": "pmdco:PMD_0020060",
+    "Bi": "pmdco:PMD_0020062",
+    "U":  "pmdco:PMD_0020090",
+    "Bh": "pmdco:PMD_0020055"
+  };
+
+  /* ── Node IDs — read from input or fall back to defaults ─────────────── */
+  $matId := $exists(material_id) ? material_id : "mat_001";
+  $cmpId := $exists(comp_id)     ? comp_id     : "chem_comp_001";
+
+  /* ── OO-LD output ────────────────────────────────────────────────────── */
+  {
+    "type": "pmdco:PMD_0000551",
+    "id":   $cmpId,
+    "quality_of": {
+      "label": material_name
+    },
+    "is_subject_of": {
+      "type": "pmdco:PMD_0025002",
+      "id":   $cmpId & "_spec",
+      "has_member": $map(elements, function($e) {
+        {
+          "type":  "pmdco:PMD_0025997",
+          "id":    "frac_" & $e.symbol,
+          "value": $e.value,
+          "unit":  $lookup($unitMap, $e.unit),
+          "element": {
+            "type":    $lookup($elementMap, $e.symbol),
+            "id":      "elem_" & $e.symbol,
+            "part_of": $matId,
+            "has_relational_quality": {
+              "type":                  "pmdco:PMD_0020102",
+              "id":                    "prop_" & $e.symbol,
+              "relational_quality_of": "elem_" & $e.symbol,
+              "specified_by_value":    "frac_" & $e.symbol
+            }
+          }
+        }
+      })
+    }
+  }
+)

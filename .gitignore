@@ -1,0 +1,25 @@
+# Python virtual environments
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyd
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Notebook-generated RDF output (source TTL files like shape.ttl are not affected)
+**/notebooks/output_*.ttl
+**/notebooks/output_*.nq
+
+# Distribution / build
+dist/
+build/
+*.egg-info/
+
+# System files
+.DS_Store
+Thumbs.db

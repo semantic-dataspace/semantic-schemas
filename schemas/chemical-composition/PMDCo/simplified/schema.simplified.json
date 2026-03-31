@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.simplified.json",
+  "title": "Chemical Composition (Simplified Input)",
+  "description": "A user-friendly form to describe the chemical composition of a material. Fill in the material name and list each element with its measured fraction. This input will be automatically converted to a standardised RDF representation (PMDCo OO-LD).",
+  "type": "object",
+  "required": ["material_name", "elements"],
+  "additionalProperties": false,
+  "properties": {
+    "material_name": {
+      "title": "Material Name",
+      "description": "A human-readable name or identifier for the material whose composition is being described. Example: '316L Stainless Steel', 'AlSi10Mg powder (batch A)'.",
+      "type": "string",
+      "minLength": 1,
+      "examples": ["316L Stainless Steel", "AlSi10Mg", "Inconel 718"]
+    },
+    "material_id": {
+      "title": "Material ID",
+      "description": "Optional stable identifier for the material node in the RDF graph. Used in part_of links. Defaults to 'mat_001' if omitted. Use a short, unique string without spaces (e.g. 'mat_316L', 'mat_AlSi10Mg_batchA').",
+      "type": "string",
+      "default": "mat_001",
+      "examples": ["mat_316L", "mat_AlSi10Mg_batchA"]
+    },
+    "comp_id": {
+      "title": "Composition ID",
+      "description": "Optional stable identifier for the ChemicalComposition node in the RDF graph. Defaults to 'chem_comp_001' if omitted.",
+      "type": "string",
+      "default": "chem_comp_001",
+      "examples": ["chem_comp_316L", "chem_comp_AlSi10Mg_batchA"]
+    },
+    "elements": {
+      "title": "Element Fractions",
+      "description": "List of chemical elements present in the material and their measured fraction values. Add one entry per element. The fractions do not need to sum to exactly 100 (traces and balance elements are common), but each individual value must be between 0 and 100.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "title": "Element Entry",
+        "description": "A single chemical element and its fraction in the composition.",
+        "type": "object",
+        "required": ["symbol", "value", "unit"],
+        "additionalProperties": false,
+        "properties": {
+          "symbol": {
+            "title": "Chemical Element",
+            "description": "The symbol of the chemical element (e.g. 'Fe' for Iron, 'C' for Carbon). Only elements with a confirmed identity in the PMDCo ontology are accepted.",
+            "type": "string",
+            "enum": [
+              "H",  "He", "Li", "Be", "B",  "C",  "N",  "O",  "F",  "Ne",
+              "Na", "Mg", "Al", "Si", "P",  "S",  "Cl", "Ar", "K",  "Ca",
+              "Sc", "Ti", "V",  "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn",
+              "Ga", "Ge", "As", "Se", "Br", "Kr", "Y",  "Zr", "Nb", "Mo",
+              "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "I",
+              "Xe", "Cs", "Ba", "La", "Ce", "Nd", "Sm", "Er", "Hf", "Ta",
+              "W",  "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi",
+              "U",  "Bh"
+            ],
+            "$comment": "Full names: Hydrogen, Helium, Lithium, Beryllium, Boron, Carbon, Nitrogen, Oxygen, Fluorine, Neon, Sodium, Magnesium, Aluminium, Silicon, Phosphorus, Sulfur, Chlorine, Argon, Potassium, Calcium, Scandium, Titanium, Vanadium, Chromium, Manganese, Iron, Cobalt, Nickel, Copper, Zinc, Gallium, Germanium, Arsenic, Selenium, Bromine, Krypton, Yttrium, Zirconium, Niobium, Molybdenum, Ruthenium, Rhodium, Palladium, Silver, Cadmium, Indium, Tin, Antimony, Tellurium, Iodine, Xenon, Caesium, Barium, Lanthanum, Cerium, Neodymium, Samarium, Erbium, Hafnium, Tantalum, Tungsten, Rhenium, Osmium, Iridium, Platinum, Gold, Mercury, Thallium, Lead, Bismuth, Uranium, Bohrium"
+          },
+          "value": {
+            "title": "Fraction Value",
+            "description": "The measured fraction of this element in the chosen unit. Must be a number between 0 (exclusive lower bound – use a very small positive number for traces) and 100 (maximum, 100% pure). Typical precision is 0.001.",
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "examples": [65.345, 17.0, 0.03]
+          },
+          "unit": {
+            "title": "Fraction Unit",
+            "description": "The unit in which the fraction value is expressed. All elements in one composition should use the same unit. Choose one of: 'mass%' (mass percentage, most common in metallurgy), 'vol%' (volume percentage), 'mol%' (molar percentage).",
+            "type": "string",
+            "enum": ["mass%", "vol%", "mol%"],
+            "default": "mass%"
+          }
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "material_name": "316L Stainless Steel",
+      "elements": [
+        { "symbol": "Fe", "value": 65.345, "unit": "mass%" },
+        { "symbol": "Cr", "value": 17.0,   "unit": "mass%" },
+        { "symbol": "Ni", "value": 12.0,   "unit": "mass%" },
+        { "symbol": "Mo", "value": 2.5,    "unit": "mass%" },
+        { "symbol": "Mn", "value": 1.8,    "unit": "mass%" },
+        { "symbol": "Si", "value": 0.5,    "unit": "mass%" },
+        { "symbol": "N",  "value": 0.1,    "unit": "mass%" },
+        { "symbol": "C",  "value": 0.03,   "unit": "mass%" },
+        { "symbol": "P",  "value": 0.045,  "unit": "mass%" },
+        { "symbol": "S",  "value": 0.03,   "unit": "mass%" }
+      ]
+    }
+  ]
+}
