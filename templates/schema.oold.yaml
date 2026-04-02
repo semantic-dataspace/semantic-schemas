@@ -1,5 +1,7 @@
 # OO-LD Schema Template
-# Copy this file to schemas/<domain>/<Ontology>/schema.oold.yaml and fill in the sections below.
+# Copy this file to schemas/<domain>/<Ontology>/schema.oold.yaml
+# (or schemas/<domain>/<Ontology>/<variant>/schema.oold.yaml if a schema for this
+# ontology already exists) and fill in the sections below.
 # Lines starting with '#' are comments — remove them in your final schema.
 # See docs/schema-format.md for the full field reference.
 
@@ -20,6 +22,12 @@
   # deploying system, not by the schema. Hardcoding a base IRI would
   # couple all deployments to a single namespace. The DSMS injects the
   # correct base at serialisation time.
+
+  # Dublin Core Terms — for schema provenance triples.
+  dcterms: 'http://purl.org/dc/terms/'
+  conforms_to:
+    '@id': 'dcterms:conformsTo'
+    '@type': '@id'
 
   # Required alias — maps the 'type' key to rdf:type:
   type: '@type'
@@ -44,6 +52,15 @@ $schema: 'https://json-schema.org/draft/2020-12/schema'
 
 # Provenance note — describe where this schema comes from:
 $comment: 'OO-LD Schema for <ConceptName> based on <Ontology>.'
+
+# Schema version (Semantic Versioning: MAJOR.MINOR.PATCH).
+# Increment PATCH for bug fixes, MINOR for new optional fields, MAJOR for breaking changes.
+# Keep a matching entry in CHANGELOG.md in this folder.
+x-schema-version: '1.0.0'
+# Stable base IRI for this schema. Combined with x-schema-version in the
+# JSONata transform to form the versioned IRI stamped on every output.
+# Replace with the actual URL of this schema folder in the repository.
+x-schema-id: 'https://github.com/<org>/semantic-schemas/tree/main/schemas/<domain>/<Ontology>/'
 
 # Human-readable name (used as the form title):
 title: MySchema

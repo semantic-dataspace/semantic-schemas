@@ -11,13 +11,16 @@ and how to convert it step by step to RDF.
 
 ```text
 schemas/<domain>/<ontology>/
-├── schema.oold.yaml          ← full OO-LD schema (expert reference)
-├── shape.ttl                 ← SHACL validation shape
-├── example.oold.json         ← complete OO-LD example (filled-in, ready to convert)
 ├── README.md                 ← pattern description & quick-start for this schema
+├── specs/
+│   ├── schema.oold.yaml      ← full OO-LD schema (expert reference)
+│   └── shape.ttl             ← SHACL validation shape
+├── docs/
+│   ├── example.oold.json     ← complete OO-LD example (filled-in, ready to convert)
+│   ├── example.input.json    ← ready-to-edit simplified input  ← start here
+│   └── *.ipynb               ← workflow notebook
 └── simplified/
-    ├── schema.simplified.json ← user-friendly JSON Schema  ← start here
-    ├── example.input.json     ← ready-to-edit example
+    ├── schema.simplified.json ← user-friendly JSON Schema
     └── transform.jsonata      ← JSONata transform: simplified JSON → OO-LD
 ```
 
@@ -28,7 +31,7 @@ layer on top of it.
 
 ## Step 1 — Fill in your data
 
-Copy `simplified/example.input.json` from the relevant schema folder and edit it
+Copy `docs/example.input.json` from the relevant schema folder and edit it
 with your own values.  Each schema's `README.md` describes the fields; the
 `simplified/schema.simplified.json` file is itself the authoritative reference
 (open it in any JSON-aware editor for inline documentation).

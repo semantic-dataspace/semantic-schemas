@@ -7,15 +7,16 @@
 # (e.g. MassProportion as subclass of Proportion, specific element
 # types as subclasses of PMD_0020140) will not fire automatically.
 
-@prefix obo:   <http://purl.obolibrary.org/obo/> .
-@prefix pmd:   <https://w3id.org/pmd/co/> .
-@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix sh:    <http://www.w3.org/ns/shacl#> .
-@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
-@prefix shape: <https://w3id.org/pmd/co/shapes/chemical_composition/> .
-@prefix :      <https://w3id.org/pmd/co/shapes/chemical_composition/> .
-@base          <https://w3id.org/pmd/co/shapes/chemical_composition/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix obo:     <http://purl.obolibrary.org/obo/> .
+@prefix pmd:     <https://w3id.org/pmd/co/> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix shape:   <https://w3id.org/pmd/co/shapes/chemical_composition/> .
+@prefix :        <https://w3id.org/pmd/co/shapes/chemical_composition/> .
+@base            <https://w3id.org/pmd/co/shapes/chemical_composition/> .
 
 shape:material_label
     a sh:NodeShape ;
@@ -29,6 +30,13 @@ shape:material_label
 shape:chemical_composition
     a sh:NodeShape ;
     sh:targetClass  pmd:PMD_0000551 ;  # ChemicalComposition
+    sh:property [
+        sh:path dcterms:conformsTo ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A ChemicalComposition instance must declare dcterms:conformsTo pointing to the versioned schema IRI." ;
+    ] ;
     sh:property [
         sh:path obo:RO_0000080 ;       # quality_of
         sh:nodeKind sh:BlankNodeOrIRI ; # blank node (labelled material) or full IRI both accepted

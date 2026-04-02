@@ -18,6 +18,12 @@ rules:
   comments:
     min-spaces-from-content: 2
 
+  # Disable block comment indentation checks.
+  # Section-divider comments inside `properties:` blocks intentionally appear
+  # at property level (2 spaces) after deeper content (4 spaces), which
+  # yamllint would otherwise flag as false positives.
+  comments-indentation: disable
+
   # Enforce consistent indentation (2 spaces, as used across all schemas)
   indentation:
     spaces: 2

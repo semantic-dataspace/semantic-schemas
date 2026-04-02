@@ -16,14 +16,17 @@ definition with a [JSON-LD](https://json-ld.org/) `@context`, so that:
 schemas/                       # Curated schema library
   <domain>/
     <ontology>/
-      schema.oold.yaml         # Full OO-LD schema (expert reference)
-      shape.ttl                # SHACL validation shape
-      example.oold.json        # Complete OO-LD example
       README.md                # Pattern description and quick-start
+      specs/
+        schema.oold.yaml       # Full OO-LD schema (expert reference)
+        shape.ttl              # SHACL validation shape
+      docs/
+        example.oold.json      # Complete OO-LD example (filled-in, ready to convert)
+        example.input.json     # Ready-to-edit simplified input (where available)
+        *.ipynb                # Workflow notebook (where available)
       simplified/              # User-friendly entry point (where available)
         schema.simplified.json # Plain JSON Schema — start here if new to OO-LD
-        example.input.json     # Ready-to-edit example input
-        jolt.spec.json         # JOLT spec to convert simplified → OO-LD
+        transform.jsonata      # JSONata transform: simplified JSON → OO-LD
 templates/
   schema.oold.yaml             # Annotated blank template
 docs/
@@ -42,7 +45,7 @@ docs/
 ### I want to submit data for an existing schema
 
 1. Find the schema in [CATALOG.md](CATALOG.md) and open its folder.
-2. If a `simplified/` subfolder exists, copy `simplified/example.input.json` and
+2. If a `simplified/` subfolder exists, copy `docs/example.input.json` and
    fill in your values — no ontology knowledge required.
 3. Follow the [Simplified Input Guide](docs/simplified-input-guide.md) to validate
    your input, convert it to OO-LD JSON with JOLT, and then to RDF.

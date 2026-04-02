@@ -6,6 +6,11 @@ Schema for describing the **chemical composition of a material** using the
 Original ontology pattern:
 <https://github.com/materialdigital/core-ontology/tree/main/patterns/chemical%20composition>
 
+> **Quickest entry point:** open
+> [`docs/chemical_composition_workflow.ipynb`](docs/chemical_composition_workflow.ipynb)
+> — an end-to-end notebook that walks through loading input, transforming to OO-LD,
+> converting to RDF, and validating against the SHACL shape.
+
 ---
 
 ## Graph pattern
@@ -71,7 +76,7 @@ Full tooling instructions are in
 
 ### 1. Describe your material
 
-Create `my_input.json` (or copy [`simplified/example.input.json`](simplified/example.input.json)):
+Create `my_input.json` (or copy [`docs/example.input.json`](docs/example.input.json)):
 
 ```json
 {
@@ -87,6 +92,17 @@ Create `my_input.json` (or copy [`simplified/example.input.json`](simplified/exa
 
 Rules: `value` must be between 0 and 100; use the same `unit` for all elements;
 `symbol` must be a PMDCo-supported element symbol.
+
+Two optional fields control the RDF node identifiers used in the generated graph.
+If omitted, both are derived automatically from `material_name`
+(e.g. `"316L Stainless Steel"` → `mat-316l-stainless-steel`, `chem-comp-316l-stainless-steel`), so every material gets a distinct ID without any extra input.
+
+| Field | Auto-derived from | Purpose |
+|---|---|---|
+| `material_id` | `material_name` | Identifier for the Material node (`part_of` back-references point here) |
+| `comp_id` | `material_name` | Identifier for the ChemicalComposition and ChemicalCompositionSpecification nodes |
+
+Override them only when you need a specific IRI to match an existing knowledge graph node.
 
 ### 2. Transform to OO-LD and convert to RDF
 
@@ -134,8 +150,8 @@ print(report)
 | `specs/shape.ttl` | SHACL validation shape |
 | `docs/example.oold.json` | Complete OO-LD example (316L stainless steel) |
 | `docs/chemical_composition_workflow.ipynb` | End-to-end Jupyter notebook (transform → RDF → SHACL) |
+| `docs/example.input.json` | Ready-to-edit simplified example |
 | `simplified/schema.simplified.json` | User-friendly JSON Schema |
-| `simplified/example.input.json` | Ready-to-edit simplified example |
 | `simplified/transform.jsonata` | JSONata transform: simplified JSON → OO-LD |
 
 ---

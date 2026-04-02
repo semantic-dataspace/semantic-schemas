@@ -9,7 +9,11 @@
 "@context":
   schema: "https://schema.org/"
   foaf: "http://xmlns.com/foaf/0.1/"
+  dcterms: "http://purl.org/dc/terms/"
   type: "@type"
+  conforms_to:
+    "@id": "http://purl.org/dc/terms/conformsTo"
+    "@type": "@id"
 
   # All six expertise fields map to schema:knowsAbout (schema.org/knowsAbout):
   #   "Of a Person to indicate a topic that is known about."
@@ -56,6 +60,8 @@ $comment: >-
   field types (materials, methods, devices, …) is carried by the rdf:type
   of the referenced entity, not by distinct property IRIs. Sub-properties
   of schema:knowsAbout are planned in a future schema-store vocabulary.
+x-schema-version: '1.0.0'
+x-schema-id: 'https://github.com/materialdigital/semantic-schemas/tree/main/schemas/expertise/'
 title: Expertise
 description: Expertise profile of a domain expert in materials science
 type: object
@@ -70,6 +76,14 @@ properties:
     readOnly: true
     const: "foaf:Person"
     default: "foaf:Person"
+
+  conforms_to:
+    title: Schema
+    description: Versioned IRI of the schema used to create this instance
+    type: string
+    readOnly: true
+    const: "https://github.com/materialdigital/semantic-schemas/tree/main/schemas/expertise/#v1.0.0"
+    default: "https://github.com/materialdigital/semantic-schemas/tree/main/schemas/expertise/#v1.0.0"
 
   materials:
     title: Materials

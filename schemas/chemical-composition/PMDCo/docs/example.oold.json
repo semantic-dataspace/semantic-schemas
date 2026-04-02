@@ -1,181 +1,182 @@
 {
   "@context": "https://w3id.org/pmd/co/test/shape_chemical_composition#",
+  "conforms_to": "https://github.com/materialdigital/semantic-schemas/tree/main/schemas/chemical-composition/PMDCo/#v1.0.0",
   "type": "pmdco:PMD_0000551",
-  "id":   "chem_comp_316L",
+  "id":   "chem-comp-316l-stainless-steel",
   "quality_of": {
     "label": "316L Stainless Steel"
   },
   "is_subject_of": {
     "type": "pmdco:PMD_0025002",
-    "id":   "chem_comp_spec_316L",
+    "id":   "chem-comp-316l-stainless-steel-spec",
     "has_member": [
       {
         "type": "pmdco:PMD_0025997",
-        "id":   "frac_Fe",
+        "id":   "frac-Fe",
         "value": 65.345,
         "unit":  "uo:0000163",
         "element": {
           "type":    "pmdco:PMD_0020026",
-          "id":      "elem_Fe",
-          "part_of": "mat_316L",
+          "id":      "elem-Fe",
+          "part_of": "mat-316l-stainless-steel",
           "has_relational_quality": {
             "type":                  "pmdco:PMD_0020102",
-            "id":                    "prop_Fe",
-            "relational_quality_of": "elem_Fe",
-            "specified_by_value":    "frac_Fe"
+            "id":                    "prop-Fe",
+            "relational_quality_of": "elem-Fe",
+            "specified_by_value":    "frac-Fe"
           }
         }
       },
       {
         "type": "pmdco:PMD_0025997",
-        "id":   "frac_Cr",
+        "id":   "frac-Cr",
         "value": 17.0,
         "unit":  "uo:0000163",
         "element": {
           "type":    "pmdco:PMD_0020029",
-          "id":      "elem_Cr",
-          "part_of": "mat_316L",
+          "id":      "elem-Cr",
+          "part_of": "mat-316l-stainless-steel",
           "has_relational_quality": {
             "type":                  "pmdco:PMD_0020102",
-            "id":                    "prop_Cr",
-            "relational_quality_of": "elem_Cr",
-            "specified_by_value":    "frac_Cr"
+            "id":                    "prop-Cr",
+            "relational_quality_of": "elem-Cr",
+            "specified_by_value":    "frac-Cr"
           }
         }
       },
       {
         "type": "pmdco:PMD_0025997",
-        "id":   "frac_Ni",
+        "id":   "frac-Ni",
         "value": 12.0,
         "unit":  "uo:0000163",
         "element": {
           "type":    "pmdco:PMD_0020051",
-          "id":      "elem_Ni",
-          "part_of": "mat_316L",
+          "id":      "elem-Ni",
+          "part_of": "mat-316l-stainless-steel",
           "has_relational_quality": {
             "type":                  "pmdco:PMD_0020102",
-            "id":                    "prop_Ni",
-            "relational_quality_of": "elem_Ni",
-            "specified_by_value":    "frac_Ni"
+            "id":                    "prop-Ni",
+            "relational_quality_of": "elem-Ni",
+            "specified_by_value":    "frac-Ni"
           }
         }
       },
       {
         "type": "pmdco:PMD_0025997",
-        "id":   "frac_Mo",
+        "id":   "frac-Mo",
         "value": 2.5,
         "unit":  "uo:0000163",
         "element": {
           "type":    "pmdco:PMD_0020034",
-          "id":      "elem_Mo",
-          "part_of": "mat_316L",
+          "id":      "elem-Mo",
+          "part_of": "mat-316l-stainless-steel",
           "has_relational_quality": {
             "type":                  "pmdco:PMD_0020102",
-            "id":                    "prop_Mo",
-            "relational_quality_of": "elem_Mo",
-            "specified_by_value":    "frac_Mo"
+            "id":                    "prop-Mo",
+            "relational_quality_of": "elem-Mo",
+            "specified_by_value":    "frac-Mo"
           }
         }
       },
       {
         "type": "pmdco:PMD_0025997",
-        "id":   "frac_Mn",
+        "id":   "frac-Mn",
         "value": 1.8,
         "unit":  "uo:0000163",
         "element": {
           "type":    "pmdco:PMD_0020078",
-          "id":      "elem_Mn",
-          "part_of": "mat_316L",
+          "id":      "elem-Mn",
+          "part_of": "mat-316l-stainless-steel",
           "has_relational_quality": {
             "type":                  "pmdco:PMD_0020102",
-            "id":                    "prop_Mn",
-            "relational_quality_of": "elem_Mn",
-            "specified_by_value":    "frac_Mn"
+            "id":                    "prop-Mn",
+            "relational_quality_of": "elem-Mn",
+            "specified_by_value":    "frac-Mn"
           }
         }
       },
       {
         "type": "pmdco:PMD_0025997",
-        "id":   "frac_Si",
+        "id":   "frac-Si",
         "value": 0.5,
         "unit":  "uo:0000163",
         "element": {
           "type":    "pmdco:PMD_0020050",
-          "id":      "elem_Si",
-          "part_of": "mat_316L",
+          "id":      "elem-Si",
+          "part_of": "mat-316l-stainless-steel",
           "has_relational_quality": {
             "type":                  "pmdco:PMD_0020102",
-            "id":                    "prop_Si",
-            "relational_quality_of": "elem_Si",
-            "specified_by_value":    "frac_Si"
+            "id":                    "prop-Si",
+            "relational_quality_of": "elem-Si",
+            "specified_by_value":    "frac-Si"
           }
         }
       },
       {
         "type": "pmdco:PMD_0025997",
-        "id":   "frac_N",
+        "id":   "frac-N",
         "value": 0.1,
         "unit":  "uo:0000163",
         "element": {
           "type":    "pmdco:PMD_0020038",
-          "id":      "elem_N",
-          "part_of": "mat_316L",
+          "id":      "elem-N",
+          "part_of": "mat-316l-stainless-steel",
           "has_relational_quality": {
             "type":                  "pmdco:PMD_0020102",
-            "id":                    "prop_N",
-            "relational_quality_of": "elem_N",
-            "specified_by_value":    "frac_N"
+            "id":                    "prop-N",
+            "relational_quality_of": "elem-N",
+            "specified_by_value":    "frac-N"
           }
         }
       },
       {
         "type": "pmdco:PMD_0025997",
-        "id":   "frac_C",
+        "id":   "frac-C",
         "value": 0.03,
         "unit":  "uo:0000163",
         "element": {
           "type":    "pmdco:PMD_0020030",
-          "id":      "elem_C",
-          "part_of": "mat_316L",
+          "id":      "elem-C",
+          "part_of": "mat-316l-stainless-steel",
           "has_relational_quality": {
             "type":                  "pmdco:PMD_0020102",
-            "id":                    "prop_C",
-            "relational_quality_of": "elem_C",
-            "specified_by_value":    "frac_C"
+            "id":                    "prop-C",
+            "relational_quality_of": "elem-C",
+            "specified_by_value":    "frac-C"
           }
         }
       },
       {
         "type": "pmdco:PMD_0025997",
-        "id":   "frac_P",
+        "id":   "frac-P",
         "value": 0.045,
         "unit":  "uo:0000163",
         "element": {
           "type":    "pmdco:PMD_0020047",
-          "id":      "elem_P",
-          "part_of": "mat_316L",
+          "id":      "elem-P",
+          "part_of": "mat-316l-stainless-steel",
           "has_relational_quality": {
             "type":                  "pmdco:PMD_0020102",
-            "id":                    "prop_P",
-            "relational_quality_of": "elem_P",
-            "specified_by_value":    "frac_P"
+            "id":                    "prop-P",
+            "relational_quality_of": "elem-P",
+            "specified_by_value":    "frac-P"
           }
         }
       },
       {
         "type": "pmdco:PMD_0025997",
-        "id":   "frac_S",
+        "id":   "frac-S",
         "value": 0.03,
         "unit":  "uo:0000163",
         "element": {
           "type":    "pmdco:PMD_0020059",
-          "id":      "elem_S",
-          "part_of": "mat_316L",
+          "id":      "elem-S",
+          "part_of": "mat-316l-stainless-steel",
           "has_relational_quality": {
             "type":                  "pmdco:PMD_0020102",
-            "id":                    "prop_S",
-            "relational_quality_of": "elem_S",
-            "specified_by_value":    "frac_S"
+            "id":                    "prop-S",
+            "relational_quality_of": "elem-S",
+            "specified_by_value":    "frac-S"
           }
         }
       }

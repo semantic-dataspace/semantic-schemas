@@ -16,17 +16,15 @@
     },
     "material_id": {
       "title": "Material ID",
-      "description": "Optional stable identifier for the material node in the RDF graph. Used in part_of links. Defaults to 'mat_001' if omitted. Use a short, unique string without spaces (e.g. 'mat_316L', 'mat_AlSi10Mg_batchA').",
+      "description": "Optional. Identifier for the Material node in the RDF graph. If omitted, derived automatically from material_name (e.g. '316L Stainless Steel' → 'mat-316l-stainless-steel'). The comp_id follows the same pattern with prefix 'chem-comp-'. Override only when you need a specific IRI to match an existing knowledge graph node.",
       "type": "string",
-      "default": "mat_001",
-      "examples": ["mat_316L", "mat_AlSi10Mg_batchA"]
+      "examples": ["mat-316l", "mat-alsi10mg-batch-a"]
     },
     "comp_id": {
       "title": "Composition ID",
-      "description": "Optional stable identifier for the ChemicalComposition node in the RDF graph. Defaults to 'chem_comp_001' if omitted.",
+      "description": "Optional. Identifier for the ChemicalComposition node in the RDF graph. If omitted, derived automatically from material_name. Override only when you need a specific IRI.",
       "type": "string",
-      "default": "chem_comp_001",
-      "examples": ["chem_comp_316L", "chem_comp_AlSi10Mg_batchA"]
+      "examples": ["chem-comp-316l", "chem-comp-alsi10mg-batch-a"]
     },
     "elements": {
       "title": "Element Fractions",

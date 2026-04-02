@@ -4,21 +4,28 @@
    *
    * Input fields (see schema.simplified.json):
    *   material_name  string   required
-   *   material_id    string   optional, default "mat_001"
-   *   comp_id        string   optional, default "chem_comp_001"
+   *   material_id    string   optional, derived from material_name if omitted
+   *   comp_id        string   optional, derived from material_name if omitted
    *   elements       array    required
    *     symbol       string   chemical element symbol (H, Fe, Cr, …)
    *     value        number   fraction 0–100
    *     unit         string   "mass%" | "vol%" | "mol%"
    *
    * Run with the jsonata-python CLI:
-   *   python -m jsonata -e transform.jsonata -i example.input.json
+   *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
    *
    * Run from Python:
    *   import jsonata, json
    *   expr   = open("transform.jsonata").read()
-   *   result = jsonata.Jsonata(expr).evaluate(json.load(open("example.input.json")))
+   *   result = jsonata.Jsonata(expr).evaluate(json.load(open("../docs/example.input.json")))
    */
+
+  /*
+   * Schema provenance — injected automatically into every output.
+   * Update $schemaUri whenever x-schema-version in specs/schema.oold.yaml changes.
+   * Format: <x-schema-id>/v<x-schema-version>
+   */
+  $schemaUri := "https://github.com/materialdigital/semantic-schemas/tree/main/schemas/chemical-composition/PMDCo/#v1.0.0";
 
   /* ── Unit label → Unit Ontology IRI ──────────────────────────────────── */
   $unitMap := {
@@ -103,12 +110,16 @@
     "Bh": "pmdco:PMD_0020055"
   };
 
-  /* ── Node IDs — read from input or fall back to defaults ─────────────── */
-  $matId := $exists(material_id) ? material_id : "mat_001";
-  $cmpId := $exists(comp_id)     ? comp_id     : "chem_comp_001";
+  /* ── Node IDs ────────────────────────────────────────────────────────── */
+  /* Derive a URL-safe slug from the material name so IDs are unique by
+     default. Override with material_id / comp_id for specific requirements. */
+  $slug  := $replace($lowercase($trim(material_name)), /[^a-z0-9]+/, "-");
+  $matId := $exists(material_id) ? material_id : "mat-" & $slug;
+  $cmpId := $exists(comp_id)     ? comp_id     : "chem-comp-" & $slug;
 
   /* ── OO-LD output ────────────────────────────────────────────────────── */
   {
+    "conforms_to": $schemaUri,
     "type": "pmdco:PMD_0000551",
     "id":   $cmpId,
     "quality_of": {
@@ -116,22 +127,22 @@
     },
     "is_subject_of": {
       "type": "pmdco:PMD_0025002",
-      "id":   $cmpId & "_spec",
+      "id":   $cmpId & "-spec",
       "has_member": $map(elements, function($e) {
         {
           "type":  "pmdco:PMD_0025997",
-          "id":    "frac_" & $e.symbol,
+          "id":    "frac-" & $e.symbol,
           "value": $e.value,
           "unit":  $lookup($unitMap, $e.unit),
           "element": {
             "type":    $lookup($elementMap, $e.symbol),
-            "id":      "elem_" & $e.symbol,
+            "id":      "elem-" & $e.symbol,
             "part_of": $matId,
             "has_relational_quality": {
               "type":                  "pmdco:PMD_0020102",
-              "id":                    "prop_" & $e.symbol,
-              "relational_quality_of": "elem_" & $e.symbol,
-              "specified_by_value":    "frac_" & $e.symbol
+              "id":                    "prop-" & $e.symbol,
+              "relational_quality_of": "elem-" & $e.symbol,
+              "specified_by_value":    "frac-" & $e.symbol
             }
           }
         }

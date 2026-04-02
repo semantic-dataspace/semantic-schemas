@@ -8,12 +8,13 @@
 #   bwmd:BaseElementOfComposition — element_symbol from IUPAC periodic table
 #   bwmd:WeightFraction           — element_symbol, min/max value in [0, 100], unit
 
-@prefix bwmd:  <https://www.iwm.fraunhofer.de/ontologies/bwmd-ontology#> .
-@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix sh:    <http://www.w3.org/ns/shacl#> .
-@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
-@prefix shape: <https://www.iwm.fraunhofer.de/ontologies/bwmd-ontology/shapes#> .
+@prefix bwmd:    <https://www.iwm.fraunhofer.de/ontologies/bwmd-ontology#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix shape:   <https://www.iwm.fraunhofer.de/ontologies/bwmd-ontology/shapes#> .
 
 # ── Periodic table element symbols (IUPAC, all 118 elements) ──────────────────
 # Used as sh:in constraint on bwmd:refersToElementSymbol.
@@ -40,6 +41,14 @@ shape:elementSymbols
 shape:ChemicalCompositionShape
     a sh:NodeShape ;
     sh:targetClass bwmd:ChemicalComposition ;
+
+    sh:property [
+        sh:path dcterms:conformsTo ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A ChemicalComposition instance must declare dcterms:conformsTo pointing to the versioned schema IRI." ;
+    ] ;
 
     sh:property [
         sh:path rdfs:label ;

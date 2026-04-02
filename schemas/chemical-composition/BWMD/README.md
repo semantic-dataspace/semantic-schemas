@@ -4,6 +4,11 @@ Schema for describing the **chemical composition of a material** using the
 [BWMD Materials Data Science Ontology](https://www.iwm.fraunhofer.de/ontologies/bwmd-ontology#)
 developed by Fraunhofer IWM.
 
+> **Quickest entry point:** open
+> [`docs/chemical_composition_workflow.ipynb`](docs/chemical_composition_workflow.ipynb)
+> — an end-to-end notebook that walks through loading input, transforming to OO-LD,
+> converting to RDF, and validating against the SHACL shape.
+
 ---
 
 ## Graph pattern
@@ -57,7 +62,7 @@ Full tooling instructions are in
 
 ### 1. Describe your material
 
-Create `my_input.json` (or copy [`simplified/example.input.json`](simplified/example.input.json)):
+Create `my_input.json` (or copy [`docs/example.input.json`](docs/example.input.json)):
 
 ```json
 {
@@ -121,8 +126,8 @@ print(report)
 | `specs/shape.ttl` | SHACL validation shape |
 | `docs/example.oold.json` | Complete OO-LD example (316L stainless steel) |
 | `docs/chemical_composition_workflow.ipynb` | End-to-end Jupyter notebook (transform → RDF → SHACL) |
+| `docs/example.input.json` | Ready-to-edit simplified example |
 | `simplified/schema.simplified.json` | User-friendly JSON Schema |
-| `simplified/example.input.json` | Ready-to-edit simplified example |
 | `simplified/transform.jsonata` | JSONata transform: simplified JSON → OO-LD |
 
 ---

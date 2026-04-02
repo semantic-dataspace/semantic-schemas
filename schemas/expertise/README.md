@@ -4,6 +4,9 @@ Schema for describing the **expertise profile of a domain expert** in materials
 science.  An expert (`foaf:Person`) is linked to sets of knowledge graph
 entities representing their areas of expertise across six categories.
 
+> **Quickest entry point:** open [`docs/expertise_workflow.ipynb`](docs/expertise_workflow.ipynb)
+> — a notebook that walks through loading the OO-LD input and converting it to RDF.
+
 ---
 
 ## Graph pattern

@@ -17,11 +17,15 @@
 #   https://www.ebi.ac.uk/chebi/  (e.g. CHEBI:18248 for iron)
 
 "@context":
-  bwmd: "https://www.iwm.fraunhofer.de/ontologies/bwmd-ontology#"
-  rdfs:  "http://www.w3.org/2000/01/rdf-schema#"
-  xsd:   "http://www.w3.org/2001/XMLSchema#"
+  bwmd:    "https://www.iwm.fraunhofer.de/ontologies/bwmd-ontology#"
+  rdfs:    "http://www.w3.org/2000/01/rdf-schema#"
+  xsd:     "http://www.w3.org/2001/XMLSchema#"
+  dcterms: "http://purl.org/dc/terms/"
 
   type: "@type"
+  conforms_to:
+    "@id": "http://purl.org/dc/terms/conformsTo"
+    "@type": "@id"
 
   label:
     "@id": "rdfs:label"
@@ -35,7 +39,6 @@
 
   element_symbol:
     "@id": "bwmd:refersToElementSymbol"
-    "@type": "xsd:string"
   min_value:
     "@id": "bwmd:hasDoubleLiteralMinValue"
     "@type": "xsd:double"
@@ -46,6 +49,8 @@
     "@id": "bwmd:hasUnitSymbol"
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
+x-schema-version: '1.0.0'
+x-schema-id: 'https://github.com/materialdigital/semantic-schemas/tree/main/schemas/chemical-composition/BWMD/'
 title: Chemical Composition (BWMD)
 description: Chemical composition of a material described using the BWMD ontology
 type: object
@@ -85,7 +90,7 @@ properties:
                Rb, Sr, Y, Zr, Nb, Mo, Tc, Ru, Rh, Pd, Ag, Cd, In, Sn, Sb, Te, I, Xe,
                Cs, Ba, La, Ce, Pr, Nd, Pm, Sm, Eu, Gd, Tb, Dy, Ho, Er, Tm, Yb, Lu,
                Hf, Ta, W, Re, Os, Ir, Pt, Au, Hg, Tl, Pb, Bi, Po, At, Rn,
-               Fr, Ra, Ac, Th, Pa, U, Np, Pu, Am, Cm, Bk, Cf, Es, Fm, Md, No, Lr,
+               Fr, Ra, Ac, Th, Pa, U, Np, Pu, Am, Cm, Bk, Cf, Es, Fm, Md, 'No', Lr,
                Rf, Db, Sg, Bh, Hs, Mt, Ds, Rg, Cn, Nh, Fl, Mc, Lv, Ts, Og]
 
   fractions:
@@ -118,7 +123,7 @@ properties:
                  Rb, Sr, Y, Zr, Nb, Mo, Tc, Ru, Rh, Pd, Ag, Cd, In, Sn, Sb, Te, I, Xe,
                  Cs, Ba, La, Ce, Pr, Nd, Pm, Sm, Eu, Gd, Tb, Dy, Ho, Er, Tm, Yb, Lu,
                  Hf, Ta, W, Re, Os, Ir, Pt, Au, Hg, Tl, Pb, Bi, Po, At, Rn,
-                 Fr, Ra, Ac, Th, Pa, U, Np, Pu, Am, Cm, Bk, Cf, Es, Fm, Md, No, Lr,
+                 Fr, Ra, Ac, Th, Pa, U, Np, Pu, Am, Cm, Bk, Cf, Es, Fm, Md, 'No', Lr,
                  Rf, Db, Sg, Bh, Hs, Mt, Ds, Rg, Cn, Nh, Fl, Mc, Lv, Ts, Og]
         min_value:
           title: Min Value

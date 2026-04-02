@@ -13,15 +13,23 @@
    *     unit        string   "%" | "wt.%" | "at.%"
    *
    * Run with the jsonata-python CLI:
-   *   python -m jsonata -e transform.jsonata -i example.input.json
+   *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
    *
    * Run from Python:
    *   import jsonata, json
    *   expr   = open("transform.jsonata").read()
-   *   result = jsonata.Jsonata(expr).evaluate(json.load(open("example.input.json")))
+   *   result = jsonata.Jsonata(expr).evaluate(json.load(open("../docs/example.input.json")))
    */
 
+  /*
+   * Schema provenance — injected automatically into every output.
+   * Update $schemaUri whenever x-schema-version in specs/schema.oold.yaml changes.
+   * Format: <x-schema-id>#v<x-schema-version>
+   */
+  $schemaUri := "https://github.com/materialdigital/semantic-schemas/tree/main/schemas/chemical-composition/BWMD/#v1.0.0";
+
   {
+    "conforms_to": $schemaUri,
     "type": "bwmd:ChemicalComposition",
     "label": label,
     "base_element": {
