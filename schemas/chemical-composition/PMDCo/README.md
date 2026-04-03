@@ -1,82 +1,26 @@
 # Chemical Composition — PMDCo
 
-Schema for describing the **chemical composition of a material** using the
+Records the **chemical composition of a material** — which elements it
+contains and in what proportions — following the
 [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/).
 
-Original ontology pattern:
-<https://github.com/materialdigital/core-ontology/tree/main/patterns/chemical%20composition>
-
-> **Quickest entry point:** open
-> [`docs/chemical_composition_workflow.ipynb`](docs/chemical_composition_workflow.ipynb)
-> — an end-to-end notebook that walks through loading input, transforming to OO-LD,
-> converting to RDF, and validating against the SHACL shape.
-
 ---
 
-## Graph pattern
+## Quick start
 
-The schema models the following RDF structure:
+**The fastest way in:** open the notebook.
 
-```text
-ChemicalComposition (PMD_0000551)
-  quality_of ──────────────────► Material  [rdfs:label = material name]
-  is_subject_of ───────────────► ChemicalCompositionSpecification (PMD_0025002)
-    has_member ──────────────────► FractionValueSpecification (PMD_0025997)  [× N]
-      value                         xsd:double, range 0–100
-      unit                          UO IRI  (mass% · vol% · mol%)
-      element ─────────────────────► PortionOfChemicalElement (PMD_0020026 etc.)
-        part_of ──────────────────► Material (same node as quality_of target)
-        has_relational_quality ───► MassProportion (PMD_0020102)
-          relational_quality_of ──► PortionOfChemicalElement  (back-ref)
-          specified_by_value ─────► FractionValueSpecification (back-ref)
+```bash
+pip install jupyterlab
+jupyter lab docs/chemical_composition_workflow.ipynb
 ```
 
-Key modelling decisions:
+The notebook walks you through every step: fill in your data, convert to RDF,
+and validate — with explanation between each step.
 
-- One `ChemicalCompositionSpecification` groups all element fractions for a given
-  composition measurement.
-- Each fraction is a `FractionValueSpecification` that carries both the numeric
-  value and the unit.
-- The element identity is encoded in the `rdf:type` of the
-  `PortionOfChemicalElement` node (e.g. `pmdco:PMD_0020026` for Iron).
-- `MassProportion` (subclass of `Proportion`) links the element portion back to
-  the fraction value specification via `specified_by_value`.
-- The `element` key in the OO-LD schema is a JSON-LD nesting helper
-  (`pmdco:PMD_hasFractionElement`, provisional) that groups the
-  `PortionOfChemicalElement` under its fraction row for form rendering; it has no
-  canonical counterpart in the ontology assertion.
+### Input fields
 
----
-
-## Supported units
-
-| Simplified label | Unit Ontology IRI | Meaning |
-|---|---|---|
-| `mass%` | `uo:0000163` | mass percentage |
-| `vol%`  | `uo:0000164` | volume percentage |
-| `mol%`  | `uo:0000165` | molar percentage |
-
----
-
-## Supported elements
-
-All elements with a confirmed `PortionOfChemicalElement` subclass in PMDCo are
-supported (72 elements).  The symbol-to-IRI mapping is in
-[`simplified/transform.jsonata`](simplified/transform.jsonata) (`$elementMap`)
-and the allowed symbol list is in the `enum` of
-[`simplified/schema.simplified.json`](simplified/schema.simplified.json).
-
----
-
-## Quick start (Python)
-
-The `simplified/` folder provides a user-friendly JSON interface.
-Full tooling instructions are in
-[`docs/simplified-input-guide.md`](../../../docs/simplified-input-guide.md).
-
-### 1. Describe your material
-
-Create `my_input.json` (or copy [`docs/example.input.json`](docs/example.input.json)):
+Copy [`docs/example.input.json`](docs/example.input.json) and fill in your values:
 
 ```json
 {
@@ -90,54 +34,43 @@ Create `my_input.json` (or copy [`docs/example.input.json`](docs/example.input.j
 }
 ```
 
-Rules: `value` must be between 0 and 100; use the same `unit` for all elements;
-`symbol` must be a PMDCo-supported element symbol.
-
-Two optional fields control the RDF node identifiers used in the generated graph.
-If omitted, both are derived automatically from `material_name`
-(e.g. `"316L Stainless Steel"` → `mat-316l-stainless-steel`, `chem-comp-316l-stainless-steel`), so every material gets a distinct ID without any extra input.
-
-| Field | Auto-derived from | Purpose |
+| Field | Required | Description |
 |---|---|---|
-| `material_id` | `material_name` | Identifier for the Material node (`part_of` back-references point here) |
-| `comp_id` | `material_name` | Identifier for the ChemicalComposition and ChemicalCompositionSpecification nodes |
+| `material_name` | yes | Name or identifier for the material |
+| `elements` | yes | List of element fractions — one entry per element |
+| `elements[].symbol` | yes | IUPAC element symbol (e.g. `"Fe"`, `"Cr"`) |
+| `elements[].value` | yes | Fraction value, 0–100 |
+| `elements[].unit` | yes | `"mass%"`, `"vol%"`, or `"mol%"` — same for all elements |
+| `material_id` | no | Custom ID for the material node — auto-derived from `material_name` if omitted |
+| `comp_id` | no | Custom ID for the composition node — auto-derived if omitted |
 
-Override them only when you need a specific IRI to match an existing knowledge graph node.
+72 PMDCo-mapped elements are supported.
+See [`simplified/schema.simplified.json`](simplified/schema.simplified.json) for the full list.
 
-### 2. Transform to OO-LD and convert to RDF
+### Convert to RDF (Python)
 
 ```bash
-pip install jsonata-python rdflib pyyaml
+pip install jsonata-python rdflib pyyaml pyshacl
 ```
 
 ```python
-import jsonata, json, yaml, rdflib
+import jsonata, json, yaml, rdflib, pyshacl
 
-# Transform simplified JSON → OO-LD
+# Transform your input → structured JSON
 expr = open("simplified/transform.jsonata").read()
-data = json.load(open("my_input.json"))
+data = json.load(open("docs/example.input.json"))
 oold = jsonata.Jsonata(expr).evaluate(data)
 
-# Convert OO-LD → RDF (rdflib ≥ 7 handles JSON-LD 1.1 natively)
+# Convert to RDF
 context = yaml.safe_load(open("specs/schema.oold.yaml"))["@context"]
 g = rdflib.Dataset()
 g.parse(data=json.dumps({"@context": context, **oold}), format="json-ld")
-g.serialize(destination="my_output.ttl", format="turtle")
-```
+g.serialize(destination="output.ttl", format="turtle")
 
-A fully resolved OO-LD example is provided in [`docs/example.oold.json`](docs/example.oold.json).
-
-### 3. Validate
-
-```python
-import pyshacl
-
-data_graph   = rdflib.Graph().parse("my_output.ttl")
-shapes_graph = rdflib.Graph().parse("specs/shape.ttl")
-conforms, _, report = pyshacl.validate(
-    data_graph, shacl_graph=shapes_graph, inference="rdfs", serialize_report_graph=True
-)
-print(report)
+# Validate
+shapes = rdflib.Graph().parse("specs/shape.ttl")
+conforms, _, _ = pyshacl.validate(g, shacl_graph=shapes, inference="rdfs")
+print("Conforms:", conforms)
 ```
 
 ---
@@ -146,18 +79,64 @@ print(report)
 
 | File | Purpose |
 |---|---|
-| `specs/schema.oold.yaml` | Full OO-LD / JSON-LD schema |
-| `specs/shape.ttl` | SHACL validation shape |
-| `docs/example.oold.json` | Complete OO-LD example (316L stainless steel) |
-| `docs/chemical_composition_workflow.ipynb` | End-to-end Jupyter notebook (transform → RDF → SHACL) |
-| `docs/example.input.json` | Ready-to-edit simplified example |
-| `simplified/schema.simplified.json` | User-friendly JSON Schema |
-| `simplified/transform.jsonata` | JSONata transform: simplified JSON → OO-LD |
+| `docs/example.input.json` | Ready-to-edit example — start here |
+| `docs/chemical_composition_workflow.ipynb` | Step-by-step notebook |
+| `docs/example.oold.json` | Fully converted OO-LD example (reference) |
+| `simplified/schema.simplified.json` | Input field reference |
+| `simplified/transform.jsonata` | Converts your input to the structured format |
+| `specs/schema.oold.yaml` | Full schema definition (expert reference) |
+| `specs/shape.ttl` | SHACL validation rules |
+
+---
+
+## Supported units
+
+| Input label | Meaning |
+|---|---|
+| `mass%` | mass percentage |
+| `vol%` | volume percentage |
+| `mol%` | molar percentage |
+
+---
+
+## For the curious — how this maps to the ontology
+
+<details>
+<summary>Show the RDF graph pattern</summary>
+
+Original PMDCo pattern:
+<https://github.com/materialdigital/core-ontology/tree/main/patterns/chemical%20composition>
+
+```text
+ChemicalComposition (PMD_0000551)
+  quality_of ──────────────────► Material  [rdfs:label = material name]
+  is_subject_of ───────────────► ChemicalCompositionSpecification (PMD_0025002)
+    has_member ──────────────────► FractionValueSpecification (PMD_0025997)  [× N]
+      value                         xsd:double, range 0–100
+      unit                          UO IRI  (mass% · vol% · mol%)
+      element ─────────────────────► PortionOfChemicalElement
+        part_of ──────────────────► Material
+        has_relational_quality ───► MassProportion (PMD_0020102)
+          relational_quality_of ──► PortionOfChemicalElement
+          specified_by_value ─────► FractionValueSpecification (back-ref)
+```
+
+Key decisions:
+
+- Element identity is encoded in the `rdf:type` of the `PortionOfChemicalElement`
+  node (e.g. `pmdco:PMD_0020026` for Iron), not as a string literal.
+- `MassProportion` links each element portion back to its fraction value via
+  `specified_by_value`.
+- SHACL validation requires `inference="rdfs"` because some shapes target
+  superclasses (`Proportion`, `PortionOfSingleChemicalElement`) and rely on
+  subclass reasoning to match the specific subtypes used in the data.
+
+</details>
 
 ---
 
 ## Further reading
 
-- [Simplified input guide](../../../docs/simplified-input-guide.md) — step-by-step workflow (validate → transform → RDF → SHACL)
-- [OO-LD primer](../../../docs/oold-primer.md) — what OO-LD is and how it works
-- [Schema format reference](../../../docs/schema-format.md) — field-by-field reference
+- [Step-by-step guide](../../../docs/simplified-input-guide.md) — fill in data → convert → validate
+- [OO-LD primer](../../../docs/oold-primer.md) — how the schema format works
+- [Schema format reference](../../../docs/schema-format.md) — for schema authors

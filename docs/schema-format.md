@@ -1,6 +1,12 @@
 # Schema Format Reference
 
-All schemas in this store are YAML files following the OO-LD convention. See [oold-primer.md](oold-primer.md) for background.
+> **Who is this for?** Schema authors and reviewers.  If you just want to
+> record data using an existing schema, start with the schema's `README.md`
+> or its notebook instead.
+
+All schemas in this store are YAML files following the OO-LD convention.
+See [oold-primer.md](oold-primer.md) for a plain-language explanation of how
+the format works.
 
 ---
 

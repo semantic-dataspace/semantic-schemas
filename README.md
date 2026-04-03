@@ -1,38 +1,41 @@
 # Semantic Schema Store
 
-A community-curated library of **OO-LD schemas** for materials science and engineering data.
+A library of templates for recording materials science data in a way that
+machines can read, search, and connect to other datasets.
 
-Each schema is a YAML file that combines a [JSON Schema](https://json-schema.org/) form
-definition with a [JSON-LD](https://json-ld.org/) `@context`, so that:
+Each template covers one concept (e.g. *chemical composition*, *specimen*).
+You fill in a plain JSON file with your values; the tooling converts it into
+**RDF** — a graph format understood by ontologies such as
+[PMDCo](https://w3id.org/pmd/co/) and [BWMD](https://www.iwm.fraunhofer.de/ontologies/bwmd-ontology#).
 
-- a **web form** can be auto-generated from it (field labels, widgets, validation), and
-- the submitted data is automatically serialised as **RDF** according to the chosen ontology.
+> **New to this?**
+> Start with a Jupyter notebook — each schema folder has one in `docs/`.
+> It walks you through the whole process step by step.
 
 ---
 
 ## Repository structure
 
 ```text
-schemas/                       # Curated schema library
+schemas/                       # Schema library
   <domain>/
     <ontology>/
-      README.md                # Pattern description and quick-start
+      README.md                # What this schema is for and how to use it
       specs/
-        schema.oold.yaml       # Full OO-LD schema (expert reference)
-        shape.ttl              # SHACL validation shape
+        schema.oold.yaml       # Full schema definition (expert reference)
+        shape.ttl              # Validation rules (SHACL)
       docs/
-        example.oold.json      # Complete OO-LD example (filled-in, ready to convert)
-        example.input.json     # Ready-to-edit simplified input (where available)
-        *.ipynb                # Workflow notebook (where available)
-      simplified/              # User-friendly entry point (where available)
-        schema.simplified.json # Plain JSON Schema — start here if new to OO-LD
-        transform.jsonata      # JSONata transform: simplified JSON → OO-LD
+        example.input.json     # Ready-to-edit example — start here
+        *.ipynb                # Step-by-step workflow notebook
+      simplified/              # User-friendly entry point
+        schema.simplified.json # Input field reference
+        transform.jsonata      # Converts your JSON to the structured format
 templates/
-  schema.oold.yaml             # Annotated blank template
+  schema.oold.yaml             # Blank template for writing a new schema
 docs/
-  oold-primer.md               # What is OO-LD and how it works
-  schema-format.md             # Field-by-field schema authoring reference
-  simplified-input-guide.md    # How to use the simplified/ interface end-to-end
+  oold-primer.md               # How the schema format works (plain language)
+  schema-format.md             # Field-by-field reference for schema authors
+  simplified-input-guide.md    # End-to-end guide: fill in data → RDF
 .github/
   ISSUE_TEMPLATE/              # Propose or correct a schema
   PULL_REQUEST_TEMPLATE.md
@@ -42,23 +45,24 @@ docs/
 
 ## Quick start
 
-### I want to submit data for an existing schema
+### I want to record data for an existing schema
 
 1. Find the schema in [CATALOG.md](CATALOG.md) and open its folder.
-2. If a `simplified/` subfolder exists, copy `docs/example.input.json` and
-   fill in your values — no ontology knowledge required.
-3. Follow the [Simplified Input Guide](docs/simplified-input-guide.md) to validate
-   your input, convert it to OO-LD JSON with JOLT, and then to RDF.
+2. Copy `docs/example.input.json` and fill in your values — no ontology
+   knowledge required.
+3. Open the notebook in `docs/` and run all cells.  It converts your file to
+   RDF and validates the result automatically.
 
-### I want to understand the full OO-LD format
+### I want to understand how the format works
 
-Read [docs/oold-primer.md](docs/oold-primer.md) and browse a `schema.oold.yaml`
-alongside its `README.md` for the pattern explanation.
+Read [docs/oold-primer.md](docs/oold-primer.md) — it explains the idea in
+plain language before introducing any technical terms.
 
 ### I want to contribute a new schema
 
-1. Read [docs/schema-format.md](docs/schema-format.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
-2. Copy [templates/schema.oold.yaml](templates/schema.oold.yaml) as your starting point.
+1. Read [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow and conventions.
+2. Copy [templates/schema.oold.yaml](templates/schema.oold.yaml) as your
+   starting point.
 3. Open a **New Schema** issue to discuss the pattern before submitting a PR.
 
 ---
@@ -67,9 +71,9 @@ alongside its `README.md` for the pattern explanation.
 
 | Document | Content |
 |---|---|
-| [docs/oold-primer.md](docs/oold-primer.md) | What OO-LD is and how JSON Schema + JSON-LD combine |
+| [docs/oold-primer.md](docs/oold-primer.md) | How the schema format works, in plain language |
+| [docs/simplified-input-guide.md](docs/simplified-input-guide.md) | Step-by-step: fill in data → convert → validate |
 | [docs/schema-format.md](docs/schema-format.md) | Field reference for writing and reviewing schemas |
-| [docs/simplified-input-guide.md](docs/simplified-input-guide.md) | End-to-end workflow: fill in data → JOLT → RDF → SHACL validation |
 
 ---
 
@@ -77,21 +81,21 @@ alongside its `README.md` for the pattern explanation.
 
 | Project | Role |
 |---|---|
-| [OO-LD](https://github.com/OO-LD/oold-python) | OO-LD specification and Python tooling |
+| [OO-LD](https://github.com/OO-LD/oold-python) | The schema format specification and Python tooling |
 | [PMDCo](https://github.com/materialdigital/core-ontology) | Platform MaterialDigital Core Ontology |
-| [BWMD Ontology](https://gitlab.cc-asp.fraunhofer.de/EMI_datamanagement/bwmd_ontology) | BAM/IWM materials ontology |
+| [BWMD Ontology](https://gitlab.cc-asp.fraunhofer.de/EMI_datamanagement/bwmd_ontology) | Fraunhofer IWM materials ontology |
 
 ---
 
-## OO-LD extension: k-items
+## The k-item field type
 
-The schemas in this store extend the base OO-LD convention with a
-**`x-kitem` field type** that links a property to a live knowledge graph rather
-than a static enum.  A `kitem` field renders as a search-and-select widget
-populated from a DSMS instance at runtime.
+Some fields in these schemas link to entities in a live knowledge graph rather
+than a static list of values.  In the DSMS web interface, these render as
+search-and-select widgets populated at runtime.  In JSON, the value is a URI
+pointing to the knowledge graph entity.
 
 See [docs/schema-format.md](docs/schema-format.md) for the field syntax.
-Background and motivation are described in:
+Background and motivation:
 
 > Nahshon, Y.; Morand, L.; Büschelberger, M.; Helm, D.; Kumaraswamy, K.;
 > Zierep, P.; Weber, M.; de Andrés, P. (2025).
@@ -105,4 +109,5 @@ Background and motivation are described in:
 ## License
 
 Schemas are published under [CC0 1.0 Universal](LICENSE) — no rights reserved.
-You may use, adapt, and redistribute them freely, including for commercial purposes, without attribution.
+You may use, adapt, and redistribute them freely, including for commercial
+purposes, without attribution.

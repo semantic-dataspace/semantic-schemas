@@ -1,21 +1,23 @@
 # Schema Catalog
 
-All curated schemas in this repository.
+All schemas currently available in this repository.
 
-| Domain | Ontology | Description | Schema |
+| Domain | Ontology | What it records | Folder |
 |---|---|---|---|
-| Chemical Composition | PMDCo | Element fractions of a material; simplified flat pattern based on `pmdco:ChemicalComposition` (PMD_0000551) | [schemas/chemical-composition/PMDCo/](schemas/chemical-composition/PMDCo/schema.oold.yaml) |
-| Chemical Composition | BWMD | Element weight fractions with min/max ranges; based on `bwmd:ChemicalComposition` | [schemas/chemical-composition/BWMD/](schemas/chemical-composition/BWMD/schema.oold.yaml) |
-| Expertise | — | Competency profile of a domain expert; links a `foaf:Person` to k-items representing materials, methods, devices, and application fields | [schemas/expertise/](schemas/expertise/schema.oold.yaml) |
+| Chemical Composition | PMDCo | Element fractions of a material (mass%, vol%, or mol%) | [schemas/chemical-composition/PMDCo/](schemas/chemical-composition/PMDCo/) |
+| Chemical Composition | BWMD | Element weight fractions with min/max ranges | [schemas/chemical-composition/BWMD/](schemas/chemical-composition/BWMD/) |
+| Specimen | PMDCo | A physical specimen — its mass and chemical composition | [schemas/specimen/PMDCo/](schemas/specimen/PMDCo/) |
+| Expertise | — | A person's areas of expertise in materials science | [schemas/expertise/](schemas/expertise/) |
 
 ---
 
 ## Domains
 
-| Domain | # Schemas | Description |
+| Domain | # Schemas | What it covers |
 |---|---|---|
 | `chemical-composition` | 2 | Element fractions that characterise a material |
-| `expertise` | 1 | Competency profiles for experts in materials science |
+| `specimen` | 1 | Physical specimens with mass and composition |
+| `expertise` | 1 | Competency profiles for materials science experts |
 
 ---
 

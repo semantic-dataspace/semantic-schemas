@@ -1,61 +1,28 @@
 # Expertise
 
-Schema for describing the **expertise profile of a domain expert** in materials
-science.  An expert (`foaf:Person`) is linked to sets of knowledge graph
-entities representing their areas of expertise across six categories.
+Records the **areas of expertise of a materials science researcher** — which
+materials, methods, devices, and application fields they work with.
 
-> **Quickest entry point:** open [`docs/expertise_workflow.ipynb`](docs/expertise_workflow.ipynb)
-> — a notebook that walks through loading the OO-LD input and converting it to RDF.
+Each value is a link to an entity in the DSMS knowledge graph (a k-item).
+In the DSMS web interface, users pick from a searchable list; they do not
+type URIs manually.
 
 ---
 
-## Graph pattern
+## Quick start
 
-```text
-foaf:Person
-  schema:knowsAbout ──► <material URI>          [0..*]
-  schema:knowsAbout ──► <simulation URI>         [0..*]
-  schema:knowsAbout ──► <measurement_device URI> [0..*]
-  schema:knowsAbout ──► <production_device URI>  [0..*]
-  schema:knowsAbout ──► <application_field URI>  [0..*]
-  schema:knowsAbout ──► <method URI>             [0..*]
+**The fastest way in:** open the notebook.
+
+```bash
+pip install jupyterlab
+jupyter lab docs/expertise_workflow.ipynb
 ```
 
-Key modelling decisions:
+### Input fields
 
-- All six expertise categories map to the same RDF property
-  `schema:knowsAbout`.  The semantic distinction between materials, methods,
-  devices, etc. is carried by the `rdf:type` of the referenced knowledge graph
-  entity, not by separate property IRIs.
-- Each value is a URI (k-item) pointing to an entity in the DSMS knowledge
-  graph.  In the DSMS web interface, users pick from a searchable list; they do
-  not type URIs manually.
-
-> **Known limitation:** a pure SPARQL query on raw triples cannot distinguish
-> "expertise in materials" from "expertise in methods" without joining on the
-> `rdf:type` of the referenced entity.  Sub-properties of `schema:knowsAbout`
-> are planned in a future schema-store vocabulary.
-
----
-
-## Expertise categories
-
-| Field | k-item type | Examples |
-|---|---|---|
-| `materials` | `material` | steel grades, alloys, polymers |
-| `material_modelling` | `simulation` | DFT, FEM, MD, CALPHAD |
-| `measurement_devices` | `measurement_device` | SEM, XRD, TEM, nanoindenter |
-| `production_devices` | `production_device` | LPBF printer, arc furnace |
-| `application_fields` | `application_field` | aerospace, automotive, biomedical |
-| `methods` | `method` | EBSD, tensile testing, hardness mapping |
-
----
-
-## Input format
-
-There is no simplified layer for this schema — the OO-LD JSON is already
-user-friendly.  Fill in the URI arrays for each relevant category and omit
-categories where the expert has no expertise.
+Copy [`docs/example.oold.json`](docs/example.oold.json) and fill in your
+values.  Each field is an array of URIs — leave out any category where the
+person has no expertise.
 
 ```json
 {
@@ -73,11 +40,19 @@ categories where the expert has no expertise.
 }
 ```
 
-A complete example is in [`docs/example.oold.json`](docs/example.oold.json).
+| Field | k-item type | Examples |
+|---|---|---|
+| `materials` | `material` | steel grades, alloys, polymers |
+| `material_modelling` | `simulation` | DFT, FEM, MD, CALPHAD |
+| `measurement_devices` | `measurement_device` | SEM, XRD, TEM, nanoindenter |
+| `production_devices` | `production_device` | LPBF printer, arc furnace |
+| `application_fields` | `application_field` | aerospace, automotive, biomedical |
+| `methods` | `method` | EBSD, tensile testing, hardness mapping |
 
----
+> **No transform step:** this schema has no `simplified/` folder — the input
+> JSON is already in the structured format.  Just fill in the URIs and convert.
 
-## Convert to RDF (Python)
+### Convert to RDF (Python)
 
 ```bash
 pip install rdflib pyyaml
@@ -91,7 +66,7 @@ doc     = json.load(open("docs/example.oold.json"))
 
 g = rdflib.Dataset()
 g.parse(data=json.dumps({"@context": context, **doc}), format="json-ld")
-g.serialize(destination="my_output.ttl", format="turtle")
+g.serialize(destination="output_expertise.ttl", format="turtle")
 ```
 
 ---
@@ -100,13 +75,42 @@ g.serialize(destination="my_output.ttl", format="turtle")
 
 | File | Purpose |
 |---|---|
-| `specs/schema.oold.yaml` | Full OO-LD / JSON-LD schema |
-| `docs/example.oold.json` | Complete example expertise profile |
-| `docs/expertise_workflow.ipynb` | Jupyter notebook (OO-LD JSON → RDF) |
+| `docs/example.oold.json` | Ready-to-edit example — start here |
+| `docs/expertise_workflow.ipynb` | Step-by-step notebook |
+| `specs/schema.oold.yaml` | Full schema definition (expert reference) |
+
+---
+
+## For the curious — how this maps to the ontology
+
+<details>
+<summary>Show the RDF graph pattern</summary>
+
+```text
+foaf:Person
+  schema:knowsAbout ──► <material URI>          [0..*]
+  schema:knowsAbout ──► <simulation URI>         [0..*]
+  schema:knowsAbout ──► <measurement_device URI> [0..*]
+  schema:knowsAbout ──► <production_device URI>  [0..*]
+  schema:knowsAbout ──► <application_field URI>  [0..*]
+  schema:knowsAbout ──► <method URI>             [0..*]
+```
+
+All six expertise categories map to the same RDF property `schema:knowsAbout`.
+The distinction between materials, methods, devices, etc. is carried by the
+`rdf:type` of the referenced knowledge graph entity, not by separate property
+IRIs.
+
+> **Known limitation:** a SPARQL query on raw triples cannot distinguish
+> "expertise in materials" from "expertise in methods" without joining on the
+> `rdf:type` of the referenced entity.  Sub-properties of `schema:knowsAbout`
+> are planned in a future version.
+
+</details>
 
 ---
 
 ## Further reading
 
-- [OO-LD primer](../../docs/oold-primer.md) — what OO-LD is and how it works
-- [Schema format reference](../../docs/schema-format.md) — field-by-field reference
+- [OO-LD primer](../../docs/oold-primer.md) — how the schema format works
+- [Schema format reference](../../docs/schema-format.md) — for schema authors

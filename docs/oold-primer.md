@@ -1,44 +1,67 @@
-# OO-LD Primer
+# How the schema format works
 
-## What is OO-LD?
+## The idea in plain language
 
-**Object-Oriented Linked Data (OO-LD)** is a convention for combining two standards in a single document:
+Each schema in this store does two jobs at once:
 
-- **JSON Schema** — describes the *shape* of a data object (fields, types, validation, UI hints)
-- **JSON-LD `@context`** — maps every field name to an ontology IRI, making the object interpretable as RDF
+1. **Defines a form** — which fields exist, what type of value each takes,
+   which are required, and what labels and hints to show in a UI.
+2. **Maps each field to an ontology term** — so that when you fill in the form,
+   the result can be automatically written as RDF, the standard format for
+   linked scientific data.
 
-The result is a schema that simultaneously serves as a form specification and a semantic data contract.
+You interact with job 1 (fill in `example.input.json`, run the notebook).
+Job 2 happens automatically in the background.
+
+The format that combines these two jobs is called
+**OO-LD (Object-Oriented Linked Data)**.  You do not need to understand
+OO-LD to use the schemas — this document is for people who want to know
+what is happening under the hood, or who want to write their own schema.
 
 Reference implementation: [github.com/OO-LD/oold-python](https://github.com/OO-LD/oold-python)
 
 ---
 
-## Why use it for a schema store?
+## The two layers
 
-| Concern | How OO-LD addresses it |
-|---|---|
-| Form generation | JSON Schema drives widget selection, labels, validation |
-| Semantic interoperability | JSON-LD context maps fields to stable ontology IRIs |
-| Multi-ontology support | Each schema file is independent; competing patterns coexist |
-| Human readability | YAML syntax; property names are English, not IRI fragments |
-| Tooling compatibility | Standard JSON Schema validators work without modification |
+An OO-LD schema is a YAML file with two sections:
+
+| Section | Standard | Purpose |
+|---|---|---|
+| `@context` | JSON-LD | Maps field names to ontology IRIs |
+| everything else | JSON Schema | Defines fields, types, validation, UI hints |
+
+### Layer 1 — JSON Schema (the form)
+
+JSON Schema is a widely used format for describing the structure of a JSON
+object.  It specifies which fields are required, what type each value must be
+(string, number, array, …), allowed values, labels, and descriptions.  Any
+JSON Schema validator or form builder can read it.
+
+### Layer 2 — JSON-LD `@context` (the ontology mapping)
+
+JSON-LD is a standard for writing linked data as JSON.  The `@context` block
+is a lookup table: it says "whenever you see the key `quality_of`, treat it as
+the RDF property `http://purl.obolibrary.org/obo/RO_0000080`."
+
+Because the two layers live in the same file, no separate mapping step is
+needed — the context is always in sync with the schema.
 
 ---
 
-## Anatomy of an OO-LD schema
+## A minimal example
 
 ```yaml
-# ── 1. JSON-LD context ──────────────────────────────────────────────────────
+# ── Layer 1: JSON-LD context ────────────────────────────────────────────────
 '@context':
   pmdco: 'https://w3id.org/pmd/co/'
   ro:    'http://purl.obolibrary.org/obo/RO_'
-  '@base': 'https://example.org/instances#'
-  type:  '@type'           # 'type' key maps to rdf:type
+  type:  '@type'           # the key 'type' becomes rdf:type
   quality_of:
-    '@id':  'ro:0000080'   # expands to full IRI using the 'ro' prefix
-    '@type': '@id'         # value is an IRI (object property)
+    '@id':   'ro:0000080'  # expands to the full IRI using the 'ro' prefix
+    '@type': '@id'         # value is an IRI (a link to another node)
 
-# ── 2. JSON Schema ──────────────────────────────────────────────────────────
+# ── Layer 2: JSON Schema ────────────────────────────────────────────────────
 $schema: 'https://json-schema.org/draft/2020-12/schema'
 title: ChemicalComposition
 type: object
@@ -48,56 +71,42 @@ properties:
   type:
     type: string
     readOnly: true
-    const: 'pmdco:PMD_0000551'   # hidden; drives rdf:type in generated RDF
+    const: 'pmdco:PMD_0000551'   # hidden; sets rdf:type in the generated RDF
   quality_of:
     title: Material
     type: string
-    format: kitem                 # x- extension: renders as a k-item picker
+    format: kitem                # custom extension: renders as a search widget
     x-kitem:
       ktypeIds: [material]
 ```
 
 ---
 
-## How fields become RDF
+## How a field value becomes an RDF triple
 
-Given the context above and a form submission:
+Given the context above and a filled-in JSON document:
 
 ```json
 { "type": "pmdco:PMD_0000551", "quality_of": "https://example.org/mat/42" }
 ```
 
-The JSON-LD processor expands this to:
+A JSON-LD processor expands this to:
 
 ```turtle
 _:instance
-    rdf:type <https://w3id.org/pmd/co/PMD_0000551> ;
-    <http://purl.obolibrary.org/obo/RO_0000080> <https://example.org/mat/42> .
+    rdf:type  <https://w3id.org/pmd/co/PMD_0000551> ;
+    <http://purl.obolibrary.org/obo/RO_0000080>  <https://example.org/mat/42> .
 ```
 
----
-
-## The `x-kitem` extension
-
-Fields that reference existing knowledge graph entities use the `format: kitem` marker and an `x-kitem` extension object:
-
-```yaml
-my_field:
-  type: array          # or string for single selection
-  format: kitem
-  x-kitem:
-    ktypeIds:
-      - material       # ktype_id values understood by the DSMS knowledge graph
-```
-
-This is a valid JSON Schema extension (`x-` prefix is reserved for custom vocabulary).
-Validators ignore it; the webform-builder uses it to render a searchable k-item picker filtered by type.
+The `pmdco:` prefix in the value is expanded using the declared prefix, and
+`quality_of` becomes the full property IRI — all from the `@context`.
 
 ---
 
 ## The `type` property convention
 
-Every OO-LD schema in this store uses a hidden `type` property to carry the `rdf:type` of the instance:
+Every OO-LD schema in this store uses a hidden `type` property to set the
+`rdf:type` of the instance:
 
 ```yaml
 type:
@@ -106,6 +115,41 @@ type:
   const: 'pmdco:PMD_0000551'
 ```
 
-- `readOnly: true` marks the property as a non-editable system value; consumers should not expose it as a user-editable field.
-- The CURIE (`pmdco:PMD_0000551`) is expanded to a full IRI at serialisation time using the `@context` prefix map.
-- This value is useful for generating the semantic data representation in RDF of this property.
+- `readOnly: true` marks it as a system value — not shown as an editable field.
+- The value (a CURIE) is expanded to a full IRI at serialisation time.
+
+---
+
+## The `x-kitem` extension
+
+Fields that reference existing knowledge graph entities use `format: kitem`
+and an `x-kitem` block:
+
+```yaml
+my_field:
+  type: array          # or string for single selection
+  format: kitem
+  x-kitem:
+    ktypeIds:
+      - material       # entity type in the DSMS knowledge graph
+```
+
+`x-` prefixed keys are a valid JSON Schema extension mechanism — standard
+validators silently ignore them.  The DSMS web form builder uses them to
+render a searchable pick-list filtered by entity type.
+
+---
+
+## Why are ontology IRIs so long?
+
+Ontology IRIs are designed to be globally unique and stable for decades.
+They are not meant to be typed by hand — that is what the `@context` prefix
+map is for.  In schemas, you write `pmdco:PMD_0000551`; only the serialiser
+ever sees the full IRI.
+
+---
+
+## Further reading
+
+- [Schema format reference](schema-format.md) — field-by-field reference for writing schemas
+- [Simplified input guide](simplified-input-guide.md) — how to go from a plain JSON file to RDF

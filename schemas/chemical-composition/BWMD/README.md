@@ -1,17 +1,110 @@
 # Chemical Composition — BWMD
 
-Schema for describing the **chemical composition of a material** using the
+Records the **chemical composition of a material** — which elements it
+contains and in what proportions — following the
 [BWMD Materials Data Science Ontology](https://www.iwm.fraunhofer.de/ontologies/bwmd-ontology#)
 developed by Fraunhofer IWM.
 
-> **Quickest entry point:** open
-> [`docs/chemical_composition_workflow.ipynb`](docs/chemical_composition_workflow.ipynb)
-> — an end-to-end notebook that walks through loading input, transforming to OO-LD,
-> converting to RDF, and validating against the SHACL shape.
+Unlike the PMDCo variant, element fractions are expressed as **ranges**
+(`min_value` / `max_value`), which suits nominal compositions and tolerance
+bands.  All 118 IUPAC elements are supported.
 
 ---
 
-## Graph pattern
+## Quick start
+
+**The fastest way in:** open the notebook.
+
+```bash
+pip install jupyterlab
+jupyter lab docs/chemical_composition_workflow.ipynb
+```
+
+The notebook walks you through every step: fill in your data, convert to RDF,
+and validate — with explanation between each step.
+
+### Input fields
+
+Copy [`docs/example.input.json`](docs/example.input.json) and fill in your values:
+
+```json
+{
+  "label": "316L Chemical Composition",
+  "base_element": { "symbol": "Fe" },
+  "fractions": [
+    { "symbol": "Cr", "min_value": 16.0, "max_value": 18.0, "unit": "wt.%" },
+    { "symbol": "Ni", "min_value": 10.0, "max_value": 14.0, "unit": "wt.%" },
+    { "symbol": "Mo", "min_value":  2.0, "max_value":  3.0, "unit": "wt.%" }
+  ]
+}
+```
+
+| Field | Required | Description |
+|---|---|---|
+| `label` | yes | Human-readable name for this composition |
+| `base_element.symbol` | yes | IUPAC symbol of the dominant element (e.g. `"Fe"`) |
+| `fractions` | yes | List of alloying elements — one entry per element |
+| `fractions[].symbol` | yes | IUPAC element symbol |
+| `fractions[].min_value` | yes | Minimum fraction, 0–100 (for a point value, set equal to `max_value`) |
+| `fractions[].max_value` | yes | Maximum fraction, 0–100 |
+| `fractions[].unit` | yes | `"%"`, `"wt.%"`, or `"at.%"` — same for all fractions |
+
+### Convert to RDF (Python)
+
+```bash
+pip install jsonata-python rdflib pyyaml pyshacl
+```
+
+```python
+import jsonata, json, yaml, rdflib, pyshacl
+
+# Transform your input → structured JSON
+expr = open("simplified/transform.jsonata").read()
+data = json.load(open("docs/example.input.json"))
+oold = jsonata.Jsonata(expr).evaluate(data)
+
+# Convert to RDF
+context = yaml.safe_load(open("specs/schema.oold.yaml"))["@context"]
+g = rdflib.Dataset()
+g.parse(data=json.dumps({"@context": context, **oold}), format="json-ld")
+g.serialize(destination="output.ttl", format="turtle")
+
+# Validate (no inference flag needed for this schema)
+shapes = rdflib.Graph().parse("specs/shape.ttl")
+conforms, _, _ = pyshacl.validate(g, shacl_graph=shapes)
+print("Conforms:", conforms)
+```
+
+---
+
+## Files in this folder
+
+| File | Purpose |
+|---|---|
+| `docs/example.input.json` | Ready-to-edit example — start here |
+| `docs/chemical_composition_workflow.ipynb` | Step-by-step notebook |
+| `docs/example.oold.json` | Fully converted OO-LD example (reference) |
+| `simplified/schema.simplified.json` | Input field reference |
+| `simplified/transform.jsonata` | Converts your input to the structured format |
+| `specs/schema.oold.yaml` | Full schema definition (expert reference) |
+| `specs/shape.ttl` | SHACL validation rules |
+
+---
+
+## Supported units
+
+| Input label | Meaning |
+|---|---|
+| `%` | weight percentage (unqualified) |
+| `wt.%` | weight percentage (explicit) |
+| `at.%` | atomic percentage |
+
+---
+
+## For the curious — how this maps to the ontology
+
+<details>
+<summary>Show the RDF graph pattern</summary>
 
 ```text
 bwmd:ChemicalComposition
@@ -25,115 +118,21 @@ bwmd:ChemicalComposition
                                bwmd:hasUnitSymbol            ("%" | "wt.%" | "at.%")
 ```
 
-Key modelling decisions:
+Key decisions:
 
 - Both `base_element` and `fractions` serialise to `bwmd:hasPart` in RDF.
 - Element identity is expressed as a plain IUPAC string literal
-  (`bwmd:refersToElementSymbol`), not as an IRI — all 118 IUPAC elements are
-  supported.
-- Weight fractions are specified as ranges (`min_value` / `max_value`); for a
-  point value, set both to the same number.
+  (`bwmd:refersToElementSymbol`), not as an IRI — this is why all 118 elements
+  are supported without an explicit mapping table.
+- No `inference="rdfs"` flag is needed for SHACL validation — all shapes target
+  classes directly.
 
----
-
-## Supported units
-
-| Simplified label | Stored string | Meaning |
-|---|---|---|
-| `%`    | `%`    | weight percentage (unqualified) |
-| `wt.%` | `wt.%` | weight percentage (explicit) |
-| `at.%` | `at.%` | atomic percentage |
-
----
-
-## Supported elements
-
-All 118 IUPAC elements (IUPAC Red Book, 2005) are supported. The full list is
-in the `enum` of
-[`simplified/schema.simplified.json`](simplified/schema.simplified.json).
-
----
-
-## Quick start (Python)
-
-The `simplified/` folder provides a user-friendly JSON interface.
-Full tooling instructions are in
-[`docs/simplified-input-guide.md`](../../../docs/simplified-input-guide.md).
-
-### 1. Describe your material
-
-Create `my_input.json` (or copy [`docs/example.input.json`](docs/example.input.json)):
-
-```json
-{
-  "label": "316L Chemical Composition",
-  "base_element": { "symbol": "Fe" },
-  "fractions": [
-    { "symbol": "Cr", "min_value": 16.0, "max_value": 18.0, "unit": "wt.%" },
-    { "symbol": "Ni", "min_value": 10.0, "max_value": 14.0, "unit": "wt.%" },
-    { "symbol": "Mo", "min_value": 2.0,  "max_value": 3.0,  "unit": "wt.%" }
-  ]
-}
-```
-
-Rules: `min_value` ≤ `max_value`; both in [0, 100]; use the same `unit` for all
-fractions; `symbol` must be a valid IUPAC element symbol.
-
-### 2. Transform to OO-LD and convert to RDF
-
-```bash
-pip install jsonata-python rdflib pyyaml
-```
-
-```python
-import jsonata, json, yaml, rdflib
-
-# Transform simplified JSON → OO-LD
-expr = open("simplified/transform.jsonata").read()
-data = json.load(open("my_input.json"))
-oold = jsonata.Jsonata(expr).evaluate(data)
-
-# Convert OO-LD → RDF (rdflib ≥ 7 handles JSON-LD 1.1 natively)
-context = yaml.safe_load(open("specs/schema.oold.yaml"))["@context"]
-g = rdflib.Dataset()
-g.parse(data=json.dumps({"@context": context, **oold}), format="json-ld")
-g.serialize(destination="my_output.ttl", format="turtle")
-```
-
-### 3. Validate
-
-```python
-import pyshacl
-
-data_graph   = rdflib.Graph().parse("my_output.ttl")
-shapes_graph = rdflib.Graph().parse("specs/shape.ttl")
-conforms, _, report = pyshacl.validate(
-    data_graph, shacl_graph=shapes_graph, serialize_report_graph=True
-)
-print(report)
-```
-
-> No `inference="rdfs"` flag is required for this schema — all SHACL shapes
-> target classes directly.
-
----
-
-## Files in this folder
-
-| File | Purpose |
-|---|---|
-| `specs/schema.oold.yaml` | Full OO-LD / JSON-LD schema |
-| `specs/shape.ttl` | SHACL validation shape |
-| `docs/example.oold.json` | Complete OO-LD example (316L stainless steel) |
-| `docs/chemical_composition_workflow.ipynb` | End-to-end Jupyter notebook (transform → RDF → SHACL) |
-| `docs/example.input.json` | Ready-to-edit simplified example |
-| `simplified/schema.simplified.json` | User-friendly JSON Schema |
-| `simplified/transform.jsonata` | JSONata transform: simplified JSON → OO-LD |
+</details>
 
 ---
 
 ## Further reading
 
-- [Simplified input guide](../../../docs/simplified-input-guide.md) — step-by-step workflow (validate → transform → RDF → SHACL)
-- [OO-LD primer](../../../docs/oold-primer.md) — what OO-LD is and how it works
-- [Schema format reference](../../../docs/schema-format.md) — field-by-field reference
+- [Step-by-step guide](../../../docs/simplified-input-guide.md) — fill in data → convert → validate
+- [OO-LD primer](../../../docs/oold-primer.md) — how the schema format works
+- [Schema format reference](../../../docs/schema-format.md) — for schema authors

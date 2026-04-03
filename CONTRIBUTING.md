@@ -1,6 +1,11 @@
 # Contributing to the Semantic Schema Store
 
-Thank you for contributing! Schemas in this store are community-maintained. The goal is a diverse library where competing patterns can coexist and be rated by users.
+> **Who is this for?** People who want to add a new schema or correct an
+> existing one.  If you just want to record data, start with
+> [README.md](README.md) instead.
+
+Thank you for contributing! Schemas in this store are community-maintained.
+The goal is a diverse library where competing ontology patterns can coexist.
 
 ---
 
