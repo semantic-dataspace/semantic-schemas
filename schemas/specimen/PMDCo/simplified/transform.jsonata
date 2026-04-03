@@ -26,7 +26,7 @@
    *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
    */
 
-  $schemaUri := "https://github.com/materialdigital/semantic-schemas/tree/main/schemas/specimen/PMDCo/#v1.0.0";
+  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/specimen/PMDCo/#v1.0.0";
 
   /* ── Mass unit label → Unit Ontology IRI ────────────────────────────── */
   $massUnitMap := {

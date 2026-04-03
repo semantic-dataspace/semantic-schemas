@@ -114,7 +114,7 @@ This schema references the chemical-composition schema via JSON Schema `$ref`:
 
 ```yaml
 has_composition:
-  $ref: "https://github.com/materialdigital/semantic-schemas/tree/main/schemas/chemical-composition/PMDCo/"
+  $ref: "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/chemical-composition/PMDCo/"
 ```
 
 ### Compatibility matrix

@@ -1,6 +1,6 @@
 {
   "type": "foaf:Person",
-  "conforms_to": "https://github.com/materialdigital/semantic-schemas/tree/main/schemas/expertise/#v1.0.0",
+  "conforms_to": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/expertise/#v1.0.0",
   "materials": [
     "https://dsms.example.org/api/knowledge/mat-steel-316l",
     "https://dsms.example.org/api/knowledge/mat-alsi10mg"

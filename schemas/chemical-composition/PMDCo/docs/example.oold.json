@@ -1,6 +1,6 @@
 {
   "@context": "https://w3id.org/pmd/co/test/shape_chemical_composition#",
-  "conforms_to": "https://github.com/materialdigital/semantic-schemas/tree/main/schemas/chemical-composition/PMDCo/#v1.0.0",
+  "conforms_to": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/chemical-composition/PMDCo/#v1.0.0",
   "type": "pmdco:PMD_0000551",
   "id":   "chem-comp-316l-stainless-steel",
   "quality_of": {

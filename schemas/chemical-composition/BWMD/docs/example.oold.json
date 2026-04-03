@@ -1,5 +1,5 @@
 {
-  "conforms_to": "https://github.com/materialdigital/semantic-schemas/tree/main/schemas/chemical-composition/BWMD/#v1.0.0",
+  "conforms_to": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/chemical-composition/BWMD/#v1.0.0",
   "type": "bwmd:ChemicalComposition",
   "label": "316L Chemical Composition",
   "base_element": {

@@ -131,11 +131,11 @@ $comment: >-
   Schema for a bfo:Object (Specimen) bearing a pmdco:Mass quality and a
   pmdco:ChemicalComposition quality (composed via $ref).
 x-schema-version: '1.0.0'
-x-schema-id: 'https://github.com/materialdigital/semantic-schemas/tree/main/schemas/specimen/PMDCo/'
+x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/specimen/PMDCo/'
 # Schemas referenced by $ref and the versions they were tested against.
 # Update this table when either schema releases a new version.
 x-schema-dependencies:
-  - schema-id: 'https://github.com/materialdigital/semantic-schemas/tree/main/schemas/chemical-composition/PMDCo/'
+  - schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/chemical-composition/PMDCo/'
     compatible-versions:
       - '1.0.0'
     property: has_composition
@@ -261,4 +261,4 @@ properties:
       graph back-reference is consistent.
     # Canonical schema URI — toolchain must resolve this to the local file.
     # Resolves to: schemas/chemical-composition/PMDCo/specs/schema.oold.yaml
-    $ref: "https://github.com/materialdigital/semantic-schemas/tree/main/schemas/chemical-composition/PMDCo/"
+    $ref: "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/chemical-composition/PMDCo/"

@@ -96,7 +96,7 @@ x-schema-version: '1.0.0'
 # Stable IRI identifying this schema. The transform appends the version to form
 # the versioned IRI that is written into every generated OO-LD and RDF output.
 # Update both this base IRI and x-schema-version when the schema is released.
-x-schema-id: 'https://github.com/materialdigital/semantic-schemas/tree/main/schemas/chemical-composition/PMDCo/'
+x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/chemical-composition/PMDCo/'
 title: Chemical Composition
 type: object
 required:

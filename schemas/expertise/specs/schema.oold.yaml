@@ -61,7 +61,7 @@ $comment: >-
   of the referenced entity, not by distinct property IRIs. Sub-properties
   of schema:knowsAbout are planned in a future schema-store vocabulary.
 x-schema-version: '1.0.0'
-x-schema-id: 'https://github.com/materialdigital/semantic-schemas/tree/main/schemas/expertise/'
+x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/expertise/'
 title: Expertise
 description: Expertise profile of a domain expert in materials science
 type: object
@@ -82,8 +82,8 @@ properties:
     description: Versioned IRI of the schema used to create this instance
     type: string
     readOnly: true
-    const: "https://github.com/materialdigital/semantic-schemas/tree/main/schemas/expertise/#v1.0.0"
-    default: "https://github.com/materialdigital/semantic-schemas/tree/main/schemas/expertise/#v1.0.0"
+    const: "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/expertise/#v1.0.0"
+    default: "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/expertise/#v1.0.0"
 
   materials:
     title: Materials
