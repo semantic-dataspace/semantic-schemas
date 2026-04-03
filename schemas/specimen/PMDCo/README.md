@@ -1,6 +1,6 @@
 # Specimen — PMDCo
 
-Records a **physical specimen** — its name, mass, and chemical composition —
+Records a **physical specimen** (its name, mass, and chemical composition)
 following the [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/).
 
 This schema builds on the [Chemical Composition — PMDCo](../../chemical-composition/PMDCo/README.md)
@@ -40,11 +40,11 @@ Copy [`docs/example.input.json`](docs/example.input.json) and fill in your value
 | Field | Required | Description |
 |---|---|---|
 | `specimen_name` | yes | Name or identifier for the specimen |
-| `elements` | yes | Chemical composition — same format as the chemical-composition schema |
+| `elements` | yes | Chemical composition, same format as the chemical-composition schema |
 | `mass_value` | no | Mass of the specimen as a positive number |
 | `mass_unit` | no | `"g"` (gram), `"kg"` (kilogram), or `"mg"` (milligram) |
-| `specimen_id` | no | Custom IRI slug — auto-derived from `specimen_name` if omitted |
-| `comp_id` | no | Custom IRI slug for the composition node — auto-derived if omitted |
+| `specimen_id` | no | Custom IRI slug (auto-derived from `specimen_name` if omitted) |
+| `comp_id` | no | Custom IRI slug for the composition node (auto-derived if omitted) |
 
 ### Convert to RDF (Python)
 
@@ -95,15 +95,15 @@ print("Conforms:", conforms)
 
 | File | Purpose |
 |---|---|
-| `docs/example.input.json` | Ready-to-edit example — start here |
+| `docs/example.input.json` | Ready-to-edit example (start here) |
 | `docs/specimen_workflow.ipynb` | Step-by-step notebook |
 | `simplified/schema.simplified.json` | Input field reference |
 | `simplified/transform.jsonata` | Converts your input to the specimen envelope + mass |
 | `specs/schema.oold.yaml` | Full schema definition (expert reference) |
 | `specs/shape.ttl` | SHACL validation rules (specimen node + mass) |
 
-SHACL validation loads two shape files — the specimen shape above plus
-`chemical-composition/PMDCo/specs/shape.ttl` — mirroring the `$ref` composition
+SHACL validation loads two shape files: the specimen shape above plus
+`chemical-composition/PMDCo/specs/shape.ttl`, mirroring the `$ref` composition
 at the schema level.
 
 ---
@@ -161,7 +161,7 @@ Specimen  (bfo:BFO_0000030 — Object)
 ```
 
 Three back-references inside the sub-schemas must be set to the parent
-specimen's `id` — the JSONata transform sets all of them automatically:
+specimen's `id`; the JSONata transform sets all of them automatically:
 
 | Field path | Must equal |
 |---|---|
@@ -175,6 +175,6 @@ specimen's `id` — the JSONata transform sets all of them automatically:
 
 ## Further reading
 
-- [Chemical Composition — PMDCo](../../chemical-composition/PMDCo/README.md) — the referenced sub-schema
-- [OO-LD primer](../../../docs/oold-primer.md) — how the schema format works
-- [Schema format reference](../../../docs/schema-format.md) — for schema authors
+- [Chemical Composition — PMDCo](../../chemical-composition/PMDCo/README.md): the referenced sub-schema
+- [OO-LD primer](../../../docs/oold-primer.md): how the schema format works
+- [Schema format reference](../../../docs/schema-format.md): for schema authors

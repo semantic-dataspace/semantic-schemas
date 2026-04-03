@@ -1,7 +1,7 @@
 # Chemical Composition — BWMD
 
-Records the **chemical composition of a material** — which elements it
-contains and in what proportions — following the
+Records the **chemical composition of a material** (which elements it
+contains and in what proportions) following the
 [BWMD Materials Data Science Ontology](https://www.iwm.fraunhofer.de/ontologies/bwmd-ontology#)
 developed by Fraunhofer IWM.
 
@@ -21,7 +21,7 @@ jupyter lab docs/chemical_composition_workflow.ipynb
 ```
 
 The notebook walks you through every step: fill in your data, convert to RDF,
-and validate — with explanation between each step.
+and validate, with explanation between each step.
 
 ### Input fields
 
@@ -43,11 +43,11 @@ Copy [`docs/example.input.json`](docs/example.input.json) and fill in your value
 |---|---|---|
 | `label` | yes | Human-readable name for this composition |
 | `base_element.symbol` | yes | IUPAC symbol of the dominant element (e.g. `"Fe"`) |
-| `fractions` | yes | List of alloying elements — one entry per element |
+| `fractions` | yes | List of alloying elements, one entry per element |
 | `fractions[].symbol` | yes | IUPAC element symbol |
 | `fractions[].min_value` | yes | Minimum fraction, 0–100 (for a point value, set equal to `max_value`) |
 | `fractions[].max_value` | yes | Maximum fraction, 0–100 |
-| `fractions[].unit` | yes | `"%"`, `"wt.%"`, or `"at.%"` — same for all fractions |
+| `fractions[].unit` | yes | `"%"`, `"wt.%"`, or `"at.%"` (same for all fractions) |
 
 ### Convert to RDF (Python)
 
@@ -81,7 +81,7 @@ print("Conforms:", conforms)
 
 | File | Purpose |
 |---|---|
-| `docs/example.input.json` | Ready-to-edit example — start here |
+| `docs/example.input.json` | Ready-to-edit example (start here) |
 | `docs/chemical_composition_workflow.ipynb` | Step-by-step notebook |
 | `docs/example.oold.json` | Fully converted OO-LD example (reference) |
 | `simplified/schema.simplified.json` | Input field reference |
@@ -122,9 +122,9 @@ Key decisions:
 
 - Both `base_element` and `fractions` serialise to `bwmd:hasPart` in RDF.
 - Element identity is expressed as a plain IUPAC string literal
-  (`bwmd:refersToElementSymbol`), not as an IRI — this is why all 118 elements
+  (`bwmd:refersToElementSymbol`), not as an IRI; this is why all 118 elements
   are supported without an explicit mapping table.
-- No `inference="rdfs"` flag is needed for SHACL validation — all shapes target
+- No `inference="rdfs"` flag is needed for SHACL validation; all shapes target
   classes directly.
 
 </details>
@@ -133,6 +133,6 @@ Key decisions:
 
 ## Further reading
 
-- [Step-by-step guide](../../../docs/simplified-input-guide.md) — fill in data → convert → validate
-- [OO-LD primer](../../../docs/oold-primer.md) — how the schema format works
-- [Schema format reference](../../../docs/schema-format.md) — for schema authors
+- [Step-by-step guide](../../../docs/simplified-input-guide.md): fill in data → convert → validate
+- [OO-LD primer](../../../docs/oold-primer.md): how the schema format works
+- [Schema format reference](../../../docs/schema-format.md): for schema authors

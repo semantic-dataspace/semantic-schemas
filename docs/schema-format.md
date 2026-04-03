@@ -59,7 +59,7 @@ my_field:
 ```
 
 `ktypeIds` are the `ktype_id` values used by the DSMS `/knowledge/search` endpoint to filter results.
-They are deployment-specific — coordinate with the DSMS instance you are targeting.
+They are deployment-specific; coordinate with the DSMS instance you are targeting.
 
 ---
 

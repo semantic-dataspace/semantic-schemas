@@ -12,9 +12,9 @@ The goal is a diverse library where competing ontology patterns can coexist.
 ## Ground rules
 
 - A schema must be grounded in a **publicly available ontology** with stable IRIs.
-- A schema for a concept that already exists under a different ontology is **welcome** — do not replace the existing one, add alongside it.
+- A schema for a concept that already exists under a different ontology is **welcome**. Add it alongside the existing one instead of replacing it.
 - Keep schemas **focused**: one domain concept per schema, one ontology per folder.
-- Do not embed large static enumerations of ontology classes — link to the ontology instead.
+- Do not embed large static enumerations of ontology classes; link to the ontology instead.
 
 ---
 
@@ -89,7 +89,7 @@ Reviewers will check:
 
 - **Bug fixes** (wrong IRI, typo): open a PR directly with a brief description.
 - **Breaking changes** (removing fields, changing structure): open an issue first.
-- Do **not** edit another contributor's schema to change its ontological pattern — create a new variant instead.
+- Do **not** edit another contributor's schema to change its ontological pattern. Create a new variant instead.
 
 ---
 
@@ -124,7 +124,7 @@ automatically carried through to the generated RDF as:
 <instance> dcterms:conformsTo <schema-id/vX.Y.Z> .
 ```
 
-Users do not need to provide any provenance information — it is stamped on every output by the
+Users do not need to provide any provenance information; it is stamped on every output by the
 transform.  When bumping the schema version, update **both** `x-schema-version` in
 `schema.oold.yaml` and `$schemaUri` in `transform.jsonata`.
 

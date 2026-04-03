@@ -1,7 +1,7 @@
 # Chemical Composition — PMDCo
 
-Records the **chemical composition of a material** — which elements it
-contains and in what proportions — following the
+Records the **chemical composition of a material** (which elements it
+contains and in what proportions) following the
 [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/).
 
 ---
@@ -16,7 +16,7 @@ jupyter lab docs/chemical_composition_workflow.ipynb
 ```
 
 The notebook walks you through every step: fill in your data, convert to RDF,
-and validate — with explanation between each step.
+and validate, with explanation between each step.
 
 ### Input fields
 
@@ -37,12 +37,12 @@ Copy [`docs/example.input.json`](docs/example.input.json) and fill in your value
 | Field | Required | Description |
 |---|---|---|
 | `material_name` | yes | Name or identifier for the material |
-| `elements` | yes | List of element fractions — one entry per element |
+| `elements` | yes | List of element fractions, one entry per element |
 | `elements[].symbol` | yes | IUPAC element symbol (e.g. `"Fe"`, `"Cr"`) |
 | `elements[].value` | yes | Fraction value, 0–100 |
-| `elements[].unit` | yes | `"mass%"`, `"vol%"`, or `"mol%"` — same for all elements |
-| `material_id` | no | Custom ID for the material node — auto-derived from `material_name` if omitted |
-| `comp_id` | no | Custom ID for the composition node — auto-derived if omitted |
+| `elements[].unit` | yes | `"mass%"`, `"vol%"`, or `"mol%"` (same for all elements) |
+| `material_id` | no | Custom ID for the material node (auto-derived from `material_name` if omitted) |
+| `comp_id` | no | Custom ID for the composition node (auto-derived if omitted) |
 
 72 PMDCo-mapped elements are supported.
 See [`simplified/schema.simplified.json`](simplified/schema.simplified.json) for the full list.
@@ -79,7 +79,7 @@ print("Conforms:", conforms)
 
 | File | Purpose |
 |---|---|
-| `docs/example.input.json` | Ready-to-edit example — start here |
+| `docs/example.input.json` | Ready-to-edit example (start here) |
 | `docs/chemical_composition_workflow.ipynb` | Step-by-step notebook |
 | `docs/example.oold.json` | Fully converted OO-LD example (reference) |
 | `simplified/schema.simplified.json` | Input field reference |
@@ -137,6 +137,6 @@ Key decisions:
 
 ## Further reading
 
-- [Step-by-step guide](../../../docs/simplified-input-guide.md) — fill in data → convert → validate
-- [OO-LD primer](../../../docs/oold-primer.md) — how the schema format works
-- [Schema format reference](../../../docs/schema-format.md) — for schema authors
+- [Step-by-step guide](../../../docs/simplified-input-guide.md): fill in data → convert → validate
+- [OO-LD primer](../../../docs/oold-primer.md): how the schema format works
+- [Schema format reference](../../../docs/schema-format.md): for schema authors

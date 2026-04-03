@@ -1,12 +1,14 @@
 # How the schema format works
 
+---
+
 ## The idea in plain language
 
 Each schema in this store does two jobs at once:
 
-1. **Defines a form** — which fields exist, what type of value each takes,
+1. **Defines a form**: which fields exist, what type of value each takes,
    which are required, and what labels and hints to show in a UI.
-2. **Maps each field to an ontology term** — so that when you fill in the form,
+2. **Maps each field to an ontology term**: when you fill in the form,
    the result can be automatically written as RDF, the standard format for
    linked scientific data.
 
@@ -15,7 +17,7 @@ Job 2 happens automatically in the background.
 
 The format that combines these two jobs is called
 **OO-LD (Object-Oriented Linked Data)**.  You do not need to understand
-OO-LD to use the schemas — this document is for people who want to know
+OO-LD to use the schemas. This document is for people who want to know
 what is happening under the hood, or who want to write their own schema.
 
 Reference implementation: [github.com/OO-LD/oold-python](https://github.com/OO-LD/oold-python)
@@ -31,21 +33,21 @@ An OO-LD schema is a YAML file with two sections:
 | `@context` | JSON-LD | Maps field names to ontology IRIs |
 | everything else | JSON Schema | Defines fields, types, validation, UI hints |
 
-### Layer 1 — JSON Schema (the form)
+### Layer 1: JSON Schema (the form)
 
 JSON Schema is a widely used format for describing the structure of a JSON
 object.  It specifies which fields are required, what type each value must be
 (string, number, array, …), allowed values, labels, and descriptions.  Any
 JSON Schema validator or form builder can read it.
 
-### Layer 2 — JSON-LD `@context` (the ontology mapping)
+### Layer 2: JSON-LD `@context` (the ontology mapping)
 
 JSON-LD is a standard for writing linked data as JSON.  The `@context` block
 is a lookup table: it says "whenever you see the key `quality_of`, treat it as
 the RDF property `http://purl.obolibrary.org/obo/RO_0000080`."
 
 Because the two layers live in the same file, no separate mapping step is
-needed — the context is always in sync with the schema.
+needed; the context is always in sync with the schema.
 
 ---
 
@@ -99,7 +101,7 @@ _:instance
 ```
 
 The `pmdco:` prefix in the value is expanded using the declared prefix, and
-`quality_of` becomes the full property IRI — all from the `@context`.
+`quality_of` becomes the full property IRI, via the `@context`.
 
 ---
 
@@ -115,7 +117,7 @@ type:
   const: 'pmdco:PMD_0000551'
 ```
 
-- `readOnly: true` marks it as a system value — not shown as an editable field.
+- `readOnly: true` marks it as a system value (not shown as an editable field).
 - The value (a CURIE) is expanded to a full IRI at serialisation time.
 
 ---
@@ -134,22 +136,21 @@ my_field:
       - material       # entity type in the DSMS knowledge graph
 ```
 
-`x-` prefixed keys are a valid JSON Schema extension mechanism — standard
-validators silently ignore them.  The DSMS web form builder uses them to
-render a searchable pick-list filtered by entity type.
+`x-` prefixed keys are a standard JSON Schema extension mechanism; validators
+silently ignore them.
 
 ---
 
 ## Why are ontology IRIs so long?
 
 Ontology IRIs are designed to be globally unique and stable for decades.
-They are not meant to be typed by hand — that is what the `@context` prefix
-map is for.  In schemas, you write `pmdco:PMD_0000551`; only the serialiser
+They are not meant to be typed by hand; the `@context` prefix map takes care
+of that.  In schemas, you write `pmdco:PMD_0000551`; only the serialiser
 ever sees the full IRI.
 
 ---
 
 ## Further reading
 
-- [Schema format reference](schema-format.md) — field-by-field reference for writing schemas
-- [Simplified input guide](simplified-input-guide.md) — how to go from a plain JSON file to RDF
+- [Schema format reference](schema-format.md): field-by-field reference for writing schemas
+- [Simplified input guide](simplified-input-guide.md): how to go from a plain JSON file to RDF

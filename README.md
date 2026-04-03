@@ -5,11 +5,10 @@ machines can read, search, and connect to other datasets.
 
 Each template covers one concept (e.g. *chemical composition*, *specimen*).
 You fill in a plain JSON file with your values; the tooling converts it into
-**RDF** — a graph format understood by ontologies such as
-[PMDCo](https://w3id.org/pmd/co/) and [BWMD](https://www.iwm.fraunhofer.de/ontologies/bwmd-ontology#).
+**RDF**, a graph format understood by ontologies such as [DCAT](https://www.w3.org/TR/vocab-dcat-3/) and [PMDCo](https://w3id.org/pmd/co/).
 
 > **New to this?**
-> Start with a Jupyter notebook — each schema folder has one in `docs/`.
+> Each schema folder has a Jupyter notebook in `docs/`.
 > It walks you through the whole process step by step.
 
 ---
@@ -48,14 +47,14 @@ docs/
 ### I want to record data for an existing schema
 
 1. Find the schema in [CATALOG.md](CATALOG.md) and open its folder.
-2. Copy `docs/example.input.json` and fill in your values — no ontology
-   knowledge required.
+2. Copy `docs/example.input.json` and fill in your values (no ontology
+   knowledge required).
 3. Open the notebook in `docs/` and run all cells.  It converts your file to
    RDF and validates the result automatically.
 
 ### I want to understand how the format works
 
-Read [docs/oold-primer.md](docs/oold-primer.md) — it explains the idea in
+Read [docs/oold-primer.md](docs/oold-primer.md). It explains the idea in
 plain language before introducing any technical terms.
 
 ### I want to contribute a new schema
@@ -89,10 +88,11 @@ plain language before introducing any technical terms.
 
 ## The k-item field type
 
-Some fields in these schemas link to entities in a live knowledge graph rather
-than a static list of values.  In the DSMS web interface, these render as
-search-and-select widgets populated at runtime.  In JSON, the value is a URI
-pointing to the knowledge graph entity.
+Some fields in these schemas link to data containers known as Knowledge Items
+(short: k-items) in a live knowledge management system rather than to a static
+list of values from an ontology. These containers encapsulate data, metadata,
+attachments, executables (apps), and more. In JSON, the value is a URI pointing
+to the k-item’s web page.
 
 See [docs/schema-format.md](docs/schema-format.md) for the field syntax.
 Background and motivation:
@@ -108,6 +108,6 @@ Background and motivation:
 
 ## License
 
-Schemas are published under [CC0 1.0 Universal](LICENSE) — no rights reserved.
+Schemas are published under [CC0 1.0 Universal](LICENSE), with no rights reserved.
 You may use, adapt, and redistribute them freely, including for commercial
 purposes, without attribution.

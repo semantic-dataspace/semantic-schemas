@@ -6,7 +6,7 @@ All schemas currently available in this repository.
 |---|---|---|---|
 | Chemical Composition | PMDCo | Element fractions of a material (mass%, vol%, or mol%) | [schemas/chemical-composition/PMDCo/](schemas/chemical-composition/PMDCo/) |
 | Chemical Composition | BWMD | Element weight fractions with min/max ranges | [schemas/chemical-composition/BWMD/](schemas/chemical-composition/BWMD/) |
-| Specimen | PMDCo | A physical specimen — its mass and chemical composition | [schemas/specimen/PMDCo/](schemas/specimen/PMDCo/) |
+| Specimen | PMDCo | A physical specimen with its mass and chemical composition | [schemas/specimen/PMDCo/](schemas/specimen/PMDCo/) |
 | Expertise | — | A person's areas of expertise in materials science | [schemas/expertise/](schemas/expertise/) |
 
 ---

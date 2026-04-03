@@ -1,6 +1,6 @@
 # Expertise
 
-Records the **areas of expertise of a materials science researcher** — which
+Records the **areas of expertise of a materials science researcher**: which
 materials, methods, devices, and application fields they work with.
 
 Each value is a link to an entity in the DSMS knowledge graph (a k-item).
@@ -21,7 +21,7 @@ jupyter lab docs/expertise_workflow.ipynb
 ### Input fields
 
 Copy [`docs/example.oold.json`](docs/example.oold.json) and fill in your
-values.  Each field is an array of URIs — leave out any category where the
+values.  Each field is an array of URIs; leave out any category where the
 person has no expertise.
 
 ```json
@@ -49,7 +49,7 @@ person has no expertise.
 | `application_fields` | `application_field` | aerospace, automotive, biomedical |
 | `methods` | `method` | EBSD, tensile testing, hardness mapping |
 
-> **No transform step:** this schema has no `simplified/` folder — the input
+> **No transform step:** this schema has no `simplified/` folder; the input
 > JSON is already in the structured format.  Just fill in the URIs and convert.
 
 ### Convert to RDF (Python)
@@ -75,7 +75,7 @@ g.serialize(destination="output_expertise.ttl", format="turtle")
 
 | File | Purpose |
 |---|---|
-| `docs/example.oold.json` | Ready-to-edit example — start here |
+| `docs/example.oold.json` | Ready-to-edit example (start here) |
 | `docs/expertise_workflow.ipynb` | Step-by-step notebook |
 | `specs/schema.oold.yaml` | Full schema definition (expert reference) |
 
@@ -112,5 +112,5 @@ IRIs.
 
 ## Further reading
 
-- [OO-LD primer](../../docs/oold-primer.md) — how the schema format works
-- [Schema format reference](../../docs/schema-format.md) — for schema authors
+- [OO-LD primer](../../docs/oold-primer.md): how the schema format works
+- [Schema format reference](../../docs/schema-format.md): for schema authors

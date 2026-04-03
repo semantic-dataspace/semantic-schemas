@@ -46,20 +46,20 @@ schemas/<domain>/<ontology>/
 ```
 
 The `simplified/` folder is the friendly entry point.  The `specs/` folder is
-the full schema — you rarely need to look at it.
+the full schema; you rarely need to look at it.
 
 ---
 
-## Step 1 — Fill in your data
+## Step 1: Fill in your data
 
 Copy `docs/example.input.json` from the schema folder you want to use and
 edit it with your values.  Each schema's `README.md` describes the fields.
-You can also open `simplified/schema.simplified.json` in any text editor — it
-contains inline descriptions for every field.
+You can also open `simplified/schema.simplified.json` in any text editor;
+it contains inline descriptions for every field.
 
 ---
 
-## Step 2 — Validate your input
+## Step 2: Validate your input
 
 Check that your file matches the expected format before going further.
 
@@ -80,7 +80,7 @@ Errors show the field path and the rule that was violated.
 
 ---
 
-## Step 3 — Convert to the structured format
+## Step 3: Convert to the structured format
 
 Each schema ships a `simplified/transform.jsonata` file that converts your
 plain JSON into the structured format expected by the RDF converter.
@@ -108,11 +108,11 @@ python -m jsonata -e simplified/transform.jsonata -i my_input.json -o my_output.
 
 ---
 
-## Step 4 — Convert to RDF
+## Step 4: Convert to RDF
 
 The structured JSON from the previous step is a standard JSON-LD document.
 The ontology mapping (which field means which property) is taken directly from
-`specs/schema.oold.yaml` — no copy-paste needed.
+`specs/schema.oold.yaml`; no copy-paste needed.
 
 ```bash
 pip install rdflib pyyaml
@@ -133,7 +133,7 @@ The Turtle file (`my_output.ttl`) is the RDF result.
 
 ---
 
-## Step 5 — Validate against the SHACL shape
+## Step 5: Validate against the SHACL shape
 
 SHACL shapes are validation rules written in RDF.  They check things like
 "every element fraction must be a number between 0 and 100."
@@ -157,7 +157,7 @@ print("Conforms:", conforms)
 ```
 
 > The `inference="rdfs"` flag is required for schemas that use class
-> hierarchies (e.g. element subclasses, proportion subclasses) — it tells the
+> hierarchies (e.g. element subclasses, proportion subclasses); it tells the
 > validator to reason about subclasses when applying the rules.
 > Check the schema's `README.md` or notebook to see whether it is needed.
 
@@ -167,12 +167,12 @@ print("Conforms:", conforms)
 
 Each schema folder has a Jupyter notebook in `docs/` that runs all of these
 steps interactively.  If you are not sure where to start, open the notebook
-first — it includes explanation between each step and shows you the output
+first; it includes explanation between each step and shows you the output
 as you go.
 
 ---
 
 ## See also
 
-- [OO-LD primer](oold-primer.md) — how the schema format works under the hood
-- [Schema format reference](schema-format.md) — for people writing new schemas
+- [OO-LD primer](oold-primer.md): how the schema format works under the hood
+- [Schema format reference](schema-format.md): for people writing new schemas
