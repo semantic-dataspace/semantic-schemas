@@ -32,9 +32,10 @@ schemas/                       # Schema library
 templates/
   schema.oold.yaml             # Blank template for writing a new schema
 docs/
-  oold-primer.md               # How the schema format works (plain language)
+  concepts.md                  # How the semantic schemas are designed and why
+  oold-primer.md               # How the OO-LD schema format works
   schema-format.md             # Field-by-field reference for schema authors
-  simplified-input-guide.md    # End-to-end guide: fill in data → RDF
+  schema-patterns.md           # Inheritance and composition between schemas
 .github/
   ISSUE_TEMPLATE/              # Propose or correct a schema
   PULL_REQUEST_TEMPLATE.md
@@ -52,10 +53,12 @@ docs/
 3. Open the notebook in `docs/` and run all cells.  It converts your file to
    RDF and validates the result automatically.
 
-### I want to understand how the format works
+### I want to understand how the semantic schemas work
 
-Read [docs/oold-primer.md](docs/oold-primer.md). It explains the idea in
-plain language before introducing any technical terms.
+Read [docs/concepts.md](docs/concepts.md) for the big picture: why there are
+two schemas per concept, what the transform does, and how the pipeline fits
+together. Then [docs/oold-primer.md](docs/oold-primer.md) if you want to go
+deeper into the OO-LD format itself.
 
 ### I want to contribute a new schema
 
@@ -70,9 +73,10 @@ plain language before introducing any technical terms.
 
 | Document | Content |
 |---|---|
-| [docs/oold-primer.md](docs/oold-primer.md) | How the schema format works, in plain language |
-| [docs/simplified-input-guide.md](docs/simplified-input-guide.md) | Step-by-step: fill in data → convert → validate |
+| [docs/concepts.md](docs/concepts.md) | How the semantic schemas are designed: two layers, the transform, the full pipeline |
+| [docs/oold-primer.md](docs/oold-primer.md) | How the OO-LD schema format works |
 | [docs/schema-format.md](docs/schema-format.md) | Field reference for writing and reviewing schemas |
+| [docs/schema-patterns.md](docs/schema-patterns.md) | Inheritance and composition between schemas |
 
 ---
 

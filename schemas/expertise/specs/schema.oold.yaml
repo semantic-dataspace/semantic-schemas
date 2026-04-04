@@ -23,7 +23,7 @@
   # Known limitation: because all fields share the same property IRI, a SPARQL
   # query on raw triples cannot distinguish "expertise in materials" from
   # "expertise in methods" without joining on the ktype of the referenced entity.
-  # A future schema-store vocabulary will define rdfs:subPropertyOf sub-properties
+  # A future semantic-schemas vocabulary will define rdfs:subPropertyOf sub-properties
   # (e.g. ssv:hasMaterialExpertise rdfs:subPropertyOf schema:knowsAbout) to resolve
   # this. See: https://github.com/<org>/semantic-schemas/issues/<n>
   materials:
@@ -59,7 +59,7 @@ $comment: >-
   and share the property schema:knowsAbout. Semantic distinction between
   field types (materials, methods, devices, …) is carried by the rdf:type
   of the referenced entity, not by distinct property IRIs. Sub-properties
-  of schema:knowsAbout are planned in a future schema-store vocabulary.
+  of schema:knowsAbout are planned in a future semantic-schemas vocabulary.
 x-schema-version: '1.0.0'
 x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/expertise/'
 title: Expertise

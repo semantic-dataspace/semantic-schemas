@@ -4,7 +4,7 @@
 
 ## The idea in plain language
 
-Each schema in this store does two jobs at once:
+Each schema in the semantic schemas collection does two jobs at once:
 
 1. **Defines a form**: which fields exist, what type of value each takes,
    which are required, and what labels and hints to show in a UI.
@@ -107,7 +107,7 @@ The `pmdco:` prefix in the value is expanded using the declared prefix, and
 
 ## The `type` property convention
 
-Every OO-LD schema in this store uses a hidden `type` property to set the
+Every OO-LD schema here uses a hidden `type` property to set the
 `rdf:type` of the instance:
 
 ```yaml
@@ -152,5 +152,5 @@ ever sees the full IRI.
 
 ## Further reading
 
+- [Concepts](concepts.md): how the two-layer design works and why
 - [Schema format reference](schema-format.md): field-by-field reference for writing schemas
-- [Simplified input guide](simplified-input-guide.md): how to go from a plain JSON file to RDF

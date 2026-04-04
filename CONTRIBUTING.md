@@ -4,7 +4,7 @@
 > existing one.  If you just want to record data, start with
 > [README.md](README.md) instead.
 
-Thank you for contributing! Schemas in this store are community-maintained.
+Thank you for contributing! These schemas are community-maintained.
 The goal is a diverse library where competing ontology patterns can coexist.
 
 ---
