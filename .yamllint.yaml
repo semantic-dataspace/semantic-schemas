@@ -30,7 +30,7 @@ rules:
     indent-sequences: true
     check-multi-line-strings: false
 
-  # Disallow bare `yes`/`no`/`on`/`off` — use `true`/`false` explicitly.
+  # Disallow bare `yes`/`no`/`on`/`off`; use `true`/`false` explicitly.
   # Exempts mapping keys (e.g. `readOnly: true` is fine).
   truthy:
     allowed-values: ['true', 'false']

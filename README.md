@@ -24,7 +24,7 @@ schemas/                       # Schema library
         schema.oold.yaml       # Full schema definition (expert reference)
         shape.ttl              # Validation rules (SHACL)
       docs/
-        example.input.json     # Ready-to-edit example — start here
+        example.input.json     # Ready-to-edit example (start here)
         *.ipynb                # Step-by-step workflow notebook
       simplified/              # User-friendly entry point
         schema.simplified.json # Input field reference

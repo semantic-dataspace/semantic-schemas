@@ -161,12 +161,12 @@ CHEM_COMP = pathlib.Path("chemical-composition/PMDCo")
 
 simplified = json.load(open("example.input.json"))
 
-# Step 1 — specimen envelope (name, mass)
+# Step 1: specimen envelope (name, mass)
 specimen_doc = jsonata.Jsonata(
     open(SPECIMEN / "simplified/transform.jsonata").read()
 ).evaluate(simplified)
 
-# Step 2 — delegate composition to the other schema's transform
+# Step 2: delegate composition to the other schema's transform
 comp_input = {
     "material_name": simplified["specimen_name"],
     "material_id":   specimen_doc["id"],
@@ -177,7 +177,7 @@ comp_doc = jsonata.Jsonata(
 ).evaluate(comp_input)
 comp_doc["quality_of"] = specimen_doc["id"]   # back-reference to parent
 
-# Step 3 — merge and parse to RDF
+# Step 3: merge and parse to RDF
 oold_doc = {**specimen_doc, "has_composition": comp_doc}
 context  = yaml.safe_load(open(SPECIMEN / "specs/schema.oold.yaml"))["@context"]
 g = rdflib.Dataset()
@@ -231,8 +231,8 @@ chemical-composition schema's context that the combined RDF graph needs.
 
 ### Embedded sub-objects vs. schema composition
 
-Some schemas embed sub-nodes that are not described by a separate schema —
-for example, the result nodes inside a tensile test or the parameter nodes
+Some schemas embed sub-nodes that are not described by a separate schema.
+For example, the result nodes inside a tensile test or the parameter nodes
 inside a model calibration. These are **simpler than schema composition**:
 there is no separate transform to invoke; the parent schema's own transform
 generates the sub-nodes directly. They are documented in the parent schema's

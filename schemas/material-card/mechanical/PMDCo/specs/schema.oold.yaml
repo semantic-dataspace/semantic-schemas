@@ -28,14 +28,14 @@
 # Design notes:
 #   - IAO:DataSet (IAO_0000100) is the canonical class for a collection of
 #     data items.  It is more appropriate than a process class here because
-#     the material card IS the data artefact — it does not describe an action.
+#     the material card IS the data artefact, not a process description.
 #   - Scalar properties (density, Young's modulus, Poisson's ratio) are mapped
 #     to PMDCo ValueObject nodes carrying qudt:value / qudt:hasUnit, consistent
 #     with the PMDCo scalar property pattern.
 #   - Mechanical properties re-use the TTO result pattern from
 #     characterization/tensile-test/TTO/ for interoperability.
 #   - The constitutive model block is embedded (composite), because parameters
-#     are direct content of the card — not independently managed graph nodes.
+#     are direct content of the card, not independently managed graph nodes.
 
 "@context":
   rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -146,7 +146,7 @@ properties:
     title: Card Name
     description: >-
       Human-readable name for this material card
-      (e.g. "316L stainless steel — Hockett-Sherby v1").
+      (e.g. "316L stainless steel, Hockett-Sherby v1").
     type: string
 
   description:

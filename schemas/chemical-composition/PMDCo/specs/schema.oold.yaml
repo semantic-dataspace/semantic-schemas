@@ -1,4 +1,4 @@
-# OO-LD Schema for Chemical Composition — PMDCo pattern
+# OO-LD Schema for Chemical Composition (PMDCo pattern)
 # Ontology: Platform MaterialDigital Core Ontology (PMDCo)
 #   https://w3id.org/pmd/co/
 #
@@ -46,7 +46,7 @@
     "@prefix": true
   pmdco: "https://w3id.org/pmd/co/"
   uqudt: "https://qudt.org/vocab/unit/"
-  # Instance IRI base — deployment-specific; override when serialising to RDF.
+  # Instance IRI base (deployment-specific; override when serialising to RDF).
   # See docs/schema-format.md § "Instance IRI base"
   "@base": "https://w3id.org/pmd/co/test/shape_chemical_composition#"
   type: "@type"
@@ -56,7 +56,7 @@
 
   quality_of:
     "@id": "ro:0000080"  # RO_0000080  quality_of
-    # No "@type": "@id" — the value is an embedded object (blank node with rdfs:label)
+    # No "@type": "@id": the value is an embedded object (blank node with rdfs:label)
   is_subject_of:
     "@id": "pmdco:PMD_0000004"  # PMD_0000004  is_subject_of
     "@type": "@id"

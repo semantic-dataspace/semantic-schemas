@@ -1,9 +1,9 @@
-# Specimen — PMDCo
+# Specimen (PMDCo)
 
 Records a **physical specimen** (its name, mass, and chemical composition)
 following the [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/).
 
-This schema builds on the [Chemical Composition — PMDCo](../../chemical-composition/PMDCo/README.md)
+This schema builds on the [Chemical Composition (PMDCo)](../../chemical-composition/PMDCo/README.md)
 schema: the composition sub-graph is produced by that schema's converter, which
 remains the single source of truth for element IRIs and naming conventions.
 
@@ -60,11 +60,11 @@ CHEM_COMP = SPECIMEN.parent.parent / "chemical-composition" / "PMDCo"
 
 simplified = json.load(open("docs/example.input.json"))
 
-# Step 1 — specimen envelope (name + mass)
+# Step 1: specimen envelope (name + mass)
 specimen_expr = open("simplified/transform.jsonata").read()
 specimen_doc  = jsonata.Jsonata(specimen_expr).evaluate(simplified)
 
-# Step 2 — composition (delegated to the composition schema's converter)
+# Step 2: composition (delegated to the composition schema's converter)
 comp_input = {
     "material_name": simplified["specimen_name"],
     "material_id":   specimen_doc["id"],
@@ -74,14 +74,14 @@ comp_expr = open(CHEM_COMP / "simplified/transform.jsonata").read()
 comp_doc  = jsonata.Jsonata(comp_expr).evaluate(comp_input)
 comp_doc["quality_of"] = specimen_doc["id"]
 
-# Step 3 — merge and convert to RDF
+# Step 3: merge and convert to RDF
 oold_doc = {**specimen_doc, "has_composition": comp_doc}
 context  = yaml.safe_load(open("specs/schema.oold.yaml"))["@context"]
 g = rdflib.Dataset()
 g.parse(data=json.dumps({"@context": context, **oold_doc}), format="json-ld")
 g.serialize(destination="output_specimen.ttl", format="turtle")
 
-# Step 4 — validate against both shape files
+# Step 4: validate against both shape files
 shapes = rdflib.Graph()
 shapes.parse("specs/shape.ttl")
 shapes.parse(str(CHEM_COMP / "specs/shape.ttl"))
@@ -128,7 +128,7 @@ the `x-schema-dependencies` table in `specs/schema.oold.yaml` and this matrix.
 
 ---
 
-## For the curious — how this maps to the ontology
+## For the curious: how this maps to the ontology
 
 <details>
 <summary>Show the RDF graph pattern</summary>
@@ -142,7 +142,7 @@ PMDCo patterns used:
 | [Chemical Composition](https://github.com/materialdigital/core-ontology/tree/main/patterns/chemical%20composition) | Full element-fraction sub-graph, referenced via JSON Schema `$ref` |
 
 ```text
-Specimen  (bfo:BFO_0000030 — Object)
+Specimen  (bfo:BFO_0000030, Object)
   rdfs:label ──────────────────────────────── name string
   has_quality ──────────────────────────────► Mass (PMD_0020133)
     quality_of ────────────────────────────► Specimen  ← back-ref
@@ -175,6 +175,6 @@ specimen's `id`; the JSONata transform sets all of them automatically:
 
 ## Further reading
 
-- [Chemical Composition — PMDCo](../../chemical-composition/PMDCo/README.md): the referenced sub-schema
+- [Chemical Composition (PMDCo)](../../chemical-composition/PMDCo/README.md): the referenced sub-schema
 - [OO-LD primer](../../../docs/oold-primer.md): how the schema format works
 - [Schema format reference](../../../docs/schema-format.md): for schema authors

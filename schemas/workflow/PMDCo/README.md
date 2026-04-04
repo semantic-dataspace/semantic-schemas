@@ -89,7 +89,7 @@ root class so it does not privilege any one ontology.
 ## For the curious: how this maps to the ontology
 
 ```text
-Process  (bfo:BFO_0000015)        — the workflow container
+Process  (bfo:BFO_0000015)        # the workflow container
   rdfs:label   workflow name
   bfo:BFO_0000051 (has_part)
     ► Step 1  (typed to domain class, e.g. pmdco:ManufacturingProcess)

@@ -81,7 +81,7 @@ g.serialize(destination="output_expertise.ttl", format="turtle")
 
 ---
 
-## For the curious — how this maps to the ontology
+## For the curious: how this maps to the ontology
 
 <details>
 <summary>Show the RDF graph pattern</summary>

@@ -13,12 +13,12 @@ the format works.
 ## Top-level structure
 
 ```yaml
-'@context': { ... }      # required — JSON-LD context
-$schema: '...'           # recommended — JSON Schema dialect URI
-$comment: '...'          # recommended — machine-readable note / provenance
-title: '...'             # required — human-readable schema name
-description: '...'       # recommended — longer description
-type: object             # required — always 'object' at root level
+'@context': { ... }      # required: JSON-LD context
+$schema: '...'           # recommended: JSON Schema dialect URI
+$comment: '...'          # recommended: machine-readable note / provenance
+title: '...'             # required: human-readable schema name
+description: '...'       # recommended: longer description
+type: object             # required: always 'object' at root level
 required: [...]          # list of required property keys
 properties: { ... }      # the fields
 ```
@@ -108,10 +108,10 @@ The rule for distinguishing generic from specialised within a domain folder is
 based on **folder depth, not folder name**:
 
 - A folder that contains schema files directly (i.e. `specs/`, `simplified/`,
-  `docs/`) is a **leaf** — it holds a concrete schema. If it sits at the
+  `docs/`) is a **leaf**: it holds a concrete schema. If it sits at the
   `<domain>/<Ontology>/` level it is the **generic base** for that domain.
-- A folder that contains only further subfolders is an **intermediate** node
-  — it groups specialised variants or sub-domains.
+- A folder that contains only further subfolders is an **intermediate** node:
+  it groups specialised variants or sub-domains.
 
 Example for the `manufacturing` domain:
 
@@ -149,4 +149,4 @@ same rule: their position in the tree signals their role, not a special name.
 ## Further reading
 
 - [OO-LD primer](oold-primer.md): how the schema format works in plain language
-- [Schema patterns](schema-patterns.md): inheritance (`$ref` + `allOf`) and composition — when to use each, what propagates, what can be overridden, and known limitations
+- [Schema patterns](schema-patterns.md): inheritance (`$ref` + `allOf`) and composition: when to use each, what propagates, what can be overridden, and known limitations

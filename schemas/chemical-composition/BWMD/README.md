@@ -1,4 +1,4 @@
-# Chemical Composition — BWMD
+# Chemical Composition (BWMD)
 
 Records the **chemical composition of a material** (which elements it
 contains and in what proportions) following the
@@ -101,7 +101,7 @@ print("Conforms:", conforms)
 
 ---
 
-## For the curious — how this maps to the ontology
+## For the curious: how this maps to the ontology
 
 <details>
 <summary>Show the RDF graph pattern</summary>

@@ -1,4 +1,4 @@
-# OO-LD Schema for Specimen — composed from two PMDCo patterns
+# OO-LD Schema for Specimen (composed from two PMDCo patterns)
 # Ontology: Platform MaterialDigital Core Ontology (PMDCo)
 #   https://w3id.org/pmd/co/
 #
@@ -23,7 +23,7 @@
 #
 # Graph pattern:
 #
-#   Specimen  (bfo:BFO_0000030 — Object)
+#   Specimen  (bfo:BFO_0000030, Object)
 #     rdfs:label ──────────────────────────────────────── name string
 #     has_quality ────────────────────────────────────► Mass (PMD_0020133)          [pattern 1+2]
 #       quality_of ──────────────────────────────────── Specimen  ← back-ref
@@ -95,7 +95,7 @@
   quality_of:
     "@id": "ro:0000080"   # RO_0000080  quality_of
     # In the composed context quality_of is an IRI back-reference to the parent
-    # specimen — hence @type: @id here.  The standalone composition schema omits
+    # specimen, hence @type: @id here.  The standalone composition schema omits
     # this because it embeds the material as a blank node with rdfs:label.
     "@type": "@id"
   is_subject_of:
@@ -259,6 +259,6 @@ properties:
       The chemical composition of this specimen.
       Set has_composition.quality_of to this specimen's id so the composition
       graph back-reference is consistent.
-    # Canonical schema URI — toolchain must resolve this to the local file.
+    # Canonical schema URI; toolchain must resolve this to the local file.
     # Resolves to: schemas/chemical-composition/PMDCo/specs/schema.oold.yaml
     $ref: "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/chemical-composition/PMDCo/"
