@@ -1,0 +1,100 @@
+(
+  /*
+   * Cross-Domain Workflow (PMDCo / BFO) — simplified JSON → OO-LD JSON
+   *
+   * Input fields (see schema.simplified.json):
+   *   workflow_name  string   required
+   *   workflow_id    string   optional, derived from workflow_name if omitted
+   *   description    string   optional
+   *   steps          array    required (min 1)
+   *     label        string   required
+   *     step_id      string   optional, derived from label if omitted
+   *     step_type    string   optional ontology class CURIE
+   *     description  string   optional
+   *     instance_iri string   optional IRI of detailed step instance
+   *     preceded_by  array    optional — step IDs that precede this one
+   *     conditions   array    optional — inline parameters {name, value?, unit?}
+   *
+   * Ordering rule:
+   *   - If a step has an explicit preceded_by list, those slugs are used as-is.
+   *   - Otherwise, the transform automatically links each step to the step
+   *     immediately before it in the array (sequential chain).
+   *   - The first step never has a preceded_by link.
+   *
+   * Run with the jsonata-python CLI:
+   *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
+   */
+
+  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/workflow/PMDCo/#v1.0.0";
+
+  /* ── Workflow ID ─────────────────────────────────────────────────────── */
+  $wfSlug := $replace($lowercase($trim(workflow_name)), /[^a-z0-9]+/, "-");
+  $wfId   := $exists(workflow_id) ? workflow_id : "workflow-" & $wfSlug;
+
+  /* ── Derive step IDs from labels (used for auto-linking) ─────────────── */
+  $stepIds := $map(steps, function($s, $i) {
+    $exists($s.step_id)
+      ? $s.step_id
+      : $wfId & "-step-" & $string($i + 1) & "-" &
+        $replace($lowercase($trim($s.label)), /[^a-z0-9]+/, "-")
+  });
+
+  /* ── Build step nodes ─────────────────────────────────────────────────── */
+  $stepNodes := $map(steps, function($s, $i) {(
+
+    $sid := $stepIds[$i];
+
+    /* Inline conditions */
+    $conds := $exists($s.conditions) and $count($s.conditions) > 0
+      ? $map($s.conditions, function($c, $j) {(
+          $cNode := {
+            "type": "pmdco:PMD_0000013",
+            "id":   $sid & "-param-" & $string($j + 1),
+            "parameter_label": $c.name
+          };
+          $withV := $exists($c.value) ? $merge([$cNode, {"parameter_value": $c.value}]) : $cNode;
+          $exists($c.unit) ? $merge([$withV, {"parameter_unit": $c.unit}]) : $withV
+        )})
+      : undefined;
+
+    /* preceded_by: explicit list, or auto-derive from array position */
+    $precededBy :=
+      $exists($s.preceded_by) and $count($s.preceded_by) > 0
+        ? $s.preceded_by          /* user-supplied step IDs / IRIs */
+        : $i > 0
+          ? [$stepIds[$i - 1]]    /* auto: previous step in sequence */
+          : undefined;            /* first step: no predecessor */
+
+    /* Build node incrementally */
+    $node := {
+      "type":  $exists($s.step_type) ? $s.step_type : "bfo:0000015",
+      "id":    $sid,
+      "label": $s.label
+    };
+    $withDesc := $exists($s.description)
+      ? $merge([$node, {"description": $s.description}])
+      : $node;
+    $withIri := $exists($s.instance_iri)
+      ? $merge([$withDesc, {"instance_iri": $s.instance_iri}])
+      : $withDesc;
+    $withPre := $exists($precededBy)
+      ? $merge([$withIri, {"preceded_by": $precededBy}])
+      : $withIri;
+    $exists($conds)
+      ? $merge([$withPre, {"has_process_condition": $conds}])
+      : $withPre
+  )});
+
+  /* ── OO-LD workflow output ───────────────────────────────────────────── */
+  $base := {
+    "conforms_to": $schemaUri,
+    "type":        "bfo:0000015",
+    "id":          $wfId,
+    "label":       workflow_name,
+    "has_part":    $stepNodes
+  };
+
+  $exists(description)
+    ? $merge([$base, {"description": description}])
+    : $base
+)

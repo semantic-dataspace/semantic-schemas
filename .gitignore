@@ -11,9 +11,11 @@ __pycache__/
 # Jupyter
 .ipynb_checkpoints/
 
-# Notebook-generated RDF output (source TTL files like shape.ttl are not affected)
-**/notebooks/output_*.ttl
-**/notebooks/output_*.nq
+# Notebook-generated output (source TTL files like shape.ttl are not affected)
+**/docs/output_*.ttl
+**/docs/output_*.nq
+**/docs/*.k
+**/docs/*.inp
 
 # Distribution / build
 dist/

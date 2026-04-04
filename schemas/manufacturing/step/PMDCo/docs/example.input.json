@@ -1,0 +1,11 @@
+{
+  "process_name": "Sintering and Annealing batch 1",
+  "description": "Green compacts are heated below the melting point, causing particles to fuse together (sintering). Annealing follows to relieve internal stresses and optimise microstructure.",
+  "inputs":  ["https://example.org/materials/anisotropic-green-compacts-batch-1"],
+  "outputs": ["https://example.org/materials/sintered-magnet-batch-1"],
+  "preceded_by": ["https://example.org/processes/pressing-of-fine-powder-batch-1"],
+  "conditions": [
+    { "name": "Sintering Temperature", "value": 1080, "unit": "°C" },
+    { "name": "Energy Consumption",    "value": 26,   "unit": "kWh" }
+  ]
+}

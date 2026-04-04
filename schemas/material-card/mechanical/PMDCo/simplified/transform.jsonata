@@ -1,0 +1,129 @@
+(
+  /*
+   * Mechanical Material Card (PMDCo / IAO) — simplified JSON → OO-LD JSON
+   *
+   * Input fields (see schema.simplified.json):
+   *   card_name              string   required
+   *   card_id                string   optional, derived from card_name if omitted
+   *   description            string   optional
+   *   material_iri           string   required (IRI)
+   *   density                object   optional  {value, unit?}
+   *   youngs_modulus         object   optional  {value, unit?}
+   *   poissons_ratio         object   optional  {value, unit?}
+   *   mechanical_properties  array    optional
+   *     type                 string   TTO short name (e.g. "YieldStrength")
+   *     value                number
+   *     unit                 string   "MPa" | "GPa" | "%"
+   *   constitutive_model     object   optional
+   *     model_type           string
+   *     calibration_iri      string   optional (IRI)
+   *     parameters           array    optional  {name, value, unit?}
+   *
+   * Run with the jsonata-python CLI:
+   *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
+   */
+
+  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/material-card/mechanical/PMDCo/#v1.0.0";
+
+  /* ── Node ID ─────────────────────────────────────────────────────────── */
+  $slug   := $replace($lowercase($trim(card_name)), /[^a-z0-9]+/, "-");
+  $cardId := $exists(card_id) ? card_id : "material-card-" & $slug;
+
+  /* ── Unit map: simplified string → QUDT CURIE ───────────────────────── */
+  $unitMap := {
+    "MPa": "uqudt:MegaPascal",
+    "GPa": "uqudt:GigaPascal",
+    "%":   "uqudt:PERCENT"
+  };
+
+  /* ── Property type map: short name → TTO CURIE ──────────────────────── */
+  $typeMap := {
+    "YieldStrength":                      "tto:YieldStrength",
+    "UpperYieldStrength":                 "tto:UpperYieldStrength",
+    "LowerYieldStrength":                 "tto:LowerYieldStrength",
+    "TensileStrength":                    "tto:TensileStrength",
+    "ProofStrength":                      "tto:ProofStrength",
+    "PercentageElongationAfterFracture":  "tto:PercentageElongationAfterFracture",
+    "PercentagePermanentElongation":      "tto:PercentagePermanentElongation",
+    "PercentageReductionOfArea":          "tto:PercentageReductionOfArea"
+  };
+
+  /* ── Scalar property node helper ─────────────────────────────────────── */
+  /* Builds a {id, scalar_value, scalar_unit?} node */
+  $scalar := function($nodeId, $obj) {(
+    $node := {"id": $nodeId, "scalar_value": $obj.value};
+    $exists($obj.unit) ? $merge([$node, {"scalar_unit": $obj.unit}]) : $node
+  )};
+
+  /* ── Mechanical properties ───────────────────────────────────────────── */
+  $mechProps := $exists(mechanical_properties) and $count(mechanical_properties) > 0
+    ? $map(mechanical_properties, function($p, $i) {
+        {
+          "type":         $typeMap[$p.type],
+          "id":           $cardId & "-prop-" & $string($i + 1),
+          "result_value": $p.value,
+          "result_unit":  $unitMap[$p.unit]
+        }
+      })
+    : undefined;
+
+  /* ── Constitutive model block ─────────────────────────────────────────── */
+  $modelBlock := $exists(constitutive_model)
+    ? (
+        $params := $exists(constitutive_model.parameters) and $count(constitutive_model.parameters) > 0
+          ? $map(constitutive_model.parameters, function($p, $i) {(
+              $pNode := {
+                "id":          $cardId & "-model-param-" & $string($i + 1),
+                "param_name":  $p.name,
+                "param_value": $p.value
+              };
+              $exists($p.unit) ? $merge([$pNode, {"param_unit": $p.unit}]) : $pNode
+            )})
+          : undefined;
+
+        $mNode := {
+          "id":         $cardId & "-model",
+          "model_type": constitutive_model.model_type
+        };
+        $withCalib := $exists(constitutive_model.calibration_iri)
+          ? $merge([$mNode, {"calibration_iri": constitutive_model.calibration_iri}])
+          : $mNode;
+        $exists($params)
+          ? $merge([$withCalib, {"model_parameters": $params}])
+          : $withCalib
+      )
+    : undefined;
+
+  /* ── OO-LD output ────────────────────────────────────────────────────── */
+  $base := {
+    "conforms_to": $schemaUri,
+    "type":        "iao:0000100",
+    "id":          $cardId,
+    "label":       card_name,
+    "material_iri": material_iri
+  };
+
+  $withDesc := $exists(description)
+    ? $merge([$base, {"description": description}])
+    : $base;
+
+  $withDensity := $exists(density)
+    ? $merge([$withDesc, {"density": $scalar($cardId & "-density", density)}])
+    : $withDesc;
+
+  $withE := $exists(youngs_modulus)
+    ? $merge([$withDensity, {"youngs_modulus": $scalar($cardId & "-youngs-modulus", youngs_modulus)}])
+    : $withDensity;
+
+  $withNu := $exists(poissons_ratio)
+    ? $merge([$withE, {"poissons_ratio": $scalar($cardId & "-poissons-ratio", poissons_ratio)}])
+    : $withE;
+
+  $withMech := $exists($mechProps)
+    ? $merge([$withNu, {"mechanical_properties": $mechProps}])
+    : $withNu;
+
+  $exists($modelBlock)
+    ? $merge([$withMech, {"constitutive_model": $modelBlock}])
+    : $withMech
+)

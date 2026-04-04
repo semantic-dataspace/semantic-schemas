@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.simplified.json",
+  "title": "Characterization Step (Simplified Input)",
+  "description": "A user-friendly form to describe a single characterization step (measurement, test, or analysis). Provide a name, the specimens or materials being characterised, and any quantitative test conditions. This input will be automatically converted to a standardised RDF representation (OBI/PMDCo OO-LD).",
+  "type": "object",
+  "required": ["step_name"],
+  "additionalProperties": false,
+  "properties": {
+    "step_name": {
+      "title": "Step Name",
+      "description": "A human-readable name for this characterization step. Example: 'Tensile test specimen 1', 'Vickers hardness batch A'.",
+      "type": "string",
+      "minLength": 1
+    },
+    "step_id": {
+      "title": "Step ID",
+      "description": "Optional. Identifier (IRI slug) for this step in the RDF graph. Auto-derived from step_name if omitted.",
+      "type": "string"
+    },
+    "description": {
+      "title": "Description",
+      "description": "Optional free-text description of this characterization step.",
+      "type": "string"
+    },
+    "inputs": {
+      "title": "Specimen / Material IRIs",
+      "description": "IRIs of the specimens or materials being characterised. Reference existing knowledge-graph nodes.",
+      "type": "array",
+      "items": { "type": "string", "format": "uri" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "preceded_by": {
+      "title": "Preceded By (Step IRIs)",
+      "description": "IRIs of characterization steps that directly precede this one.",
+      "type": "array",
+      "items": { "type": "string", "format": "uri" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "conditions": {
+      "title": "Test Conditions / Parameters",
+      "description": "Quantitative conditions under which this step is carried out.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "additionalProperties": false,
+        "properties": {
+          "name":  { "title": "Condition Name", "type": "string" },
+          "value": { "title": "Value", "type": "number" },
+          "unit":  { "title": "Unit", "type": "string" }
+        }
+      },
+      "default": []
+    }
+  }
+}

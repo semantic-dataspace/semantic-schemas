@@ -1,0 +1,91 @@
+# SHACL shape for the OBI ComputerSimulation / PMDCo simulation step pattern.
+#
+# Validates:
+#   1. ComputerSimulation node (OBI_0000471)
+#      - must have rdfs:label
+#      - must have dcterms:conformsTo
+#      - inputs and outputs must be IRIs
+#      - preceded_by references must be IRIs
+#   2. ProcessCondition nodes (PMD_0000013)
+#      - must have rdfs:label
+#      - value (if present) must be xsd:double
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix obi:     <http://purl.obolibrary.org/obo/OBI_> .
+@prefix bfo:     <http://purl.obolibrary.org/obo/BFO_> .
+@prefix pmd:     <https://w3id.org/pmd/co/> .
+@prefix qudt:    <http://qudt.org/schema/qudt/> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix shape:   <https://w3id.org/pmd/co/shapes/simulation/step/> .
+@prefix :        <https://w3id.org/pmd/co/shapes/simulation/step/> .
+@base            <https://w3id.org/pmd/co/shapes/simulation/step/> .
+
+# ── ComputerSimulation node ───────────────────────────────────────────────────
+
+shape:simulation_step
+    a sh:NodeShape ;
+    sh:targetClass obi:0000471 ;   # OBI ComputerSimulation
+    sh:property [
+        sh:path dcterms:conformsTo ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A SimulationStep must declare dcterms:conformsTo pointing to the versioned schema IRI." ;
+    ] ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A SimulationStep must have exactly one rdfs:label." ;
+    ] ;
+    sh:property [
+        sh:path <http://purl.obolibrary.org/obo/OBI_0000293> ;   # has_specified_input
+        sh:nodeKind sh:IRI ;
+        sh:message "Each has_specified_input value must be an IRI referencing a dataset or material node." ;
+    ] ;
+    sh:property [
+        sh:path <http://purl.obolibrary.org/obo/OBI_0000299> ;   # has_specified_output
+        sh:nodeKind sh:IRI ;
+        sh:message "Each has_specified_output value must be an IRI referencing a dataset or result node." ;
+    ] ;
+    sh:property [
+        sh:path <http://purl.obolibrary.org/obo/BFO_0000062> ;   # preceded_by
+        sh:nodeKind sh:IRI ;
+        sh:message "Each preceded_by value must be an IRI referencing another process node." ;
+    ] ;
+    sh:property [
+        sh:path pmd:PMD_0000016 ;   # has_process_condition
+        sh:node shape:simulation_parameter ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .
+
+# ── SimulationParameter node (reuses ProcessCondition class) ──────────────────
+
+shape:simulation_parameter
+    a sh:NodeShape ;
+    sh:targetClass pmd:PMD_0000013 ;   # ProcessCondition
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A simulation parameter must have exactly one rdfs:label (parameter name)." ;
+    ] ;
+    sh:property [
+        sh:path qudt:value ;
+        sh:datatype xsd:double ;
+        sh:maxCount 1 ;
+        sh:message "Simulation parameter value must be an xsd:double." ;
+    ] ;
+    sh:property [
+        sh:path qudt:hasUnit ;
+        sh:maxCount 1 ;
+        sh:message "Simulation parameter may have at most one unit." ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .

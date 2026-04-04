@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.simplified.json",
+  "title": "Simulation Step (Simplified Input)",
+  "description": "A user-friendly form to describe a single simulation step (computational analysis, numerical model run, or data-driven calculation). Provide a name, the datasets or materials going in, the results coming out, and any quantitative simulation parameters. This input will be automatically converted to a standardised RDF representation (OBI/PMDCo OO-LD).",
+  "type": "object",
+  "required": ["step_name"],
+  "additionalProperties": false,
+  "properties": {
+    "step_name": {
+      "title": "Step Name",
+      "description": "A human-readable name for this simulation step. Example: 'FEM stress analysis run 1', 'Constitutive model calibration batch A'.",
+      "type": "string",
+      "minLength": 1
+    },
+    "step_id": {
+      "title": "Step ID",
+      "description": "Optional. Identifier (IRI slug) for this step in the RDF graph. Auto-derived from step_name if omitted.",
+      "type": "string"
+    },
+    "description": {
+      "title": "Description",
+      "description": "Optional free-text description of this simulation step.",
+      "type": "string"
+    },
+    "inputs": {
+      "title": "Input Dataset / Material IRIs",
+      "description": "IRIs of datasets or material nodes consumed by this simulation. Reference existing knowledge-graph nodes.",
+      "type": "array",
+      "items": { "type": "string", "format": "uri" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "outputs": {
+      "title": "Output Dataset / Result IRIs",
+      "description": "IRIs of datasets or result nodes produced by this simulation. Reference existing knowledge-graph nodes.",
+      "type": "array",
+      "items": { "type": "string", "format": "uri" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "preceded_by": {
+      "title": "Preceded By (Step IRIs)",
+      "description": "IRIs of steps that directly precede this one in the workflow.",
+      "type": "array",
+      "items": { "type": "string", "format": "uri" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "conditions": {
+      "title": "Simulation Parameters",
+      "description": "Quantitative parameters governing this simulation step (e.g. mesh size, time step, convergence tolerance).",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "additionalProperties": false,
+        "properties": {
+          "name":  { "title": "Parameter Name", "type": "string" },
+          "value": { "title": "Value", "type": "number" },
+          "unit":  { "title": "Unit", "type": "string" }
+        }
+      },
+      "default": []
+    }
+  }
+}

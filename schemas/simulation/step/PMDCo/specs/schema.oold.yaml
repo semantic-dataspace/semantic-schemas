@@ -1,0 +1,199 @@
+# OO-LD Schema for SimulationStep (PMDCo / OBI pattern)
+# Ontology: Platform MaterialDigital Core Ontology (PMDCo)
+#   https://w3id.org/pmd/co/
+# Root class: OBI ComputerSimulation (OBI_0000471)
+#   http://purl.obolibrary.org/obo/OBI_0000471
+#
+# Graph pattern:
+#
+#   ComputerSimulation  (obi:OBI_0000471)
+#     rdfs:label ──────────────────────────────────────── name string
+#     rdfs:comment ────────────────────────────────────── description string  (optional)
+#     has_specified_input ────────────────────────────► Material/Dataset IRI  [× 0..N]
+#     has_specified_output ───────────────────────────► Dataset/Result IRI    [× 0..N]
+#     preceded_by ────────────────────────────────────► Process IRI  [× 0..N]  (optional)
+#     has_process_condition ──────────────────────────► ProcessCondition (pmdco:PMD_0000013)  [× 0..N]
+#       rdfs:label ──────── condition name
+#       qudt:value ──────── numeric value (xsd:double)
+#       qudt:hasUnit ─────── unit string
+#
+# Design notes:
+#   - OBI ComputerSimulation (OBI_0000471) is the canonical OBI class for
+#     computational processes.  It is the base from which domain-specific
+#     simulation schemas (e.g. model calibration, FEM) inherit.
+#   - Inputs are typically material parameter datasets or specimen IRIs;
+#     outputs are simulation result datasets.
+#   - This schema is the simulation counterpart of manufacturing/step/PMDCo/
+#     and characterization/step/PMDCo/.  The structural pattern is identical;
+#     only the root class differs.
+
+"@context":
+  rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  rdfs: "http://www.w3.org/2000/01/rdf-schema#"
+  xsd: "http://www.w3.org/2001/XMLSchema#"
+  dcterms: "http://purl.org/dc/terms/"
+  conforms_to:
+    "@id": "http://purl.org/dc/terms/conformsTo"
+    "@type": "@id"
+  obi:
+    "@id": "http://purl.obolibrary.org/obo/OBI_"
+    "@prefix": true
+  bfo:
+    "@id": "http://purl.obolibrary.org/obo/BFO_"
+    "@prefix": true
+  pmdco: "https://w3id.org/pmd/co/"
+  qudt: "http://qudt.org/schema/qudt/"
+  "@base": "https://w3id.org/pmd/co/test/shape_simulation_step#"
+  type: "@type"
+  id: "@id"
+  label:
+    "@id": "rdfs:label"
+  description:
+    "@id": "rdfs:comment"
+  has_specified_input:
+    "@id": "obi:0000293"   # OBI_0000293  has_specified_input
+    "@type": "@id"
+    "@container": "@set"
+  has_specified_output:
+    "@id": "obi:0000299"   # OBI_0000299  has_specified_output
+    "@type": "@id"
+    "@container": "@set"
+  preceded_by:
+    "@id": "bfo:0000062"   # BFO_0000062  preceded_by
+    "@type": "@id"
+    "@container": "@set"
+  has_process_condition:
+    "@id": "pmdco:PMD_0000016"   # PMD_0000016  has_process_condition
+    "@type": "@id"
+    "@container": "@set"
+  parameter_label:
+    "@id": "rdfs:label"
+  parameter_value:
+    "@id": "qudt:value"
+    "@type": "xsd:double"
+  parameter_unit:
+    "@id": "qudt:hasUnit"
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: Schema for an obi:ComputerSimulation (generic simulation step)
+x-schema-version: '1.0.0'
+x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/simulation/step/PMDCo/'
+title: Simulation Step
+type: object
+required:
+  - type
+  - id
+  - label
+
+properties:
+
+  type:
+    title: Type
+    type: string
+    readOnly: true
+    const: "obi:0000471"
+    default: "obi:0000471"
+    options:
+      enum_titles:
+        - obi:ComputerSimulation
+
+  id:
+    title: ID
+    description: Identifier for this simulation step instance; managed by the consumer.
+    type: string
+    readOnly: true
+    default: simulation-step
+
+  label:
+    title: Step Name
+    description: >-
+      Human-readable name for this simulation step
+      (e.g. "FEM stress analysis run 1", "Constitutive model calibration").
+    type: string
+
+  description:
+    title: Description
+    description: Optional free-text description of what this simulation step does.
+    type: string
+    format: textarea
+
+  has_specified_input:
+    title: Inputs
+    description: >-
+      Datasets or material nodes consumed by this simulation,
+      referenced by their IRI in the knowledge graph.
+    type: array
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  has_specified_output:
+    title: Outputs
+    description: >-
+      Datasets or result nodes produced by this simulation,
+      referenced by their IRI in the knowledge graph.
+    type: array
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  preceded_by:
+    title: Preceded By
+    description: >-
+      Steps that directly precede this one in the workflow,
+      referenced by their IRI.
+    type: array
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  has_process_condition:
+    title: Simulation Parameters
+    description: >-
+      Quantitative parameters governing this simulation step
+      (e.g. mesh size, convergence tolerance, time step).
+    type: array
+    items:
+      type: object
+      title: Simulation Parameter
+      required:
+        - type
+        - id
+        - parameter_label
+      properties:
+        type:
+          title: Type
+          type: string
+          readOnly: true
+          const: "pmdco:PMD_0000013"
+          default: "pmdco:PMD_0000013"
+          options:
+            enum_titles:
+              - pmdco:ProcessCondition
+        id:
+          title: ID
+          description: Identifier for this parameter instance; managed by the consumer.
+          type: string
+          readOnly: true
+          default: condition-1
+        parameter_label:
+          title: Parameter Name
+          description: >-
+            Human-readable name for this parameter
+            (e.g. "Mesh Size", "Time Step", "Convergence Tolerance").
+          type: string
+        parameter_value:
+          title: Value
+          description: Numeric magnitude of the parameter.
+          type: number
+        parameter_unit:
+          title: Unit
+          description: Unit of the value (e.g. "mm", "s", "MPa").
+          type: string
+    default: []

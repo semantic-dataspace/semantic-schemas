@@ -53,7 +53,21 @@ schemas/<domain>/<ontology>/<variant>/
 responsible for renaming the existing flat folder into its variant sub-folder as part of their PR.
 Update `CATALOG.md` accordingly.
 
-### 3. Validate locally
+### 3. Run the tests
+
+Every schema's workflow notebook is executed automatically on CI. To run the
+same checks locally:
+
+```bash
+python -m venv .venv
+.venv/bin/pip install -r requirements-dev.txt
+.venv/bin/pytest --nbmake $(find schemas -name "*.ipynb" \
+    ! -path "*/.ipynb_checkpoints/*" ! -name "*Copy*")
+```
+
+All notebooks must pass before a PR can be merged.
+
+### 4. Validate locally
 
 Ensure:
 
@@ -61,11 +75,11 @@ Ensure:
 - All IRIs in `@context` resolve to real ontology terms.
 - The schema renders correctly in the webform-builder demo app (see [docs/webform-integration.md](docs/webform-integration.md)).
 
-### 4. Update CATALOG.md
+### 5. Update CATALOG.md
 
 Add a row for your schema to [CATALOG.md](CATALOG.md).
 
-### 5. Open a pull request
+### 6. Open a pull request
 
 Use the PR template. Link the issue from step 1.
 

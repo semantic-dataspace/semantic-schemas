@@ -1,0 +1,83 @@
+(
+  /*
+   * Constitutive Model Calibration (PMDCo / OBI) — simplified JSON → OO-LD JSON
+   *
+   * Input fields (see schema.simplified.json):
+   *   step_name               string   required
+   *   step_id                 string   optional, derived from step_name if omitted
+   *   description             string   optional
+   *   model_type              string   required  (enum: Hockett-Sherby, Swift, …)
+   *   inputs                  array    optional — experimental dataset IRIs
+   *   outputs                 array    optional — material card IRIs
+   *   preceded_by             array    optional — preceding step IRIs
+   *   conditions              array    optional — algorithmic settings {name, value?, unit?}
+   *   calibrated_parameters   array    optional — fitted parameters {name, value, unit?}
+   *
+   * Run with the jsonata-python CLI:
+   *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
+   */
+
+  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/simulation/model-calibration/PMDCo/#v1.0.0";
+
+  /* ── Node IDs ────────────────────────────────────────────────────────── */
+  $slug   := $replace($lowercase($trim(step_name)), /[^a-z0-9]+/, "-");
+  $stepId := $exists(step_id) ? step_id : "calibration-" & $slug;
+
+  /* ── Calibration settings (process conditions) ───────────────────────── */
+  $conditions := $exists(conditions) and $count(conditions) > 0
+    ? $map(conditions, function($c, $i) {(
+        $node := {
+          "type": "pmdco:PMD_0000013",
+          "id":   $stepId & "-setting-" & $string($i + 1),
+          "parameter_label": $c.name
+        };
+        $withValue := $exists($c.value) ? $merge([$node, {"parameter_value": $c.value}]) : $node;
+        $exists($c.unit) ? $merge([$withValue, {"parameter_unit": $c.unit}]) : $withValue
+      )})
+    : undefined;
+
+  /* ── Calibrated parameters (embedded output nodes) ───────────────────── */
+  $params := $exists(calibrated_parameters) and $count(calibrated_parameters) > 0
+    ? $map(calibrated_parameters, function($p, $i) {(
+        $node := {
+          "id":         $stepId & "-param-" & $string($i + 1),
+          "param_name": $p.name,
+          "param_value": $p.value
+        };
+        $exists($p.unit) ? $merge([$node, {"param_unit": $p.unit}]) : $node
+      )})
+    : undefined;
+
+  /* ── OO-LD output ────────────────────────────────────────────────────── */
+  $base := {
+    "conforms_to": $schemaUri,
+    "type":        "obi:0000471",
+    "id":          $stepId,
+    "label":       step_name,
+    "model_type":  model_type
+  };
+
+  $withDesc := $exists(description)
+    ? $merge([$base, {"description": description}])
+    : $base;
+
+  $withInputs := $exists(inputs) and $count(inputs) > 0
+    ? $merge([$withDesc, {"has_specified_input": inputs}])
+    : $withDesc;
+
+  $withOutputs := $exists(outputs) and $count(outputs) > 0
+    ? $merge([$withInputs, {"has_specified_output": outputs}])
+    : $withInputs;
+
+  $withPreceded := $exists(preceded_by) and $count(preceded_by) > 0
+    ? $merge([$withOutputs, {"preceded_by": preceded_by}])
+    : $withOutputs;
+
+  $withConditions := $exists($conditions)
+    ? $merge([$withPreceded, {"has_process_condition": $conditions}])
+    : $withPreceded;
+
+  $exists($params)
+    ? $merge([$withConditions, {"calibrated_parameters": $params}])
+    : $withConditions
+)

@@ -1,0 +1,30 @@
+name: Test notebooks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  notebooks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install --upgrade pip
+          .venv/bin/pip install -r requirements-dev.txt
+
+      - name: Run notebooks
+        run: |
+          .venv/bin/pytest --nbmake \
+            $(find schemas -name "*.ipynb" \
+                ! -path "*/.ipynb_checkpoints/*" \
+                ! -name "*Copy*")

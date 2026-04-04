@@ -1,0 +1,19 @@
+{
+  "step_name":   "Hockett-Sherby calibration 316L batch 1",
+  "description": "Fit Hockett-Sherby flow curve to experimental tensile test data for 316L stainless steel batch 1.",
+  "model_type":  "Hockett-Sherby",
+  "inputs":      ["https://example.org/tensile-tests/316L-batch-1-results"],
+  "outputs":     ["https://example.org/material-cards/316L-hockett-sherby-v1"],
+  "preceded_by": ["https://example.org/characterization/tensile-test-316L-batch-1"],
+  "conditions": [
+    { "name": "Optimiser",     "unit": "Levenberg-Marquardt" },
+    { "name": "Strain Range",  "value": 0.5,  "unit": "1" },
+    { "name": "Iterations",    "value": 1000, "unit": "count" }
+  ],
+  "calibrated_parameters": [
+    { "name": "sigma_sat", "value": 780.0, "unit": "MPa" },
+    { "name": "sigma_0",   "value": 220.0, "unit": "MPa" },
+    { "name": "c",         "value": 12.5 },
+    { "name": "n",         "value": 0.68 }
+  ]
+}

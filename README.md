@@ -1,4 +1,4 @@
-# Semantic Schema Store
+# Semantic Schemas
 
 A library of templates for recording materials science data in a way that
 machines can read, search, and connect to other datasets.

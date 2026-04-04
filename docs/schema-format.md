@@ -95,6 +95,45 @@ unit:
 
 ---
 
+## Folder structure for multi-schema domains
+
+Some domains (such as process schemas) contain both a generic base schema and
+multiple specialised variants. These use one extra level of nesting:
+
+```text
+schemas/<domain>/<specialisation>/<Ontology>/
+```
+
+The rule for distinguishing generic from specialised within a domain folder is
+based on **folder depth, not folder name**:
+
+- A folder that contains schema files directly (i.e. `specs/`, `simplified/`,
+  `docs/`) is a **leaf** — it holds a concrete schema. If it sits at the
+  `<domain>/<Ontology>/` level it is the **generic base** for that domain.
+- A folder that contains only further subfolders is an **intermediate** node
+  — it groups specialised variants or sub-domains.
+
+Example for the `manufacturing` domain:
+
+```text
+schemas/
+  manufacturing/
+    step/
+      PMDCo/          ← leaf at domain/step level  →  generic manufacturing step
+      BWMD/           ← leaf                       →  same concept, different ontology
+      sintering/
+        PMDCo/        ← leaf under a named subfolder  →  specialised sintering step
+      welding/
+        PMDCo/        ← leaf                           →  specialised welding step
+    chain/
+      PMDCo/          ← leaf at domain/chain level →  manufacturing process chain
+```
+
+Composite schemas (those that reference other schemas via `$ref`) follow the
+same rule: their position in the tree signals their role, not a special name.
+
+---
+
 ## Checklist for a valid schema
 
 - [ ] `'@context'` declared
@@ -104,3 +143,10 @@ unit:
 - [ ] `x-kitem` provided for every `format: kitem` field
 - [ ] `title` present on every property (used as form label)
 - [ ] `description` present on every property (used as tooltip/hint)
+
+---
+
+## Further reading
+
+- [OO-LD primer](oold-primer.md): how the schema format works in plain language
+- [Schema patterns](schema-patterns.md): inheritance (`$ref` + `allOf`) and composition — when to use each, what propagates, what can be overridden, and known limitations

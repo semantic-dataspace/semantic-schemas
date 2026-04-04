@@ -1,0 +1,4 @@
+pyyaml
+rdflib
+pyshacl
+jsonata-python

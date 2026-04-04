@@ -1,0 +1,10 @@
+{
+  "step_name": "Tensile test specimen 1",
+  "description": "Uniaxial tensile test on a 316L stainless steel specimen at room temperature following ISO 6892-1.",
+  "inputs": ["https://example.org/specimens/316L-tensile-bar-1"],
+  "conditions": [
+    { "name": "Test Standard", "unit": "ISO 6892-1" },
+    { "name": "Strain Rate",   "value": 0.00025, "unit": "1/s" },
+    { "name": "Temperature",   "value": 23,      "unit": "°C"  }
+  ]
+}
