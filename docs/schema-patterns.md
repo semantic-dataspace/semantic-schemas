@@ -8,18 +8,6 @@ choose one over the other.
 
 ---
 
-## Quick reference
-
-| Question | Inheritance | Composition (embed) | Composition (reference) |
-|---|---|---|---|
-| My entity IS a specialisation of the base | yes | no | no |
-| My entity HAS sub-objects it owns | no | yes | no |
-| My entity LINKS TO independent objects | no | no | yes |
-| Sub-objects have their own lifecycle | no | no | yes |
-| Sub-objects can be shared across records | no | no | yes |
-
----
-
 ## 1. Inheritance: extending a base schema
 
 ### How it works
