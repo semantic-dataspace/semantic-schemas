@@ -134,6 +134,41 @@ same rule: their position in the tree signals their role, not a special name.
 
 ---
 
+## Leaf folder contents
+
+Every leaf node — the ontology folder at the bottom of the tree — uses the
+following standard subfolders:
+
+| Subfolder | Purpose |
+|---|---|
+| `specs/` | Schema definition: `schema.oold.yaml` and `shape.ttl` |
+| `simplified/` | Simplified input format: `schema.simplified.json` and `transform.jsonata` |
+| `docs/` | Notebooks, example files, and the schema `README.md` |
+
+Machine-specific file parsers — extractors that read instrument output files
+and convert them to the schema's simplified JSON — are **not** stored here.
+They live in the companion repository **`semantic-transformers`**, in a
+`parsers/` tree that mirrors this repository's `schemas/` tree exactly:
+
+```text
+semantic-transformers/
+  parsers/
+    characterization/
+      tensile-test/
+        TTO/
+          zwick/        ← one folder per instrument model
+            extractor.py
+            column_mapping.json
+            compatibility.yaml
+```
+
+Each extractor implements the `Extractor` protocol from `semantic-transformers`
+and can be plugged into a `Converter` without changing the schema transform or
+the notebook. See the `semantic-transformers` repository for details on adding
+support for a new instrument.
+
+---
+
 ## Checklist for a valid schema
 
 - [ ] `'@context'` declared
