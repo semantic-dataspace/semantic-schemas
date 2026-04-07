@@ -16,6 +16,10 @@ __pycache__/
 **/docs/output_*.nq
 **/docs/*.k
 **/docs/*.inp
+**/docs/*.parquet
+**/docs/*.ttl
+!**/specs/shape.ttl
+!**/specs/*.ttl
 
 # Distribution / build
 dist/
