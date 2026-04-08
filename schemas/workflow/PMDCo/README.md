@@ -63,7 +63,7 @@ to express branching or merging.
 | File | Purpose |
 |---|---|
 | `docs/example.input.json` | Ready-to-edit 4-step QA-to-FEM example |
-| `docs/workflow_demo.ipynb` | Step-by-step pedagogic notebook |
+| `docs/3_workflow_cross_domain.ipynb` | Step-by-step pedagogic notebook |
 | `simplified/schema.simplified.json` | Input field reference |
 | `simplified/transform.jsonata` | Converts your input to the structured format |
 | `specs/schema.oold.yaml` | Full schema definition |

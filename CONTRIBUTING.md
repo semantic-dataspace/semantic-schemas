@@ -95,7 +95,7 @@ Reviewers will check:
 | Completeness | Required fields cover the minimum viable instance |
 | Usability | Labels and descriptions are clear for a non-expert |
 | Simplicity | No unnecessary nesting; nested `type: object` degrades webform rendering |
-| x-kitem types | `ktypeIds` match the ktype IDs used in the target DSMS deployment |
+| x-kitem types | `ktypeIds` match the ktype IDs used in the target deployment (DSMS-specific; omit if not applicable) |
 
 ---
 

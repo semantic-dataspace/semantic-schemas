@@ -58,8 +58,7 @@ my_field:
   uniqueItems: true
 ```
 
-`ktypeIds` are the `ktype_id` values used by the DSMS `/knowledge/search` endpoint to filter results.
-They are deployment-specific; coordinate with the DSMS instance you are targeting.
+`ktypeIds` are the IDs of schema templates made available by DSMS (Dataspace Management System). See [here](/README.md#the-k-item-field-type) for more information.
 
 ---
 

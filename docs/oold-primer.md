@@ -124,8 +124,7 @@ type:
 
 ## The `x-kitem` extension
 
-Fields that reference existing knowledge graph entities use `format: kitem`
-and an `x-kitem` block:
+Fields that reference data container (called knowledge items) use `format: kitem` and an `x-kitem` block:
 
 ```yaml
 my_field:
@@ -133,7 +132,7 @@ my_field:
   format: kitem
   x-kitem:
     ktypeIds:
-      - material       # entity type in the DSMS knowledge graph
+      - material       # entity type
 ```
 
 `x-` prefixed keys are a standard JSON Schema extension mechanism; validators

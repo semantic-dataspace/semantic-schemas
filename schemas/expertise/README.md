@@ -3,9 +3,7 @@
 Records the **areas of expertise of a materials science researcher**: which
 materials, methods, devices, and application fields they work with.
 
-Each value is a link to an entity in the DSMS knowledge graph (a k-item).
-In the DSMS web interface, users pick from a searchable list; they do not
-type URIs manually.
+Each value is a link to a data container referred to as knowledge item (or k-item for short).
 
 ---
 

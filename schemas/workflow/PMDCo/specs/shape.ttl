@@ -28,7 +28,9 @@
 
 shape:workflow
     a sh:NodeShape ;
-    sh:targetClass bfo:0000015 ;   # BFO Process
+    # Target only the root workflow node (the one that declares conformsTo),
+    # not generic BFO Process step nodes which share the same bfo:0000015 type.
+    sh:targetSubjectsOf dcterms:conformsTo ;
     sh:property [
         sh:path dcterms:conformsTo ;
         sh:nodeKind sh:IRI ;
