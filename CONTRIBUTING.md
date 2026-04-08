@@ -62,7 +62,7 @@ same checks locally:
 python -m venv .venv
 .venv/bin/pip install -r requirements-dev.txt
 .venv/bin/pytest --nbmake $(find schemas -name "*.ipynb" \
-    ! -path "*/.ipynb_checkpoints/*" ! -name "*Copy*")
+    ! -path "*/.ipynb_checkpoints/*")
 ```
 
 All notebooks must pass before a PR can be merged.

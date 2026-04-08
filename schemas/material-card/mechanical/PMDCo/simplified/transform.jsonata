@@ -59,10 +59,10 @@
   $mechProps := $exists(mechanical_properties) and $count(mechanical_properties) > 0
     ? $map(mechanical_properties, function($p, $i) {
         {
-          "type":         $typeMap[$p.type],
+          "type":         $lookup($typeMap, $p.type),
           "id":           $cardId & "-prop-" & $string($i + 1),
           "result_value": $p.value,
-          "result_unit":  $unitMap[$p.unit]
+          "result_unit":  $lookup($unitMap, $p.unit)
         }
       })
     : undefined;

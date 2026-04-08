@@ -53,5 +53,4 @@ jobs:
         run: |
           .venv/bin/pytest --nbmake \
             $(find schemas -name "*.ipynb" \
-                ! -path "*/.ipynb_checkpoints/*" \
-                ! -name "*Copy*")
+                ! -path "*/.ipynb_checkpoints/*")
