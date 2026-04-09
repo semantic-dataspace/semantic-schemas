@@ -60,10 +60,13 @@ class Schema:
         return self._transform_src
 
     @staticmethod
-    def _parse_oold(context: dict, oold_doc: dict) -> rdflib.Graph:
+    def _parse_oold(
+        context: dict, oold_doc: dict, base: str | None = None
+    ) -> rdflib.Graph:
+        ctx = {**context, **({} if base is None else {"@base": base})}
         ds = rdflib.Dataset()
         ds.parse(
-            data=json.dumps({"@context": context, **oold_doc}),
+            data=json.dumps({"@context": ctx, **oold_doc}),
             format="json-ld",
         )
         g = rdflib.Graph()
@@ -75,13 +78,24 @@ class Schema:
     # Public API
     # ------------------------------------------------------------------
 
-    def parse(self, oold_doc: dict) -> rdflib.Graph:
+    def parse(self, oold_doc: dict, base: str | None = None) -> rdflib.Graph:
         """Parse an already-transformed OO-LD document into a flat rdflib.Graph.
 
         Use this when you have assembled the OO-LD document manually (e.g. by
         merging outputs from multiple schemas) and only need the parsing step.
+
+        Parameters
+        ----------
+        oold_doc :
+            The OO-LD document (already transformed from simplified input).
+        base :
+            Optional base IRI used to resolve relative node identifiers.
+            When omitted the schema's own ``@base`` (if any) applies; schemas
+            without a built-in ``@base`` fall back to the current working
+            directory.  Pass your own IRI (e.g. ``"https://example.org/"``) to
+            produce portable, globally-unique node IRIs.
         """
-        return self._parse_oold(self._get_context(), oold_doc)
+        return self._parse_oold(self._get_context(), oold_doc, base=base)
 
     def transform(self, data: dict) -> dict:
         """Run the JSONata transform and return the OO-LD document."""
@@ -89,10 +103,18 @@ class Schema:
 
         return Jsonata(self._get_transform_src()).evaluate(data)
 
-    def to_graph(self, data: dict) -> rdflib.Graph:
-        """Transform *data* to OO-LD and parse into a flat rdflib.Graph."""
+    def to_graph(self, data: dict, base: str | None = None) -> rdflib.Graph:
+        """Transform *data* to OO-LD and parse into a flat rdflib.Graph.
+
+        Parameters
+        ----------
+        data :
+            Simplified input dict (as filled in by the user).
+        base :
+            Optional base IRI — see :meth:`parse` for details.
+        """
         oold_doc = self.transform(data)
-        return self._parse_oold(self._get_context(), oold_doc)
+        return self._parse_oold(self._get_context(), oold_doc, base=base)
 
     def validate(
         self,

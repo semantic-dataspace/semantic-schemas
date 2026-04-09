@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2026-04-09
+
+### Fixed
+
+- Removed local Python executable path from all notebook setup cell outputs
+- Replaced absolute schema directory paths in notebook outputs with relative
+  paths (last three path components, e.g. `characterization/step/PMDCo`)
+- Fixed stale cell outputs across all 14 notebooks that contained
+  `/root/semantic-dataspace/...` absolute paths from the development machine
+- Added `base` parameter to `Schema.parse()` and `Schema.to_graph()` so
+  callers can supply a custom base IRI for relative node identifiers; schemas
+  without a built-in `@base` (e.g. specimen) no longer produce `file://`
+  URIs in their RDF output when a base is provided
+
+### Added
+
+- Git clone and environment setup instructions added to the first cell of all
+  14 notebooks so they can be run standalone after downloading from GitHub
+- `specimen` notebook now demonstrates the `base` parameter with
+  `BASE = "https://example.org/"`, showing how to produce globally-unique IRIs
+
 ## [0.1.1] - 2026-04-09
 
 ### Fixed
