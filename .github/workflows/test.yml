@@ -41,8 +41,8 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          repository: Semantic-Dataspace/semantic-transformers
-          path: ../semantic-transformers
+          repository: semantic-dataspace/semantic-transformers
+          path: semantic-transformers-repo
 
       - uses: actions/setup-python@v5
         with:
@@ -53,7 +53,7 @@ jobs:
           python -m venv .venv
           .venv/bin/pip install --upgrade pip
           .venv/bin/pip install -r requirements-dev.txt
-          .venv/bin/pip install -e ../semantic-transformers
+          .venv/bin/pip install -e ./semantic-transformers-repo
 
       - name: Run notebooks
         run: |
