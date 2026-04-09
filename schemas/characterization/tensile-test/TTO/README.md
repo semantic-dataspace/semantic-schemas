@@ -5,10 +5,12 @@ following the
 [Tensile Test Ontology (TTO)](https://w3id.org/pmd/tto/) built on the
 [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/).
 
-This schema **extends** [`characterization/step/PMDCo/`](../../step/PMDCo/README.md)
-via JSON Schema `$ref` and `allOf`. It inherits the generic characterization
-structure (specimen input, test conditions, process chain position) and adds
-tensile-test-specific result fields typed to TTO classes.
+This schema **extends** [`characterization/step/PMDCo/`](../../step/PMDCo/README.md):
+it inherits the generic characterization structure (specimen input, test
+conditions, process chain position) and adds tensile-test-specific result fields
+typed to TTO classes. Technically this uses JSON Schema `$ref` + `allOf`
+(inheritance); see [docs/4_schema-patterns.md](../../../../docs/4_schema-patterns.md)
+for details.
 
 ---
 
@@ -31,8 +33,8 @@ characterization/tensile-test/TTO/   this schema
     …
 ```
 
-This is the same mechanism used by `specimen/PMDCo/`, which extends
-`chemical-composition/PMDCo/`.
+For a different relationship pattern, see [`specimen/PMDCo/`](../../../specimen/PMDCo/README.md),
+which *composes* `chemical-composition/PMDCo/` rather than extending it.
 
 ---
 

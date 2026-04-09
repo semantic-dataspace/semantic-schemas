@@ -11,7 +11,8 @@ The goal is a diverse library where competing ontology patterns can coexist.
 
 ## Ground rules
 
-- A schema must be grounded in a **publicly available ontology** with stable IRIs.
+- A schema must be grounded in a **publicly available ontology** with stable IRIs
+  (Internationalized Resource Identifiers: persistent web addresses that uniquely identify concepts).
 - A schema for a concept that already exists under a different ontology is **welcome**. Add it alongside the existing one instead of replacing it.
 - Keep schemas **focused**: one domain concept per schema, one ontology per folder.
 - Do not embed large static enumerations of ontology classes; link to the ontology instead.

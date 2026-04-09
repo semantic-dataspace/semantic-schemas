@@ -10,6 +10,10 @@ choose one over the other.
 
 ## 1. Inheritance: extending a base schema
 
+Use inheritance when your schema is a specialisation of an existing one: it shares most of the base
+structure but adds or narrows specific fields. The extending schema inherits all base validation
+rules and overrides only what differs.
+
 ### How it works
 
 Inheritance is expressed using JSON Schema's `$ref` + `allOf` mechanism.

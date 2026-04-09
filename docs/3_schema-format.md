@@ -106,7 +106,7 @@ schemas/<domain>/<specialisation>/<Ontology>/
 The rule for distinguishing generic from specialised within a domain folder is
 based on **folder depth, not folder name**:
 
-- A folder that contains schema files directly (i.e. `specs/`, `specs/`,
+- A folder that contains schema files directly (i.e. `specs/`,
   `docs/`) is a **leaf**: it holds a concrete schema. If it sits at the
   `<domain>/<Ontology>/` level it is the **generic base** for that domain.
 - A folder that contains only further subfolders is an **intermediate** node:
@@ -140,12 +140,11 @@ following standard subfolders:
 
 | Subfolder | Purpose |
 |---|---|
-| `specs/` | Schema definition: `schema.oold.yaml` and `shape.ttl` |
-| `specs/` | Simplified input format: `schema.simplified.json` and `transform.jsonata` |
+| `specs/` | All schema files: `schema.oold.yaml`, `shape.ttl`, `schema.simplified.json`, `transform.simplified.jsonata` |
 | `docs/` | Notebooks, example files, and the schema `README.md` |
 
-Machine-specific file parsers — extractors that read instrument output files
-and convert them to the schema's simplified JSON — are **not** stored here.
+Machine-specific file parsers (programs that read instrument output files
+and convert them to the schema's simplified JSON) are **not** stored here.
 They live in the companion repository **`semantic-transformers`**, in a
 `parsers/` tree that mirrors this repository's `schemas/` tree exactly:
 
@@ -154,15 +153,14 @@ semantic-transformers/
   parsers/
     characterization/
       tensile-test/
-        TTO/
-          zwick/        ← one folder per instrument model
-            extractor.py
-            column_mapping.json
-            compatibility.yaml
+        zwick/          ← one folder per instrument model
+          zwick_parser.py
+          column_mapping.json
+          README.md
 ```
 
-Each extractor implements the `Extractor` protocol from `semantic-transformers`
-and can be plugged into a `Converter` without changing the schema transform or
+Each parser implements the `Parser` protocol from `semantic-transformers`
+and can be plugged into a `Transformer` without changing the schema transform or
 the notebook. See the `semantic-transformers` repository for details on adding
 support for a new instrument.
 

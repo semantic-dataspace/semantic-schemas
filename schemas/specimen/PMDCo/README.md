@@ -4,7 +4,7 @@ Records a **physical specimen** (its name, mass, and chemical composition)
 following the [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/).
 
 This schema builds on the [Chemical Composition (PMDCo)](../../chemical-composition/PMDCo/README.md)
-schema: the composition sub-graph is produced by that schema's converter, which
+schema: the composition sub-graph is produced by that schema's transform, which
 remains the single source of truth for element IRIs and naming conventions.
 
 ---
@@ -110,7 +110,12 @@ at the schema level.
 
 ## Schema composition
 
-This schema references the chemical-composition schema via JSON Schema `$ref`:
+Schema composition means this schema formally depends on another schema to
+describe one of its sub-objects. The chemical composition of a specimen is
+complex enough to deserve its own schema and validation rules; rather than
+duplicating that logic here, this schema delegates to it.
+
+This dependency is declared via JSON Schema `$ref`:
 
 ```yaml
 has_composition:

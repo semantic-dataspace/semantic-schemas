@@ -5,7 +5,8 @@ machines can read, search, and connect to other datasets.
 
 Each template covers one concept (e.g. *chemical composition*, *specimen*).
 You fill in a plain JSON file with your values; the tooling converts it into
-**RDF**, a graph format understood by ontologies such as [DCAT](https://www.w3.org/TR/vocab-dcat-3/) and [PMDCo](https://w3id.org/pmd/co/).
+**RDF**, a standard format for linked data, using vocabulary from materials
+science ontologies such as [DCAT](https://www.w3.org/TR/vocab-dcat-3/) and [PMDCo](https://w3id.org/pmd/co/).
 
 > **New to this?**
 > Each schema folder has a Jupyter notebook in `docs/`.
@@ -22,7 +23,7 @@ schemas/                       # Schema library
       README.md                # What this schema is for and how to use it
       specs/
         schema.oold.yaml             # Full schema definition (expert reference)
-        shape.ttl                    # Validation rules (SHACL)
+        shape.ttl                    # SHACL validation rules (checks the output RDF)
         schema.simplified.json       # Input field reference
         transform.simplified.jsonata # Converts your input to the structured format
       docs/
@@ -64,15 +65,17 @@ the cells that call `from semantic_schemas import Schema` will fail.
 1. Find the schema in [CATALOG.md](CATALOG.md) and open its folder.
 2. Copy `docs/example.input.json` and fill in your values (no ontology
    knowledge required).
-3. Open the notebook in `docs/` and run all cells.  It converts your file to
-   RDF and validates the result automatically.
+3. Open the Jupyter notebook in `docs/` and run all cells
+   (`Kernel → Restart & Run All`). It converts your file to RDF and validates
+   the result automatically.
 
 ### I want to understand how the semantic schemas work
 
 Read [docs/1_concepts.md](docs/1_concepts.md) for the big picture: why there are
-two schemas per concept, what the transform does, and how the pipeline fits
-together. Then [docs/2_oold-primer.md](docs/2_oold-primer.md) if you want to go
-deeper into the OO-LD format itself.
+two schemas per concept (one simple for users, one expert for machines), what
+the transform does, and how the pipeline fits together. Then
+[docs/2_oold-primer.md](docs/2_oold-primer.md) if you want to go deeper into the
+OO-LD (Object-Oriented Linked Data) format itself.
 
 ### I want to contribute a new schema
 
@@ -88,7 +91,7 @@ deeper into the OO-LD format itself.
 | Document | Content |
 |---|---|
 | [docs/1_concepts.md](docs/1_concepts.md) | How the semantic schemas are designed: two layers, the transform, the full pipeline |
-| [docs/2_oold-primer.md](docs/2_oold-primer.md) | How the OO-LD schema format works |
+| [docs/2_oold-primer.md](docs/2_oold-primer.md) | How the OO-LD (Object-Oriented Linked Data) schema format works |
 | [docs/3_schema-format.md](docs/3_schema-format.md) | Field reference for writing and reviewing schemas |
 | [docs/4_schema-patterns.md](docs/4_schema-patterns.md) | Inheritance and composition between schemas |
 

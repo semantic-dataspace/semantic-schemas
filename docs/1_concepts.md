@@ -127,6 +127,8 @@ The notebook in `docs/` runs every stage and shows the output at each step.
 
 ## What you provide vs. what happens automatically
 
+This table shows where your effort is needed and what the toolchain handles for you.
+
 | Stage | What you provide | What is automatic |
 |---|---|---|
 | Input | Your measurement values | Field names, types, which are required |
