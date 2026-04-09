@@ -117,4 +117,4 @@ This is consistent with OBI's intent for `OBI_0000299`.
 
 - [Simulation Step (PMDCo)](../../step/PMDCo/README.md): the base schema this extends
 - [Workflow example](../../../workflow/PMDCo/README.md): the full 4-step QA-to-FEM scenario
-- [OO-LD primer](../../../../docs/oold-primer.md): how the schema format works
+- [OO-LD primer](../../../../docs/2_oold-primer.md): how the schema format works

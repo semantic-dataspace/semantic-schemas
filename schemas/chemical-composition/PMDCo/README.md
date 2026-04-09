@@ -12,7 +12,7 @@ contains and in what proportions) following the
 
 ```bash
 pip install jupyterlab
-jupyter lab docs/chemical_composition_workflow.ipynb
+jupyter lab docs/1_chemical_composition_workflow.ipynb
 ```
 
 The notebook walks you through every step: fill in your data, convert to RDF,
@@ -80,7 +80,7 @@ print("Conforms:", conforms)
 | File | Purpose |
 |---|---|
 | `docs/example.input.json` | Ready-to-edit example (start here) |
-| `docs/chemical_composition_workflow.ipynb` | Step-by-step notebook |
+| `docs/1_chemical_composition_workflow.ipynb` | Step-by-step notebook |
 | `docs/example.oold.json` | Fully converted OO-LD example (reference) |
 | `simplified/schema.simplified.json` | Input field reference |
 | `simplified/transform.jsonata` | Converts your input to the structured format |
@@ -138,5 +138,5 @@ Key decisions:
 ## Further reading
 
 - [Step-by-step guide](../../../docs/simplified-input-guide.md): fill in data → convert → validate
-- [OO-LD primer](../../../docs/oold-primer.md): how the schema format works
-- [Schema format reference](../../../docs/schema-format.md): for schema authors
+- [OO-LD primer](../../../docs/2_oold-primer.md): how the schema format works
+- [Schema format reference](../../../docs/3_schema-format.md): for schema authors

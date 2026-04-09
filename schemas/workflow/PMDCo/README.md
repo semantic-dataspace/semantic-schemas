@@ -118,4 +118,4 @@ characterization results or calibrated model parameters.
 - [Simulation Step (PMDCo)](../../simulation/step/PMDCo/README.md)
 - [Constitutive Model Calibration (PMDCo)](../../simulation/model-calibration/PMDCo/README.md)
 - [Mechanical Material Card (PMDCo)](../../material-card/mechanical/PMDCo/README.md)
-- [OO-LD primer](../../../docs/oold-primer.md): how the schema format works
+- [OO-LD primer](../../../docs/2_oold-primer.md): how the schema format works

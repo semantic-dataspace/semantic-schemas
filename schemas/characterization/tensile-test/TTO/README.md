@@ -42,7 +42,7 @@ This is the same mechanism used by `specimen/PMDCo/`, which extends
 
 ```bash
 pip install jupyterlab
-jupyter lab docs/tensile_test_workflow.ipynb
+jupyter lab docs/1_tensile_test_workflow.ipynb
 ```
 
 ### Input fields
@@ -96,7 +96,7 @@ Copy [`docs/example.input.json`](docs/example.input.json) and fill in your value
 | File | Purpose |
 |---|---|
 | `docs/example.input.json` | Ready-to-edit example (start here) |
-| `docs/tensile_test_workflow.ipynb` | Step-by-step notebook |
+| `docs/1_tensile_test_workflow.ipynb` | Step-by-step notebook |
 | `simplified/schema.simplified.json` | Input field reference |
 | `simplified/transform.jsonata` | Converts your input to the structured format |
 | `specs/schema.oold.yaml` | Full schema definition |
@@ -148,5 +148,5 @@ which is correct in both cases.
 - [Characterization Step (PMDCo)](../../step/PMDCo/README.md): the base schema this one extends
 - [TTO application ontology](https://github.com/materialdigital/application-ontologies/tree/main/tensile_test_ontology_TTO)
 - [PMDCo core-ontology patterns](https://github.com/materialdigital/core-ontology/tree/main/patterns)
-- [OO-LD primer](../../../../docs/oold-primer.md): how the schema format works
-- [Schema format reference](../../../../docs/schema-format.md): folder structure and naming conventions
+- [OO-LD primer](../../../../docs/2_oold-primer.md): how the schema format works
+- [Schema format reference](../../../../docs/3_schema-format.md): folder structure and naming conventions

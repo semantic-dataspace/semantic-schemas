@@ -10,7 +10,7 @@ materials, position in a process chain, and quantitative conditions) following t
 
 ```bash
 pip install jupyterlab
-jupyter lab docs/process_workflow.ipynb
+jupyter lab docs/1_process_workflow.ipynb
 ```
 
 The notebook walks through every step: fill in your data, convert to RDF,
@@ -78,7 +78,7 @@ print("Conforms:", conforms)
 | File | Purpose |
 |---|---|
 | `docs/example.input.json` | Ready-to-edit example (start here) |
-| `docs/process_workflow.ipynb` | Step-by-step notebook |
+| `docs/1_process_workflow.ipynb` | Step-by-step notebook |
 | `simplified/schema.simplified.json` | Input field reference |
 | `simplified/transform.jsonata` | Converts your input to the structured format |
 | `specs/schema.oold.yaml` | Full schema definition (expert reference) |
@@ -130,7 +130,7 @@ Key decisions:
 
 ## Further reading
 
-- [OO-LD primer](../../../docs/oold-primer.md): how the schema format works
-- [Schema format reference](../../../docs/schema-format.md): for schema authors
+- [OO-LD primer](../../../docs/2_oold-primer.md): how the schema format works
+- [Schema format reference](../../../docs/3_schema-format.md): for schema authors
 - [PMDCo Input and Output of Processes pattern](https://github.com/materialdigital/core-ontology/tree/main/patterns/input%20and%20output%20of%20processes)
 - [PMDCo Process Chain pattern](https://github.com/materialdigital/core-ontology/tree/main/patterns/process%20chain): for modelling parallel and serial sub-processes

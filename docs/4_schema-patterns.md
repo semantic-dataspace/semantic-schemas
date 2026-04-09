@@ -337,8 +337,8 @@ Does my schema contain sub-objects?
 
 ## Further reading
 
-- [OO-LD primer](oold-primer.md): what OO-LD is and how the schema format works
-- [Schema format reference](schema-format.md): folder structure, naming conventions, and the leaf-folder pattern
+- [OO-LD primer](2_oold-primer.md): what OO-LD is and how the schema format works
+- [Schema format reference](3_schema-format.md): folder structure, naming conventions, and the leaf-folder pattern
 - [Tensile Test (TTO)](../schemas/characterization/tensile-test/TTO/README.md): worked example of inheritance
 - [Constitutive Model Calibration (PMDCo)](../schemas/simulation/model-calibration/PMDCo/README.md): second inheritance example
 - [Specimen (PMDCo)](../schemas/specimen/PMDCo/README.md): worked example of composition (chemical composition embedded)

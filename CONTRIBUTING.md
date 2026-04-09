@@ -1,4 +1,4 @@
-# Contributing to the Semantic Schema Store
+# Contributing to the Semantic Schemas
 
 > **Who is this for?** People who want to add a new schema or correct an
 > existing one.  If you just want to record data, start with
@@ -32,7 +32,13 @@ This prevents duplicate work and gets early feedback on the pattern.
 
 ### 2. Write the schema
 
-Start from [templates/schema.oold.yaml](templates/schema.oold.yaml). Read [docs/schema-format.md](docs/schema-format.md) for a full field reference.
+The fastest way to create all schema files is to work through the LLM session
+described in **[docs/5_llm-schema-guide.md](docs/5_llm-schema-guide.md)**. It
+provides the exact prompts and shows what to verify at each step.
+
+If you prefer to write by hand, start from
+[templates/schema.oold.yaml](templates/schema.oold.yaml) and read
+[docs/3_schema-format.md](docs/3_schema-format.md) for a full field reference.
 
 Place your schema at:
 
@@ -66,6 +72,34 @@ python -m venv .venv
 ```
 
 All notebooks must pass before a PR can be merged.
+
+### 3a. Refresh notebook outputs (for documentation)
+
+The notebooks are committed with their output cells so that GitHub renders
+them as readable documentation.  After changing a schema or its transform,
+re-execute all notebooks in-place to update the stored outputs before
+committing:
+
+```bash
+find schemas -name "*.ipynb" ! -path "*/.ipynb_checkpoints/*" \
+  | xargs .venv/bin/jupyter nbconvert \
+      --to notebook \
+      --execute \
+      --inplace \
+      --ExecutePreprocessor.timeout=300
+```
+
+Run this from the repository root.  Commit the resulting `*.ipynb` changes
+together with any schema changes so that the rendered output on GitHub stays
+in sync.
+
+> **Tip.** To refresh a single notebook only, pass its path directly:
+>
+> ```bash
+> .venv/bin/jupyter nbconvert --to notebook --execute --inplace \
+>     --ExecutePreprocessor.timeout=300 \
+>     schemas/<domain>/<Ontology>/docs/<name>_workflow.ipynb
+> ```
 
 ### 4. Validate locally
 

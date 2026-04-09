@@ -79,5 +79,5 @@ data-fitting routines, and machine-learning inference.
 ## Further reading
 
 - [Model Calibration (PMDCo)](../../model-calibration/PMDCo/README.md): a worked specialisation of this schema
-- [OO-LD primer](../../../../docs/oold-primer.md): how the schema format works
-- [Schema format reference](../../../../docs/schema-format.md): folder and naming conventions
+- [OO-LD primer](../../../../docs/2_oold-primer.md): how the schema format works
+- [Schema format reference](../../../../docs/3_schema-format.md): folder and naming conventions

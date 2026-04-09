@@ -32,14 +32,29 @@ schemas/                       # Schema library
 templates/
   schema.oold.yaml             # Blank template for writing a new schema
 docs/
-  concepts.md                  # How the semantic schemas are designed and why
-  oold-primer.md               # How the OO-LD schema format works
-  schema-format.md             # Field-by-field reference for schema authors
-  schema-patterns.md           # Inheritance and composition between schemas
+  1_concepts.md                  # How the semantic schemas are designed and why
+  2_oold-primer.md               # How the OO-LD schema format works
+  3_schema-format.md             # Field-by-field reference for schema authors
+  4_schema-patterns.md           # Inheritance and composition between schemas
 .github/
   ISSUE_TEMPLATE/              # Propose or correct a schema
   PULL_REQUEST_TEMPLATE.md
 ```
+
+---
+
+## Installation
+
+```bash
+git clone https://github.com/Semantic-Dataspace/semantic-schemas
+cd semantic-schemas
+python3 -m venv .venv
+source .venv/bin/activate           # Windows: .venv\Scripts\activate
+pip install -r requirements-dev.txt # installs semantic_schemas + dev tools
+```
+
+The `semantic_schemas` package is used by all workflow notebooks. Without it,
+the cells that call `from semantic_schemas import Schema` will fail.
 
 ---
 
@@ -55,9 +70,9 @@ docs/
 
 ### I want to understand how the semantic schemas work
 
-Read [docs/concepts.md](docs/concepts.md) for the big picture: why there are
+Read [docs/1_concepts.md](docs/1_concepts.md) for the big picture: why there are
 two schemas per concept, what the transform does, and how the pipeline fits
-together. Then [docs/oold-primer.md](docs/oold-primer.md) if you want to go
+together. Then [docs/2_oold-primer.md](docs/2_oold-primer.md) if you want to go
 deeper into the OO-LD format itself.
 
 ### I want to contribute a new schema
@@ -73,10 +88,10 @@ deeper into the OO-LD format itself.
 
 | Document | Content |
 |---|---|
-| [docs/concepts.md](docs/concepts.md) | How the semantic schemas are designed: two layers, the transform, the full pipeline |
-| [docs/oold-primer.md](docs/oold-primer.md) | How the OO-LD schema format works |
-| [docs/schema-format.md](docs/schema-format.md) | Field reference for writing and reviewing schemas |
-| [docs/schema-patterns.md](docs/schema-patterns.md) | Inheritance and composition between schemas |
+| [docs/1_concepts.md](docs/1_concepts.md) | How the semantic schemas are designed: two layers, the transform, the full pipeline |
+| [docs/2_oold-primer.md](docs/2_oold-primer.md) | How the OO-LD schema format works |
+| [docs/3_schema-format.md](docs/3_schema-format.md) | Field reference for writing and reviewing schemas |
+| [docs/4_schema-patterns.md](docs/4_schema-patterns.md) | Inheritance and composition between schemas |
 
 ---
 
@@ -98,7 +113,7 @@ list of values from an ontology. These containers encapsulate data, metadata,
 attachments, executables (apps), and more. In JSON, the value is a URI pointing
 to the k-item’s web page.
 
-See [docs/schema-format.md](docs/schema-format.md) for the field syntax.
+See [docs/3_schema-format.md](docs/3_schema-format.md) for the field syntax.
 Background and motivation:
 
 > Nahshon, Y.; Morand, L.; Büschelberger, M.; Helm, D.; Kumaraswamy, K.;

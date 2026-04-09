@@ -78,7 +78,7 @@ the toolchain can build a form, map field names to ontology IRIs, produce RDF
 triples, and run SHACL validation, all without further configuration.
 
 You rarely need to open this file unless you are writing or reviewing a schema.
-[oold-primer.md](oold-primer.md) explains the format in detail.
+[2_oold-primer.md](2_oold-primer.md) explains the format in detail.
 
 ---
 
@@ -142,7 +142,7 @@ Schemas are not isolated. A specimen schema may *compose* a chemical
 composition schema (the specimen record embeds a full composition sub-graph
 produced by the composition schema's own transform). A tensile test schema
 may *extend* a generic characterization step schema (inheriting its fields
-and adding test-specific result nodes). [schema-patterns.md](schema-patterns.md)
+and adding test-specific result nodes). [4_schema-patterns.md](4_schema-patterns.md)
 explains these relationships in detail.
 
 ---
@@ -152,6 +152,6 @@ explains these relationships in detail.
 | Goal | Where to look |
 |---|---|
 | Record data with an existing schema | Open the notebook in the schema folder (see [CATALOG.md](../CATALOG.md)) |
-| Understand the OO-LD format in depth | [oold-primer.md](oold-primer.md) |
-| Write a new schema | [CONTRIBUTING.md](../CONTRIBUTING.md) and [schema-format.md](schema-format.md) |
-| Understand inheritance and composition | [schema-patterns.md](schema-patterns.md) |
+| Understand the OO-LD format in depth | [2_oold-primer.md](2_oold-primer.md) |
+| Write a new schema | [CONTRIBUTING.md](../CONTRIBUTING.md) and [3_schema-format.md](3_schema-format.md) |
+| Understand inheritance and composition | [4_schema-patterns.md](4_schema-patterns.md) |

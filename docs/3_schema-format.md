@@ -5,7 +5,7 @@
 > or its notebook instead.
 
 All semantic schemas are YAML files following the OO-LD convention.
-See [oold-primer.md](oold-primer.md) for a plain-language explanation of how
+See [2_oold-primer.md](2_oold-primer.md) for a plain-language explanation of how
 the format works.
 
 ---
@@ -182,5 +182,5 @@ support for a new instrument.
 
 ## Further reading
 
-- [OO-LD primer](oold-primer.md): how the schema format works in plain language
-- [Schema patterns](schema-patterns.md): inheritance (`$ref` + `allOf`) and composition: when to use each, what propagates, what can be overridden, and known limitations
+- [OO-LD primer](2_oold-primer.md): how the schema format works in plain language
+- [Schema patterns](4_schema-patterns.md): inheritance (`$ref` + `allOf`) and composition: when to use each, what propagates, what can be overridden, and known limitations

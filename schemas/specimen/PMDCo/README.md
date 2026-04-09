@@ -15,7 +15,7 @@ remains the single source of truth for element IRIs and naming conventions.
 
 ```bash
 pip install jupyterlab
-jupyter lab docs/specimen_workflow.ipynb
+jupyter lab docs/1_specimen_workflow.ipynb
 ```
 
 The notebook walks through all steps: fill in your data, convert to RDF,
@@ -96,7 +96,7 @@ print("Conforms:", conforms)
 | File | Purpose |
 |---|---|
 | `docs/example.input.json` | Ready-to-edit example (start here) |
-| `docs/specimen_workflow.ipynb` | Step-by-step notebook |
+| `docs/1_specimen_workflow.ipynb` | Step-by-step notebook |
 | `simplified/schema.simplified.json` | Input field reference |
 | `simplified/transform.jsonata` | Converts your input to the specimen envelope + mass |
 | `specs/schema.oold.yaml` | Full schema definition (expert reference) |
@@ -176,5 +176,5 @@ specimen's `id`; the JSONata transform sets all of them automatically:
 ## Further reading
 
 - [Chemical Composition (PMDCo)](../../chemical-composition/PMDCo/README.md): the referenced sub-schema
-- [OO-LD primer](../../../docs/oold-primer.md): how the schema format works
-- [Schema format reference](../../../docs/schema-format.md): for schema authors
+- [OO-LD primer](../../../docs/2_oold-primer.md): how the schema format works
+- [Schema format reference](../../../docs/3_schema-format.md): for schema authors

@@ -106,4 +106,4 @@ DataSet  (iao:IAO_0000100)
 
 - [Constitutive Model Calibration (PMDCo)](../../../simulation/model-calibration/PMDCo/README.md): the process that produces these parameters
 - [Workflow example](../../../workflow/PMDCo/README.md): the full 4-step QA-to-FEM scenario
-- [OO-LD primer](../../../../docs/oold-primer.md): how the schema format works
+- [OO-LD primer](../../../../docs/2_oold-primer.md): how the schema format works

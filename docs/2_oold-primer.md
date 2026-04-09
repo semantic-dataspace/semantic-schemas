@@ -151,5 +151,5 @@ ever sees the full IRI.
 
 ## Further reading
 
-- [Concepts](concepts.md): how the two-layer design works and why
-- [Schema format reference](schema-format.md): field-by-field reference for writing schemas
+- [Concepts](1_concepts.md): how the two-layer design works and why
+- [Schema format reference](3_schema-format.md): field-by-field reference for writing schemas

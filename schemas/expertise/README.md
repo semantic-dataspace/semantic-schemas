@@ -13,7 +13,7 @@ Each value is a link to a data container referred to as knowledge item (or k-ite
 
 ```bash
 pip install jupyterlab
-jupyter lab docs/expertise_workflow.ipynb
+jupyter lab docs/1_expertise_workflow.ipynb
 ```
 
 ### Input fields
@@ -74,7 +74,7 @@ g.serialize(destination="output_expertise.ttl", format="turtle")
 | File | Purpose |
 |---|---|
 | `docs/example.oold.json` | Ready-to-edit example (start here) |
-| `docs/expertise_workflow.ipynb` | Step-by-step notebook |
+| `docs/1_expertise_workflow.ipynb` | Step-by-step notebook |
 | `specs/schema.oold.yaml` | Full schema definition (expert reference) |
 
 ---
@@ -110,5 +110,5 @@ IRIs.
 
 ## Further reading
 
-- [OO-LD primer](../../docs/oold-primer.md): how the schema format works
-- [Schema format reference](../../docs/schema-format.md): for schema authors
+- [OO-LD primer](../../docs/2_oold-primer.md): how the schema format works
+- [Schema format reference](../../docs/3_schema-format.md): for schema authors
