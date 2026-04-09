@@ -3,7 +3,7 @@ SHACL conformance tests for all schemas.
 
 For every schema directory that contains:
   docs/example.input.json      sample simplified-JSON input
-  simplified/transform.jsonata JSONata transform
+  specs/transform.simplified.jsonata JSONata transform
   specs/schema.oold.yaml       OO-LD context
   specs/shape.ttl              SHACL shapes
 
@@ -36,7 +36,7 @@ def _find_schemas() -> list[tuple[str, Path]]:
         schema_dir = shape_path.parent.parent
         if all([
             (schema_dir / "docs" / "example.input.json").exists(),
-            (schema_dir / "simplified" / "transform.jsonata").exists(),
+            (schema_dir / "specs" / "transform.simplified.jsonata").exists(),
             (schema_dir / "specs" / "schema.oold.yaml").exists(),
         ]):
             schema_id = str(schema_dir.relative_to(SCHEMAS_ROOT))
@@ -69,7 +69,7 @@ def _base_shapes(shape_file: Path) -> list[Path]:
 def _build_graph(schema_dir: Path) -> rdflib.Graph:
     """Run example.input.json through transform + OO-LD context → flat RDF graph."""
     data        = json.loads((schema_dir / "docs" / "example.input.json").read_text())
-    transform   = (schema_dir / "simplified" / "transform.jsonata").read_text()
+    transform   = (schema_dir / "specs" / "transform.simplified.jsonata").read_text()
     raw_context = yaml.safe_load((schema_dir / "specs" / "schema.oold.yaml").read_text())
     context     = raw_context["@context"]
 

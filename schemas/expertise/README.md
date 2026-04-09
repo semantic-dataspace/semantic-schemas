@@ -47,7 +47,7 @@ person has no expertise.
 | `application_fields` | `application_field` | aerospace, automotive, biomedical |
 | `methods` | `method` | EBSD, tensile testing, hardness mapping |
 
-> **No transform step:** this schema has no `simplified/` folder; the input
+> **No transform step:** this schema has no `specs/` folder; the input
 > JSON is already in the structured format.  Just fill in the URIs and convert.
 
 ### Convert to RDF (Python)

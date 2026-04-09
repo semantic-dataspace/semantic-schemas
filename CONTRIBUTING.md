@@ -158,7 +158,7 @@ changes (removed or renamed field, structural overhaul).
 
 ### Automatic provenance stamping
 
-Every schema's `simplified/transform.jsonata` must declare a `$schemaUri` constant formed by appending the version to `x-schema-id`:
+Every schema's `specs/transform.simplified.jsonata` must declare a `$schemaUri` constant formed by appending the version to `x-schema-id`:
 
 ```jsonata
 $schemaUri := "<x-schema-id>#v<x-schema-version>";

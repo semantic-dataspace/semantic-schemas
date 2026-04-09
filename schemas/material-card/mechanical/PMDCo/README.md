@@ -68,8 +68,8 @@ Units: `MPa`, `GPa`, `%`
 | File | Purpose |
 |---|---|
 | `docs/example.input.json` | Ready-to-edit example (316L with Hockett-Sherby) |
-| `simplified/schema.simplified.json` | Input field reference |
-| `simplified/transform.jsonata` | Converts your input to the structured format |
+| `specs/schema.simplified.json` | Input field reference |
+| `specs/transform.simplified.jsonata` | Converts your input to the structured format |
 | `specs/schema.oold.yaml` | Full schema definition |
 | `specs/shape.ttl` | SHACL validation rules |
 

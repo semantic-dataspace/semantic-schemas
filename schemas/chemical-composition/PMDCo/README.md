@@ -45,7 +45,7 @@ Copy [`docs/example.input.json`](docs/example.input.json) and fill in your value
 | `comp_id` | no | Custom ID for the composition node (auto-derived if omitted) |
 
 72 PMDCo-mapped elements are supported.
-See [`simplified/schema.simplified.json`](simplified/schema.simplified.json) for the full list.
+See [`specs/schema.simplified.json`](specs/schema.simplified.json) for the full list.
 
 ### Convert to RDF (Python)
 
@@ -57,7 +57,7 @@ pip install jsonata-python rdflib pyyaml pyshacl
 import jsonata, json, yaml, rdflib, pyshacl
 
 # Transform your input → structured JSON
-expr = open("simplified/transform.jsonata").read()
+expr = open("specs/transform.simplified.jsonata").read()
 data = json.load(open("docs/example.input.json"))
 oold = jsonata.Jsonata(expr).evaluate(data)
 
@@ -82,8 +82,8 @@ print("Conforms:", conforms)
 | `docs/example.input.json` | Ready-to-edit example (start here) |
 | `docs/1_chemical_composition_workflow.ipynb` | Step-by-step notebook |
 | `docs/example.oold.json` | Fully converted OO-LD example (reference) |
-| `simplified/schema.simplified.json` | Input field reference |
-| `simplified/transform.jsonata` | Converts your input to the structured format |
+| `specs/schema.simplified.json` | Input field reference |
+| `specs/transform.simplified.jsonata` | Converts your input to the structured format |
 | `specs/schema.oold.yaml` | Full schema definition (expert reference) |
 | `specs/shape.ttl` | SHACL validation rules |
 

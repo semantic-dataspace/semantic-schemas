@@ -151,7 +151,7 @@ simplified = json.load(open("example.input.json"))
 
 # Step 1: specimen envelope (name, mass)
 specimen_doc = jsonata.Jsonata(
-    open(SPECIMEN / "simplified/transform.jsonata").read()
+    open(SPECIMEN / "specs/transform.simplified.jsonata").read()
 ).evaluate(simplified)
 
 # Step 2: delegate composition to the other schema's transform
@@ -161,7 +161,7 @@ comp_input = {
     "elements":      simplified["elements"],
 }
 comp_doc = jsonata.Jsonata(
-    open(CHEM_COMP / "simplified/transform.jsonata").read()
+    open(CHEM_COMP / "specs/transform.simplified.jsonata").read()
 ).evaluate(comp_input)
 comp_doc["quality_of"] = specimen_doc["id"]   # back-reference to parent
 

@@ -32,7 +32,7 @@ class Schema:
     schema_dir : path-like
         Root of the schema directory, i.e. the folder that contains
         ``specs/schema.oold.yaml``, ``specs/shape.ttl``, and
-        ``simplified/transform.jsonata``.
+        ``specs/transform.simplified.jsonata``.
     """
 
     def __init__(self, schema_dir: Union[Path, str]) -> None:
@@ -55,7 +55,7 @@ class Schema:
     def _get_transform_src(self) -> str:
         if self._transform_src is None:
             self._transform_src = (
-                self.dir / "simplified" / "transform.jsonata"
+                self.dir / "specs" / "transform.simplified.jsonata"
             ).read_text(encoding="utf-8")
         return self._transform_src
 

@@ -64,8 +64,8 @@ to express branching or merging.
 |---|---|
 | `docs/example.input.json` | Ready-to-edit 4-step QA-to-FEM example |
 | `docs/3_workflow_cross_domain.ipynb` | Step-by-step pedagogic notebook |
-| `simplified/schema.simplified.json` | Input field reference |
-| `simplified/transform.jsonata` | Converts your input to the structured format |
+| `specs/schema.simplified.json` | Input field reference |
+| `specs/transform.simplified.jsonata` | Converts your input to the structured format |
 | `specs/schema.oold.yaml` | Full schema definition |
 | `specs/shape.ttl` | SHACL validation rules |
 

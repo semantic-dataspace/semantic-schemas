@@ -53,7 +53,7 @@ between knowledge modeling and data entry.
 
 ### The simplified schema (the user layer)
 
-`simplified/schema.simplified.json` is a plain [JSON Schema](https://json-schema.org/).
+`specs/schema.simplified.json` is a plain [JSON Schema](https://json-schema.org/).
 Its field names are readable English words, its descriptions explain each
 value in plain language, and it carries no ontology-specific content. A user
 fills in `docs/example.input.json` guided by this schema, with no IRI knowledge
@@ -87,7 +87,7 @@ You rarely need to open this file unless you are writing or reviewing a schema.
 The simplified input is deliberately flat and human-readable. The OO-LD schema
 expects a specific nested structure with typed nodes, stable IDs, and ontology
 class assignments. The file that bridges these two representations is
-`simplified/transform.jsonata`.
+`specs/transform.simplified.jsonata`.
 
 It is a short program written in [JSONata](https://jsonata.org), a lightweight
 query and transformation language for JSON. The transform:
@@ -108,7 +108,7 @@ with it directly.
 ```text
 docs/example.input.json
   │
-  │  simplified/transform.jsonata
+  │  specs/transform.simplified.jsonata
   ▼
 OO-LD JSON document          ← structured JSON-LD with typed nodes
   │

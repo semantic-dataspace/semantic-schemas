@@ -61,7 +61,7 @@ CHEM_COMP = SPECIMEN.parent.parent / "chemical-composition" / "PMDCo"
 simplified = json.load(open("docs/example.input.json"))
 
 # Step 1: specimen envelope (name + mass)
-specimen_expr = open("simplified/transform.jsonata").read()
+specimen_expr = open("specs/transform.simplified.jsonata").read()
 specimen_doc  = jsonata.Jsonata(specimen_expr).evaluate(simplified)
 
 # Step 2: composition (delegated to the composition schema's converter)
@@ -70,7 +70,7 @@ comp_input = {
     "material_id":   specimen_doc["id"],
     "elements":      simplified["elements"],
 }
-comp_expr = open(CHEM_COMP / "simplified/transform.jsonata").read()
+comp_expr = open(CHEM_COMP / "specs/transform.simplified.jsonata").read()
 comp_doc  = jsonata.Jsonata(comp_expr).evaluate(comp_input)
 comp_doc["quality_of"] = specimen_doc["id"]
 
@@ -97,8 +97,8 @@ print("Conforms:", conforms)
 |---|---|
 | `docs/example.input.json` | Ready-to-edit example (start here) |
 | `docs/1_specimen_workflow.ipynb` | Step-by-step notebook |
-| `simplified/schema.simplified.json` | Input field reference |
-| `simplified/transform.jsonata` | Converts your input to the specimen envelope + mass |
+| `specs/schema.simplified.json` | Input field reference |
+| `specs/transform.simplified.jsonata` | Converts your input to the specimen envelope + mass |
 | `specs/schema.oold.yaml` | Full schema definition (expert reference) |
 | `specs/shape.ttl` | SHACL validation rules (specimen node + mass) |
 

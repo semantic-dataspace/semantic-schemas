@@ -21,14 +21,13 @@ schemas/                       # Schema library
     <ontology>/
       README.md                # What this schema is for and how to use it
       specs/
-        schema.oold.yaml       # Full schema definition (expert reference)
-        shape.ttl              # Validation rules (SHACL)
+        schema.oold.yaml             # Full schema definition (expert reference)
+        shape.ttl                    # Validation rules (SHACL)
+        schema.simplified.json       # Input field reference
+        transform.simplified.jsonata # Converts your input to the structured format
       docs/
         example.input.json     # Ready-to-edit example (start here)
         *.ipynb                # Step-by-step workflow notebook
-      simplified/              # User-friendly entry point
-        schema.simplified.json # Input field reference
-        transform.jsonata      # Converts your JSON to the structured format
 templates/
   schema.oold.yaml             # Blank template for writing a new schema
 docs/

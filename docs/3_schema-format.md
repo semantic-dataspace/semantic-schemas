@@ -106,7 +106,7 @@ schemas/<domain>/<specialisation>/<Ontology>/
 The rule for distinguishing generic from specialised within a domain folder is
 based on **folder depth, not folder name**:
 
-- A folder that contains schema files directly (i.e. `specs/`, `simplified/`,
+- A folder that contains schema files directly (i.e. `specs/`, `specs/`,
   `docs/`) is a **leaf**: it holds a concrete schema. If it sits at the
   `<domain>/<Ontology>/` level it is the **generic base** for that domain.
 - A folder that contains only further subfolders is an **intermediate** node:
@@ -141,7 +141,7 @@ following standard subfolders:
 | Subfolder | Purpose |
 |---|---|
 | `specs/` | Schema definition: `schema.oold.yaml` and `shape.ttl` |
-| `simplified/` | Simplified input format: `schema.simplified.json` and `transform.jsonata` |
+| `specs/` | Simplified input format: `schema.simplified.json` and `transform.jsonata` |
 | `docs/` | Notebooks, example files, and the schema `README.md` |
 
 Machine-specific file parsers — extractors that read instrument output files
