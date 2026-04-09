@@ -1,0 +1,12 @@
+{
+  "step_name":   "FEM stress analysis run 1",
+  "description": "Implicit static FEM analysis of tensile specimen geometry using calibrated Hockett-Sherby material card.",
+  "inputs":      ["https://example.org/material-cards/316L-hockett-sherby-v1"],
+  "outputs":     ["https://example.org/simulation-results/fem-stress-316L-run-1"],
+  "preceded_by": ["https://example.org/simulations/model-calibration-316L-batch-1"],
+  "conditions": [
+    { "name": "Solver",        "unit": "Abaqus/Standard 2023" },
+    { "name": "Mesh Size",     "value": 0.5,  "unit": "mm" },
+    { "name": "Load Step",     "value": 0.01, "unit": "s" }
+  ]
+}

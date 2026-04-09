@@ -1,0 +1,168 @@
+# SHACL shape for the BWMD Chemical Composition pattern.
+#
+# Ontology: BWMD Materials Data Science Ontology
+#   https://www.iwm.fraunhofer.de/ontologies/bwmd-ontology#
+#
+# Validates:
+#   bwmd:ChemicalComposition  — label, one BaseElementOfComposition, ≥1 WeightFraction
+#   bwmd:BaseElementOfComposition — element_symbol from IUPAC periodic table
+#   bwmd:WeightFraction           — element_symbol, min/max value in [0, 100], unit
+
+@prefix bwmd:    <https://www.iwm.fraunhofer.de/ontologies/bwmd-ontology#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix shape:   <https://www.iwm.fraunhofer.de/ontologies/bwmd-ontology/shapes#> .
+
+# ── Periodic table element symbols (IUPAC, all 118 elements) ──────────────────
+# Used as sh:in constraint on bwmd:refersToElementSymbol.
+
+shape:elementSymbols
+    rdf:type rdf:List ;
+    rdf:first "H" ;
+    rdf:rest ( "He" "Li" "Be" "B" "C" "N" "O" "F" "Ne"
+               "Na" "Mg" "Al" "Si" "P" "S" "Cl" "Ar"
+               "K"  "Ca" "Sc" "Ti" "V" "Cr" "Mn" "Fe" "Co" "Ni" "Cu" "Zn"
+               "Ga" "Ge" "As" "Se" "Br" "Kr"
+               "Rb" "Sr" "Y"  "Zr" "Nb" "Mo" "Tc" "Ru" "Rh" "Pd" "Ag" "Cd"
+               "In" "Sn" "Sb" "Te" "I"  "Xe"
+               "Cs" "Ba"
+               "La" "Ce" "Pr" "Nd" "Pm" "Sm" "Eu" "Gd" "Tb" "Dy" "Ho" "Er" "Tm" "Yb" "Lu"
+               "Hf" "Ta" "W"  "Re" "Os" "Ir" "Pt" "Au" "Hg" "Tl" "Pb" "Bi" "Po" "At" "Rn"
+               "Fr" "Ra"
+               "Ac" "Th" "Pa" "U"  "Np" "Pu" "Am" "Cm" "Bk" "Cf" "Es" "Fm" "Md" "No" "Lr"
+               "Rf" "Db" "Sg" "Bh" "Hs" "Mt" "Ds" "Rg" "Cn" "Nh" "Fl" "Mc" "Lv" "Ts" "Og" ) .
+
+
+# ── ChemicalComposition ───────────────────────────────────────────────────────
+
+shape:ChemicalCompositionShape
+    a sh:NodeShape ;
+    sh:targetClass bwmd:ChemicalComposition ;
+
+    sh:property [
+        sh:path dcterms:conformsTo ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A ChemicalComposition instance must declare dcterms:conformsTo pointing to the versioned schema IRI." ;
+    ] ;
+
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A ChemicalComposition must have exactly one rdfs:label." ;
+    ] ;
+
+    # Exactly one BaseElementOfComposition among the hasPart values
+    sh:property [
+        sh:path bwmd:hasPart ;
+        sh:qualifiedValueShape [ sh:class bwmd:BaseElementOfComposition ] ;
+        sh:qualifiedMinCount 1 ;
+        sh:qualifiedMaxCount 1 ;
+        sh:message "A ChemicalComposition must have exactly one BaseElementOfComposition via bwmd:hasPart." ;
+    ] ;
+
+    # At least one WeightFraction among the hasPart values
+    sh:property [
+        sh:path bwmd:hasPart ;
+        sh:qualifiedValueShape [ sh:class bwmd:WeightFraction ] ;
+        sh:qualifiedMinCount 1 ;
+        sh:message "A ChemicalComposition must have at least one WeightFraction via bwmd:hasPart." ;
+    ] ;
+
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .
+
+
+# ── BaseElementOfComposition ──────────────────────────────────────────────────
+
+shape:BaseElementOfCompositionShape
+    a sh:NodeShape ;
+    sh:targetClass bwmd:BaseElementOfComposition ;
+
+    sh:property [
+        sh:path bwmd:refersToElementSymbol ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "H" "He" "Li" "Be" "B" "C" "N" "O" "F" "Ne"
+                "Na" "Mg" "Al" "Si" "P" "S" "Cl" "Ar"
+                "K"  "Ca" "Sc" "Ti" "V" "Cr" "Mn" "Fe" "Co" "Ni" "Cu" "Zn"
+                "Ga" "Ge" "As" "Se" "Br" "Kr"
+                "Rb" "Sr" "Y"  "Zr" "Nb" "Mo" "Tc" "Ru" "Rh" "Pd" "Ag" "Cd"
+                "In" "Sn" "Sb" "Te" "I"  "Xe"
+                "Cs" "Ba"
+                "La" "Ce" "Pr" "Nd" "Pm" "Sm" "Eu" "Gd" "Tb" "Dy" "Ho" "Er" "Tm" "Yb" "Lu"
+                "Hf" "Ta" "W"  "Re" "Os" "Ir" "Pt" "Au" "Hg" "Tl" "Pb" "Bi" "Po" "At" "Rn"
+                "Fr" "Ra"
+                "Ac" "Th" "Pa" "U"  "Np" "Pu" "Am" "Cm" "Bk" "Cf" "Es" "Fm" "Md" "No" "Lr"
+                "Rf" "Db" "Sg" "Bh" "Hs" "Mt" "Ds" "Rg" "Cn" "Nh" "Fl" "Mc" "Lv" "Ts" "Og" ) ;
+        sh:message "bwmd:refersToElementSymbol must be a valid IUPAC element symbol." ;
+    ] ;
+
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .
+
+
+# ── WeightFraction ────────────────────────────────────────────────────────────
+
+shape:WeightFractionShape
+    a sh:NodeShape ;
+    sh:targetClass bwmd:WeightFraction ;
+
+    sh:property [
+        sh:path bwmd:refersToElementSymbol ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "H" "He" "Li" "Be" "B" "C" "N" "O" "F" "Ne"
+                "Na" "Mg" "Al" "Si" "P" "S" "Cl" "Ar"
+                "K"  "Ca" "Sc" "Ti" "V" "Cr" "Mn" "Fe" "Co" "Ni" "Cu" "Zn"
+                "Ga" "Ge" "As" "Se" "Br" "Kr"
+                "Rb" "Sr" "Y"  "Zr" "Nb" "Mo" "Tc" "Ru" "Rh" "Pd" "Ag" "Cd"
+                "In" "Sn" "Sb" "Te" "I"  "Xe"
+                "Cs" "Ba"
+                "La" "Ce" "Pr" "Nd" "Pm" "Sm" "Eu" "Gd" "Tb" "Dy" "Ho" "Er" "Tm" "Yb" "Lu"
+                "Hf" "Ta" "W"  "Re" "Os" "Ir" "Pt" "Au" "Hg" "Tl" "Pb" "Bi" "Po" "At" "Rn"
+                "Fr" "Ra"
+                "Ac" "Th" "Pa" "U"  "Np" "Pu" "Am" "Cm" "Bk" "Cf" "Es" "Fm" "Md" "No" "Lr"
+                "Rf" "Db" "Sg" "Bh" "Hs" "Mt" "Ds" "Rg" "Cn" "Nh" "Fl" "Mc" "Lv" "Ts" "Og" ) ;
+        sh:message "bwmd:refersToElementSymbol must be a valid IUPAC element symbol." ;
+    ] ;
+
+    sh:property [
+        sh:path bwmd:hasDoubleLiteralMinValue ;
+        sh:datatype xsd:double ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 100.0 ;
+        sh:message "bwmd:hasDoubleLiteralMinValue must be a double in [0, 100]." ;
+    ] ;
+
+    sh:property [
+        sh:path bwmd:hasDoubleLiteralMaxValue ;
+        sh:datatype xsd:double ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 100.0 ;
+        sh:message "bwmd:hasDoubleLiteralMaxValue must be a double in [0, 100]." ;
+    ] ;
+
+    sh:property [
+        sh:path bwmd:hasUnitSymbol ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "%" "wt.%" "at.%" ) ;
+        sh:message "bwmd:hasUnitSymbol must be one of: %, wt.%, at.%." ;
+    ] ;
+
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .

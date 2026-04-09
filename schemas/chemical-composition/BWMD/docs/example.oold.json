@@ -1,0 +1,19 @@
+{
+  "conforms_to": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/chemical-composition/BWMD/#v1.0.0",
+  "type": "bwmd:ChemicalComposition",
+  "label": "316L Chemical Composition",
+  "base_element": {
+    "type": "bwmd:BaseElementOfComposition",
+    "element_symbol": "Fe"
+  },
+  "fractions": [
+    { "type": "bwmd:WeightFraction", "element_symbol": "Cr", "min_value": 16.0,  "max_value": 18.0,  "unit_symbol": "wt.%" },
+    { "type": "bwmd:WeightFraction", "element_symbol": "Ni", "min_value": 10.0,  "max_value": 14.0,  "unit_symbol": "wt.%" },
+    { "type": "bwmd:WeightFraction", "element_symbol": "Mo", "min_value": 2.0,   "max_value": 3.0,   "unit_symbol": "wt.%" },
+    { "type": "bwmd:WeightFraction", "element_symbol": "Mn", "min_value": 0.0,   "max_value": 2.0,   "unit_symbol": "wt.%" },
+    { "type": "bwmd:WeightFraction", "element_symbol": "Si", "min_value": 0.0,   "max_value": 0.75,  "unit_symbol": "wt.%" },
+    { "type": "bwmd:WeightFraction", "element_symbol": "C",  "min_value": 0.0,   "max_value": 0.03,  "unit_symbol": "wt.%" },
+    { "type": "bwmd:WeightFraction", "element_symbol": "P",  "min_value": 0.0,   "max_value": 0.045, "unit_symbol": "wt.%" },
+    { "type": "bwmd:WeightFraction", "element_symbol": "S",  "min_value": 0.0,   "max_value": 0.03,  "unit_symbol": "wt.%" }
+  ]
+}

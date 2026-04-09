@@ -1,0 +1,101 @@
+(
+  /*
+   * Tensile Test (TTO) — simplified JSON → OO-LD JSON
+   *
+   * Input fields (see schema.simplified.json):
+   *   test_name         string   required
+   *   specimen_iri      string   required — IRI of the specimen node
+   *   test_id           string   optional, derived from test_name if omitted
+   *   description       string   optional
+   *   test_standard     string   optional
+   *   strain_rate       number   optional
+   *   strain_rate_unit  string   optional, default "1/s"
+   *   temperature       number   optional (°C)
+   *   results           array    optional
+   *     property        string   TTO property name (e.g. "YieldStrength")
+   *     value           number
+   *     unit            string   "MPa" | "GPa" | "%"
+   */
+
+  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/tensile-test/TTO/#v1.0.0";
+
+  /* ── Property name → TTO class CURIE ─────────────────────────────────── */
+  $propertyMap := {
+    "YieldStrength":                     "tto:YieldStrength",
+    "UpperYieldStrength":                "tto:UpperYieldStrength",
+    "LowerYieldStrength":                "tto:LowerYieldStrength",
+    "TensileStrength":                   "tto:TensileStrength",
+    "ProofStrength":                     "tto:ProofStrength",
+    "PercentageElongationAfterFracture": "tto:PercentageElongationAfterFracture",
+    "PercentagePermanentElongation":     "tto:PercentagePermanentElongation",
+    "PercentageReductionOfArea":         "tto:PercentageReductionOfArea"
+  };
+
+  /* ── Unit label → QUDT unit IRI ──────────────────────────────────────── */
+  $unitMap := {
+    "MPa": "uqudt:MegaPascal",
+    "GPa": "uqudt:GigaPascal",
+    "%":   "uqudt:PERCENT"
+  };
+
+  /* ── Node IDs ─────────────────────────────────────────────────────────── */
+  $slug   := $replace($lowercase($trim(test_name)), /[^a-z0-9]+/, "-");
+  $testId := $exists(test_id) ? test_id : "tensile-test-" & $slug;
+
+  /* ── Test conditions ──────────────────────────────────────────────────── */
+  $conds := [];
+  $conds := $exists(test_standard)
+    ? $append($conds, [{
+        "type": "pmdco:PMD_0000013",
+        "id":   $testId & "-condition-standard",
+        "parameter_label": "Test Standard",
+        "parameter_unit":  test_standard
+      }])
+    : $conds;
+  $conds := $exists(strain_rate)
+    ? $append($conds, [{
+        "type": "pmdco:PMD_0000013",
+        "id":   $testId & "-condition-strain-rate",
+        "parameter_label": "Strain Rate",
+        "parameter_value": strain_rate,
+        "parameter_unit":  $exists(strain_rate_unit) ? strain_rate_unit : "1/s"
+      }])
+    : $conds;
+  $conds := $exists(temperature)
+    ? $append($conds, [{
+        "type": "pmdco:PMD_0000013",
+        "id":   $testId & "-condition-temperature",
+        "parameter_label": "Temperature",
+        "parameter_value": temperature,
+        "parameter_unit":  "°C"
+      }])
+    : $conds;
+
+  /* ── Measured results ─────────────────────────────────────────────────── */
+  $measured := $exists(results) and $count(results) > 0
+    ? $map(results, function($r, $i) {
+        {
+          "type":         $lookup($propertyMap, $r.property),
+          "id":           $testId & "-result-" & $lowercase($r.property),
+          "result_value": $r.value,
+          "result_unit":  $lookup($unitMap, $r.unit)
+        }
+      })
+    : undefined;
+
+  /* ── OO-LD output ─────────────────────────────────────────────────────── */
+  $base := {
+    "conforms_to":          $schemaUri,
+    "type":                 "tto:TensileTest",
+    "id":                   $testId,
+    "label":                test_name,
+    "has_specified_input":  [specimen_iri]
+  };
+
+  $withDesc  := $exists(description) ? $merge([$base,     {"description": description}]) : $base;
+  $withConds := $count($conds) > 0   ? $merge([$withDesc, {"has_process_condition": $conds}]) : $withDesc;
+
+  $exists($measured)
+    ? $merge([$withConds, {"measured_properties": $measured}])
+    : $withConds
+)

@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.simplified.json",
+  "title": "Mechanical Material Card (Simplified Input)",
+  "description": "A user-friendly form to describe a mechanical material card: a structured dataset that collects elastic constants, discrete mechanical properties, and a fitted constitutive model for use in FEM simulations. This input will be automatically converted to a standardised RDF representation (IAO/PMDCo OO-LD).",
+  "type": "object",
+  "required": ["card_name", "material_iri"],
+  "additionalProperties": false,
+  "properties": {
+    "card_name": {
+      "title": "Card Name",
+      "description": "A human-readable name for this material card. Example: '316L stainless steel — Hockett-Sherby v1'.",
+      "type": "string",
+      "minLength": 1
+    },
+    "card_id": {
+      "title": "Card ID",
+      "description": "Optional. IRI slug for this card node. Auto-derived from card_name if omitted.",
+      "type": "string"
+    },
+    "description": {
+      "title": "Description",
+      "description": "Optional free-text description.",
+      "type": "string"
+    },
+    "material_iri": {
+      "title": "Material IRI",
+      "description": "IRI of the material this card describes. Must be an existing knowledge-graph node.",
+      "type": "string",
+      "format": "uri"
+    },
+    "density": {
+      "title": "Density",
+      "description": "Mass density with value and unit (e.g. 7.93 g/cm³).",
+      "type": "object",
+      "required": ["value"],
+      "additionalProperties": false,
+      "properties": {
+        "value": { "title": "Value", "type": "number", "minimum": 0 },
+        "unit":  { "title": "Unit",  "type": "string", "default": "g/cm³" }
+      }
+    },
+    "youngs_modulus": {
+      "title": "Young's Modulus",
+      "description": "Elastic modulus with value and unit (e.g. 193 GPa).",
+      "type": "object",
+      "required": ["value"],
+      "additionalProperties": false,
+      "properties": {
+        "value": { "title": "Value", "type": "number", "minimum": 0 },
+        "unit":  { "title": "Unit",  "type": "string", "default": "GPa" }
+      }
+    },
+    "poissons_ratio": {
+      "title": "Poisson's Ratio",
+      "description": "Dimensionless lateral-to-axial strain ratio (e.g. 0.29).",
+      "type": "object",
+      "required": ["value"],
+      "additionalProperties": false,
+      "properties": {
+        "value": { "title": "Value", "type": "number", "minimum": 0, "maximum": 0.5 },
+        "unit":  { "title": "Unit",  "type": "string", "default": "dimensionless" }
+      }
+    },
+    "mechanical_properties": {
+      "title": "Mechanical Properties",
+      "description": "Discrete mechanical properties (yield strength, tensile strength, elongation, etc.).",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "value", "unit"],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "title": "Property Type",
+            "type": "string",
+            "enum": [
+              "YieldStrength", "UpperYieldStrength", "LowerYieldStrength",
+              "TensileStrength", "ProofStrength",
+              "PercentageElongationAfterFracture", "PercentagePermanentElongation",
+              "PercentageReductionOfArea"
+            ]
+          },
+          "value": { "title": "Value", "type": "number", "minimum": 0 },
+          "unit": {
+            "title": "Unit",
+            "type": "string",
+            "enum": ["MPa", "GPa", "%"]
+          }
+        }
+      },
+      "default": []
+    },
+    "constitutive_model": {
+      "title": "Constitutive Model",
+      "description": "Flow-curve model to be embedded in the card.",
+      "type": "object",
+      "required": ["model_type"],
+      "additionalProperties": false,
+      "properties": {
+        "model_type": {
+          "title": "Model Family",
+          "type": "string",
+          "enum": ["Hockett-Sherby", "Swift", "Voce", "Hollomon", "Johnson-Cook"]
+        },
+        "calibration_iri": {
+          "title": "Calibration Process IRI",
+          "description": "IRI of the calibration step that produced these parameters (provenance).",
+          "type": "string",
+          "format": "uri"
+        },
+        "parameters": {
+          "title": "Parameters",
+          "description": "Fitted model parameter values.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "value"],
+            "additionalProperties": false,
+            "properties": {
+              "name":  { "title": "Name / Symbol", "type": "string" },
+              "value": { "title": "Value", "type": "number" },
+              "unit":  { "title": "Unit",  "type": "string" }
+            }
+          },
+          "default": []
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.simplified.json",
+  "title": "Manufacturing Process (Simplified Input)",
+  "description": "A user-friendly form to describe a manufacturing process step. Provide a name, optional description, and lists of input and output material IRIs. This input will be automatically converted to a standardised RDF representation (PMDCo OO-LD).",
+  "type": "object",
+  "required": ["process_name"],
+  "additionalProperties": false,
+  "properties": {
+    "process_name": {
+      "title": "Process Name",
+      "description": "A human-readable name for this process step. Example: 'Sintering and Annealing batch 1', 'Hydrogen Decrepitation'.",
+      "type": "string",
+      "minLength": 1,
+      "examples": ["Sintering and Annealing", "Cold Rolling", "Hydrogen Decrepitation"]
+    },
+    "process_id": {
+      "title": "Process ID",
+      "description": "Optional. Identifier (IRI slug) for the process node in the RDF graph. If omitted, derived automatically from process_name (e.g. 'Sintering and Annealing' → 'process-sintering-and-annealing').",
+      "type": "string",
+      "examples": ["process-sintering-batch-1", "process-hd-2102-0072"]
+    },
+    "description": {
+      "title": "Description",
+      "description": "Optional free-text description of what this process does.",
+      "type": "string",
+      "examples": ["Green compacts are heated below the melting point, causing particles to fuse. Annealing follows to relieve stresses."]
+    },
+    "inputs": {
+      "title": "Input Material IRIs",
+      "description": "IRIs of materials consumed or used by this process. Reference existing knowledge-graph nodes.",
+      "type": "array",
+      "items": {
+        "title": "Input IRI",
+        "type": "string",
+        "format": "uri"
+      },
+      "uniqueItems": true,
+      "default": [],
+      "examples": [
+        ["https://example.org/materials/green-compact-batch-1"]
+      ]
+    },
+    "outputs": {
+      "title": "Output Material IRIs",
+      "description": "IRIs of materials produced by this process. Reference existing knowledge-graph nodes.",
+      "type": "array",
+      "items": {
+        "title": "Output IRI",
+        "type": "string",
+        "format": "uri"
+      },
+      "uniqueItems": true,
+      "default": [],
+      "examples": [
+        ["https://example.org/materials/sintered-magnet-batch-1"]
+      ]
+    },
+    "preceded_by": {
+      "title": "Preceded By (Process IRIs)",
+      "description": "IRIs of processes that directly precede this one in the process chain.",
+      "type": "array",
+      "items": {
+        "title": "Preceding Process IRI",
+        "type": "string",
+        "format": "uri"
+      },
+      "uniqueItems": true,
+      "default": [],
+      "examples": [
+        ["https://example.org/processes/pressing-of-fine-powder-batch-1"]
+      ]
+    },
+    "conditions": {
+      "title": "Process Conditions / Parameters",
+      "description": "Quantitative conditions under which this process is carried out (e.g. temperature, pressure, energy consumption).",
+      "type": "array",
+      "items": {
+        "title": "Process Condition",
+        "type": "object",
+        "required": ["name"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "title": "Parameter Name",
+            "description": "Name of the process condition (e.g. 'Sintering Temperature', 'Applied Pressure').",
+            "type": "string",
+            "examples": ["Sintering Temperature", "Energy Consumption", "Holding Time"]
+          },
+          "value": {
+            "title": "Value",
+            "description": "Numeric magnitude of the condition.",
+            "type": "number",
+            "examples": [1080, 26, 4.5]
+          },
+          "unit": {
+            "title": "Unit",
+            "description": "Unit of the value (e.g. '°C', 'MPa', 'kWh', 'h').",
+            "type": "string",
+            "examples": ["°C", "MPa", "kWh", "h", "bar"]
+          }
+        }
+      },
+      "default": []
+    }
+  },
+  "examples": [
+    {
+      "process_name": "Sintering and Annealing batch 1",
+      "description": "Green compacts are heated below the melting point, causing particles to fuse together (sintering). Annealing follows to relieve internal stresses and optimise microstructure.",
+      "inputs": ["https://example.org/materials/anisotropic-green-compacts-batch-1"],
+      "outputs": ["https://example.org/materials/sintered-magnet-batch-1"],
+      "preceded_by": ["https://example.org/processes/pressing-of-fine-powder-batch-1"],
+      "conditions": [
+        { "name": "Sintering Temperature", "value": 1080, "unit": "°C" },
+        { "name": "Energy Consumption",    "value": 26,   "unit": "kWh" }
+      ]
+    }
+  ]
+}

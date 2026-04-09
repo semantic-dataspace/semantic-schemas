@@ -1,0 +1,98 @@
+# SHACL shape for the PMDCo Specimen pattern.
+#
+# Combines two PMDCo patterns:
+#
+#   1. Duality Object / Material
+#      https://github.com/materialdigital/core-ontology/tree/main/patterns/duality%20object%20material
+#      (no shape.ttl exists upstream; constraints here are derived from the example data)
+#
+#   2. Material Property (Quality) — for the Mass quality + ScalarValueSpecification
+#      https://github.com/materialdigital/core-ontology/tree/main/patterns/material%20property%20(quality)
+#
+# Chemical composition is validated by loading this file alongside:
+#   chemical-composition/PMDCo/specs/shape.ttl
+#
+# That shape already targets pmd:PMD_0000551 (ChemicalComposition) and all its
+# sub-nodes, so no duplication is needed here.
+#
+# NOTE: Requires RDFS inference for subclass-targeted shapes (e.g. MassProportion).
+#   Pass inference="rdfs" to pyshacl.validate().
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix obo:     <http://purl.obolibrary.org/obo/> .
+@prefix pmd:     <https://w3id.org/pmd/co/> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix shape:   <https://w3id.org/pmd/co/shapes/specimen/> .
+@prefix :        <https://w3id.org/pmd/co/shapes/specimen/> .
+@base            <https://w3id.org/pmd/co/shapes/specimen/> .
+
+# ── Specimen node (Duality Object / Material pattern) ──────────────────────
+
+shape:specimen
+    a sh:NodeShape ;
+    sh:targetClass <http://purl.obolibrary.org/obo/BFO_0000030> ;   # bfo:Object
+    sh:property [
+        sh:path dcterms:conformsTo ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A Specimen must declare dcterms:conformsTo pointing to the versioned schema IRI." ;
+    ] ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A Specimen must have exactly one rdfs:label." ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .
+
+# ── Mass quality (Material Property / Quality pattern) ─────────────────────
+
+shape:mass_quality
+    a sh:NodeShape ;
+    sh:targetClass pmd:PMD_0020133 ;    # Mass
+    sh:property [
+        sh:path obo:RO_0000080 ;        # quality_of
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A Mass quality must be quality_of exactly one specimen (referenced by IRI)." ;
+    ] ;
+    sh:property [
+        sh:path pmd:PMD_0000077 ;       # specified_by_value
+        sh:node shape:mass_scalar_value_specification ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .
+
+shape:mass_scalar_value_specification
+    a sh:NodeShape ;
+    sh:description "A ScalarValueSpecification for mass must carry a positive numeric value and one of the accepted mass unit IRIs." ;
+    sh:property [
+        sh:path obo:OBI_0001937 ;       # has_specified_numeric_value
+        sh:datatype xsd:double ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minExclusive 0.0 ;
+        sh:message "Mass value must be a positive number." ;
+    ] ;
+    sh:property [
+        sh:path obo:IAO_0000039 ;       # has_measurement_unit_label
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in (
+            <http://purl.obolibrary.org/obo/UO_0000021>   # gram
+            <http://purl.obolibrary.org/obo/UO_0000022>   # kilogram
+            <http://purl.obolibrary.org/obo/UO_0000023>   # milligram
+        ) ;
+        sh:message "Mass unit must be UO_0000021 (g), UO_0000022 (kg), or UO_0000023 (mg)." ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .

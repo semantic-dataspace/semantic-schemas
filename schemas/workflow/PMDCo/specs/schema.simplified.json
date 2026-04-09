@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.simplified.json",
+  "title": "Cross-Domain Workflow (Simplified Input)",
+  "description": "A user-friendly form to describe a multi-step workflow that may span manufacturing, characterization, simulation, and data management steps. Steps from different domain ontologies can be combined freely. Each step records its name, optional reference to a detailed knowledge-graph instance, and optional inline parameters. This input will be automatically converted to a standardised RDF representation (BFO/PMDCo OO-LD).",
+  "type": "object",
+  "required": ["workflow_name", "steps"],
+  "additionalProperties": false,
+  "properties": {
+    "workflow_name": {
+      "title": "Workflow Name",
+      "description": "A human-readable name for this workflow. Example: 'QA-to-FEM material card workflow — 316L batch 1'.",
+      "type": "string",
+      "minLength": 1
+    },
+    "workflow_id": {
+      "title": "Workflow ID",
+      "description": "Optional. IRI slug for the workflow node. Auto-derived from workflow_name if omitted.",
+      "type": "string"
+    },
+    "description": {
+      "title": "Description",
+      "description": "Optional free-text description of the overall workflow.",
+      "type": "string"
+    },
+    "steps": {
+      "title": "Steps",
+      "description": "Ordered list of process steps. Steps are connected in sequence by default; use preceded_by to express branching.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["label"],
+        "additionalProperties": false,
+        "properties": {
+          "label": {
+            "title": "Step Name",
+            "description": "Human-readable name for this step.",
+            "type": "string"
+          },
+          "step_id": {
+            "title": "Step ID",
+            "description": "Optional. IRI slug for this step node. Auto-derived from label if omitted.",
+            "type": "string"
+          },
+          "step_type": {
+            "title": "Step Type",
+            "description": "Ontology class for this step (e.g. 'pmdco:PMD_0000029', 'obi:0000070', 'obi:0000471'). Leave blank for a generic BFO process step.",
+            "type": "string"
+          },
+          "description": {
+            "title": "Step Description",
+            "description": "Optional free-text description of what this step does.",
+            "type": "string"
+          },
+          "instance_iri": {
+            "title": "Instance IRI",
+            "description": "IRI of a fully described step instance in the knowledge graph. Include for provenance; omit for lightweight sketches.",
+            "type": "string",
+            "format": "uri"
+          },
+          "preceded_by": {
+            "title": "Preceded By (Step IDs)",
+            "description": "IDs of the steps that directly precede this one. If omitted, the previous step in the array is used.",
+            "type": "array",
+            "items": { "type": "string" },
+            "uniqueItems": true,
+            "default": []
+          },
+          "conditions": {
+            "title": "Inline Parameters",
+            "description": "Inline quantitative parameters for this step (optional; prefer instance_iri for detailed steps).",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name"],
+              "additionalProperties": false,
+              "properties": {
+                "name":  { "title": "Parameter Name", "type": "string" },
+                "value": { "title": "Value", "type": "number" },
+                "unit":  { "title": "Unit", "type": "string" }
+              }
+            },
+            "default": []
+          }
+        }
+      }
+    }
+  }
+}

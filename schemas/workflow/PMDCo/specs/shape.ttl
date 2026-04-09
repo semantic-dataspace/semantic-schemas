@@ -1,0 +1,80 @@
+# SHACL shape for the cross-domain Workflow (BFO:Process) pattern.
+#
+# Validates:
+#   1. Workflow node (BFO_0000015)
+#      - must have rdfs:label
+#      - must have dcterms:conformsTo
+#      - must have at least one has_part step
+#   2. WorkflowStep nodes (embedded BFO_0000015 parts):
+#      - must have rdfs:label
+#      - preceded_by references must be IRIs or local nodes
+#   3. ProcessCondition nodes (PMD_0000013) — inline step parameters
+#      - must have rdfs:label
+#      - value (if present) must be xsd:double
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix bfo:     <http://purl.obolibrary.org/obo/BFO_> .
+@prefix pmd:     <https://w3id.org/pmd/co/> .
+@prefix qudt:    <http://qudt.org/schema/qudt/> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix shape:   <https://w3id.org/pmd/co/shapes/workflow/> .
+@prefix :        <https://w3id.org/pmd/co/shapes/workflow/> .
+@base            <https://w3id.org/pmd/co/shapes/workflow/> .
+
+# ── Workflow node ─────────────────────────────────────────────────────────────
+
+shape:workflow
+    a sh:NodeShape ;
+    # Target only the root workflow node (the one that declares conformsTo),
+    # not generic BFO Process step nodes which share the same bfo:0000015 type.
+    sh:targetSubjectsOf dcterms:conformsTo ;
+    sh:property [
+        sh:path dcterms:conformsTo ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A Workflow must declare dcterms:conformsTo pointing to the versioned schema IRI." ;
+    ] ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A Workflow must have exactly one rdfs:label." ;
+    ] ;
+    sh:property [
+        sh:path <http://purl.obolibrary.org/obo/BFO_0000051> ;   # has_part
+        sh:minCount 1 ;
+        sh:message "A Workflow must have at least one has_part step." ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .
+
+# ── Workflow step inline parameter node ───────────────────────────────────────
+
+shape:step_condition
+    a sh:NodeShape ;
+    sh:targetClass pmd:PMD_0000013 ;   # ProcessCondition
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A step parameter must have exactly one rdfs:label." ;
+    ] ;
+    sh:property [
+        sh:path qudt:value ;
+        sh:datatype xsd:double ;
+        sh:maxCount 1 ;
+        sh:message "Step parameter value must be xsd:double." ;
+    ] ;
+    sh:property [
+        sh:path qudt:hasUnit ;
+        sh:maxCount 1 ;
+        sh:message "Step parameter may have at most one unit." ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .

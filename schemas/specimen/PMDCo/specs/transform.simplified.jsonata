@@ -1,0 +1,64 @@
+(
+  /*
+   * Specimen (PMDCo) — simplified JSON → OO-LD JSON  (specimen envelope only)
+   *
+   * This transform produces the specimen node and the mass quality block.
+   * The has_composition block is intentionally NOT included here.
+   *
+   * Reason: the chemical-composition logic already lives in
+   *   chemical-composition/PMDCo/simplified/transform.jsonata
+   * Duplicating it here would create two sources of truth for the element
+   * symbol → PMDCo IRI mapping and the fraction ID conventions.
+   *
+   * Composition happens at the caller level (see docs/specimen_workflow.ipynb):
+   *   1. Run this transform  → specimen envelope (type, id, label, mass)
+   *   2. Run the composition transform with material_id set to the specimen id
+   *   3. Replace composition's embedded quality_of with the specimen IRI
+   *   4. Merge the composition output as has_composition into the specimen doc
+   *
+   * Input fields (see schema.simplified.json):
+   *   specimen_name  string   required
+   *   specimen_id    string   optional, derived from specimen_name if omitted
+   *   mass_value     number   optional
+   *   mass_unit      string   optional — "g" | "kg" | "mg"  (default "g")
+   *
+   * Run with the jsonata-python CLI:
+   *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
+   */
+
+  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/specimen/PMDCo/#v1.0.0";
+
+  /* ── Mass unit label → Unit Ontology IRI ────────────────────────────── */
+  $massUnitMap := {
+    "g":  "uo:0000021",
+    "kg": "uo:0000022",
+    "mg": "uo:0000023"
+  };
+
+  /* ── Node IDs ────────────────────────────────────────────────────────── */
+  $slug   := $replace($lowercase($trim(specimen_name)), /[^a-z0-9]+/, "-");
+  $specId := $exists(specimen_id) ? specimen_id : "specimen-" & $slug;
+
+  /* ── Mass quality (optional) ─────────────────────────────────────────── */
+  $massBlock := $exists(mass_value) ? {
+    "type":       "pmdco:PMD_0020133",
+    "id":         "mass-" & $specId,
+    "quality_of": $specId,
+    "specified_by_value": {
+      "type":  "obi:0001931",
+      "id":    "mass-svs-" & $specId,
+      "value": mass_value,
+      "unit":  $lookup($massUnitMap, $exists(mass_unit) ? mass_unit : "g")
+    }
+  } : undefined;
+
+  /* ── OO-LD output (specimen envelope only) ───────────────────────────── */
+  {
+    "conforms_to": $schemaUri,
+    "type":  "bfo:0000030",
+    "id":    $specId,
+    "label": specimen_name,
+    "mass":  $massBlock
+    /* has_composition is merged in by the caller — see docs/specimen_workflow.ipynb */
+  }
+)

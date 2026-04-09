@@ -1,0 +1,170 @@
+# OO-LD Schema for Expert Expertise Profile
+# Format: JSON Schema (draft 2020-12) + JSON-LD @context
+# Reference: https://github.com/OO-LD/oold-python
+#
+# K-item fields use the x-kitem extension (x- prefix = valid JSON Schema extension).
+# Each x-kitem.ktypeIds entry is the ktype_id used to query the DSMS knowledge graph API:
+#   GET /api/knowledge?ktype_id=<ktype_id>
+
+"@context":
+  schema: "https://schema.org/"
+  foaf: "http://xmlns.com/foaf/0.1/"
+  dcterms: "http://purl.org/dc/terms/"
+  type: "@type"
+  conforms_to:
+    "@id": "http://purl.org/dc/terms/conformsTo"
+    "@type": "@id"
+
+  # All six expertise fields map to schema:knowsAbout (schema.org/knowsAbout):
+  #   "Of a Person to indicate a topic that is known about."
+  # The semantic distinction between materials, methods, devices, etc. is carried
+  # by the rdf:type of the referenced k-item, not by a separate property per field.
+  #
+  # Known limitation: because all fields share the same property IRI, a SPARQL
+  # query on raw triples cannot distinguish "expertise in materials" from
+  # "expertise in methods" without joining on the ktype of the referenced entity.
+  # A future semantic-schemas vocabulary will define rdfs:subPropertyOf sub-properties
+  # (e.g. ssv:hasMaterialExpertise rdfs:subPropertyOf schema:knowsAbout) to resolve
+  # this. See: https://github.com/<org>/semantic-schemas/issues/<n>
+  materials:
+    "@id": "schema:knowsAbout"
+    "@type": "@id"
+    "@container": "@set"
+  material_modelling:
+    "@id": "schema:knowsAbout"
+    "@type": "@id"
+    "@container": "@set"
+  measurement_devices:
+    "@id": "schema:knowsAbout"
+    "@type": "@id"
+    "@container": "@set"
+  production_devices:
+    "@id": "schema:knowsAbout"
+    "@type": "@id"
+    "@container": "@set"
+  application_fields:
+    "@id": "schema:knowsAbout"
+    "@type": "@id"
+    "@container": "@set"
+  methods:
+    "@id": "schema:knowsAbout"
+    "@type": "@id"
+    "@container": "@set"
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: >-
+  OO-LD Schema for Expert Expertise Profile.
+  An expert (foaf:Person) is linked to lists of knowledge graph entities
+  representing their areas of expertise. All list fields are k-items
+  and share the property schema:knowsAbout. Semantic distinction between
+  field types (materials, methods, devices, …) is carried by the rdf:type
+  of the referenced entity, not by distinct property IRIs. Sub-properties
+  of schema:knowsAbout are planned in a future semantic-schemas vocabulary.
+x-schema-version: '1.0.0'
+x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/expertise/'
+title: Expertise
+description: Expertise profile of a domain expert in materials science
+type: object
+required:
+  - type
+
+properties:
+  type:
+    title: Type
+    description: RDF type of this instance
+    type: string
+    readOnly: true
+    const: "foaf:Person"
+    default: "foaf:Person"
+
+  conforms_to:
+    title: Schema
+    description: Versioned IRI of the schema used to create this instance
+    type: string
+    readOnly: true
+    const: "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/expertise/#v1.0.0"
+    default: "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/expertise/#v1.0.0"
+
+  materials:
+    title: Materials
+    description: Materials the expert has expertise in
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds:
+        - material
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  material_modelling:
+    title: Material Modelling
+    description: Material modelling and simulation approaches the expert has expertise in
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds:
+        - simulation
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  measurement_devices:
+    title: Measurement Devices
+    description: Measurement and characterisation devices the expert has expertise in
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds:
+        - measurement_device
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  production_devices:
+    title: Production Devices
+    description: Manufacturing and production devices the expert has expertise in
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds:
+        - production_device
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  application_fields:
+    title: Application Fields
+    description: Application domains and industries the expert works in
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds:
+        - application_field
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  methods:
+    title: Methods
+    description: Scientific and engineering methods the expert has expertise in
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds:
+        - method
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []

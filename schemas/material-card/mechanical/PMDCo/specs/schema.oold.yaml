@@ -1,0 +1,339 @@
+# OO-LD Schema for MechanicalMaterialCard (PMDCo / IAO pattern)
+# Ontology: Platform MaterialDigital Core Ontology (PMDCo)
+#   https://w3id.org/pmd/co/
+# Root class: IAO DataSet (IAO_0000100)
+#   http://purl.obolibrary.org/obo/IAO_0000100
+#
+# Graph pattern:
+#
+#   DataSet  (iao:IAO_0000100)
+#     rdfs:label ──────────────────────────────────────── card name string
+#     rdfs:comment ────────────────────────────────────── description  (optional)
+#     dcterms:references ─────────────────────────────► Material IRI
+#     density ─────────────────────────────────────────── xsd:double  [g/cm³]
+#     youngs_modulus ──────────────────────────────────── xsd:double  [GPa]
+#     poissons_ratio ──────────────────────────────────── xsd:double  [dimensionless]
+#     mechanical_property  [× 0..N]  (embedded TTO/PMDCo result nodes)
+#       type  ────────────── TTO class (YieldStrength, TensileStrength, …)
+#       result_value ──────── xsd:double
+#       result_unit ───────── unit IRI  (QUDT)
+#     constitutive_model   (embedded node)
+#       model_type ────────── string (e.g. "Hockett-Sherby")
+#       calibration_iri ───── IRI of the calibration process
+#       parameters    [× 0..N]
+#         param_name ───────── string
+#         param_value ──────── xsd:double
+#         param_unit ───────── string  (optional)
+#
+# Design notes:
+#   - IAO:DataSet (IAO_0000100) is the canonical class for a collection of
+#     data items.  It is more appropriate than a process class here because
+#     the material card IS the data artefact, not a process description.
+#   - Scalar properties (density, Young's modulus, Poisson's ratio) are mapped
+#     to PMDCo ValueObject nodes carrying qudt:value / qudt:hasUnit, consistent
+#     with the PMDCo scalar property pattern.
+#   - Mechanical properties re-use the TTO result pattern from
+#     characterization/tensile-test/TTO/ for interoperability.
+#   - The constitutive model block is embedded (composite), because parameters
+#     are direct content of the card, not independently managed graph nodes.
+
+"@context":
+  rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  rdfs: "http://www.w3.org/2000/01/rdf-schema#"
+  xsd: "http://www.w3.org/2001/XMLSchema#"
+  dcterms: "http://purl.org/dc/terms/"
+  conforms_to:
+    "@id": "http://purl.org/dc/terms/conformsTo"
+    "@type": "@id"
+  iao:
+    "@id": "http://purl.obolibrary.org/obo/IAO_"
+    "@prefix": true
+  obi:
+    "@id": "http://purl.obolibrary.org/obo/OBI_"
+    "@prefix": true
+  tto: "https://w3id.org/pmd/tto/"
+  pmdco: "https://w3id.org/pmd/co/"
+  qudt: "http://qudt.org/schema/qudt/"
+  uqudt: "https://qudt.org/vocab/unit/"
+  "@base": "https://w3id.org/pmd/co/test/shape_material_card#"
+  type: "@type"
+  id: "@id"
+  label:
+    "@id": "rdfs:label"
+  description:
+    "@id": "rdfs:comment"
+  material_iri:
+    "@id": "http://purl.org/dc/terms/references"
+    "@type": "@id"
+  # Scalar material properties (each maps to a PMDCo ValueObject)
+  density:
+    "@id": "pmdco:PMD_0000025"       # PMDCo: Density
+    "@container": "@set"
+  youngs_modulus:
+    "@id": "pmdco:PMD_0000039"       # PMDCo: YoungModulus
+    "@container": "@set"
+  poissons_ratio:
+    "@id": "pmdco:PMD_0000040"       # PMDCo: PoissonRatio
+    "@container": "@set"
+  scalar_value:
+    "@id": "qudt:value"
+    "@type": "xsd:double"
+  scalar_unit:
+    "@id": "qudt:hasUnit"
+  # Mechanical properties (TTO result pattern)
+  mechanical_properties:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0000299"   # has_specified_output
+    "@container": "@set"
+  result_value:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0001937"   # has_specified_numeric_value
+    "@type": "xsd:double"
+  result_unit:
+    "@id": "http://purl.obolibrary.org/obo/IAO_0000039"   # has_measurement_unit_label
+    "@type": "@id"
+  # Constitutive model block
+  constitutive_model:
+    "@id": "pmdco:PMD_0000104"       # PMDCo: MaterialModel
+    "@container": "@set"
+  model_type:
+    "@id": "http://purl.org/dc/terms/type"
+  calibration_iri:
+    "@id": "http://purl.org/dc/terms/source"
+    "@type": "@id"
+  # Model parameters (within constitutive_model node)
+  model_parameters:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
+    "@container": "@set"
+  param_name:
+    "@id": "rdfs:label"
+  param_value:
+    "@id": "qudt:value"
+    "@type": "xsd:double"
+  param_unit:
+    "@id": "qudt:hasUnit"
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: Schema for a mechanical material card (IAO:DataSet)
+x-schema-version: '1.0.0'
+x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/material-card/mechanical/PMDCo/'
+title: Mechanical Material Card
+type: object
+required:
+  - type
+  - id
+  - label
+  - material_iri
+
+properties:
+
+  type:
+    title: Type
+    type: string
+    readOnly: true
+    const: "iao:0000100"
+    default: "iao:0000100"
+    options:
+      enum_titles:
+        - iao:DataSet
+
+  id:
+    title: ID
+    description: Identifier for this material card instance; managed by the consumer.
+    type: string
+    readOnly: true
+    default: material-card
+
+  label:
+    title: Card Name
+    description: >-
+      Human-readable name for this material card
+      (e.g. "316L stainless steel, Hockett-Sherby v1").
+    type: string
+
+  description:
+    title: Description
+    description: Optional free-text description of this material card.
+    type: string
+    format: textarea
+
+  material_iri:
+    title: Material IRI
+    description: >-
+      IRI of the material that this card describes.
+      References an existing knowledge-graph node.
+    type: string
+    format: uri
+
+  density:
+    title: Density
+    description: Mass density of the material (g/cm³ or kg/m³).
+    type: object
+    properties:
+      id:
+        title: ID
+        type: string
+        readOnly: true
+        default: density-1
+      scalar_value:
+        title: Value
+        type: number
+        minimum: 0
+      scalar_unit:
+        title: Unit
+        type: string
+        default: "g/cm³"
+
+  youngs_modulus:
+    title: Young's Modulus
+    description: Elastic modulus of the material (GPa).
+    type: object
+    properties:
+      id:
+        title: ID
+        type: string
+        readOnly: true
+        default: youngs-modulus-1
+      scalar_value:
+        title: Value
+        type: number
+        minimum: 0
+      scalar_unit:
+        title: Unit
+        type: string
+        default: "GPa"
+
+  poissons_ratio:
+    title: Poisson's Ratio
+    description: Lateral-to-axial strain ratio (dimensionless, typically 0.2–0.5).
+    type: object
+    properties:
+      id:
+        title: ID
+        type: string
+        readOnly: true
+        default: poissons-ratio-1
+      scalar_value:
+        title: Value
+        type: number
+        minimum: 0
+        maximum: 0.5
+      scalar_unit:
+        title: Unit
+        type: string
+        default: "dimensionless"
+
+  mechanical_properties:
+    title: Mechanical Properties
+    description: >-
+      Discrete mechanical property values (yield strength, tensile strength, etc.)
+      obtained from characterization and stored in this card.
+    type: array
+    items:
+      type: object
+      title: Mechanical Property
+      required:
+        - type
+        - id
+        - result_value
+        - result_unit
+      properties:
+        type:
+          title: Property Type
+          description: TTO class identifying which mechanical property this represents.
+          type: string
+          enum:
+            - tto:YieldStrength
+            - tto:UpperYieldStrength
+            - tto:LowerYieldStrength
+            - tto:TensileStrength
+            - tto:ProofStrength
+            - tto:PercentageElongationAfterFracture
+            - tto:PercentagePermanentElongation
+            - tto:PercentageReductionOfArea
+          options:
+            enum_titles:
+              - Yield Strength  (Rₑ)
+              - Upper Yield Strength  (ReH)
+              - Lower Yield Strength  (ReL)
+              - Tensile Strength  (Rm)
+              - Proof Strength  (Rp)
+              - Elongation After Fracture  (A)
+              - Permanent Elongation  (Ag)
+              - Reduction of Area  (Z)
+        id:
+          title: ID
+          type: string
+          readOnly: true
+          default: prop-1
+        result_value:
+          title: Value
+          type: number
+          minimum: 0
+        result_unit:
+          title: Unit
+          type: string
+          enum:
+            - uqudt:MegaPascal
+            - uqudt:GigaPascal
+            - uqudt:PERCENT
+          options:
+            enum_titles:
+              - MPa (megapascal)
+              - GPa (gigapascal)
+              - "% (percent)"
+    default: []
+
+  constitutive_model:
+    title: Constitutive Model
+    description: >-
+      Flow-curve model fitted to experimental data for use in FEM simulations.
+    type: object
+    properties:
+      id:
+        title: ID
+        type: string
+        readOnly: true
+        default: constitutive-model-1
+      model_type:
+        title: Model Family
+        description: Name of the constitutive model (e.g. "Hockett-Sherby").
+        type: string
+        enum:
+          - Hockett-Sherby
+          - Swift
+          - Voce
+          - Hollomon
+          - Johnson-Cook
+      calibration_iri:
+        title: Calibration Process IRI
+        description: >-
+          IRI of the model calibration step that produced these parameters.
+          Used for provenance tracing.
+        type: string
+        format: uri
+      model_parameters:
+        title: Model Parameters
+        description: Fitted model parameter values.
+        type: array
+        items:
+          type: object
+          title: Model Parameter
+          required:
+            - id
+            - param_name
+            - param_value
+          properties:
+            id:
+              title: ID
+              type: string
+              readOnly: true
+              default: param-1
+            param_name:
+              title: Parameter Name
+              type: string
+            param_value:
+              title: Value
+              type: number
+            param_unit:
+              title: Unit
+              type: string
+        default: []

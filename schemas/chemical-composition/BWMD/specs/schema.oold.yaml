@@ -1,0 +1,145 @@
+# OO-LD Schema: Chemical Composition (BWMD pattern)
+#
+# Ontology: BWMD Materials Data Science Ontology
+#   https://www.iwm.fraunhofer.de/ontologies/bwmd-ontology#
+#
+# Pattern:
+#   bwmd:ChemicalComposition
+#     bwmd:hasPart  → bwmd:BaseElementOfComposition   (balance element, e.g. Fe)
+#     bwmd:hasPart  → bwmd:WeightFraction (one per alloying element)
+#                       bwmd:refersToElementSymbol   IUPAC symbol string
+#                       bwmd:hasDoubleLiteralMinValue
+#                       bwmd:hasDoubleLiteralMaxValue
+#                       bwmd:hasUnitSymbol
+#
+# Element symbols follow IUPAC recommendations (IUPAC Red Book, 2005).
+# For IRI-based element identification see ChEBI:
+#   https://www.ebi.ac.uk/chebi/  (e.g. CHEBI:18248 for iron)
+
+"@context":
+  bwmd:    "https://www.iwm.fraunhofer.de/ontologies/bwmd-ontology#"
+  rdfs:    "http://www.w3.org/2000/01/rdf-schema#"
+  xsd:     "http://www.w3.org/2001/XMLSchema#"
+  dcterms: "http://purl.org/dc/terms/"
+
+  type: "@type"
+  conforms_to:
+    "@id": "http://purl.org/dc/terms/conformsTo"
+    "@type": "@id"
+
+  label:
+    "@id": "rdfs:label"
+
+  # Both base_element and fractions serialise to bwmd:hasPart in RDF.
+  base_element:
+    "@id": "bwmd:hasPart"
+  fractions:
+    "@id": "bwmd:hasPart"
+    "@container": "@set"
+
+  element_symbol:
+    "@id": "bwmd:refersToElementSymbol"
+  min_value:
+    "@id": "bwmd:hasDoubleLiteralMinValue"
+    "@type": "xsd:double"
+  max_value:
+    "@id": "bwmd:hasDoubleLiteralMaxValue"
+    "@type": "xsd:double"
+  unit_symbol:
+    "@id": "bwmd:hasUnitSymbol"
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+x-schema-version: '1.0.0'
+x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/chemical-composition/BWMD/'
+title: Chemical Composition (BWMD)
+description: Chemical composition of a material described using the BWMD ontology
+type: object
+
+properties:
+  type:
+    title: Type
+    type: string
+    readOnly: true
+    const: "bwmd:ChemicalComposition"
+    default: "bwmd:ChemicalComposition"
+
+  label:
+    title: Label
+    description: Human-readable name for this composition (e.g. "316/4401 Chemical Composition")
+    type: string
+
+  base_element:
+    title: Base Element
+    description: >-
+      The balance / majority element of the composition (e.g. Fe for steel).
+      Corresponds to a bwmd:BaseElementOfComposition instance.
+    type: object
+    properties:
+      type:
+        title: Type
+        type: string
+        readOnly: true
+        const: "bwmd:BaseElementOfComposition"
+        default: "bwmd:BaseElementOfComposition"
+      element_symbol:
+        title: Element Symbol
+        description: IUPAC element symbol of the balance element
+        type: string
+        enum: [H, He, Li, Be, B, C, N, O, F, Ne, Na, Mg, Al, Si, P, S, Cl, Ar,
+               K, Ca, Sc, Ti, V, Cr, Mn, Fe, Co, Ni, Cu, Zn, Ga, Ge, As, Se, Br, Kr,
+               Rb, Sr, Y, Zr, Nb, Mo, Tc, Ru, Rh, Pd, Ag, Cd, In, Sn, Sb, Te, I, Xe,
+               Cs, Ba, La, Ce, Pr, Nd, Pm, Sm, Eu, Gd, Tb, Dy, Ho, Er, Tm, Yb, Lu,
+               Hf, Ta, W, Re, Os, Ir, Pt, Au, Hg, Tl, Pb, Bi, Po, At, Rn,
+               Fr, Ra, Ac, Th, Pa, U, Np, Pu, Am, Cm, Bk, Cf, Es, Fm, Md, 'No', Lr,
+               Rf, Db, Sg, Bh, Hs, Mt, Ds, Rg, Cn, Nh, Fl, Mc, Lv, Ts, Og]
+
+  fractions:
+    title: Weight Fractions
+    description: >-
+      Weight fractions of alloying elements.
+      Each entry corresponds to a bwmd:WeightFraction instance.
+    type: array
+    minItems: 1
+    items:
+      title: Weight Fraction
+      type: object
+      required:
+        - element_symbol
+        - min_value
+        - max_value
+      properties:
+        type:
+          title: Type
+          type: string
+          readOnly: true
+          const: "bwmd:WeightFraction"
+          default: "bwmd:WeightFraction"
+        element_symbol:
+          title: Element Symbol
+          description: IUPAC symbol of the alloying element
+          type: string
+          enum: [H, He, Li, Be, B, C, N, O, F, Ne, Na, Mg, Al, Si, P, S, Cl, Ar,
+                 K, Ca, Sc, Ti, V, Cr, Mn, Fe, Co, Ni, Cu, Zn, Ga, Ge, As, Se, Br, Kr,
+                 Rb, Sr, Y, Zr, Nb, Mo, Tc, Ru, Rh, Pd, Ag, Cd, In, Sn, Sb, Te, I, Xe,
+                 Cs, Ba, La, Ce, Pr, Nd, Pm, Sm, Eu, Gd, Tb, Dy, Ho, Er, Tm, Yb, Lu,
+                 Hf, Ta, W, Re, Os, Ir, Pt, Au, Hg, Tl, Pb, Bi, Po, At, Rn,
+                 Fr, Ra, Ac, Th, Pa, U, Np, Pu, Am, Cm, Bk, Cf, Es, Fm, Md, 'No', Lr,
+                 Rf, Db, Sg, Bh, Hs, Mt, Ds, Rg, Cn, Nh, Fl, Mc, Lv, Ts, Og]
+        min_value:
+          title: Min Value
+          description: Minimum weight fraction; use the same value as max for an exact specification
+          type: number
+          minimum: 0
+          maximum: 100
+        max_value:
+          title: Max Value
+          description: Maximum weight fraction; use the same value as min for an exact specification
+          type: number
+          minimum: 0
+          maximum: 100
+        unit_symbol:
+          title: Unit
+          description: Unit of the weight fraction value
+          type: string
+          enum: ["%", "wt.%", "at.%"]
+          default: "%"

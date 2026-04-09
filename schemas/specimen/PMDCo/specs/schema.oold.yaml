@@ -1,0 +1,264 @@
+# OO-LD Schema for Specimen (composed from two PMDCo patterns)
+# Ontology: Platform MaterialDigital Core Ontology (PMDCo)
+#   https://w3id.org/pmd/co/
+#
+# PMDCo patterns combined:
+#
+#   1. Duality Object / Material
+#      https://github.com/materialdigital/core-ontology/tree/main/patterns/duality%20object%20material
+#      → establishes that a specimen is a bfo:Object that bears qualities via has_quality.
+#        The pattern example shows has_quality linking to both a Mass and a ChemicalComposition,
+#        but gives no constraints on how the Mass value is represented.
+#
+#   2. Material Property (Quality)
+#      https://github.com/materialdigital/core-ontology/tree/main/patterns/material%20property%20(quality)
+#      → defines how scalar qualities such as Mass are quantified:
+#        Mass → specified_by_value → ScalarValueSpecification (OBI_0001931)
+#                                        has_specified_numeric_value (OBI_0001937)
+#                                        has_measurement_unit_label  (IAO_0000039)
+#
+#   3. Chemical Composition (schema composition via $ref)
+#      https://github.com/materialdigital/core-ontology/tree/main/patterns/chemical%20composition
+#      → full sub-graph defined in chemical-composition/PMDCo/specs/schema.oold.yaml
+#
+# Graph pattern:
+#
+#   Specimen  (bfo:BFO_0000030, Object)
+#     rdfs:label ──────────────────────────────────────── name string
+#     has_quality ────────────────────────────────────► Mass (PMD_0020133)          [pattern 1+2]
+#       quality_of ──────────────────────────────────── Specimen  ← back-ref
+#       specified_by_value ─────────────────────────► ScalarValueSpecification (OBI_0001931)
+#         has_specified_numeric_value ─────────────── xsd:double
+#         has_measurement_unit_label ──────────────── unit IRI
+#     has_quality ────────────────────────────────────► ChemicalComposition (PMD_0000551)  [pattern 1+3]
+#       [full sub-graph defined by chemical-composition/PMDCo/specs/schema.oold.yaml]
+#
+# Composition via $ref:
+#   The `has_composition` property references the standalone chemical-composition schema
+#   in full.  The consumer must set `has_composition.quality_of` to the specimen's own
+#   `id` value so that the back-reference inside the composition graph is consistent.
+#
+# @context note:
+#   JSON Schema $ref does not merge JSON-LD @context blocks.  Until the toolchain
+#   supports automatic context merging, this schema re-declares all @context entries
+#   required by the referenced composition schema.  If chemical-composition/PMDCo/
+#   specs/schema.oold.yaml adds or changes a context entry, update the section
+#   marked "── Composition context (mirrored) ──" below accordingly.
+
+"@context":
+  # ── Specimen context ──────────────────────────────────────────────────────────
+  bfo:
+    "@id": "http://purl.obolibrary.org/obo/BFO_"
+    "@prefix": true
+  ro:
+    "@id": "http://purl.obolibrary.org/obo/RO_"
+    "@prefix": true
+  rdfs: "http://www.w3.org/2000/01/rdf-schema#"
+  dcterms: "http://purl.org/dc/terms/"
+  conforms_to:
+    "@id": "http://purl.org/dc/terms/conformsTo"
+    "@type": "@id"
+  type: "@type"
+  id: "@id"
+  label:
+    "@id": "rdfs:label"
+  # Both mass and has_composition map to ro:RO_0000086 (has_quality).
+  # Separate JSON keys are used for readability and schema validation;
+  # the RDF processor emits both as triples with the same predicate.
+  mass:
+    "@id": "ro:0000086"   # RO_0000086  has_quality  (mass quality)
+    "@type": "@id"
+  has_composition:
+    "@id": "ro:0000086"   # RO_0000086  has_quality  (chemical composition quality)
+    "@type": "@id"
+
+  # ── Composition context (mirrored from chemical-composition/PMDCo/specs/schema.oold.yaml) ──
+  # Keep in sync with that file.  Remove this section once the toolchain merges
+  # @context blocks from $ref targets automatically.
+  owl: "http://www.w3.org/2002/07/owl#"
+  rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xsd: "http://www.w3.org/2001/XMLSchema#"
+  obo:
+    "@id": "http://purl.obolibrary.org/obo/"
+    "@prefix": true
+  obi:
+    "@id": "http://purl.obolibrary.org/obo/OBI_"
+    "@prefix": true
+  iao:
+    "@id": "http://purl.obolibrary.org/obo/IAO_"
+    "@prefix": true
+  uo:
+    "@id": "http://purl.obolibrary.org/obo/UO_"
+    "@prefix": true
+  pmdco: "https://w3id.org/pmd/co/"
+  uqudt: "https://qudt.org/vocab/unit/"
+  quality_of:
+    "@id": "ro:0000080"   # RO_0000080  quality_of
+    # In the composed context quality_of is an IRI back-reference to the parent
+    # specimen, hence @type: @id here.  The standalone composition schema omits
+    # this because it embeds the material as a blank node with rdfs:label.
+    "@type": "@id"
+  is_subject_of:
+    "@id": "pmdco:PMD_0000004"
+    "@type": "@id"
+  has_member:
+    "@id": "ro:0002351"   # RO_0002351  has_member
+    "@type": "@id"
+  relational_quality_of:
+    "@id": "pmdco:PMD_0025999"
+    "@type": "@id"
+  has_relational_quality:
+    "@id": "pmdco:PMD_0025998"
+    "@type": "@id"
+  specified_by_value:
+    "@id": "pmdco:PMD_0000077"
+    "@type": "@id"
+  part_of:
+    "@id": "bfo:0000050"  # BFO_0000050  part_of
+    "@type": "@id"
+  value:
+    "@id": "obi:0001937"  # OBI_0001937  has_specified_numeric_value
+    "@type": "xsd:double"
+  unit:
+    "@id": "iao:0000039"  # IAO_0000039  has_measurement_unit_label
+    "@type": "@id"
+  element:
+    "@id": "pmdco:PMD_hasFractionElement"  # provisional nesting helper (see composition schema)
+    "@type": "@id"
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: >-
+  Schema for a bfo:Object (Specimen) bearing a pmdco:Mass quality and a
+  pmdco:ChemicalComposition quality (composed via $ref).
+x-schema-version: '1.0.0'
+x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/specimen/PMDCo/'
+# Schemas referenced by $ref and the versions they were tested against.
+# Update this table when either schema releases a new version.
+x-schema-dependencies:
+  - schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/chemical-composition/PMDCo/'
+    compatible-versions:
+      - '1.0.0'
+    property: has_composition
+title: Specimen
+type: object
+required:
+  - type
+  - id
+  - label
+
+properties:
+
+  type:
+    title: Type
+    type: string
+    readOnly: true
+    const: "bfo:0000030"
+    default: "bfo:0000030"
+    options:
+      enum_titles:
+        - bfo:Object
+
+  id:
+    title: ID
+    description: Identifier for this specimen instance; managed by the consumer.
+    type: string
+    readOnly: true
+    default: specimen
+
+  label:
+    title: Specimen Name
+    description: >-
+      Human-readable name or identifier for this specimen
+      (e.g. "316L tensile bar #1").
+    type: string
+
+  mass:
+    title: Mass
+    description: >-
+      The mass of this specimen, modelled as a PMDCo Mass quality
+      (PMD_0020133) with a ScalarValueSpecification.
+    type: object
+    required:
+      - type
+      - id
+      - quality_of
+      - specified_by_value
+    properties:
+      type:
+        title: Type
+        type: string
+        readOnly: true
+        const: "pmdco:PMD_0020133"
+        default: "pmdco:PMD_0020133"
+        options:
+          enum_titles:
+            - pmdco:Mass
+      id:
+        title: ID
+        description: Identifier for this mass quality instance; managed by the consumer.
+        type: string
+        readOnly: true
+        default: mass
+      quality_of:
+        title: Quality Of
+        description: >-
+          Back-reference to the specimen this mass is a quality of.
+          Must match the root specimen id; set by the consumer.
+        type: string
+        readOnly: true
+        $comment: Must match the root specimen id; set by the consumer.
+      specified_by_value:
+        title: Scalar Value
+        description: >-
+          A ScalarValueSpecification carrying the numeric mass value and its unit.
+        type: object
+        required:
+          - type
+          - id
+          - value
+          - unit
+        properties:
+          type:
+            title: Type
+            type: string
+            readOnly: true
+            const: "obi:0001931"
+            default: "obi:0001931"
+            options:
+              enum_titles:
+                - obi:ScalarValueSpecification
+          id:
+            title: ID
+            description: Identifier for this value specification; managed by the consumer.
+            type: string
+            readOnly: true
+            default: mass-svs
+          value:
+            title: Mass Value
+            description: Numeric mass of the specimen.
+            type: number
+            minimum: 0
+          unit:
+            title: Unit
+            description: Unit of the mass value.
+            type: string
+            enum:
+              - "uo:0000021"
+              - "uo:0000022"
+              - "uo:0000023"
+            default: "uo:0000021"
+            options:
+              enum_titles:
+                - gram (g)
+                - kilogram (kg)
+                - milligram (mg)
+
+  has_composition:
+    title: Chemical Composition
+    description: >-
+      The chemical composition of this specimen.
+      Set has_composition.quality_of to this specimen's id so the composition
+      graph back-reference is consistent.
+    # Canonical schema URI; toolchain must resolve this to the local file.
+    # Resolves to: schemas/chemical-composition/PMDCo/specs/schema.oold.yaml
+    $ref: "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/chemical-composition/PMDCo/"

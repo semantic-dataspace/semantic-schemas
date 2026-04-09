@@ -1,0 +1,15 @@
+{
+  "material_name": "316L Stainless Steel",
+  "elements": [
+    { "symbol": "Fe", "value": 65.345, "unit": "mass%" },
+    { "symbol": "Cr", "value": 17.0,   "unit": "mass%" },
+    { "symbol": "Ni", "value": 12.0,   "unit": "mass%" },
+    { "symbol": "Mo", "value": 2.5,    "unit": "mass%" },
+    { "symbol": "Mn", "value": 1.8,    "unit": "mass%" },
+    { "symbol": "Si", "value": 0.5,    "unit": "mass%" },
+    { "symbol": "N",  "value": 0.1,    "unit": "mass%" },
+    { "symbol": "C",  "value": 0.03,   "unit": "mass%" },
+    { "symbol": "P",  "value": 0.045,  "unit": "mass%" },
+    { "symbol": "S",  "value": 0.03,   "unit": "mass%" }
+  ]
+}

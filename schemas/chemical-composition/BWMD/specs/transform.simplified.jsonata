@@ -1,0 +1,49 @@
+(
+  /*
+   * Chemical Composition (BWMD) — simplified JSON → OO-LD JSON
+   *
+   * Input fields (see schema.simplified.json):
+   *   label         string   required — human-readable composition name
+   *   base_element  object   required
+   *     symbol      string   IUPAC element symbol (balance element)
+   *   fractions     array    required
+   *     symbol      string   IUPAC element symbol
+   *     min_value   number   weight fraction 0–100
+   *     max_value   number   weight fraction 0–100
+   *     unit        string   "%" | "wt.%" | "at.%"
+   *
+   * Run with the jsonata-python CLI:
+   *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
+   *
+   * Run from Python:
+   *   import jsonata, json
+   *   expr   = open("transform.jsonata").read()
+   *   result = jsonata.Jsonata(expr).evaluate(json.load(open("../docs/example.input.json")))
+   */
+
+  /*
+   * Schema provenance — injected automatically into every output.
+   * Update $schemaUri whenever x-schema-version in specs/schema.oold.yaml changes.
+   * Format: <x-schema-id>#v<x-schema-version>
+   */
+  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/chemical-composition/BWMD/#v1.0.0";
+
+  {
+    "conforms_to": $schemaUri,
+    "type": "bwmd:ChemicalComposition",
+    "label": label,
+    "base_element": {
+      "type": "bwmd:BaseElementOfComposition",
+      "element_symbol": base_element.symbol
+    },
+    "fractions": $map(fractions, function($f) {
+      {
+        "type": "bwmd:WeightFraction",
+        "element_symbol": $f.symbol,
+        "min_value": $f.min_value,
+        "max_value": $f.max_value,
+        "unit_symbol": $exists($f.unit) ? $f.unit : "wt.%"
+      }
+    })
+  }
+)

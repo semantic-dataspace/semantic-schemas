@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.simplified.json",
+  "title": "Specimen (Simplified Input)",
+  "description": "A user-friendly form to describe a physical specimen: its name, mass, and chemical composition. This input will be automatically converted to a standardised RDF representation following the PMDCo duality-object-material pattern.",
+  "type": "object",
+  "required": ["specimen_name", "elements"],
+  "additionalProperties": false,
+  "properties": {
+    "specimen_name": {
+      "title": "Specimen Name",
+      "description": "A human-readable name or identifier for the specimen. Example: '316L Tensile Bar #1', 'AlSi10Mg disc A3'.",
+      "type": "string",
+      "minLength": 1,
+      "examples": ["316L Tensile Bar #1", "AlSi10Mg disc A3", "Inconel 718 coupon B7"]
+    },
+    "specimen_id": {
+      "title": "Specimen ID",
+      "description": "Optional. Identifier for the Specimen node in the RDF graph. If omitted, derived automatically from specimen_name (e.g. '316L Tensile Bar #1' → 'specimen-316l-tensile-bar-1'). Override only when you need a specific IRI to match an existing knowledge graph node.",
+      "type": "string",
+      "examples": ["specimen-316l-tb1", "specimen-alsi10mg-a3"]
+    },
+    "comp_id": {
+      "title": "Composition ID",
+      "description": "Optional. Identifier for the ChemicalComposition node in the RDF graph. If omitted, derived automatically from specimen_name. Override only when you need a specific IRI.",
+      "type": "string",
+      "examples": ["chem-comp-316l-tb1"]
+    },
+    "mass_value": {
+      "title": "Mass Value",
+      "description": "Optional. Mass of the specimen as a positive number. If provided, mass_unit must also be given.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "examples": [50.3, 1.2, 250.0]
+    },
+    "mass_unit": {
+      "title": "Mass Unit",
+      "description": "Unit for the mass value. Required when mass_value is provided. Choose one of: 'g' (gram), 'kg' (kilogram), 'mg' (milligram).",
+      "type": "string",
+      "enum": ["g", "kg", "mg"],
+      "default": "g"
+    },
+    "elements": {
+      "title": "Element Fractions",
+      "description": "List of chemical elements present in the specimen and their measured fraction values. Add one entry per element. The fractions do not need to sum to exactly 100 (traces and balance elements are common), but each individual value must be between 0 and 100.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "title": "Element Entry",
+        "description": "A single chemical element and its fraction in the composition.",
+        "type": "object",
+        "required": ["symbol", "value", "unit"],
+        "additionalProperties": false,
+        "properties": {
+          "symbol": {
+            "title": "Chemical Element",
+            "description": "The symbol of the chemical element (e.g. 'Fe' for Iron, 'C' for Carbon). Only elements with a confirmed identity in the PMDCo ontology are accepted.",
+            "type": "string",
+            "enum": [
+              "H",  "He", "Li", "Be", "B",  "C",  "N",  "O",  "F",  "Ne",
+              "Na", "Mg", "Al", "Si", "P",  "S",  "Cl", "Ar", "K",  "Ca",
+              "Sc", "Ti", "V",  "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn",
+              "Ga", "Ge", "As", "Se", "Br", "Kr", "Y",  "Zr", "Nb", "Mo",
+              "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "I",
+              "Xe", "Cs", "Ba", "La", "Ce", "Nd", "Sm", "Er", "Hf", "Ta",
+              "W",  "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi",
+              "U",  "Bh"
+            ]
+          },
+          "value": {
+            "title": "Fraction Value",
+            "description": "The measured fraction of this element in the chosen unit. Must be a number between 0 and 100.",
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "examples": [65.345, 17.0, 0.03]
+          },
+          "unit": {
+            "title": "Fraction Unit",
+            "description": "The unit in which the fraction value is expressed. All elements in one composition should use the same unit.",
+            "type": "string",
+            "enum": ["mass%", "vol%", "mol%"],
+            "default": "mass%"
+          }
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "specimen_name": "316L Tensile Bar #1",
+      "mass_value": 50.3,
+      "mass_unit": "g",
+      "elements": [
+        { "symbol": "Fe", "value": 65.345, "unit": "mass%" },
+        { "symbol": "Cr", "value": 17.0,   "unit": "mass%" },
+        { "symbol": "Ni", "value": 12.0,   "unit": "mass%" },
+        { "symbol": "Mo", "value": 2.5,    "unit": "mass%" },
+        { "symbol": "Mn", "value": 1.8,    "unit": "mass%" },
+        { "symbol": "Si", "value": 0.5,    "unit": "mass%" },
+        { "symbol": "N",  "value": 0.1,    "unit": "mass%" },
+        { "symbol": "C",  "value": 0.03,   "unit": "mass%" },
+        { "symbol": "P",  "value": 0.045,  "unit": "mass%" },
+        { "symbol": "S",  "value": 0.03,   "unit": "mass%" }
+      ]
+    }
+  ]
+}

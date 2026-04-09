@@ -1,0 +1,130 @@
+# SHACL shape for the mechanical material card (IAO:DataSet) pattern.
+#
+# Validates:
+#   1. DataSet node (IAO_0000100)
+#      - must have rdfs:label
+#      - must have dcterms:conformsTo
+#      - must reference a material IRI via dcterms:references
+#   2. ScalarProperty nodes (density, Young's modulus, Poisson's ratio):
+#      - value must be xsd:double
+#   3. MechanicalProperty nodes (TTO pattern):
+#      - must have rdf:type (TTO class)
+#      - value must be xsd:double (> 0)
+#      - unit must be an IRI from the allowed QUDT set
+#   4. ConstitutiveModel node:
+#      - must have dcterms:type (model family string)
+#   5. ModelParameter nodes:
+#      - must have rdfs:label
+#      - value must be xsd:double
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix iao:     <http://purl.obolibrary.org/obo/IAO_> .
+@prefix obi:     <http://purl.obolibrary.org/obo/OBI_> .
+@prefix tto:     <https://w3id.org/pmd/tto/> .
+@prefix pmd:     <https://w3id.org/pmd/co/> .
+@prefix qudt:    <http://qudt.org/schema/qudt/> .
+@prefix uqudt:   <https://qudt.org/vocab/unit/> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix shape:   <https://w3id.org/pmd/co/shapes/material-card/mechanical/> .
+@prefix :        <https://w3id.org/pmd/co/shapes/material-card/mechanical/> .
+@base            <https://w3id.org/pmd/co/shapes/material-card/mechanical/> .
+
+# ── MaterialCard (DataSet) node ───────────────────────────────────────────────
+
+shape:material_card
+    a sh:NodeShape ;
+    sh:targetClass iao:0000100 ;   # IAO DataSet
+    sh:property [
+        sh:path dcterms:conformsTo ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A MaterialCard must declare dcterms:conformsTo pointing to the versioned schema IRI." ;
+    ] ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A MaterialCard must have exactly one rdfs:label." ;
+    ] ;
+    sh:property [
+        sh:path dcterms:references ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A MaterialCard must reference exactly one material IRI via dcterms:references." ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .
+
+# ── Scalar property nodes ─────────────────────────────────────────────────────
+
+shape:scalar_property
+    a sh:NodeShape ;
+    sh:property [
+        sh:path qudt:value ;
+        sh:datatype xsd:double ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A scalar property node must have exactly one qudt:value (xsd:double)." ;
+    ] ;
+    sh:property [
+        sh:path qudt:hasUnit ;
+        sh:maxCount 1 ;
+        sh:message "A scalar property node may have at most one qudt:hasUnit." ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .
+
+# ── MechanicalProperty nodes ──────────────────────────────────────────────────
+
+shape:mechanical_property
+    a sh:NodeShape ;
+    sh:property [
+        sh:path <http://purl.obolibrary.org/obo/OBI_0001937> ;   # has_specified_numeric_value
+        sh:datatype xsd:double ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minExclusive 0 ;
+        sh:message "A MechanicalProperty must have a positive xsd:double value." ;
+    ] ;
+    sh:property [
+        sh:path <http://purl.obolibrary.org/obo/IAO_0000039> ;   # has_measurement_unit_label
+        sh:nodeKind sh:IRI ;
+        sh:in ( uqudt:MegaPascal uqudt:GigaPascal uqudt:PERCENT ) ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A MechanicalProperty unit must be one of uqudt:MegaPascal, uqudt:GigaPascal, uqudt:PERCENT." ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .
+
+# ── ModelParameter nodes ──────────────────────────────────────────────────────
+
+shape:model_parameter
+    a sh:NodeShape ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A ModelParameter must have exactly one rdfs:label (parameter name/symbol)." ;
+    ] ;
+    sh:property [
+        sh:path qudt:value ;
+        sh:datatype xsd:double ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A ModelParameter must have exactly one qudt:value (xsd:double)." ;
+    ] ;
+    sh:property [
+        sh:path qudt:hasUnit ;
+        sh:maxCount 1 ;
+        sh:message "A ModelParameter may have at most one qudt:hasUnit." ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .

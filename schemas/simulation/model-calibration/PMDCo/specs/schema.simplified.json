@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.simplified.json",
+  "title": "Constitutive Model Calibration (Simplified Input)",
+  "description": "A user-friendly form to record a constitutive model calibration: the experimental stress-strain data that went in, the model family fitted, and the resulting model parameters. This input will be automatically converted to a standardised RDF representation (OBI/PMDCo OO-LD).",
+  "type": "object",
+  "required": ["step_name", "model_type"],
+  "additionalProperties": false,
+  "properties": {
+    "step_name": {
+      "title": "Calibration Name",
+      "description": "A human-readable name for this calibration run. Example: 'Hockett-Sherby calibration 316L batch 1'.",
+      "type": "string",
+      "minLength": 1
+    },
+    "step_id": {
+      "title": "Step ID",
+      "description": "Optional. IRI slug for this calibration node. Auto-derived from step_name if omitted.",
+      "type": "string"
+    },
+    "description": {
+      "title": "Description",
+      "description": "Optional free-text description of this calibration.",
+      "type": "string"
+    },
+    "model_type": {
+      "title": "Constitutive Model",
+      "description": "The constitutive model family fitted in this calibration.",
+      "type": "string",
+      "enum": ["Hockett-Sherby", "Swift", "Voce", "Hollomon", "Johnson-Cook"]
+    },
+    "inputs": {
+      "title": "Input Dataset IRIs",
+      "description": "IRIs of the experimental datasets (e.g. tensile test results) used as calibration input.",
+      "type": "array",
+      "items": { "type": "string", "format": "uri" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "outputs": {
+      "title": "Output Material Card IRIs",
+      "description": "IRIs of the material cards or parameter datasets produced by this calibration.",
+      "type": "array",
+      "items": { "type": "string", "format": "uri" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "preceded_by": {
+      "title": "Preceded By (Step IRIs)",
+      "description": "IRIs of steps that directly precede this calibration.",
+      "type": "array",
+      "items": { "type": "string", "format": "uri" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "conditions": {
+      "title": "Calibration Settings",
+      "description": "Algorithmic settings for the calibration (e.g. optimiser, strain range, number of iterations).",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "additionalProperties": false,
+        "properties": {
+          "name":  { "title": "Setting Name", "type": "string" },
+          "value": { "title": "Value", "type": "number" },
+          "unit":  { "title": "Unit", "type": "string" }
+        }
+      },
+      "default": []
+    },
+    "calibrated_parameters": {
+      "title": "Calibrated Parameters",
+      "description": "The fitted model parameters. Use the canonical symbol as the name (e.g. 'sigma_sat', 'c', 'n').",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "value"],
+        "additionalProperties": false,
+        "properties": {
+          "name":  { "title": "Parameter Name / Symbol", "type": "string" },
+          "value": { "title": "Value", "type": "number" },
+          "unit":  { "title": "Unit", "type": "string" }
+        }
+      },
+      "default": []
+    }
+  }
+}

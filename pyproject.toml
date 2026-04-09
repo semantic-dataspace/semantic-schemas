@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "semantic-schemas"
+version = "0.1.0"
+description = "OO-LD schema library and tooling for materials science data"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "CC0-1.0" }
+authors = [
+    { name = "Semantic Dataspace contributors" },
+]
+keywords = [
+    "materials science",
+    "ontology",
+    "linked data",
+    "json-ld",
+    "rdf",
+    "shacl",
+    "oold",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Scientific/Engineering :: Chemistry",
+    "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "jsonata-python",
+    "rdflib",
+    "pyshacl",
+    "pyyaml",
+]
+
+[project.urls]
+Homepage = "https://github.com/Semantic-Dataspace/semantic-schemas"
+Repository = "https://github.com/Semantic-Dataspace/semantic-schemas"
+"Bug Tracker" = "https://github.com/Semantic-Dataspace/semantic-schemas/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::DeprecationWarning:rdflib",
+]

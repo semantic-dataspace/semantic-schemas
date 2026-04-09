@@ -1,0 +1,63 @@
+# SHACL shape for the TTO TensileTest pattern.
+#
+# Validates the tensile-test-specific nodes only.
+# Load alongside the base shape for complete validation:
+#   characterization/step/PMDCo/specs/shape.ttl  (assay node + process conditions)
+#
+# TTO reference:
+#   https://github.com/materialdigital/application-ontologies/tree/main/tensile_test_ontology_TTO
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix obi:     <http://purl.obolibrary.org/obo/OBI_> .
+@prefix iao:     <http://purl.obolibrary.org/obo/IAO_> .
+@prefix tto:     <https://w3id.org/pmd/tto/> .
+@prefix uqudt:   <https://qudt.org/vocab/unit/> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix shape:   <https://w3id.org/pmd/co/shapes/characterization/tensile-test/> .
+@prefix :        <https://w3id.org/pmd/co/shapes/characterization/tensile-test/> .
+@base            <https://w3id.org/pmd/co/shapes/characterization/tensile-test/> .
+
+# ── TensileTest node ──────────────────────────────────────────────────────────
+
+shape:tensile_test
+    a sh:NodeShape ;
+    sh:targetClass tto:TensileTest ;
+    sh:property [
+        sh:path <http://purl.obolibrary.org/obo/OBI_0000293> ;   # has_specified_input
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:message "A TensileTest must have at least one has_specified_input (the specimen IRI)." ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .
+
+# ── Measurement result nodes ──────────────────────────────────────────────────
+# Targets the common superclass; requires reasoning to match TTO subclasses.
+
+shape:measurement_result
+    a sh:NodeShape ;
+    sh:targetClass tto:MechanicalProperty ;   # superclass of all TTO result types
+    sh:property [
+        sh:path obi:0001937 ;   # has_specified_numeric_value
+        sh:datatype xsd:double ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minExclusive 0.0 ;
+        sh:message "Measurement result value must be a positive number." ;
+    ] ;
+    sh:property [
+        sh:path iao:0000039 ;   # has_measurement_unit_label
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in (
+            uqudt:MegaPascal
+            uqudt:GigaPascal
+            uqudt:PERCENT
+        ) ;
+        sh:message "Result unit must be uqudt:MegaPascal, uqudt:GigaPascal, or uqudt:PERCENT." ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .

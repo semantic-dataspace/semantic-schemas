@@ -1,0 +1,214 @@
+# OO-LD Schema for cross-domain Workflow (PMDCo / BFO pattern)
+# Ontology: Platform MaterialDigital Core Ontology (PMDCo)
+#   https://w3id.org/pmd/co/
+# Root class: BFO Process (BFO_0000015)
+#   http://purl.obolibrary.org/obo/BFO_0000015
+#
+# Graph pattern:
+#
+#   Process  (bfo:BFO_0000015)
+#     rdfs:label ──────────────────────────────────────── workflow name string
+#     rdfs:comment ────────────────────────────────────── description  (optional)
+#     has_part  [× N] ────────────────────────────────► Step node  (bfo:BFO_0000051)
+#       type  ─────────────────────────── step class (if known) or bfo:BFO_0000015
+#       id    ─────────────────────────── local slug or full IRI
+#       label ─────────────────────────── step name string
+#       description ────────────────────── free-text  (optional)
+#       instance_iri ───────────────────► IRI of the detailed step instance in
+#                                         the knowledge graph  (optional)
+#       preceded_by [× 0..N] ──────────► step IRI  (bfo:BFO_0000062)
+#       has_process_condition [× 0..N] ── inline parameters  (optional)
+#
+# Design notes:
+#   - BFO:Process (BFO_0000015) is the most general process class.  It keeps
+#     the workflow schema independent of any specific domain ontology (PMDCo,
+#     OBI, TTO) so that steps of different types can coexist.
+#   - Steps are embedded (composite).  A step's instance_iri optionally points
+#     to a fully described node elsewhere in the graph (e.g. a TensileTest
+#     instance described by characterization/tensile-test/TTO/).
+#   - Step ordering is expressed inline via preceded_by on each step node.
+#     The transform derives preceded_by from the array position when the user
+#     does not supply explicit links.
+#   - Step type is intentionally open: a step may be typed as
+#     pmdco:ManufacturingProcess, obi:Assay, obi:ComputerSimulation, etc.
+#     Without a type the step defaults to bfo:BFO_0000015 (plain Process).
+
+"@context":
+  rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  rdfs: "http://www.w3.org/2000/01/rdf-schema#"
+  xsd: "http://www.w3.org/2001/XMLSchema#"
+  dcterms: "http://purl.org/dc/terms/"
+  conforms_to:
+    "@id": "http://purl.org/dc/terms/conformsTo"
+    "@type": "@id"
+  bfo:
+    "@id": "http://purl.obolibrary.org/obo/BFO_"
+    "@prefix": true
+  obi:
+    "@id": "http://purl.obolibrary.org/obo/OBI_"
+    "@prefix": true
+  pmdco: "https://w3id.org/pmd/co/"
+  qudt: "http://qudt.org/schema/qudt/"
+  "@base": "https://w3id.org/pmd/co/test/shape_workflow#"
+  type: "@type"
+  id: "@id"
+  label:
+    "@id": "rdfs:label"
+  description:
+    "@id": "rdfs:comment"
+  has_part:
+    "@id": "bfo:0000051"   # BFO_0000051  has_part
+    "@container": "@set"
+  instance_iri:
+    "@id": "http://purl.org/dc/terms/references"
+    "@type": "@id"
+  preceded_by:
+    "@id": "bfo:0000062"   # BFO_0000062  preceded_by
+    "@type": "@id"
+    "@container": "@set"
+  has_process_condition:
+    "@id": "pmdco:PMD_0000016"
+    "@type": "@id"
+    "@container": "@set"
+  parameter_label:
+    "@id": "rdfs:label"
+  parameter_value:
+    "@id": "qudt:value"
+    "@type": "xsd:double"
+  parameter_unit:
+    "@id": "qudt:hasUnit"
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: Schema for a cross-domain workflow (bfo:Process with embedded step nodes)
+x-schema-version: '1.0.0'
+x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/workflow/PMDCo/'
+title: Cross-Domain Workflow
+type: object
+required:
+  - type
+  - id
+  - label
+  - has_part
+
+properties:
+
+  type:
+    title: Type
+    type: string
+    readOnly: true
+    const: "bfo:0000015"
+    default: "bfo:0000015"
+    options:
+      enum_titles:
+        - bfo:Process
+
+  id:
+    title: ID
+    description: Identifier for this workflow instance; managed by the consumer.
+    type: string
+    readOnly: true
+    default: workflow
+
+  label:
+    title: Workflow Name
+    description: Human-readable name for this workflow.
+    type: string
+
+  description:
+    title: Description
+    description: Optional free-text description of the overall workflow.
+    type: string
+    format: textarea
+
+  has_part:
+    title: Steps
+    description: >-
+      Ordered list of process steps that make up this workflow.
+      Steps are embedded in the workflow node and connected via preceded_by.
+    type: array
+    minItems: 1
+    items:
+      type: object
+      title: Workflow Step
+      required:
+        - id
+        - label
+      properties:
+        type:
+          title: Step Type
+          description: >-
+            Ontology class for this step.
+            Leave blank for a generic step (defaults to bfo:BFO_0000015).
+            Common values: pmdco:PMD_0000029 (ManufacturingProcess),
+            obi:0000070 (Assay / characterization),
+            obi:0000471 (ComputerSimulation).
+          type: string
+        id:
+          title: Step ID
+          description: >-
+            IRI slug for this step node within the workflow graph.
+            Use the same slug as the detailed instance if one exists.
+          type: string
+        label:
+          title: Step Name
+          description: Human-readable name for this step.
+          type: string
+        description:
+          title: Step Description
+          description: Optional free-text description of what this step does.
+          type: string
+        instance_iri:
+          title: Instance IRI
+          description: >-
+            IRI of a fully described instance of this step elsewhere in the
+            knowledge graph (e.g. a TensileTest node described by
+            characterization/tensile-test/TTO/). Optional: include for
+            provenance; omit for lightweight workflow sketches.
+          type: string
+          format: uri
+        preceded_by:
+          title: Preceded By
+          description: >-
+            IRI slugs (or full IRIs) of the steps that directly precede this one.
+            If omitted the transform derives ordering from array position.
+          type: array
+          items:
+            type: string
+          uniqueItems: true
+          default: []
+        has_process_condition:
+          title: Step Parameters
+          description: >-
+            Inline quantitative parameters for this step (optional).
+            Only needed when the step has no separate detailed instance.
+          type: array
+          items:
+            type: object
+            title: Step Parameter
+            required:
+              - type
+              - id
+              - parameter_label
+            properties:
+              type:
+                title: Type
+                type: string
+                readOnly: true
+                const: "pmdco:PMD_0000013"
+                default: "pmdco:PMD_0000013"
+              id:
+                title: ID
+                type: string
+                readOnly: true
+                default: condition-1
+              parameter_label:
+                title: Parameter Name
+                type: string
+              parameter_value:
+                title: Value
+                type: number
+              parameter_unit:
+                title: Unit
+                type: string
+          default: []
+    default: []

@@ -1,0 +1,279 @@
+# OO-LD Schema for TensileTest (TTO pattern)
+# Ontology: Tensile Test Ontology (TTO)
+#   https://w3id.org/pmd/tto/
+# Built on: Platform MaterialDigital Core Ontology (PMDCo)
+#   https://w3id.org/pmd/co/
+#
+# TTO reference:
+#   https://github.com/materialdigital/application-ontologies/tree/main/tensile_test_ontology_TTO
+#
+# This schema EXTENDS characterization/step/PMDCo/ via JSON Schema $ref + allOf.
+# It inherits:
+#   - the root class pattern (overridden here to tto:TensileTest)
+#   - has_specified_input   (specimen IRI)
+#   - preceded_by           (process chain)
+#   - has_process_condition (test conditions)
+#
+# It ADDS:
+#   - measured_properties   (array of embedded TTO result nodes)
+#
+# Graph pattern:
+#
+#   TensileTest  (tto:TensileTest)
+#     rdfs:label ──────────────────────────────────────── name string
+#     rdfs:comment ────────────────────────────────────── description  (optional)
+#     has_specified_input ────────────────────────────► Specimen IRI  [× 1]
+#     preceded_by ────────────────────────────────────► Assay IRI  [× 0..N]
+#     has_process_condition ──────────────────────────► ProcessCondition  [× 0..N]
+#     has_specified_output ───────────────────────────► MeasurementResult  [× 0..N]
+#       type  ──────────────────── TTO class (YieldStrength, TensileStrength, …)
+#       result_value ────────────── xsd:double
+#       result_unit ─────────────── unit IRI  (QUDT)
+#
+# @context note:
+#   JSON Schema $ref does not merge @context blocks.  Until the toolchain
+#   supports automatic context merging, this schema re-declares all @context
+#   entries required by the base schema.  See the section marked
+#   "── Base context (mirrored) ──" below.
+#   If characterization/step/PMDCo/specs/schema.oold.yaml changes a context
+#   entry, update the mirrored section accordingly.
+
+"@context":
+  # ── TensileTest context ───────────────────────────────────────────────────
+  rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  rdfs: "http://www.w3.org/2000/01/rdf-schema#"
+  xsd: "http://www.w3.org/2001/XMLSchema#"
+  dcterms: "http://purl.org/dc/terms/"
+  conforms_to:
+    "@id": "http://purl.org/dc/terms/conformsTo"
+    "@type": "@id"
+  tto: "https://w3id.org/pmd/tto/"
+  uqudt: "https://qudt.org/vocab/unit/"
+  type: "@type"
+  id: "@id"
+  label:
+    "@id": "rdfs:label"
+  description:
+    "@id": "rdfs:comment"
+  # Measured results are the specified outputs of the assay.
+  # They are embedded objects (created by the test), not external IRIs.
+  measured_properties:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0000299"   # has_specified_output
+    "@container": "@set"
+  result_value:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0001937"   # has_specified_numeric_value
+    "@type": "xsd:double"
+  result_unit:
+    "@id": "http://purl.obolibrary.org/obo/IAO_0000039"   # has_measurement_unit_label
+    "@type": "@id"
+
+  # ── Base context (mirrored from characterization/step/PMDCo/specs/schema.oold.yaml) ──
+  # Keep in sync with that file.
+  obi:
+    "@id": "http://purl.obolibrary.org/obo/OBI_"
+    "@prefix": true
+  bfo:
+    "@id": "http://purl.obolibrary.org/obo/BFO_"
+    "@prefix": true
+  pmdco: "https://w3id.org/pmd/co/"
+  qudt: "http://qudt.org/schema/qudt/"
+  "@base": "https://w3id.org/pmd/co/test/shape_tensile_test#"
+  has_specified_input:
+    "@id": "obi:0000293"
+    "@type": "@id"
+    "@container": "@set"
+  preceded_by:
+    "@id": "bfo:0000062"
+    "@type": "@id"
+    "@container": "@set"
+  has_process_condition:
+    "@id": "pmdco:PMD_0000016"
+    "@type": "@id"
+    "@container": "@set"
+  parameter_label:
+    "@id": "rdfs:label"
+  parameter_value:
+    "@id": "qudt:value"
+    "@type": "xsd:double"
+  parameter_unit:
+    "@id": "qudt:hasUnit"
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: Schema for a tto:TensileTest, extending characterization/step/PMDCo/
+x-schema-version: '1.0.0'
+x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/tensile-test/TTO/'
+x-schema-dependencies:
+  - schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/step/PMDCo/'
+    compatible-versions:
+      - '1.0.0'
+    property: (base schema via allOf)
+title: Tensile Test
+type: object
+
+allOf:
+  - $ref: "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/step/PMDCo/"
+
+required:
+  - type
+  - id
+  - label
+
+properties:
+
+  type:
+    title: Type
+    type: string
+    readOnly: true
+    const: "tto:TensileTest"
+    default: "tto:TensileTest"
+    options:
+      enum_titles:
+        - tto:TensileTest
+
+  id:
+    title: ID
+    description: Identifier for this tensile test instance; managed by the consumer.
+    type: string
+    readOnly: true
+    default: tensile-test
+
+  label:
+    title: Test Name
+    description: >-
+      Human-readable name for this tensile test
+      (e.g. "Tensile test 316L bar 1").
+    type: string
+
+  description:
+    title: Description
+    description: Optional free-text description.
+    type: string
+    format: textarea
+
+  has_specified_input:
+    title: Specimen
+    description: >-
+      IRI of the specimen being tested. Typically one specimen per tensile test.
+    type: array
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  preceded_by:
+    title: Preceded By
+    description: IRIs of steps that directly precede this one.
+    type: array
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  has_process_condition:
+    title: Test Conditions
+    description: >-
+      Quantitative conditions for this test (strain rate, temperature, gauge length, etc.)
+      and the test standard applied.
+    type: array
+    items:
+      type: object
+      title: Test Condition
+      required:
+        - type
+        - id
+        - parameter_label
+      properties:
+        type:
+          title: Type
+          type: string
+          readOnly: true
+          const: "pmdco:PMD_0000013"
+          default: "pmdco:PMD_0000013"
+          options:
+            enum_titles:
+              - pmdco:ProcessCondition
+        id:
+          title: ID
+          type: string
+          readOnly: true
+          default: condition-1
+        parameter_label:
+          title: Condition Name
+          type: string
+        parameter_value:
+          title: Value
+          type: number
+        parameter_unit:
+          title: Unit
+          type: string
+    default: []
+
+  measured_properties:
+    title: Measured Properties
+    description: >-
+      Mechanical properties determined from this tensile test.
+      Each entry is typed to the appropriate TTO class and carries a numeric value
+      and a QUDT unit IRI.
+    type: array
+    items:
+      type: object
+      title: Measurement Result
+      required:
+        - type
+        - id
+        - result_value
+        - result_unit
+      properties:
+        type:
+          title: Property Type
+          description: TTO class identifying which mechanical property this result represents.
+          type: string
+          enum:
+            - tto:YieldStrength
+            - tto:UpperYieldStrength
+            - tto:LowerYieldStrength
+            - tto:TensileStrength
+            - tto:ProofStrength
+            - tto:PercentageElongationAfterFracture
+            - tto:PercentagePermanentElongation
+            - tto:PercentageReductionOfArea
+          options:
+            enum_titles:
+              - Yield Strength  (Rₑ)
+              - Upper Yield Strength  (ReH)
+              - Lower Yield Strength  (ReL)
+              - Tensile Strength  (Rm)
+              - Proof Strength  (Rp)
+              - Elongation After Fracture  (A)
+              - Permanent Elongation  (Ag)
+              - Reduction of Area  (Z)
+        id:
+          title: ID
+          description: Identifier for this result node; managed by the consumer.
+          type: string
+          readOnly: true
+          default: result-1
+        result_value:
+          title: Value
+          description: Numeric value of the measured property.
+          type: number
+          minimum: 0
+        result_unit:
+          title: Unit
+          description: >-
+            QUDT unit IRI for the value.
+            Use uqudt:MegaPascal for stress properties (MPa),
+            uqudt:PERCENT for elongation and reduction of area.
+          type: string
+          enum:
+            - uqudt:MegaPascal
+            - uqudt:GigaPascal
+            - uqudt:PERCENT
+          options:
+            enum_titles:
+              - MPa (megapascal)
+              - GPa (gigapascal)
+              - "% (percent)"
+    default: []
