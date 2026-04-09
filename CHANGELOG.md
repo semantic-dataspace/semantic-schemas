@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.0] - 2026-04-09
 
+### Fixed
+
+- Updated all notebook workflows to use the `semantic_transformers.parsers`
+  package import path following the restructuring of `semantic-transformers` v0.1.3
+- Replaced outdated `extractor` terminology with `parser` throughout
+  `2_tensile_test_csv_workflow.ipynb` (variable names, API calls, prose)
+- Fixed broken `meta_field_map` format in Zwick variant examples (values are
+  field name strings, not `[name, type]` tuples)
+- Suppressed local filesystem paths in notebook cell outputs: save cells now
+  print only the filename instead of the full absolute path (all 12 notebooks)
+
 ### Added
 
 - Initial public release of semantic-schemas
