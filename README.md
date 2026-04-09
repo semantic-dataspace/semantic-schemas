@@ -45,15 +45,25 @@ docs/
 
 ## Installation
 
+### Using pip (recommended)
+
+```bash
+pip install semantic-schemas
+```
+
+### Development installation
+
+For development or contributions, clone the repository and install in editable mode:
+
 ```bash
 git clone https://github.com/Semantic-Dataspace/semantic-schemas
 cd semantic-schemas
 python3 -m venv .venv
 source .venv/bin/activate           # Windows: .venv\Scripts\activate
-pip install -r requirements-dev.txt # installs semantic_schemas + dev tools
+pip install -e ".[dev]"
 ```
 
-The `semantic_schemas` package is used by all workflow notebooks. Without it,
+Note: The `semantic_schemas` package is used by all workflow notebooks. Without it,
 the cells that call `from semantic_schemas import Schema` will fail.
 
 ---
