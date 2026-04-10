@@ -4,9 +4,10 @@ Records a **multi-step workflow** that spans different process domains
 (manufacturing, characterization, simulation, data management) in a single
 RDF graph node.
 
-Each step references its detailed schema instance by IRI so the workflow
-can combine PMDCo manufacturing steps, OBI assays, TTO tensile tests, and
-OBI computer simulations without coupling any of them to each other.
+Each step carries an optional `reference` IRI pointing to its detailed schema
+instance so the workflow can combine PMDCo manufacturing steps, OBI assays,
+TTO tensile tests, and OBI computer simulations without coupling any of them
+to each other.
 
 ---
 
@@ -19,19 +20,19 @@ Copy [`docs/example.input.json`](docs/example.input.json) and fill in your value
   "workflow_name": "QA-to-FEM material card workflow — 316L batch 1",
   "steps": [
     {
-      "label":        "Material Production — 316L batch 1",
-      "step_type":    "pmdco:PMD_0000029",
-      "instance_iri": "https://example.org/manufacturing/316L-production-batch-1"
+      "label":      "Material Production — 316L batch 1",
+      "step_type":  "pmdco:PMD_0000029",
+      "reference": "https://example.org/manufacturing/316L-production-batch-1"
     },
     {
-      "label":        "Tensile Test — 316L batch 1 QA",
-      "step_type":    "obi:0000070",
-      "instance_iri": "https://example.org/characterization/tensile-test-316L-batch-1"
+      "label":      "Tensile Test — 316L batch 1 QA",
+      "step_type":  "obi:0000070",
+      "reference": "https://example.org/characterization/tensile-test-316L-batch-1"
     },
     {
-      "label":        "Hockett-Sherby Calibration — 316L batch 1",
-      "step_type":    "obi:0000471",
-      "instance_iri": "https://example.org/simulations/hs-calibration-316L-batch-1"
+      "label":      "Hockett-Sherby Calibration — 316L batch 1",
+      "step_type":  "obi:0000471",
+      "reference": "https://example.org/simulations/hs-calibration-316L-batch-1"
     },
     {
       "label":       "FEM Material Card Export — LS-Dyna / Abaqus",
@@ -51,7 +52,7 @@ to express branching or merging.
 | `steps[].label` | yes | Step name |
 | `steps[].step_type` | no | Ontology class CURIE for this step |
 | `steps[].description` | no | Free-text step description |
-| `steps[].instance_iri` | no | IRI of the detailed step instance in the knowledge graph |
+| `steps[].reference` | no | IRI of the detailed step instance in the knowledge graph |
 | `steps[].preceded_by` | no | Step IDs of direct predecessors (auto-derived from array order if omitted) |
 | `steps[].conditions` | no | Inline quantitative parameters for this step |
 | `workflow_id` | no | Custom IRI slug; auto-derived from `workflow_name` if omitted |
@@ -68,6 +69,7 @@ to express branching or merging.
 | `specs/transform.simplified.jsonata` | Converts your input to the structured format |
 | `specs/schema.oold.yaml` | Full schema definition |
 | `specs/shape.ttl` | SHACL validation rules |
+| `CHANGELOG.md` | Version history for this schema |
 
 ---
 
@@ -103,7 +105,7 @@ Process  (bfo:BFO_0000015)        # the workflow container
         …
 ```
 
-`instance_iri` (mapped to `dcterms:references`) is the bridge between the
+`reference` (mapped to `dcterms:references`) is the bridge between the
 lightweight workflow record and the detailed step descriptions in the graph.
 A consumer can dereference it to retrieve the full step, including its
 characterization results or calibrated model parameters.

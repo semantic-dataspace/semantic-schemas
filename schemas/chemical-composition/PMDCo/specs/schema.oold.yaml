@@ -26,9 +26,7 @@
   conforms_to:
     "@id": "http://purl.org/dc/terms/conformsTo"
     "@type": "@id"
-  obo:
-    "@id": "http://purl.obolibrary.org/obo/"
-    "@prefix": true
+  obo: "http://purl.obolibrary.org/obo/"
   bfo:
     "@id": "http://purl.obolibrary.org/obo/BFO_"
     "@prefix": true

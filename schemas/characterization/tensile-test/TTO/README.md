@@ -103,10 +103,17 @@ Copy [`docs/example.input.json`](docs/example.input.json) and fill in your value
 | `specs/transform.simplified.jsonata` | Converts your input to the structured format |
 | `specs/schema.oold.yaml` | Full schema definition |
 | `specs/shape.ttl` | SHACL validation rules (tensile-test additions) |
+| `CHANGELOG.md` | Version history for this schema |
 
 SHACL validation loads two shape files: the tensile-test shape above plus
 `characterization/step/PMDCo/specs/shape.ttl`, mirroring the `$ref` base at
 the schema level.
+
+Each schema folder keeps a `CHANGELOG.md` at its root that records breaking
+changes, backwards-compatible additions, and corrections — following
+[Semantic Versioning](https://semver.org/). See
+[docs/3_schema-format.md](../../../../docs/3_schema-format.md) for the
+versioning convention.
 
 ---
 

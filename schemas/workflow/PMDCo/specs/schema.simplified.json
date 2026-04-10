@@ -53,8 +53,8 @@
             "description": "Optional free-text description of what this step does.",
             "type": "string"
           },
-          "instance_iri": {
-            "title": "Instance IRI",
+          "reference": {
+            "title": "Reference",
             "description": "IRI of a fully described step instance in the knowledge graph. Include for provenance; omit for lightweight sketches.",
             "type": "string",
             "format": "uri"
@@ -69,7 +69,7 @@
           },
           "conditions": {
             "title": "Inline Parameters",
-            "description": "Inline quantitative parameters for this step (optional; prefer instance_iri for detailed steps).",
+            "description": "Inline quantitative parameters for this step (optional; prefer reference for detailed steps).",
             "type": "array",
             "items": {
               "type": "object",

@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3] - 2026-04-10
+
+### Added
+
+- `obo: "http://purl.obolibrary.org/obo/"` simple-string prefix entry added to
+  all schemas that use OBO terms (`characterization/step`, `manufacturing/step`,
+  `material-card/mechanical`, `specimen`, `chemical-composition`, `simulation/step`,
+  `simulation/model-calibration`, `workflow`). Fixes `ns1`/`ns2`/`ns3`
+  auto-generated prefixes in serialised Turtle output.
+- `CHANGELOG.md` files at the schema level: `characterization/tensile-test/TTO`
+  and `workflow/PMDCo`. Convention documented in `docs/3_schema-format.md` and
+  `CONTRIBUTING.md`.
+- `docs/3_schema-format.md`: new "Schema versioning and CHANGELOG" section
+  documenting MAJOR/MINOR/PATCH rules, schema IRI encoding, and the relationship
+  to per-parser CHANGELOGs in `semantic-transformers`.
+
+### Changed
+
+- **`characterization/tensile-test/TTO` schema bumped to v1.1.0** (backwards-compatible):
+  - New optional fields: `gauge_length` / `gauge_length_unit`, `preload` / `preload_unit`,
+    `test_date` (ISO 8601 datetime).
+  - `obo:` prefix added to context so OBO terms serialise with a readable prefix.
+- **`workflow/PMDCo` schema bumped to v1.1.0**:
+  - Renamed `instance_iri` to `reference` in the simplified input schema, OO-LD
+    schema, JSONata transform, notebooks, and `example.input.json`. The field maps
+    to `dcterms:references` in RDF; the new name is a plain noun consistent with
+    the rest of the schema.
+- `semantic_schemas.__init__`: namespace bindings now propagated from the parsed
+  JSON-LD Dataset instead of being hard-coded. Adding a prefix to the schema
+  `@context` YAML is sufficient; no library changes are needed.
+- All notebooks updated: `BASE_IRI` variable, `flat = result.flat_graph`,
+  combined-graph cells now propagate namespace bindings when merging sub-graphs.
+
 ## [0.1.2] - 2026-04-09
 
 ### Fixed

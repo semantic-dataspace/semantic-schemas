@@ -35,6 +35,7 @@
   conforms_to:
     "@id": "http://purl.org/dc/terms/conformsTo"
     "@type": "@id"
+  obo: "http://purl.obolibrary.org/obo/"
   obi:
     "@id": "http://purl.obolibrary.org/obo/OBI_"
     "@prefix": true

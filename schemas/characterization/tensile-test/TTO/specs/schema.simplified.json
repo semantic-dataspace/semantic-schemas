@@ -31,6 +31,12 @@
       "format": "uri",
       "examples": ["https://example.org/specimens/316L-tensile-bar-1"]
     },
+    "test_date": {
+      "title": "Test Date",
+      "description": "Date and time when the test was conducted, in ISO 8601 format (e.g. '2021-05-19T09:36:00').",
+      "type": "string",
+      "format": "date-time"
+    },
     "test_standard": {
       "title": "Test Standard",
       "description": "The standard or norm followed (e.g. 'ISO 6892-1', 'ASTM E8').",
@@ -56,6 +62,31 @@
       "description": "Temperature at which the test was conducted, in °C.",
       "type": "number",
       "examples": [23, -40, 200]
+    },
+    "gauge_length": {
+      "title": "Gauge Length",
+      "description": "Extensometer gauge length used during the test (e.g. 80 mm).",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "examples": [80, 50]
+    },
+    "gauge_length_unit": {
+      "title": "Gauge Length Unit",
+      "description": "Unit for the gauge length value.",
+      "type": "string",
+      "default": "mm"
+    },
+    "preload": {
+      "title": "Pre-load",
+      "description": "Pre-load or pre-force applied before the main test ramp.",
+      "type": "number",
+      "examples": [2, 5]
+    },
+    "preload_unit": {
+      "title": "Pre-load Unit",
+      "description": "Unit for the pre-load value.",
+      "type": "string",
+      "default": "MPa"
     },
     "results": {
       "title": "Measured Properties",

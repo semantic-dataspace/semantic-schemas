@@ -136,12 +136,33 @@ same rule: their position in the tree signals their role, not a special name.
 ## Leaf folder contents
 
 Every leaf node — the ontology folder at the bottom of the tree — uses the
-following standard subfolders:
+following standard subfolders and files:
 
-| Subfolder | Purpose |
+| Path | Purpose |
 |---|---|
 | `specs/` | All schema files: `schema.oold.yaml`, `shape.ttl`, `schema.simplified.json`, `transform.simplified.jsonata` |
 | `docs/` | Notebooks, example files, and the schema `README.md` |
+| `CHANGELOG.md` | Version history for this schema (at the leaf root) |
+
+### Schema versioning and CHANGELOG
+
+Each schema leaf folder keeps a `CHANGELOG.md` at its root, following
+[Semantic Versioning](https://semver.org/) and the
+[Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format:
+
+- **MAJOR** — breaking changes: renamed or removed fields, incompatible graph
+  structure.
+- **MINOR** — backwards-compatible additions: new optional fields, new
+  conditions.
+- **PATCH** — corrections that do not affect the graph: typos, description
+  fixes, example updates.
+
+The schema IRI encodes the minor version: `…/<Ontology>/#v<MAJOR>.<MINOR>.0`.
+
+Instrument parsers in `semantic-transformers` each keep their own
+`CHANGELOG.md` inside the parser folder (e.g.
+`parsers/characterization/tensile_test/zwick/CHANGELOG.md`), recording which
+schema version each parser release was tested against.
 
 Machine-specific file parsers (programs that read instrument output files
 and convert them to the schema's simplified JSON) are **not** stored here.

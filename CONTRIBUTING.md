@@ -179,14 +179,22 @@ transform.  When bumping the schema version, update **both** `x-schema-version` 
 
 ### Change history
 
-Each schema folder should contain a `CHANGELOG.md` that records what changed in each version.  A minimal entry looks like:
+Each schema folder must contain a `CHANGELOG.md` at its root that records what changed
+in each version. Follow the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format:
 
 ```markdown
-## 1.1.0 — 2026-04-01
-- Added optional `notes` field.
+## [1.1.0] — 2026-04-01
 
-## 1.0.0 — 2026-01-15
+### Added
+- Optional `notes` field.
+
+## [1.0.0] — 2026-01-15
+
 - Initial release.
 ```
 
-Users who need to retrieve the exact schema files for a past version can use `git log -- schemas/<domain>/<ontology>/` to find the corresponding commit.
+The full convention (MAJOR/MINOR/PATCH semantics, schema IRI versioning, and the
+relationship to instrument-parser changelogs in `semantic-transformers`) is documented
+in [docs/3_schema-format.md](docs/3_schema-format.md).
+
+Users who need the exact schema files for a past version can use `git log -- schemas/<domain>/<ontology>/` to find the corresponding commit.

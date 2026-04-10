@@ -11,7 +11,7 @@
    *     step_id      string   optional, derived from label if omitted
    *     step_type    string   optional ontology class CURIE
    *     description  string   optional
-   *     instance_iri string   optional IRI of detailed step instance
+   *     reference    string   optional IRI of detailed step instance
    *     preceded_by  array    optional — step IDs that precede this one
    *     conditions   array    optional — inline parameters {name, value?, unit?}
    *
@@ -25,7 +25,7 @@
    *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
    */
 
-  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/workflow/PMDCo/#v1.0.0";
+  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/workflow/PMDCo/#v1.1.0";
 
   /* ── Workflow ID ─────────────────────────────────────────────────────── */
   $wfSlug := $replace($lowercase($trim(workflow_name)), /[^a-z0-9]+/, "-");
@@ -74,8 +74,8 @@
     $withDesc := $exists($s.description)
       ? $merge([$node, {"description": $s.description}])
       : $node;
-    $withIri := $exists($s.instance_iri)
-      ? $merge([$withDesc, {"instance_iri": $s.instance_iri}])
+    $withIri := $exists($s.reference)
+      ? $merge([$withDesc, {"reference": $s.reference}])
       : $withDesc;
     $withPre := $exists($precededBy)
       ? $merge([$withIri, {"preceded_by": $precededBy}])

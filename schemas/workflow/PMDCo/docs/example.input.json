@@ -1,38 +1,38 @@
 {
-  "workflow_name": "QA-to-FEM material card workflow — 316L batch 1",
-  "description":   "Four-step workflow: material production → mechanical characterization → constitutive model calibration → FEM material card export. Demonstrates cross-domain workflow composition using manufacturing, characterization, and simulation schemas.",
+  "workflow_name": "QA-to-FEM material card workflow, 316L batch 1",
+  "description":   "Four-step workflow: material production, mechanical characterization, constitutive model calibration, and FEM material card export. Demonstrates cross-domain workflow composition using manufacturing, characterization, and simulation schemas.",
   "steps": [
     {
-      "label":        "Material Production — 316L batch 1",
+      "label":        "Material Production, 316L batch 1",
       "step_type":    "pmdco:PMD_0000029",
       "description":  "Melting, casting, and rolling of austenitic stainless steel 316L. Batch 1 test coupons cut for QA and material card purposes.",
-      "instance_iri": "https://example.org/manufacturing/316L-production-batch-1"
+      "reference": "https://example.org/manufacturing/316L-production-batch-1"
     },
     {
-      "label":        "Tensile Test — 316L batch 1 QA",
+      "label":        "Tensile Test, 316L batch 1 QA",
       "step_type":    "obi:0000070",
       "description":  "Room-temperature tensile test according to ISO 6892-1 on two specimens from batch 1. Yields Rp0.2, Rm, and A50.",
-      "instance_iri": "https://example.org/characterization/tensile-test-316L-batch-1",
+      "reference": "https://example.org/characterization/tensile-test-316L-batch-1",
       "conditions": [
         { "name": "Test Standard", "unit": "ISO 6892-1" },
         { "name": "Strain Rate",   "value": 0.00025, "unit": "1/s" }
       ]
     },
     {
-      "label":        "Hockett-Sherby Calibration — 316L batch 1",
+      "label":        "Hockett-Sherby Calibration, 316L batch 1",
       "step_type":    "obi:0000471",
       "description":  "Fit Hockett-Sherby constitutive model to flow curve extracted from the tensile test. Produces sigma_sat, sigma_0, c, n.",
-      "instance_iri": "https://example.org/simulations/hs-calibration-316L-batch-1",
+      "reference": "https://example.org/simulations/hs-calibration-316L-batch-1",
       "conditions": [
         { "name": "Optimiser",    "unit": "Levenberg-Marquardt" },
         { "name": "Strain Range", "value": 0.5, "unit": "1" }
       ]
     },
     {
-      "label":       "FEM Material Card Export — LS-Dyna / Abaqus",
+      "label":       "FEM Material Card Export, LS-Dyna and Abaqus",
       "description": "Query the knowledge graph for the calibrated Hockett-Sherby parameters and export a syntactic material card in LS-Dyna *MAT_036 and Abaqus *PLASTIC formats for downstream FEM analyses.",
       "conditions": [
-        { "name": "Target Solver", "unit": "LS-Dyna R14 / Abaqus 2023" },
+        { "name": "Target Solver",       "unit": "LS-Dyna R14 / Abaqus 2023" },
         { "name": "Material Card Format", "unit": "*MAT_036 / *PLASTIC" }
       ]
     }

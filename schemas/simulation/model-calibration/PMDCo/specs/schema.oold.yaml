@@ -61,6 +61,7 @@
 
   # ── Base context (mirrored from simulation/step/PMDCo/specs/schema.oold.yaml) ──
   # Keep in sync with that file.
+  obo: "http://purl.obolibrary.org/obo/"
   obi:
     "@id": "http://purl.obolibrary.org/obo/OBI_"
     "@prefix": true

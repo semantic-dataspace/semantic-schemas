@@ -72,6 +72,11 @@ class Schema:
         g = rdflib.Graph()
         for s, p, o, _ in ds.quads():
             g.add((s, p, o))
+        # Propagate all namespace bindings the JSON-LD parser derived from
+        # the @context.  Schemas declare their own prefixes there, so no
+        # hard-coding is needed here.
+        for prefix, ns in ds.namespaces():
+            g.bind(prefix, ns)
         return g
 
     # ------------------------------------------------------------------

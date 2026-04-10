@@ -14,7 +14,7 @@
 #       id    ─────────────────────────── local slug or full IRI
 #       label ─────────────────────────── step name string
 #       description ────────────────────── free-text  (optional)
-#       instance_iri ───────────────────► IRI of the detailed step instance in
+#       reference ──────────────────────► IRI of the detailed step instance in
 #                                         the knowledge graph  (optional)
 #       preceded_by [× 0..N] ──────────► step IRI  (bfo:BFO_0000062)
 #       has_process_condition [× 0..N] ── inline parameters  (optional)
@@ -23,9 +23,9 @@
 #   - BFO:Process (BFO_0000015) is the most general process class.  It keeps
 #     the workflow schema independent of any specific domain ontology (PMDCo,
 #     OBI, TTO) so that steps of different types can coexist.
-#   - Steps are embedded (composite).  A step's instance_iri optionally points
-#     to a fully described node elsewhere in the graph (e.g. a TensileTest
-#     instance described by characterization/tensile-test/TTO/).
+#   - Steps are embedded (composite).  A step's reference field optionally
+#     points to a fully described node elsewhere in the graph (e.g. a
+#     TensileTest instance described by characterization/tensile-test/TTO/).
 #   - Step ordering is expressed inline via preceded_by on each step node.
 #     The transform derives preceded_by from the array position when the user
 #     does not supply explicit links.
@@ -41,6 +41,7 @@
   conforms_to:
     "@id": "http://purl.org/dc/terms/conformsTo"
     "@type": "@id"
+  obo: "http://purl.obolibrary.org/obo/"
   bfo:
     "@id": "http://purl.obolibrary.org/obo/BFO_"
     "@prefix": true
@@ -59,7 +60,7 @@
   has_part:
     "@id": "bfo:0000051"   # BFO_0000051  has_part
     "@container": "@set"
-  instance_iri:
+  reference:
     "@id": "http://purl.org/dc/terms/references"
     "@type": "@id"
   preceded_by:
@@ -80,7 +81,7 @@
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for a cross-domain workflow (bfo:Process with embedded step nodes)
-x-schema-version: '1.0.0'
+x-schema-version: '1.1.0'
 x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/workflow/PMDCo/'
 title: Cross-Domain Workflow
 type: object
@@ -157,8 +158,8 @@ properties:
           title: Step Description
           description: Optional free-text description of what this step does.
           type: string
-        instance_iri:
-          title: Instance IRI
+        reference:
+          title: Reference
           description: >-
             IRI of a fully described instance of this step elsewhere in the
             knowledge graph (e.g. a TensileTest node described by

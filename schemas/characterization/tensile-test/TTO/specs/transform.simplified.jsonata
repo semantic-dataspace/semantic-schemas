@@ -17,7 +17,7 @@
    *     unit            string   "MPa" | "GPa" | "%"
    */
 
-  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/tensile-test/TTO/#v1.0.0";
+  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/tensile-test/TTO/#v1.1.0";
 
   /* ── Property name → TTO class CURIE ─────────────────────────────────── */
   $propertyMap := {
@@ -70,6 +70,24 @@
         "parameter_unit":  "°C"
       }])
     : $conds;
+  $conds := $exists(gauge_length)
+    ? $append($conds, [{
+        "type": "pmdco:PMD_0000013",
+        "id":   $testId & "-condition-gauge-length",
+        "parameter_label": "Gauge Length",
+        "parameter_value": gauge_length,
+        "parameter_unit":  $exists(gauge_length_unit) ? gauge_length_unit : "mm"
+      }])
+    : $conds;
+  $conds := $exists(preload)
+    ? $append($conds, [{
+        "type": "pmdco:PMD_0000013",
+        "id":   $testId & "-condition-preload",
+        "parameter_label": "Pre-load",
+        "parameter_value": preload,
+        "parameter_unit":  $exists(preload_unit) ? preload_unit : "MPa"
+      }])
+    : $conds;
 
   /* ── Measured results ─────────────────────────────────────────────────── */
   $measured := $exists(results) and $count(results) > 0
@@ -92,8 +110,9 @@
     "has_specified_input":  [specimen_iri]
   };
 
-  $withDesc  := $exists(description) ? $merge([$base,     {"description": description}]) : $base;
-  $withConds := $count($conds) > 0   ? $merge([$withDesc, {"has_process_condition": $conds}]) : $withDesc;
+  $withDate  := $exists(test_date)    ? $merge([$base,     {"date": test_date}])            : $base;
+  $withDesc  := $exists(description)  ? $merge([$withDate, {"description": description}])   : $withDate;
+  $withConds := $count($conds) > 0    ? $merge([$withDesc, {"has_process_condition": $conds}]) : $withDesc;
 
   $exists($measured)
     ? $merge([$withConds, {"measured_properties": $measured}])
