@@ -63,43 +63,38 @@ Update `CATALOG.md` accordingly.
 ### 3. Run the tests
 
 Every schema's workflow notebook is executed automatically on CI. To run the
-same checks locally:
+same checks locally, use the helper script:
 
 ```bash
 python -m venv .venv
-.venv/bin/pip install -r requirements-dev.txt
-.venv/bin/pytest --nbmake $(find schemas -name "*.ipynb" \
-    ! -path "*/.ipynb_checkpoints/*")
+source .venv/bin/activate
+pip install -r requirements-dev.txt
+./scripts/run_notebooks.sh
 ```
 
-All notebooks must pass before a PR can be merged.
+The script collects all notebooks under `schemas/`, skips checkpoint folders,
+and runs them with `pytest --nbmake`. All notebooks must pass before a PR can
+be merged.
 
 ### 3a. Refresh notebook outputs (for documentation)
 
 The notebooks are committed with their output cells so that GitHub renders
-them as readable documentation.  After changing a schema or its transform,
+them as readable documentation. After changing a schema or its transform,
 re-execute all notebooks in-place to update the stored outputs before
 committing:
 
 ```bash
-find schemas -name "*.ipynb" ! -path "*/.ipynb_checkpoints/*" \
-  | xargs .venv/bin/jupyter nbconvert \
-      --to notebook \
-      --execute \
-      --inplace \
-      --ExecutePreprocessor.timeout=300
+source .venv/bin/activate
+./scripts/run_notebooks.sh --refresh
 ```
 
-Run this from the repository root.  Commit the resulting `*.ipynb` changes
-together with any schema changes so that the rendered output on GitHub stays
-in sync.
+Commit the resulting `*.ipynb` changes together with any schema changes so
+that the rendered output on GitHub stays in sync.
 
-> **Tip.** To refresh a single notebook only, pass its path directly:
+> **Tip.** To run or refresh a single notebook only, pass its path directly:
 >
 > ```bash
-> .venv/bin/jupyter nbconvert --to notebook --execute --inplace \
->     --ExecutePreprocessor.timeout=300 \
->     schemas/<domain>/<Ontology>/docs/<name>_workflow.ipynb
+> ./scripts/run_notebooks.sh schemas/<domain>/<Ontology>/docs/<name>.ipynb
 > ```
 
 ### 4. Validate locally

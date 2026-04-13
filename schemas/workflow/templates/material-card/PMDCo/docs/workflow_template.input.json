@@ -1,0 +1,63 @@
+{
+  "workflow_name": "316L material card workflow, batch 1",
+  "operator_iri":  "https://example.org/people/jane-doe",
+  "specimen_iri":  "https://example.org/specimens/316L-batch-1-bar-1",
+  "material_iri":  "https://example.org/materials/316L-batch-1",
+
+  "device": {
+    "name":             "Zwick Z250 Universal Testing Machine",
+    "manufacturer":     "Zwick Roell",
+    "model":            "Z250",
+    "serial_number":    "ZR-12345",
+    "calibration_date": "2024-03-01"
+  },
+
+  "production": {
+    "name":        "316L Production, batch 1",
+    "description": "Melting, continuous casting, and hot rolling of 316L austenitic stainless steel. Test coupons cut from batch 1 for QA tensile testing and material card generation.",
+    "conditions": [
+      {"name": "Rolling Temperature", "value": 1150, "unit": "C"},
+      {"name": "Final Thickness",     "value": 6.0,  "unit": "mm"}
+    ]
+  },
+
+  "characterization": {
+    "name": "Tensile test 316L batch 1 QA",
+    "date": "2024-11-15T09:30:00",
+    "conditions": [
+      {"name": "Test Standard", "unit": "ISO 6892-1"},
+      {"name": "Strain Rate",   "value": 0.00025, "unit": "1/s"},
+      {"name": "Temperature",   "value": 23,      "unit": "C"}
+    ],
+    "results": [
+      {"property": "YieldStrength",                     "value": 285, "unit": "MPa"},
+      {"property": "TensileStrength",                   "value": 620, "unit": "MPa"},
+      {"property": "PercentageElongationAfterFracture", "value": 50,  "unit": "%"},
+      {"property": "PercentageReductionOfArea",         "value": 65,  "unit": "%"}
+    ]
+  },
+
+  "calibration": {
+    "name":        "Hockett-Sherby calibration 316L batch 1",
+    "model_type":  "Hockett-Sherby",
+    "description": "Levenberg-Marquardt fit of Hockett-Sherby flow curve to ISO 6892-1 tensile test data.",
+    "optimizer_settings": [
+      {"name": "Optimiser",    "unit": "Levenberg-Marquardt"},
+      {"name": "Strain Range", "value": 0.5, "unit": "1"}
+    ],
+    "parameters": [
+      {"name": "sigma_sat", "value": 780.0, "unit": "MPa"},
+      {"name": "sigma_0",   "value": 220.0, "unit": "MPa"},
+      {"name": "c",         "value": 12.5},
+      {"name": "n",         "value": 0.68}
+    ]
+  },
+
+  "material_card": {
+    "name":        "316L stainless steel, Hockett-Sherby v1",
+    "description": "Mechanical material card for 316L austenitic SS batch 1. Elastic constants from literature; plastic data from ISO 6892-1 tensile test.",
+    "density":        {"value": 7.93,  "unit": "g/cm3"},
+    "youngs_modulus": {"value": 193.0, "unit": "GPa"},
+    "poissons_ratio": {"value": 0.29}
+  }
+}

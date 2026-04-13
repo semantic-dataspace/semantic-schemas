@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Simplified input schema for the material-card workflow template. Validates the single template dictionary that drives all six schema calls in the material card workflow.",
+  "x-schema-version": "1.0.0",
+  "x-schema-id": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/workflow/templates/material-card/",
+  "x-schema-dependencies": [
+    { "schema-id": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/measurement-device/PMDCo/", "compatible-versions": ["1.0.0"] },
+    { "schema-id": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/manufacturing/step/base/PMDCo/", "compatible-versions": ["2.0.0"] },
+    { "schema-id": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/process/PMDCo/", "compatible-versions": ["1.0.0"] },
+    { "schema-id": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/step/tensile-test/TTO/", "compatible-versions": ["2.0.0"] },
+    { "schema-id": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/simulation/step/model-calibration/PMDCo/", "compatible-versions": ["2.0.0"] },
+    { "schema-id": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/material-card/mechanical/PMDCo/", "compatible-versions": ["1.0.0"] }
+  ],
+  "title": "Material Card Workflow Template",
+  "description": "Single input dictionary for a complete material card workflow: device registration, manufacturing step, tensile test characterization (with enforced provenance), constitutive model calibration, and mechanical material card export.",
+  "type": "object",
+  "required": ["workflow_name", "operator_iri", "specimen_iri", "material_iri", "device", "production", "characterization", "calibration", "material_card"],
+
+  "properties": {
+
+    "workflow_name": {
+      "title": "Workflow Name",
+      "description": "Human-readable name for this material card workflow run.",
+      "type": "string"
+    },
+
+    "operator_iri": {
+      "title": "Operator IRI",
+      "description": "IRI of the person who ran the characterization experiment (from expertise/ schema).",
+      "type": "string",
+      "format": "uri"
+    },
+
+    "specimen_iri": {
+      "title": "Specimen IRI",
+      "description": "IRI of the specimen tested (from specimen/PMDCo/ schema).",
+      "type": "string",
+      "format": "uri"
+    },
+
+    "material_iri": {
+      "title": "Material IRI",
+      "description": "IRI of the material batch produced by the manufacturing step.",
+      "type": "string",
+      "format": "uri"
+    },
+
+    "device": {
+      "title": "Measurement Device",
+      "description": "The instrument used for characterization. Routed to measurement-device/PMDCo/.",
+      "type": "object",
+      "required": ["name", "manufacturer", "model", "serial_number", "calibration_date"],
+      "properties": {
+        "name":             { "title": "Device Name",        "type": "string" },
+        "manufacturer":     { "title": "Manufacturer",       "type": "string" },
+        "model":            { "title": "Model",              "type": "string" },
+        "serial_number":    { "title": "Serial Number",      "type": "string" },
+        "calibration_date": { "title": "Last Calibration",   "type": "string", "format": "date" }
+      }
+    },
+
+    "production": {
+      "title": "Production Step",
+      "description": "Manufacturing step that produced the material batch. Routed to manufacturing/step/base/PMDCo/.",
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name":        { "title": "Step Name",    "type": "string" },
+        "description": { "title": "Description",  "type": "string" },
+        "conditions": {
+          "title": "Process Conditions",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name":  { "title": "Parameter Name",  "type": "string" },
+              "value": { "title": "Value",           "type": "number" },
+              "unit":  { "title": "Unit",            "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "characterization": {
+      "title": "Characterization",
+      "description": "Tensile test conditions and results. Routed to characterization/process/PMDCo/ (provenance) and characterization/step/tensile-test/TTO/ (results).",
+      "type": "object",
+      "required": ["name", "results"],
+      "properties": {
+        "name": { "title": "Experiment Name", "type": "string" },
+        "date": { "title": "Test Date",       "type": "string", "format": "date-time" },
+        "conditions": {
+          "title": "Test Conditions",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name":  { "title": "Parameter Name", "type": "string" },
+              "value": { "title": "Value",          "type": "number" },
+              "unit":  { "title": "Unit",           "type": "string" }
+            }
+          }
+        },
+        "results": {
+          "title": "Measured Properties",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["property", "value", "unit"],
+            "properties": {
+              "property": {
+                "title": "Property",
+                "type": "string",
+                "enum": [
+                  "YieldStrength", "TensileStrength", "UpperYieldStrength", "LowerYieldStrength",
+                  "ProofStrength", "PercentageElongationAfterFracture",
+                  "PercentagePermanentElongation", "PercentageReductionOfArea"
+                ]
+              },
+              "value": { "title": "Value", "type": "number", "minimum": 0 },
+              "unit":  { "title": "Unit",  "type": "string", "enum": ["MPa", "GPa", "%"] }
+            }
+          }
+        }
+      }
+    },
+
+    "calibration": {
+      "title": "Constitutive Model Calibration",
+      "description": "Flow curve fit parameters. Routed to simulation/step/model-calibration/PMDCo/.",
+      "type": "object",
+      "required": ["name", "model_type", "parameters"],
+      "properties": {
+        "name":        { "title": "Calibration Name", "type": "string" },
+        "model_type":  {
+          "title": "Model Family",
+          "type": "string",
+          "enum": ["Hockett-Sherby", "Swift", "Voce", "Hollomon", "Johnson-Cook"]
+        },
+        "description": { "title": "Description", "type": "string" },
+        "optimizer_settings": {
+          "title": "Optimizer Settings",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name":  { "title": "Setting Name", "type": "string" },
+              "value": { "title": "Value",        "type": "number" },
+              "unit":  { "title": "Unit",         "type": "string" }
+            }
+          }
+        },
+        "parameters": {
+          "title": "Model Parameters",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["name", "value"],
+            "properties": {
+              "name":  { "title": "Parameter Name", "type": "string" },
+              "value": { "title": "Value",          "type": "number" },
+              "unit":  { "title": "Unit",           "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "material_card": {
+      "title": "Mechanical Material Card",
+      "description": "Elastic constants for the material card. Routed to material-card/mechanical/PMDCo/. Plastic parameters are taken from the calibration section.",
+      "type": "object",
+      "required": ["name", "density", "youngs_modulus", "poissons_ratio"],
+      "properties": {
+        "name":        { "title": "Card Name",    "type": "string" },
+        "description": { "title": "Description",  "type": "string" },
+        "density": {
+          "title": "Density",
+          "type": "object",
+          "required": ["value"],
+          "properties": {
+            "value": { "title": "Value", "type": "number", "minimum": 0 },
+            "unit":  { "title": "Unit",  "type": "string", "default": "g/cm3" }
+          }
+        },
+        "youngs_modulus": {
+          "title": "Young's Modulus",
+          "type": "object",
+          "required": ["value"],
+          "properties": {
+            "value": { "title": "Value", "type": "number", "minimum": 0 },
+            "unit":  { "title": "Unit",  "type": "string", "default": "GPa" }
+          }
+        },
+        "poissons_ratio": {
+          "title": "Poisson's Ratio",
+          "type": "object",
+          "required": ["value"],
+          "properties": {
+            "value": { "title": "Value", "type": "number", "minimum": 0, "maximum": 0.5 }
+          }
+        }
+      }
+    }
+
+  }
+}

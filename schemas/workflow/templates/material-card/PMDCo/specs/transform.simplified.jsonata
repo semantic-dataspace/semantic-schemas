@@ -1,0 +1,123 @@
+/**
+ * Transform: Material Card Workflow Template
+ *
+ * Input:  workflow_template  (validated against schema.simplified.json)
+ * Output: An object with one key per sub-schema call, each containing the
+ *         ready-to-use simplified input for that schema's own transform.
+ *
+ * Consumers (e.g. the notebook) pass each output section to the corresponding
+ * schema's transform.  The template transform does NOT produce OO-LD or RDF
+ * directly; that is handled by the six sub-schema transforms.
+ *
+ * Sub-schema routing:
+ *   $.device_input          → measurement-device/PMDCo/   transform.simplified.jsonata
+ *   $.production_input      → manufacturing/step/base/PMDCo/ transform.simplified.jsonata
+ *   $.process_input         → characterization/process/PMDCo/ transform.simplified.jsonata
+ *   $.tto_input             → characterization/step/tensile-test/TTO/ transform.simplified.jsonata
+ *   $.calibration_input     → simulation/step/model-calibration/PMDCo/ transform.simplified.jsonata
+ *   $.material_card_input   → material-card/mechanical/PMDCo/ transform.simplified.jsonata
+ *
+ * Note: process_input.device_iri and process_input.step_reference are
+ * placeholder strings here; the consumer must replace them with the IRIs
+ * returned by the device and TTO transform calls respectively.
+ */
+{
+  /* ── Shared context ─────────────────────────────────────────────────────── */
+  "workflow_name": workflow_name,
+  "operator_iri":  operator_iri,
+  "specimen_iri":  specimen_iri,
+  "material_iri":  material_iri,
+
+  /* ── Step 1: device registration ────────────────────────────────────────── */
+  "device_input": {
+    "device_name":      device.name,
+    "manufacturer":     device.manufacturer,
+    "model":            device.model,
+    "serial_number":    device.serial_number,
+    "calibration_date": device.calibration_date
+  },
+
+  /* ── Step 2: manufacturing step ─────────────────────────────────────────── */
+  "production_input": {
+    "process_name": production.name,
+    "description":  production.description,
+    "outputs":      [material_iri],
+    "conditions":   production.conditions ? production.conditions : []
+  },
+
+  /* ── Step 3a: characterization process template ─────────────────────────── */
+  /* device_iri and step_reference must be filled in by the consumer           */
+  "process_input": {
+    "process_name": characterization.name,
+    "operator_iri": operator_iri,
+    "device_iri":   "__device_iri_from_step1__",
+    "specimen_iri": specimen_iri,
+    "date":         characterization.date,
+    "conditions":   characterization.conditions ? characterization.conditions : [],
+    "step_reference": "__tto_iri_from_step3b__"
+  },
+
+  /* ── Step 3b: tensile test result record ────────────────────────────────── */
+  "tto_input": {
+    "test_name":    characterization.name,
+    "specimen_iri": specimen_iri,
+    "conditions":   characterization.conditions ? characterization.conditions : [],
+    "results":      characterization.results.(
+      {
+        "property": property,
+        "value":    value,
+        "unit":     unit
+      }
+    )
+  },
+
+  /* ── Step 4: constitutive model calibration ─────────────────────────────── */
+  /* inputs (tto IRI) must be filled in by the consumer                        */
+  "calibration_input": {
+    "step_name":   calibration.name,
+    "model_type":  calibration.model_type,
+    "description": calibration.description,
+    "inputs":      ["__tto_iri_from_step3b__"],
+    "conditions":  calibration.optimizer_settings ? calibration.optimizer_settings : [],
+    "calibrated_parameters": calibration.parameters.(
+      {
+        "name":  name,
+        "value": value,
+        "unit":  unit ? unit : ""
+      }
+    )
+  },
+
+  /* ── Step 5: mechanical material card ───────────────────────────────────── */
+  /* calibration_iri must be filled in by the consumer                         */
+  "material_card_input": {
+    "card_name":      material_card.name,
+    "material_iri":   material_iri,
+    "description":    material_card.description,
+    "density":        material_card.density,
+    "youngs_modulus": material_card.youngs_modulus,
+    "poissons_ratio": material_card.poissons_ratio,
+    "mechanical_properties": characterization.results[
+      property in ["YieldStrength", "TensileStrength", "PercentageElongationAfterFracture"]
+    ].(
+      {
+        "type":  "tto:" & property,
+        "value": value,
+        "unit":  unit = "MPa" ? "uqudt:MegaPascal"
+               : unit = "GPa" ? "uqudt:GigaPascal"
+               : "uqudt:PERCENT"
+      }
+    ),
+    "constitutive_model": {
+      "model_type":      calibration.model_type,
+      "calibration_iri": "__calib_iri_from_step4__",
+      "parameters":      calibration.parameters.(
+        {
+          "name":  name,
+          "value": value,
+          "unit":  unit ? unit : ""
+        }
+      )
+    }
+  }
+}

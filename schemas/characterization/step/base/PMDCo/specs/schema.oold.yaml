@@ -1,0 +1,187 @@
+# OO-LD Schema for CharacterizationStep (PMDCo pattern)
+# Ontology: Platform MaterialDigital Core Ontology (PMDCo)
+#   https://w3id.org/pmd/co/
+#
+# PMDCo patterns combined:
+#   - Input and Output of Processes
+#     https://github.com/materialdigital/core-ontology/tree/main/patterns/input%20and%20output%20of%20processes
+#   - Measurement
+#     https://github.com/materialdigital/core-ontology/tree/main/patterns/measurement
+#
+# Graph pattern:
+#
+#   Assay  (obi:OBI_0000070)
+#     rdfs:label ──────────────────────────────────────── name string
+#     rdfs:comment ────────────────────────────────────── description string  (optional)
+#     has_specified_input ────────────────────────────► Material/Specimen IRI  [× 0..N]
+#     preceded_by ────────────────────────────────────► Assay IRI  [× 0..N]  (optional)
+#     has_process_condition ──────────────────────────► ProcessCondition (pmdco:PMD_0000013)  [× 0..N]  (optional)
+#       rdfs:label ──────── condition name
+#       qudt:value ──────── numeric value (xsd:double)
+#       qudt:hasUnit ─────── unit string
+#
+# Design notes:
+#   - OBI Assay (OBI_0000070) is the canonical class for planned characterization
+#     processes in the PMDCo ecosystem.  It is the superclass from which domain-
+#     specific characterization schemas (e.g. tensile test, hardness test) inherit.
+#   - Measured results are not included here: each specialised schema defines its
+#     own result fields, typed to the appropriate domain ontology classes.
+#   - This schema is the characterization counterpart of manufacturing/step/base/PMDCo/.
+#     The structural pattern (inputs, conditions, chain position) is identical;
+#     only the root class differs.
+
+"@context":
+  rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  rdfs: "http://www.w3.org/2000/01/rdf-schema#"
+  xsd: "http://www.w3.org/2001/XMLSchema#"
+  dcterms: "http://purl.org/dc/terms/"
+  conforms_to:
+    "@id": "http://purl.org/dc/terms/conformsTo"
+    "@type": "@id"
+  obo: "http://purl.obolibrary.org/obo/"
+  obi:
+    "@id": "http://purl.obolibrary.org/obo/OBI_"
+    "@prefix": true
+  bfo:
+    "@id": "http://purl.obolibrary.org/obo/BFO_"
+    "@prefix": true
+  pmdco: "https://w3id.org/pmd/co/"
+  qudt: "http://qudt.org/schema/qudt/"
+  "@base": "https://w3id.org/pmd/co/test/shape_characterization_step#"
+  type: "@type"
+  id: "@id"
+  label:
+    "@id": "rdfs:label"
+  description:
+    "@id": "rdfs:comment"
+  has_specified_input:
+    "@id": "obi:0000293"   # OBI_0000293  has_specified_input
+    "@type": "@id"
+    "@container": "@set"
+  preceded_by:
+    "@id": "bfo:0000062"   # BFO_0000062  preceded_by
+    "@type": "@id"
+    "@container": "@set"
+  has_process_condition:
+    "@id": "pmdco:PMD_0000016"   # PMD_0000016  has_process_condition
+    "@type": "@id"
+    "@container": "@set"
+  parameter_label:
+    "@id": "rdfs:label"
+  parameter_value:
+    "@id": "qudt:value"
+    "@type": "xsd:double"
+  parameter_unit:
+    "@id": "qudt:hasUnit"
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: Schema for an obi:Assay (generic characterization step)
+x-schema-version: '2.0.0'
+x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/step/base/PMDCo/'
+title: Characterization Step
+type: object
+required:
+  - type
+  - id
+  - label
+
+properties:
+
+  type:
+    title: Type
+    type: string
+    readOnly: true
+    const: "obi:0000070"
+    default: "obi:0000070"
+    options:
+      enum_titles:
+        - obi:Assay
+
+  id:
+    title: ID
+    description: Identifier for this characterization step instance; managed by the consumer.
+    type: string
+    readOnly: true
+    default: characterization-step
+
+  label:
+    title: Step Name
+    description: >-
+      Human-readable name for this characterization step
+      (e.g. "Tensile test specimen 1", "Hardness measurement batch A").
+    type: string
+
+  description:
+    title: Description
+    description: Optional free-text description of what this step does.
+    type: string
+    format: textarea
+
+  has_specified_input:
+    title: Inputs
+    description: >-
+      Specimens or materials characterised by this step,
+      referenced by their IRI in the knowledge graph.
+    type: array
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  preceded_by:
+    title: Preceded By
+    description: >-
+      Steps that directly precede this one in the characterization workflow,
+      referenced by their IRI.
+    type: array
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  has_process_condition:
+    title: Test Conditions / Parameters
+    description: >-
+      Quantitative conditions under which this characterization step is carried out
+      (e.g. strain rate, temperature, applied force).
+    type: array
+    items:
+      type: object
+      title: Process Condition
+      required:
+        - type
+        - id
+        - parameter_label
+      properties:
+        type:
+          title: Type
+          type: string
+          readOnly: true
+          const: "pmdco:PMD_0000013"
+          default: "pmdco:PMD_0000013"
+          options:
+            enum_titles:
+              - pmdco:ProcessCondition
+        id:
+          title: ID
+          description: Identifier for this condition instance; managed by the consumer.
+          type: string
+          readOnly: true
+          default: condition-1
+        parameter_label:
+          title: Condition Name
+          description: >-
+            Human-readable name for this condition
+            (e.g. "Strain Rate", "Test Temperature", "Gauge Length").
+          type: string
+        parameter_value:
+          title: Value
+          description: Numeric magnitude of the condition.
+          type: number
+        parameter_unit:
+          title: Unit
+          description: Unit of the value (e.g. "1/s", "°C", "mm").
+          type: string
+    default: []

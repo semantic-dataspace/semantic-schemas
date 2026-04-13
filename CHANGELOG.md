@@ -5,6 +5,96 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-04-13
+
+### Added
+
+- **`measurement-device/PMDCo/`** — new schema for registering physical measurement
+  and characterization instruments. Records name, manufacturer, model, serial number,
+  and last calibration date. Root class: `obi:OBI_0000968` (Device). Includes
+  simplified input schema, OO-LD schema, JSONata transform, SHACL shape, example
+  input, and step-by-step notebook (`1_device_workflow.ipynb`).
+- **`characterization/process/PMDCo/`** — new fixed-structure template for
+  characterization experiments. Enforces three mandatory fields (operator via
+  `prov:wasAssociatedWith`, device via `schema:instrument`, specimen via
+  `obi:has_specified_input`). Optional `step_reference` links to a detailed result
+  node. Includes all spec files and notebook (`1_characterization_process_workflow.ipynb`).
+- **`workflow/templates/material-card/PMDCo/`** — new cross-schema workflow template
+  sitting above `workflow/PMDCo/`. A single input dictionary drives all six sub-schemas
+  (device, manufacturing step, characterization process + TTO result, model calibration,
+  material card). Includes `specs/schema.simplified.json`, `specs/transform.simplified.jsonata`,
+  `README.md`, `docs/workflow_template.input.json`, and beginner-oriented notebook
+  `docs/1_material_card_with_template.ipynb`. No new RDF class; validated by the
+  six sub-schemas' own SHACL shapes.
+- **`scripts/run_notebooks.sh`** — helper script to run all notebooks in test mode
+  (`./scripts/run_notebooks.sh`) or refresh outputs in-place for documentation
+  (`./scripts/run_notebooks.sh --refresh`). Supports a single-notebook path argument.
+
+### Changed
+
+- **`characterization/step/PMDCo/` renamed to `characterization/step/base/PMDCo/`**
+  (schema v2.0.0, breaking path change). The schema is otherwise unchanged;
+  only `x-schema-id` and the provenance IRI (`conforms_to`) are updated.
+- **`characterization/tensile-test/TTO/` moved to `characterization/step/tensile-test/TTO/`**
+  (schema v2.0.0, breaking path change). Base schema dependency updated to
+  `characterization/step/base/PMDCo/` v2.0.0.
+- **`manufacturing/step/PMDCo/` renamed to `manufacturing/step/base/PMDCo/`**
+  (schema v2.0.0, breaking path change). No field or graph changes.
+- **`simulation/step/PMDCo/` renamed to `simulation/step/base/PMDCo/`**
+  (schema v2.0.0, breaking path change). No field or graph changes.
+- **`simulation/model-calibration/PMDCo/` moved to `simulation/step/model-calibration/PMDCo/`**
+  (schema v2.0.0, breaking path change). Base schema `$ref` updated to
+  `simulation/step/base/PMDCo/` v2.0.0.
+- **`characterization/process/PMDCo/README.md`**: reframed to lead with the
+  "fixed-structure template" concept rather than provenance-enforcement language.
+- **`workflow/PMDCo/README.md`**: title changed from "Cross-Domain Workflow" to
+  "Workflow"; step type table updated to reflect new `step/base/` paths.
+- **`workflow/PMDCo/docs/3_material_card_without_template.ipynb`** (renamed from
+  `3_workflow_cross_domain.ipynb`): path variables and labels updated to new folder
+  locations; title updated to "316L material card workflow: step-by-step approach".
+- **`workflow/templates/material-card/PMDCo/docs/1_material_card_with_template.ipynb`**
+  (was `4_workflow_process_centric.ipynb`, fully rewritten): beginner-oriented notebook
+  using a single `workflow_template` dictionary; all schema machinery hidden behind
+  named helper functions; plain-English outputs and query framing; no em-dash style.
+- **`docs/4_schema-patterns.md`**: stale path references updated; new section 5
+  explaining the `process/` template layer and when to use it vs `step/` schemas.
+- **`CATALOG.md`**: updated paths for all moved schemas; domain structure section
+  extended to cover `manufacturing/` and `simulation/` folder layout; new entry
+  for `workflow/templates/material-card/PMDCo/`.
+- **`CONTRIBUTING.md`**: sections 3 and 3a rewritten to use `scripts/run_notebooks.sh`
+  instead of inline `find | xargs` commands.
+- **`docs/4_schema-patterns.md`**: further reading links, code examples, and repository
+  examples table updated to new paths; new note in section 5 documenting the
+  `workflow/templates/` layer as the workflow-level analogue of `characterization/process/`.
+- **`docs/5_llm-schema-guide.md`**: stale `characterization/tensile-test/TTO/` path
+  references updated to `characterization/step/tensile-test/TTO/`.
+
+### Fixed
+
+- **`characterization/step/tensile-test/TTO/docs/2_tensile_test_csv_workflow.ipynb`**:
+  two bugs introduced by the schema restructuring: (1) `REPO_ROOT = SCHEMA.parents[3]`
+  pointed to `schemas/` rather than the repository root, causing a doubled
+  `schemas/schemas/` prefix when loading the base shape; (2) `CHAR_BASE` still
+  referenced the old `step/PMDCo/` path. Both corrected; `REPO_ROOT` renamed to
+  `SCHEMAS` to accurately reflect what it holds.
+
+### Migration
+
+All schemas that reference the old paths must be updated:
+
+| Old path | New path |
+|---|---|
+| `characterization/step/PMDCo/` | `characterization/step/base/PMDCo/` |
+| `characterization/tensile-test/TTO/` | `characterization/step/tensile-test/TTO/` |
+| `manufacturing/step/PMDCo/` | `manufacturing/step/base/PMDCo/` |
+| `simulation/step/PMDCo/` | `simulation/step/base/PMDCo/` |
+| `simulation/model-calibration/PMDCo/` | `simulation/step/model-calibration/PMDCo/` |
+
+Update `conforms_to` IRI filters in SPARQL queries accordingly (see individual
+schema CHANGELOGs for the exact old → new IRI mapping).
+
+---
+
 ## [0.1.3] - 2026-04-10
 
 ### Added
@@ -135,3 +225,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Performance and simulation domain extensions
 - Custom validators and schema composition tools
 - Web-based schema editor interface
+- `manufacturing/process/PMDCo/` and `simulation/process/PMDCo/` template layers
+  following the `characterization/process/PMDCo/` pattern

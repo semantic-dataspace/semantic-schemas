@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.simplified.json",
+  "title": "Measurement Device (Simplified Input)",
+  "description": "A user-friendly form to register a measurement or characterization device: its name, manufacturer, model, and calibration status. This input will be automatically converted to a standardised RDF representation (OBI/PMDCo OO-LD).",
+  "type": "object",
+  "required": ["device_name"],
+  "additionalProperties": false,
+  "properties": {
+    "device_name": {
+      "title": "Device Name",
+      "description": "A human-readable name or identifier for this device. Include enough detail to distinguish it from similar devices in the same lab (e.g. 'Zwick Z250 #1', 'Zeiss EVO MA15 Lab-A').",
+      "type": "string",
+      "minLength": 1,
+      "examples": [
+        "Zwick Z250 Universal Testing Machine #1",
+        "Zeiss EVO MA15 SEM Lab-A",
+        "Bruker D8 Advance XRD"
+      ]
+    },
+    "device_id": {
+      "title": "Device ID",
+      "description": "Optional. Identifier (IRI slug) for this device node in the RDF graph. Auto-derived from device_name if omitted.",
+      "type": "string",
+      "examples": ["device-zwick-z250-1", "device-sem-lab-a"]
+    },
+    "description": {
+      "title": "Description",
+      "description": "Optional free-text description of the device or its capabilities.",
+      "type": "string"
+    },
+    "manufacturer": {
+      "title": "Manufacturer",
+      "description": "Name of the device manufacturer.",
+      "type": "string",
+      "examples": ["Zwick Roell", "Zeiss", "Bruker", "Instron", "Netzsch"]
+    },
+    "model": {
+      "title": "Model",
+      "description": "Model name or number as given by the manufacturer.",
+      "type": "string",
+      "examples": ["Z250", "EVO MA15", "D8 Advance", "5982"]
+    },
+    "serial_number": {
+      "title": "Serial Number",
+      "description": "Serial number assigned by the manufacturer to this individual unit.",
+      "type": "string"
+    },
+    "calibration_date": {
+      "title": "Last Calibration Date",
+      "description": "Date of the most recent calibration, in ISO 8601 format (YYYY-MM-DD).",
+      "type": "string",
+      "format": "date",
+      "examples": ["2024-01-15", "2025-06-30"]
+    }
+  },
+  "examples": [
+    {
+      "device_name": "Zwick Z250 Universal Testing Machine #1",
+      "manufacturer": "Zwick Roell",
+      "model": "Z250",
+      "serial_number": "ZR-12345",
+      "calibration_date": "2024-03-01"
+    }
+  ]
+}

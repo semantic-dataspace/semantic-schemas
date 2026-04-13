@@ -1,0 +1,103 @@
+# SHACL shape for the PMDCo CharacterizationProcess pattern.
+#
+# This shape validates the GUIDED INTAKE layer for characterization experiments.
+# It enforces three mandatory provenance links on every obi:Assay node produced
+# by this schema:
+#   1. prov:wasAssociatedWith  → operator/expert IRI
+#   2. schema:instrument       → measurement device IRI
+#   3. obi:0000293             → specimen IRI (has_specified_input)
+#
+# Note: The base characterization step shape (characterization/step/base/PMDCo/)
+# validates obi:Assay nodes in general. This shape is more restrictive and
+# should be used when validating CharacterizationProcess instances specifically.
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix obi:     <http://purl.obolibrary.org/obo/OBI_> .
+@prefix bfo:     <http://purl.obolibrary.org/obo/BFO_> .
+@prefix pmd:     <https://w3id.org/pmd/co/> .
+@prefix prov:    <https://www.w3.org/ns/prov#> .
+@prefix schema:  <https://schema.org/> .
+@prefix qudt:    <http://qudt.org/schema/qudt/> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix shape:   <https://w3id.org/pmd/co/shapes/characterization/process/> .
+@base            <https://w3id.org/pmd/co/shapes/characterization/process/> .
+
+# ── CharacterizationProcess node ─────────────────────────────────────────────
+
+shape:characterization_process
+    a sh:NodeShape ;
+    sh:targetClass <http://purl.obolibrary.org/obo/OBI_0000070> ;   # obi:Assay
+    sh:property [
+        sh:path dcterms:conformsTo ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A CharacterizationProcess must declare dcterms:conformsTo pointing to the versioned schema IRI." ;
+    ] ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A CharacterizationProcess must have exactly one rdfs:label." ;
+    ] ;
+    sh:property [
+        sh:path prov:wasAssociatedWith ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A CharacterizationProcess must reference exactly one operator via prov:wasAssociatedWith." ;
+    ] ;
+    sh:property [
+        sh:path schema:instrument ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A CharacterizationProcess must reference exactly one measurement device via schema:instrument." ;
+    ] ;
+    sh:property [
+        sh:path <http://purl.obolibrary.org/obo/OBI_0000293> ;   # has_specified_input
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:message "A CharacterizationProcess must reference at least one specimen via has_specified_input." ;
+    ] ;
+    sh:property [
+        sh:path dcterms:references ;
+        sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+        sh:message "step_reference (dcterms:references) must be an IRI." ;
+    ] ;
+    sh:property [
+        sh:path pmd:PMD_0000016 ;   # has_process_condition
+        sh:node shape:process_condition ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .
+
+# ── ProcessCondition node ─────────────────────────────────────────────────────
+
+shape:process_condition
+    a sh:NodeShape ;
+    sh:targetClass pmd:PMD_0000013 ;   # ProcessCondition
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A ProcessCondition must have exactly one rdfs:label (parameter name)." ;
+    ] ;
+    sh:property [
+        sh:path qudt:value ;
+        sh:datatype xsd:double ;
+        sh:maxCount 1 ;
+        sh:message "ProcessCondition value must be an xsd:double." ;
+    ] ;
+    sh:property [
+        sh:path qudt:hasUnit ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .

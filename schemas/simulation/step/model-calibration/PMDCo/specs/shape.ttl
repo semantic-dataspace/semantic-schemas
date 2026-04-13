@@ -1,0 +1,71 @@
+# SHACL shape for the constitutive model calibration pattern.
+#
+# Load together with simulation/step/base/PMDCo/specs/shape.ttl:
+#   pyshacl validate --inference rdfs \
+#     --shacl simulation/step/base/PMDCo/specs/shape.ttl \
+#     --shacl simulation/step/model-calibration/PMDCo/specs/shape.ttl \
+#     your_graph.ttl
+#
+# Validates:
+#   1. ComputerSimulation node (OBI_0000471) — inherited rules from base shape
+#   2. ModelCalibration-specific: must have dcterms:type (model_type)
+#   3. ModelParameter nodes (IAO_0000027 DataItem reused as parameter carrier):
+#      - must have rdfs:label (param_name)
+#      - value must be xsd:double
+#      - unit is optional string
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix obi:     <http://purl.obolibrary.org/obo/OBI_> .
+@prefix bfo:     <http://purl.obolibrary.org/obo/BFO_> .
+@prefix pmd:     <https://w3id.org/pmd/co/> .
+@prefix qudt:    <http://qudt.org/schema/qudt/> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix shape:   <https://w3id.org/pmd/co/shapes/simulation/model-calibration/> .
+@prefix :        <https://w3id.org/pmd/co/shapes/simulation/model-calibration/> .
+@base            <https://w3id.org/pmd/co/shapes/simulation/model-calibration/> .
+
+# ── Model calibration additional constraints ──────────────────────────────────
+
+shape:model_calibration
+    a sh:NodeShape ;
+    sh:targetClass obi:0000471 ;   # OBI ComputerSimulation
+    sh:property [
+        sh:path dcterms:type ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A ModelCalibration must declare dcterms:type naming the constitutive model family." ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .
+
+# ── ModelParameter nodes ──────────────────────────────────────────────────────
+# Calibrated parameters are embedded output nodes (has_specified_output = OBI_0000299).
+# They carry rdfs:label, qudt:value, and optionally qudt:hasUnit.
+
+shape:model_parameter
+    a sh:NodeShape ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A model parameter node must have exactly one rdfs:label (parameter name/symbol)." ;
+    ] ;
+    sh:property [
+        sh:path qudt:value ;
+        sh:datatype xsd:double ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A model parameter node must have exactly one qudt:value (xsd:double)." ;
+    ] ;
+    sh:property [
+        sh:path qudt:hasUnit ;
+        sh:maxCount 1 ;
+        sh:message "A model parameter node may have at most one qudt:hasUnit." ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .

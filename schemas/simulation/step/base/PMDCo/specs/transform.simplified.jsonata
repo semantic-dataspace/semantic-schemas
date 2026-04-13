@@ -1,0 +1,67 @@
+(
+  /*
+   * Simulation Step (PMDCo / OBI) — simplified JSON → OO-LD JSON
+   *
+   * Input fields (see schema.simplified.json):
+   *   step_name   string   required
+   *   step_id     string   optional, derived from step_name if omitted
+   *   description string   optional
+   *   inputs      array    optional — each item is a dataset/material IRI string
+   *   outputs     array    optional — each item is a dataset/result IRI string
+   *   preceded_by array    optional — each item is a process IRI string
+   *   conditions  array    optional
+   *     name      string   required
+   *     value     number   optional
+   *     unit      string   optional
+   *
+   * Run with the jsonata-python CLI:
+   *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
+   */
+
+  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/simulation/step/base/PMDCo/#v2.0.0";
+
+  /* ── Node IDs ────────────────────────────────────────────────────────── */
+  $slug   := $replace($lowercase($trim(step_name)), /[^a-z0-9]+/, "-");
+  $stepId := $exists(step_id) ? step_id : "simulation-" & $slug;
+
+  /* ── Simulation parameters ───────────────────────────────────────────── */
+  $conditions := $exists(conditions) and $count(conditions) > 0
+    ? $map(conditions, function($c, $i) {(
+        $node := {
+          "type": "pmdco:PMD_0000013",
+          "id":   $stepId & "-param-" & $string($i + 1),
+          "parameter_label": $c.name
+        };
+        $withValue := $exists($c.value) ? $merge([$node, {"parameter_value": $c.value}]) : $node;
+        $exists($c.unit) ? $merge([$withValue, {"parameter_unit": $c.unit}]) : $withValue
+      )})
+    : undefined;
+
+  /* ── OO-LD output ────────────────────────────────────────────────────── */
+  $base := {
+    "conforms_to": $schemaUri,
+    "type":        "obi:0000471",
+    "id":          $stepId,
+    "label":       step_name
+  };
+
+  $withDesc := $exists(description)
+    ? $merge([$base, {"description": description}])
+    : $base;
+
+  $withInputs := $exists(inputs) and $count(inputs) > 0
+    ? $merge([$withDesc, {"has_specified_input": inputs}])
+    : $withDesc;
+
+  $withOutputs := $exists(outputs) and $count(outputs) > 0
+    ? $merge([$withInputs, {"has_specified_output": outputs}])
+    : $withInputs;
+
+  $withPreceded := $exists(preceded_by) and $count(preceded_by) > 0
+    ? $merge([$withOutputs, {"preceded_by": preceded_by}])
+    : $withOutputs;
+
+  $exists($conditions)
+    ? $merge([$withPreceded, {"has_process_condition": $conditions}])
+    : $withPreceded
+)

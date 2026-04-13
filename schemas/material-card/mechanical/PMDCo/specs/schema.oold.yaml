@@ -33,7 +33,7 @@
 #     to PMDCo ValueObject nodes carrying qudt:value / qudt:hasUnit, consistent
 #     with the PMDCo scalar property pattern.
 #   - Mechanical properties re-use the TTO result pattern from
-#     characterization/tensile-test/TTO/ for interoperability.
+#     characterization/step/tensile-test/TTO/ for interoperability.
 #   - The constitutive model block is embedded (composite), because parameters
 #     are direct content of the card, not independently managed graph nodes.
 

@@ -1,0 +1,250 @@
+# OO-LD Schema for CharacterizationProcess (PMDCo pattern)
+# Ontology: Platform MaterialDigital Core Ontology (PMDCo) / OBI / PROV-O
+#   https://w3id.org/pmd/co/
+#   http://purl.obolibrary.org/obo/obi.owl
+#   https://www.w3.org/TR/prov-o/
+#
+# PMDCo patterns:
+#   https://github.com/materialdigital/core-ontology
+#
+# This schema is the GUIDED INTAKE layer for characterization experiments.
+# It enforces three provenance entities that are mandatory for traceability:
+#   1. Expert / operator  — who conducted the experiment
+#   2. Measurement device — which instrument was used
+#   3. Specimen           — what material was characterised
+#
+# It can also carry a reference IRI to the detailed step result
+# (e.g. a tto:TensileTest node from characterization/step/tensile-test/TTO/).
+#
+# Relationship to other schemas:
+#   characterization/step/base/PMDCo/  — generic step (inputs, conditions, chain)
+#   characterization/step/tensile-test/TTO/ — detailed tensile test with results
+#   measurement-device/PMDCo/          — device record referenced by device_iri
+#   expertise/                         — person record referenced by operator_iri
+#   specimen/PMDCo/                    — specimen record referenced by specimen_iri
+#
+# Graph pattern:
+#
+#   Assay  (obi:OBI_0000070)
+#     rdfs:label ──────────────────────────────────── process name
+#     rdfs:comment ────────────────────────────────── description  (optional)
+#     prov:wasAssociatedWith ──────────────────────► Expert IRI  (foaf:Person)  [1]
+#     schema:instrument ───────────────────────────► Device IRI  (obi:Device)   [1]
+#     has_specified_input ─────────────────────────► Specimen IRI               [1]
+#     dcterms:references ──────────────────────────► Step result IRI            [0..1]  (optional)
+#     has_process_condition ───────────────────────► ProcessCondition           [0..N]  (optional)
+#     dcterms:date ────────────────────────────────── experiment date            (optional)
+#
+# Design notes:
+#   - prov:wasAssociatedWith (PROV-O) links a process to a responsible agent.
+#     It is the standard W3C provenance property for "this activity was carried
+#     out by or on behalf of this agent".
+#   - schema:instrument (schema.org) represents "the object that helped the agent
+#     perform the action" — semantically precise for a measurement instrument.
+#   - has_specified_input (OBI_0000293) follows the same pattern as the base
+#     characterization step and the tensile test schema.
+#   - dcterms:references (same as in workflow/PMDCo/) is the bridge to the
+#     detailed result node in the knowledge graph.
+
+"@context":
+  rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  rdfs: "http://www.w3.org/2000/01/rdf-schema#"
+  xsd: "http://www.w3.org/2001/XMLSchema#"
+  dcterms: "http://purl.org/dc/terms/"
+  prov: "https://www.w3.org/ns/prov#"
+  schema: "https://schema.org/"
+  obo: "http://purl.obolibrary.org/obo/"
+  obi:
+    "@id": "http://purl.obolibrary.org/obo/OBI_"
+    "@prefix": true
+  bfo:
+    "@id": "http://purl.obolibrary.org/obo/BFO_"
+    "@prefix": true
+  pmdco: "https://w3id.org/pmd/co/"
+  qudt: "http://qudt.org/schema/qudt/"
+  conforms_to:
+    "@id": "http://purl.org/dc/terms/conformsTo"
+    "@type": "@id"
+  # Instance IRI base (deployment-specific); override when serialising to RDF.
+  "@base": "https://w3id.org/pmd/co/test/shape_characterization_process#"
+  type: "@type"
+  id: "@id"
+  label:
+    "@id": "rdfs:label"
+  description:
+    "@id": "rdfs:comment"
+  operator_iri:
+    "@id": "prov:wasAssociatedWith"   # PROV-O: this process was associated with this agent
+    "@type": "@id"
+  device_iri:
+    "@id": "schema:instrument"        # schema.org: the instrument used
+    "@type": "@id"
+  has_specified_input:
+    "@id": "obi:0000293"              # OBI_0000293  has_specified_input
+    "@type": "@id"
+    "@container": "@set"
+  step_reference:
+    "@id": "http://purl.org/dc/terms/references"
+    "@type": "@id"
+  date:
+    "@id": "http://purl.org/dc/terms/date"
+    "@type": "xsd:dateTime"
+  preceded_by:
+    "@id": "bfo:0000062"              # BFO_0000062  preceded_by
+    "@type": "@id"
+    "@container": "@set"
+  has_process_condition:
+    "@id": "pmdco:PMD_0000016"        # PMD_0000016  has_process_condition
+    "@type": "@id"
+    "@container": "@set"
+  parameter_label:
+    "@id": "rdfs:label"
+  parameter_value:
+    "@id": "qudt:value"
+    "@type": "xsd:double"
+  parameter_unit:
+    "@id": "qudt:hasUnit"
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: >-
+  Guided intake schema for a characterization experiment (obi:Assay).
+  Enforces operator, device, and specimen as required provenance fields.
+x-schema-version: '1.0.0'
+x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/process/PMDCo/'
+title: Characterization Process
+type: object
+required:
+  - type
+  - id
+  - label
+  - operator_iri
+  - device_iri
+
+properties:
+
+  type:
+    title: Type
+    type: string
+    readOnly: true
+    const: "obi:0000070"
+    default: "obi:0000070"
+    options:
+      enum_titles:
+        - obi:Assay
+
+  id:
+    title: ID
+    description: Identifier for this process instance; managed by the consumer.
+    type: string
+    readOnly: true
+    default: char-process
+
+  label:
+    title: Process Name
+    description: >-
+      Human-readable name for this characterization process
+      (e.g. "Tensile test 316L batch 1 — QA run").
+    type: string
+
+  description:
+    title: Description
+    description: Optional free-text description of this characterization process.
+    type: string
+    format: textarea
+
+  operator_iri:
+    title: Operator (Expert)
+    description: >-
+      IRI of the person (expert or technician) who conducted this experiment.
+      Reference an existing knowledge-graph node registered with the expertise schema.
+    type: string
+    format: uri
+
+  device_iri:
+    title: Measurement Device
+    description: >-
+      IRI of the measurement device used in this experiment.
+      Reference an existing knowledge-graph node registered with the
+      measurement-device/PMDCo schema.
+    type: string
+    format: uri
+
+  has_specified_input:
+    title: Specimen
+    description: >-
+      IRI of the specimen being characterised. Reference an existing node
+      registered with the specimen/PMDCo schema.
+    type: array
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  step_reference:
+    title: Step Result Reference
+    description: >-
+      IRI of the detailed characterization step result in the knowledge graph
+      (e.g. a tto:TensileTest node from characterization/step/tensile-test/TTO/).
+      Add this after the detailed step has been recorded; omit for lightweight
+      provenance records.
+    type: string
+    format: uri
+
+  date:
+    title: Experiment Date
+    description: >-
+      Date and time when the experiment was conducted, in ISO 8601 format
+      (e.g. "2024-11-15T09:30:00").
+    type: string
+    format: date-time
+
+  preceded_by:
+    title: Preceded By
+    description: >-
+      IRIs of characterization processes that directly precede this one.
+    type: array
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  has_process_condition:
+    title: Test Conditions / Parameters
+    description: >-
+      Quantitative conditions under which this experiment was carried out
+      (strain rate, temperature, gauge length, test standard, etc.).
+    type: array
+    items:
+      type: object
+      title: Process Condition
+      required:
+        - type
+        - id
+        - parameter_label
+      properties:
+        type:
+          title: Type
+          type: string
+          readOnly: true
+          const: "pmdco:PMD_0000013"
+          default: "pmdco:PMD_0000013"
+          options:
+            enum_titles:
+              - pmdco:ProcessCondition
+        id:
+          title: ID
+          type: string
+          readOnly: true
+          default: condition-1
+        parameter_label:
+          title: Condition Name
+          type: string
+        parameter_value:
+          title: Value
+          type: number
+        parameter_unit:
+          title: Unit
+          type: string
+    default: []

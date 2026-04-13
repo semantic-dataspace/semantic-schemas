@@ -25,7 +25,7 @@
 #     OBI, TTO) so that steps of different types can coexist.
 #   - Steps are embedded (composite).  A step's reference field optionally
 #     points to a fully described node elsewhere in the graph (e.g. a
-#     TensileTest instance described by characterization/tensile-test/TTO/).
+#     TensileTest instance described by characterization/step/tensile-test/TTO/).
 #   - Step ordering is expressed inline via preceded_by on each step node.
 #     The transform derives preceded_by from the array position when the user
 #     does not supply explicit links.
@@ -163,7 +163,7 @@ properties:
           description: >-
             IRI of a fully described instance of this step elsewhere in the
             knowledge graph (e.g. a TensileTest node described by
-            characterization/tensile-test/TTO/). Optional: include for
+            characterization/step/tensile-test/TTO/). Optional: include for
             provenance; omit for lightweight workflow sketches.
           type: string
           format: uri

@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.simplified.json",
+  "title": "Characterization Process (Simplified Input)",
+  "description": "A guided form to describe a characterization experiment with full provenance context. Three fields are mandatory: who performed the experiment (operator), which device was used, and which specimen was characterised. This input will be automatically converted to a standardised RDF representation (OBI/PMDCo OO-LD).",
+  "type": "object",
+  "required": ["process_name", "operator_iri", "device_iri", "specimen_iri"],
+  "additionalProperties": false,
+  "properties": {
+    "process_name": {
+      "title": "Process Name",
+      "description": "A human-readable name for this characterization experiment. Example: 'Tensile test 316L batch 1 — QA run'.",
+      "type": "string",
+      "minLength": 1,
+      "examples": [
+        "Tensile test 316L batch 1 — QA run",
+        "Hardness mapping AlSi10Mg disc A3"
+      ]
+    },
+    "process_id": {
+      "title": "Process ID",
+      "description": "Optional. Identifier (IRI slug) for this process node in the RDF graph. Auto-derived from process_name if omitted.",
+      "type": "string"
+    },
+    "description": {
+      "title": "Description",
+      "description": "Optional free-text description of this experiment.",
+      "type": "string"
+    },
+    "operator_iri": {
+      "title": "Operator (Expert) IRI",
+      "description": "IRI of the person (expert or technician) who conducted this experiment. Must reference an existing node in the knowledge graph.",
+      "type": "string",
+      "format": "uri",
+      "examples": ["https://example.org/people/jane-doe"]
+    },
+    "device_iri": {
+      "title": "Measurement Device IRI",
+      "description": "IRI of the measurement device used in this experiment. Must reference a node registered with the measurement-device/PMDCo schema.",
+      "type": "string",
+      "format": "uri",
+      "examples": ["https://example.org/devices/zwick-z250-1"]
+    },
+    "specimen_iri": {
+      "title": "Specimen IRI",
+      "description": "IRI of the specimen being characterised. Must reference a node registered with the specimen/PMDCo schema.",
+      "type": "string",
+      "format": "uri",
+      "examples": ["https://example.org/specimens/316L-tensile-bar-1"]
+    },
+    "date": {
+      "title": "Experiment Date",
+      "description": "Date and time when the experiment was conducted, in ISO 8601 format (e.g. '2024-11-15T09:30:00').",
+      "type": "string",
+      "format": "date-time"
+    },
+    "step_reference": {
+      "title": "Step Result Reference",
+      "description": "IRI of the detailed characterization step result in the knowledge graph (e.g. a tto:TensileTest node). Add this after the detailed result has been recorded.",
+      "type": "string",
+      "format": "uri",
+      "examples": ["https://example.org/characterization/tensile-test-316L-batch-1"]
+    },
+    "preceded_by": {
+      "title": "Preceded By",
+      "description": "IRIs of characterization processes that directly precede this one.",
+      "type": "array",
+      "items": { "type": "string", "format": "uri" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "conditions": {
+      "title": "Test Conditions",
+      "description": "Quantitative conditions under which this experiment was carried out (e.g. strain rate, temperature, test standard).",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "additionalProperties": false,
+        "properties": {
+          "name":  { "title": "Condition Name", "type": "string" },
+          "value": { "title": "Value", "type": "number" },
+          "unit":  { "title": "Unit", "type": "string" }
+        }
+      },
+      "default": []
+    }
+  },
+  "examples": [
+    {
+      "process_name": "Tensile test 316L batch 1 — QA run",
+      "operator_iri": "https://example.org/people/jane-doe",
+      "device_iri":   "https://example.org/devices/zwick-z250-1",
+      "specimen_iri": "https://example.org/specimens/316L-tensile-bar-1",
+      "date": "2024-11-15T09:30:00",
+      "step_reference": "https://example.org/characterization/tensile-test-316L-batch-1",
+      "conditions": [
+        { "name": "Test Standard", "unit": "ISO 6892-1" },
+        { "name": "Strain Rate",   "value": 0.00025, "unit": "1/s" },
+        { "name": "Temperature",   "value": 23,      "unit": "°C" }
+      ]
+    }
+  ]
+}

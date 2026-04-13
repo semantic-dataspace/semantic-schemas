@@ -32,7 +32,7 @@ Prepare the following; you will paste these into your LLM session:
 2. **`docs/3_schema-format.md`**: field reference (this repo)
 3. **An existing schema as example**: pick the one most similar to what you
    are building. Good starting points:
-   - Process step: `schemas/characterization/tensile-test/TTO/`
+   - Process step: `schemas/characterization/step/tensile-test/TTO/`
    - Data artefact: `schemas/material-card/mechanical/PMDCo/`
    - Descriptor: `schemas/chemical-composition/PMDCo/`
 4. **The ontology you intend to use**: have its IRI browser open so you can
@@ -267,7 +267,7 @@ Below is a concrete run-through of Prompt 1 to show what a filled-in version
 looks like.
 
 **Context attached:** `templates/schema.oold.yaml`, `docs/3_schema-format.md`,
-`schemas/characterization/tensile-test/TTO/` (full folder).
+`schemas/characterization/step/tensile-test/TTO/` (full folder).
 
 **Prompt:**
 

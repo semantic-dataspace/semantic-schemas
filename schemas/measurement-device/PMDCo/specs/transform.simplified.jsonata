@@ -1,0 +1,48 @@
+(
+  /*
+   * Measurement Device (PMDCo) — simplified JSON → OO-LD JSON
+   *
+   * Input fields (see schema.simplified.json):
+   *   device_name       string   required
+   *   device_id         string   optional, derived from device_name if omitted
+   *   description       string   optional
+   *   manufacturer      string   optional
+   *   model             string   optional
+   *   serial_number     string   optional
+   *   calibration_date  string   optional (ISO 8601 date)
+   *
+   * Run with the jsonata-python CLI:
+   *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
+   *
+   * Run from Python:
+   *   import jsonata, json
+   *   expr   = open("transform.jsonata").read()
+   *   result = jsonata.Jsonata(expr).evaluate(json.load(open("../docs/example.input.json")))
+   */
+
+  /*
+   * Schema provenance — injected automatically into every output.
+   * Update $schemaUri whenever x-schema-version in specs/schema.oold.yaml changes.
+   */
+  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/measurement-device/PMDCo/#v1.0.0";
+
+  /* ── Node ID ─────────────────────────────────────────────────────────── */
+  $slug  := $replace($lowercase($trim(device_name)), /[^a-z0-9]+/, "-");
+  $devId := $exists(device_id) ? device_id : "device-" & $slug;
+
+  /* ── OO-LD output ────────────────────────────────────────────────────── */
+  $base := {
+    "conforms_to": $schemaUri,
+    "type":        "obi:0000968",
+    "id":          $devId,
+    "label":       device_name
+  };
+
+  $withDesc    := $exists(description)      ? $merge([$base,        {"description":      description}])      : $base;
+  $withMfr     := $exists(manufacturer)     ? $merge([$withDesc,    {"manufacturer":     manufacturer}])     : $withDesc;
+  $withModel   := $exists(model)            ? $merge([$withMfr,     {"model":            model}])            : $withMfr;
+  $withSerial  := $exists(serial_number)    ? $merge([$withModel,   {"serial_number":    serial_number}])    : $withModel;
+  $exists(calibration_date)
+    ? $merge([$withSerial, {"calibration_date": calibration_date}])
+    : $withSerial
+)

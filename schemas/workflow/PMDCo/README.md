@@ -1,6 +1,6 @@
-# Cross-Domain Workflow (PMDCo)
+# Workflow (PMDCo)
 
-Records a **multi-step workflow** that spans different process domains
+Records a **multi-step workflow** spanning any combination of process domains
 (manufacturing, characterization, simulation, data management) in a single
 RDF graph node.
 
@@ -64,7 +64,7 @@ to express branching or merging.
 | File | Purpose |
 |---|---|
 | `docs/example.input.json` | Ready-to-edit 4-step QA-to-FEM example |
-| `docs/3_workflow_cross_domain.ipynb` | Step-by-step pedagogic notebook |
+| `docs/3_material_card_without_template.ipynb` | 316L material card workflow — step-by-step, direct schema approach |
 | `specs/schema.simplified.json` | Input field reference |
 | `specs/transform.simplified.jsonata` | Converts your input to the structured format |
 | `specs/schema.oold.yaml` | Full schema definition |
@@ -73,13 +73,13 @@ to express branching or merging.
 
 ---
 
-## Cross-domain step types
+## Step types
 
 | `step_type` value | Domain | Schema |
 |---|---|---|
-| `pmdco:PMD_0000029` | Manufacturing | `manufacturing/step/PMDCo/` |
-| `obi:0000070` | Characterization | `characterization/step/PMDCo/` |
-| `obi:0000471` | Simulation | `simulation/step/PMDCo/` |
+| `pmdco:PMD_0000029` | Manufacturing | `manufacturing/step/base/PMDCo/` |
+| `obi:0000070` | Characterization | `characterization/step/base/PMDCo/` |
+| `obi:0000471` | Simulation | `simulation/step/base/PMDCo/` |
 | *(omitted)* | Generic | `bfo:BFO_0000015` (plain process) |
 
 Mixing step types in a single workflow is intentional and supported. The
@@ -114,10 +114,12 @@ characterization results or calibrated model parameters.
 
 ## Further reading
 
-- [Manufacturing Step (PMDCo)](../../manufacturing/step/PMDCo/README.md)
-- [Characterization Step (PMDCo)](../../characterization/step/PMDCo/README.md)
-- [Tensile Test (TTO)](../../characterization/tensile-test/TTO/README.md)
-- [Simulation Step (PMDCo)](../../simulation/step/PMDCo/README.md)
-- [Constitutive Model Calibration (PMDCo)](../../simulation/model-calibration/PMDCo/README.md)
+- [Manufacturing Step (PMDCo)](../../manufacturing/step/base/PMDCo/README.md)
+- [Material Card Template](../templates/material-card/PMDCo/README.md): fill-in-one-form approach (notebook 4)
+- [Characterization Process (PMDCo)](../../characterization/process/PMDCo/README.md)
+- [Characterization Step base (PMDCo)](../../characterization/step/base/PMDCo/README.md)
+- [Tensile Test (TTO)](../../characterization/step/tensile-test/TTO/README.md)
+- [Simulation Step (PMDCo)](../../simulation/step/base/PMDCo/README.md)
+- [Constitutive Model Calibration (PMDCo)](../../simulation/step/model-calibration/PMDCo/README.md)
 - [Mechanical Material Card (PMDCo)](../../material-card/mechanical/PMDCo/README.md)
 - [OO-LD primer](../../../docs/2_oold-primer.md): how the schema format works

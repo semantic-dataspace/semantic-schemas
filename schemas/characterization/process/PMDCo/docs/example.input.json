@@ -1,0 +1,13 @@
+{
+  "process_name": "Tensile test 316L batch 1 — QA run",
+  "operator_iri": "https://example.org/people/jane-doe",
+  "device_iri":   "https://example.org/devices/zwick-z250-1",
+  "specimen_iri": "https://example.org/specimens/316L-tensile-bar-1",
+  "date": "2024-11-15T09:30:00",
+  "step_reference": "https://example.org/characterization/tensile-test-316L-batch-1",
+  "conditions": [
+    { "name": "Test Standard", "unit": "ISO 6892-1" },
+    { "name": "Strain Rate",   "value": 0.00025, "unit": "1/s" },
+    { "name": "Temperature",   "value": 23,      "unit": "°C" }
+  ]
+}

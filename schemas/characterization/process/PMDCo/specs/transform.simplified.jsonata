@@ -1,0 +1,68 @@
+(
+  /*
+   * Characterization Process (PMDCo) — simplified JSON → OO-LD JSON
+   *
+   * Input fields (see schema.simplified.json):
+   *   process_name   string   required
+   *   operator_iri   string   required — IRI of the expert/technician
+   *   device_iri     string   required — IRI of the measurement device
+   *   specimen_iri   string   required — IRI of the specimen
+   *   process_id     string   optional, derived from process_name if omitted
+   *   description    string   optional
+   *   date           string   optional (ISO 8601 datetime)
+   *   step_reference string   optional — IRI of detailed step result
+   *   preceded_by    array    optional — each item is a process IRI string
+   *   conditions     array    optional
+   *     name         string   required
+   *     value        number   optional
+   *     unit         string   optional
+   *
+   * Run with the jsonata-python CLI:
+   *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
+   */
+
+  /*
+   * Schema provenance — injected automatically into every output.
+   * Update $schemaUri whenever x-schema-version in specs/schema.oold.yaml changes.
+   */
+  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/process/PMDCo/#v1.0.0";
+
+  /* ── Node IDs ────────────────────────────────────────────────────────── */
+  $slug    := $replace($lowercase($trim(process_name)), /[^a-z0-9]+/, "-");
+  $procId  := $exists(process_id) ? process_id : "char-process-" & $slug;
+
+  /* ── Process conditions ──────────────────────────────────────────────── */
+  $conditions := $exists(conditions) and $count(conditions) > 0
+    ? $map(conditions, function($c, $i) {(
+        $node := {
+          "type": "pmdco:PMD_0000013",
+          "id":   $procId & "-condition-" & $string($i + 1),
+          "parameter_label": $c.name
+        };
+        $withValue := $exists($c.value) ? $merge([$node, {"parameter_value": $c.value}]) : $node;
+        $exists($c.unit) ? $merge([$withValue, {"parameter_unit": $c.unit}]) : $withValue
+      )})
+    : undefined;
+
+  /* ── OO-LD output ────────────────────────────────────────────────────── */
+  $base := {
+    "conforms_to":        $schemaUri,
+    "type":               "obi:0000070",
+    "id":                 $procId,
+    "label":              process_name,
+    "operator_iri":       operator_iri,
+    "device_iri":         device_iri,
+    "has_specified_input": [specimen_iri]
+  };
+
+  $withDesc     := $exists(description)    ? $merge([$base,         {"description":     description}])     : $base;
+  $withDate     := $exists(date)           ? $merge([$withDesc,     {"date":            date}])            : $withDesc;
+  $withRef      := $exists(step_reference) ? $merge([$withDate,     {"step_reference":  step_reference}])  : $withDate;
+  $withPreceded := $exists(preceded_by) and $count(preceded_by) > 0
+    ? $merge([$withRef, {"preceded_by": preceded_by}])
+    : $withRef;
+
+  $exists($conditions)
+    ? $merge([$withPreceded, {"has_process_condition": $conditions}])
+    : $withPreceded
+)

@@ -1,0 +1,127 @@
+# OO-LD Schema for MeasurementDevice (PMDCo/OBI pattern)
+# Ontology: Platform MaterialDigital Core Ontology (PMDCo) / OBI
+#   https://w3id.org/pmd/co/
+#   http://purl.obolibrary.org/obo/obi.owl
+#
+# PMDCo pattern:
+#   https://github.com/materialdigital/core-ontology
+#
+# Graph pattern:
+#
+#   Device  (obi:OBI_0000968)
+#     rdfs:label ──────────────────────────────────────── device name
+#     rdfs:comment ────────────────────────────────────── description  (optional)
+#     schema:manufacturer ─────────────────────────────── manufacturer name  (optional)
+#     schema:model ────────────────────────────────────── model identifier  (optional)
+#     schema:serialNumber ─────────────────────────────── serial number  (optional)
+#     dcterms:date ────────────────────────────────────── last calibration date  (optional, xsd:date)
+#
+# Design notes:
+#   - obi:OBI_0000968 (Device) is the canonical OBI class for physical instruments
+#     and is used across the PMDCo ecosystem to type measurement equipment.
+#   - Descriptive metadata (manufacturer, model, serial number) are mapped to
+#     schema.org terms which are stable, widely understood, and unambiguous.
+#   - calibration_date uses dcterms:date typed as xsd:date.
+#   - This schema is referenced by characterization/process/PMDCo/ which requires
+#     a device IRI as a mandatory provenance field.
+
+"@context":
+  rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  rdfs: "http://www.w3.org/2000/01/rdf-schema#"
+  xsd: "http://www.w3.org/2001/XMLSchema#"
+  dcterms: "http://purl.org/dc/terms/"
+  schema: "https://schema.org/"
+  obo: "http://purl.obolibrary.org/obo/"
+  obi:
+    "@id": "http://purl.obolibrary.org/obo/OBI_"
+    "@prefix": true
+  conforms_to:
+    "@id": "http://purl.org/dc/terms/conformsTo"
+    "@type": "@id"
+  # Instance IRI base (deployment-specific); override when serialising to RDF.
+  "@base": "https://w3id.org/pmd/co/test/shape_measurement_device#"
+  type: "@type"
+  id: "@id"
+  label:
+    "@id": "rdfs:label"
+  description:
+    "@id": "rdfs:comment"
+  manufacturer:
+    "@id": "schema:manufacturer"
+  model:
+    "@id": "schema:model"
+  serial_number:
+    "@id": "schema:serialNumber"
+  calibration_date:
+    "@id": "dcterms:date"
+    "@type": "xsd:date"
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: Schema for an obi:Device (measurement instrument / characterization equipment)
+x-schema-version: '1.0.0'
+x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/measurement-device/PMDCo/'
+title: Measurement Device
+type: object
+required:
+  - type
+  - id
+  - label
+
+properties:
+
+  type:
+    title: Type
+    type: string
+    readOnly: true
+    const: "obi:0000968"
+    default: "obi:0000968"
+    options:
+      enum_titles:
+        - obi:Device
+
+  id:
+    title: ID
+    description: Identifier for this device instance; managed by the consumer.
+    type: string
+    readOnly: true
+    default: device
+
+  label:
+    title: Device Name
+    description: >-
+      Human-readable name or identifier for this measurement device
+      (e.g. "Zwick Z250 Universal Testing Machine #1", "Zeiss EVO MA15 SEM Lab-A").
+    type: string
+
+  description:
+    title: Description
+    description: Optional free-text description of the device or its capabilities.
+    type: string
+    format: textarea
+
+  manufacturer:
+    title: Manufacturer
+    description: >-
+      Name of the device manufacturer
+      (e.g. "Zwick Roell", "Zeiss", "Bruker", "Instron").
+    type: string
+
+  model:
+    title: Model
+    description: >-
+      Model name or number as given by the manufacturer
+      (e.g. "Z250", "EVO MA15", "D8 Advance").
+    type: string
+
+  serial_number:
+    title: Serial Number
+    description: Serial number assigned by the manufacturer to this individual unit.
+    type: string
+
+  calibration_date:
+    title: Last Calibration Date
+    description: >-
+      Date of the most recent calibration of this device, in ISO 8601 format
+      (YYYY-MM-DD).
+    type: string
+    format: date
