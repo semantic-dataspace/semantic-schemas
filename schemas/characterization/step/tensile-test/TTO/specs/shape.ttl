@@ -107,10 +107,10 @@ shape:scalar_value_spec
     a sh:NodeShape ;
     sh:targetClass obo:OBI_0001931 ;
 
-    # PMD_0000006 (has_value): positive xsd:float
+    # PMD_0000006 (has_value): positive numeric value
     sh:property [
         sh:path pmdco:PMD_0000006 ;
-        sh:datatype xsd:float ;
+        sh:datatype xsd:double ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:minExclusive 0.0 ;

@@ -11,6 +11,20 @@ The schema IRI encodes the minor version: `…/TTO/#v<MAJOR>.<MINOR>.0`.
 
 ---
 
+## [3.0.1] — 2026-04-24
+
+### Fixed
+
+- **`specs/shape.ttl`**: `sh:datatype xsd:float` → `xsd:double` for the
+  `pmdco:PMD_0000006` property constraint.  pyshacl treats integer-form
+  `xsd:float` literals (e.g. `'310'^^xsd:float`) as ill-typed; `xsd:double`
+  is the natural JSON numeric type and accepts both integer and decimal lexical
+  forms.
+- **`specs/schema.oold.yaml`**: `result_value` `@type` changed from `xsd:float`
+  to `xsd:double` to match.
+
+---
+
 ## [3.0.0] — 2026-04-24
 
 ### Changed (breaking)

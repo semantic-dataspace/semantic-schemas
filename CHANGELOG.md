@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2026-04-24
+
+### Fixed
+
+- **`characterization/step/tensile-test/TTO/specs/shape.ttl`**: `sh:datatype`
+  changed from `xsd:float` to `xsd:double` for the `pmdco:PMD_0000006` constraint
+  on `OBI_0001931` nodes.  pyshacl rejects integer-form `xsd:float` lexical values
+  (e.g. `'310'^^xsd:float`) as ill-typed even though they are valid per the XSD spec;
+  switching to `xsd:double` (the natural JSON numeric type) fixes the false-positive
+  SHACL violations without changing the data model.
+- **`characterization/step/tensile-test/TTO/specs/schema.oold.yaml`**: `result_value`
+  `@type` changed from `xsd:float` to `xsd:double` to match.
+
+---
+
 ## [0.3.0] - 2026-04-24
 
 ### Changed

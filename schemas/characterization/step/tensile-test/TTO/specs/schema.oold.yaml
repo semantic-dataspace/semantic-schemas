@@ -90,7 +90,7 @@
   # pmdco:PMD_0000006 — numeric value on ScalarValueSpecification
   result_value:
     "@id": "https://w3id.org/pmd/co/PMD_0000006"
-    "@type": "xsd:float"
+    "@type": "xsd:double"
   "@base": "https://example.org/"
 
 # ── Time-series descriptor pattern ────────────────────────────────────────────
