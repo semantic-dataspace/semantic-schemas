@@ -3,7 +3,6 @@
   "specimen_iri": "https://example.org/specimens/316L-tensile-bar-1",
   "test_standard": "ISO 6892-1",
   "strain_rate": 0.00025,
-  "strain_rate_unit": "1/s",
   "temperature": 23,
   "results": [
     { "property": "YieldStrength",                     "value": 310, "unit": "MPa" },

@@ -1,0 +1,14 @@
+{
+  "test_name":    "Tensile test 316L bar 1",
+  "specimen_iri": "https://example.org/specimens/316L-tensile-bar-1",
+  "test_standard": "ISO 6892-1",
+  "strain_rate": 0.00025,
+  "strain_rate_unit": "1/s",
+  "temperature": 23,
+  "results": [
+    { "name": "Yield Strength",            "value": 310, "unit": "MPa" },
+    { "name": "Tensile Strength",          "value": 620, "unit": "MPa" },
+    { "name": "Elongation After Fracture", "value": 40,  "unit": "%" },
+    { "name": "Reduction of Area",         "value": 65,  "unit": "%" }
+  ]
+}

@@ -1,0 +1,180 @@
+# SHACL shape for the PMDCo tensile test measurement pattern.
+#
+# Validates the tensile-test-specific nodes following the full OBI measurement
+# pattern as used in PMDCo.
+#
+# PMDCo measurement pattern reference:
+#   https://github.com/materialdigital/core-ontology/tree/main/patterns/measurement
+#
+# Class hierarchy:
+#   PMD_0000974 (tensile testing process)
+#     → PMD_0000849 (mechanical property analyzing process)
+#       → OBI_0000070 (assay)
+#
+# Pattern enforced here:
+#
+#   TensileTestingProcess (PMD_0000974)
+#     realizes            → EvaluantRole (OBI_0000067)         BFO_0000055
+#     has_specified_input → Specimen (BFO_0000040)              OBI_0000293
+#       (cross-ref: specimen's has_role must equal realizes target)
+#     has_specified_output → MeasurementDatum (IAO_0000109)     OBI_0000299
+#
+#   MeasurementDatum (IAO_0000109)
+#     rdfs:label                  — property name string
+#     is_about                  → Specimen                      IAO_0000136
+#     is_quality_measurement_of → Quality (BFO_0000019)         IAO_0000221
+#     has_value_specification   → ScalarValueSpec (OBI_0001931) OBI_0001938
+#
+#   ScalarValueSpecification (OBI_0001931)
+#     has_specified_numeric_value  xsd:double                   OBI_0001937
+#     has_measurement_unit_label → unit IRI                     IAO_0000039
+#     specifies_value_of         → Quality (BFO_0000019)        OBI_0001927
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix obi:     <http://purl.obolibrary.org/obo/OBI_> .
+@prefix iao:     <http://purl.obolibrary.org/obo/IAO_> .
+@prefix bfo:     <http://purl.obolibrary.org/obo/BFO_> .
+@prefix obo:     <http://purl.obolibrary.org/obo/> .
+@prefix pmdco:   <https://w3id.org/pmd/co/> .
+@prefix uqudt:   <http://qudt.org/vocab/unit/> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix shape:   <https://w3id.org/pmd/co/shapes/characterization/tensile-test-pmdco/> .
+@prefix :        <https://w3id.org/pmd/co/shapes/characterization/tensile-test-pmdco/> .
+@base            <https://w3id.org/pmd/co/shapes/characterization/tensile-test-pmdco/> .
+
+# ── Tensile test process node ─────────────────────────────────────────────────
+
+shape:tensile_test
+    a sh:NodeShape ;
+    sh:targetClass pmdco:PMD_0000974 ;
+
+    # Schema provenance
+    sh:property [
+        sh:path dcterms:conformsTo ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:message "A TensileTestingProcess must declare dcterms:conformsTo pointing to the versioned schema IRI." ;
+    ] ;
+
+    # realizes (BFO_0000055): assay must realize at least one evaluant role
+    sh:property [
+        sh:path bfo:0000055 ;
+        sh:minCount 1 ;
+        sh:class obo:OBI_0000067 ;
+        sh:message "A TensileTestingProcess must realize at least one evaluant role (OBI_0000067) via BFO_0000055." ;
+    ] ;
+
+    # has_specified_input (OBI_0000293): at least one specimen IRI.
+    # sh:class bfo:0000040 (material entity) and the upstream cross-reference
+    # (has_specified_input / has_role = realizes) are intentionally omitted here:
+    # both require the specimen's own graph to be present, which is out of scope
+    # for a process-side-only validator.
+    sh:property [
+        sh:path obi:0000293 ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:message "A TensileTestingProcess must have at least one has_specified_input (the specimen IRI)." ;
+    ] ;
+
+    # has_specified_output (OBI_0000299): at least one MeasurementDatum
+    sh:property [
+        sh:path obi:0000299 ;
+        sh:minCount 1 ;
+        sh:class obo:IAO_0000109 ;
+        sh:message "A TensileTestingProcess must have at least one has_specified_output that is a MeasurementDatum (IAO_0000109)." ;
+    ] ;
+
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .
+
+# ── Measurement datum nodes ───────────────────────────────────────────────────
+
+shape:measurement_datum
+    a sh:NodeShape ;
+    sh:targetClass obo:IAO_0000109 ;   # MeasurementDatum
+
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A MeasurementDatum must have exactly one rdfs:label naming the measured property." ;
+    ] ;
+
+    # is_about (IAO_0000136): datum references the specimen it was measured on
+    sh:property [
+        sh:path iao:0000136 ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:message "A MeasurementDatum must have is_about (IAO_0000136) pointing to the evaluated entity." ;
+    ] ;
+
+    # is_quality_measurement_of (IAO_0000221): datum references the quality it measures
+    sh:property [
+        sh:path iao:0000221 ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:message "A MeasurementDatum must have is_quality_measurement_of (IAO_0000221) pointing to the quality being measured." ;
+    ] ;
+
+    sh:property [
+        sh:path obi:0001938 ;   # has_value_specification
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class obo:OBI_0001931 ;
+        sh:message "A MeasurementDatum must have exactly one has_value_specification (OBI_0001938) pointing to a ScalarValueSpecification." ;
+    ] ;
+
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .
+
+# ── Scalar value specification nodes ─────────────────────────────────────────
+
+shape:scalar_value_spec
+    a sh:NodeShape ;
+    sh:targetClass obo:OBI_0001931 ;   # ScalarValueSpecification
+
+    # has_specified_numeric_value (OBI_0001937) — canonical predicate
+    sh:property [
+        sh:path obi:0001937 ;
+        sh:datatype xsd:double ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minExclusive 0.0 ;
+        sh:message "A ScalarValueSpecification must have a positive numeric value via OBI_0001937 (has_specified_numeric_value)." ;
+    ] ;
+
+    # has_measurement_unit_label (IAO_0000039)
+    sh:property [
+        sh:path iao:0000039 ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in (
+            uqudt:MegaPascal
+            uqudt:GigaPascal
+            uqudt:PERCENT
+        ) ;
+        sh:message "Result unit must be uqudt:MegaPascal, uqudt:GigaPascal, or uqudt:PERCENT." ;
+    ] ;
+
+    # specifies_value_of (OBI_0001927): value spec points back to the quality it quantifies
+    sh:property [
+        sh:path obi:0001927 ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:message "A ScalarValueSpecification must have specifies_value_of (OBI_0001927) pointing to the quality being quantified." ;
+    ] ;
+
+    # is_about (IAO_0000136): value spec also references the evaluated entity directly
+    sh:property [
+        sh:path iao:0000136 ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:message "A ScalarValueSpecification must have is_about (IAO_0000136) pointing to the evaluated entity." ;
+    ] ;
+
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .

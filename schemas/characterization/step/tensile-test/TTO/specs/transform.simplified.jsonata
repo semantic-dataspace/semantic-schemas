@@ -1,120 +1,180 @@
 (
   /*
-   * Tensile Test (TTO) — simplified JSON → OO-LD JSON
+   * Tensile Test (TTO + PMDCo 3) — simplified JSON → OO-LD JSON
    *
    * Input fields (see schema.simplified.json):
    *   test_name         string   required
    *   specimen_iri      string   required — IRI of the specimen node
    *   test_id           string   optional, derived from test_name if omitted
    *   description       string   optional
-   *   test_standard     string   optional
+   *   test_standard     string   optional — attached as rdfs:label on the method node
    *   strain_rate       number   optional
    *   strain_rate_unit  string   optional, default "1/s"
    *   temperature       number   optional (°C)
    *   results           array    optional
-   *     property        string   TTO property name (e.g. "YieldStrength")
+   *     property        string   TTO property key (e.g. "YieldStrength")
    *     value           number
    *     unit            string   "MPa" | "GPa" | "%"
+   *
+   * Graph produced (TTO/PMDCo 3 pattern):
+   *
+   *   Process (pmdco:PMD_0000974)
+   *     BFO_0000055  → TensileTestMethod (tto:TTO_0000054)
+   *     OBI_0000293  → Specimen IRI
+   *     PMD_0000009  → condition quality nodes (tto:TTO_0000051, pmdco:PMD_0000967 …)
+   *     OBI_0000299  → all _smd nodes (conditions + results)
+   *
+   *   Quality node (tto:TTO_XXXXX)
+   *     IAO_0000417  → _smd                  ("is quality measured as")
+   *
+   *   _smd (obo:IAO_0000109)
+   *     IAO_0000136  → quality node           (is_about)
+   *     OBI_0001938  → _svs
+   *
+   *   _svs (obo:OBI_0001931)
+   *     IAO_0000039  → unit IRI
+   *     IAO_0000136  → quality node           (is_about)
+   *     OBI_0001927  → quality node           (specifies_value_of)
+   *     PMD_0000006  → xsd:float value
    */
 
-  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/step/tensile-test/TTO/#v2.0.0";
+  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/step/tensile-test/TTO/#v3.0.0";
 
-  /* ── Property name → TTO class CURIE ─────────────────────────────────── */
+  /* ── Property key → TTO class CURIE (numeric IRIs, TTO v3.0.0) ─────────── */
   $propertyMap := {
-    "YieldStrength":                     "tto:YieldStrength",
-    "UpperYieldStrength":                "tto:UpperYieldStrength",
-    "LowerYieldStrength":                "tto:LowerYieldStrength",
-    "TensileStrength":                   "tto:TensileStrength",
-    "ProofStrength":                     "tto:ProofStrength",
-    "PercentageElongationAfterFracture": "tto:PercentageElongationAfterFracture",
-    "PercentagePermanentElongation":     "tto:PercentagePermanentElongation",
-    "PercentageReductionOfArea":         "tto:PercentageReductionOfArea"
+    "YieldStrength":                     "tto:TTO_0000009",
+    "UpperYieldStrength":                "tto:TTO_0000059",
+    "LowerYieldStrength":                "tto:TTO_0000022",
+    "TensileStrength":                   "tto:TTO_0000053",
+    "ProofStrength":                     "tto:TTO_0000047",
+    "PercentageElongationAfterFracture": "tto:TTO_0000033",
+    "PercentagePermanentElongation":     "tto:TTO_0000035",
+    "PercentageReductionOfArea":         "tto:TTO_0000038"
   };
 
-  /* ── Unit label → QUDT unit IRI ──────────────────────────────────────── */
+  /* ── Unit label → QUDT unit IRI ──────────────────────────────────────────── */
   $unitMap := {
-    "MPa": "uqudt:MegaPascal",
-    "GPa": "uqudt:GigaPascal",
-    "%":   "uqudt:PERCENT"
+    "MPa":  "unit:MegaPa",
+    "GPa":  "unit:GigaPa",
+    "%":    "unit:PERCENT",
+    "°C":   "unit:DEG_C",
+    "mm":   "unit:MilliM",
+    "1/s":  "unit:PER-SEC",
+    "mm/s": "unit:MilliM-PER-SEC"
   };
 
-  /* ── Node IDs ─────────────────────────────────────────────────────────── */
-  $slug   := $replace($lowercase($trim(test_name)), /[^a-z0-9]+/, "-");
-  $testId := $exists(test_id) ? test_id : "tensile-test-" & $slug;
+  /* ── Node IDs ────────────────────────────────────────────────────────────── */
+  /* specimen_iri is a document field; capture before $map so closures work.  */
+  $specimenIri := specimen_iri;
+  $slug        := $replace($lowercase($trim(test_name)), /[^a-z0-9]+/, "-");
+  $testId      := $exists(test_id) ? test_id : "tensile-test-" & $slug;
+  $methodId    := $testId & "-method";
 
-  /* ── Test conditions ──────────────────────────────────────────────────── */
-  $conds := [];
-  $conds := $exists(test_standard)
-    ? $append($conds, [{
-        "type": "pmdco:PMD_0000013",
-        "id":   $testId & "-condition-standard",
-        "parameter_label": "Test Standard",
-        "parameter_unit":  test_standard
+  /* ── Condition quality nodes (go into PMD_0000009) ───────────────────────── */
+  /* Each condition is a TTO/PMDCo quality instance with an IAO_0000417 link.  */
+  $condQuals := [];
+  $condQuals := $exists(strain_rate)
+    ? $append($condQuals, [{
+        "type": "tto:TTO_0000051",
+        "id":   $testId & "-strain-rate",
+        "is_quality_measured_as": $testId & "-strain-rate-smd"
       }])
-    : $conds;
-  $conds := $exists(strain_rate)
-    ? $append($conds, [{
-        "type": "pmdco:PMD_0000013",
-        "id":   $testId & "-condition-strain-rate",
-        "parameter_label": "Strain Rate",
-        "parameter_value": strain_rate,
-        "parameter_unit":  $exists(strain_rate_unit) ? strain_rate_unit : "1/s"
+    : $condQuals;
+  $condQuals := $exists(temperature)
+    ? $append($condQuals, [{
+        "type": "pmdco:PMD_0000967",
+        "id":   $testId & "-temperature",
+        "is_quality_measured_as": $testId & "-temperature-smd"
       }])
-    : $conds;
-  $conds := $exists(temperature)
-    ? $append($conds, [{
-        "type": "pmdco:PMD_0000013",
-        "id":   $testId & "-condition-temperature",
-        "parameter_label": "Temperature",
-        "parameter_value": temperature,
-        "parameter_unit":  "°C"
-      }])
-    : $conds;
-  $conds := $exists(gauge_length)
-    ? $append($conds, [{
-        "type": "pmdco:PMD_0000013",
-        "id":   $testId & "-condition-gauge-length",
-        "parameter_label": "Gauge Length",
-        "parameter_value": gauge_length,
-        "parameter_unit":  $exists(gauge_length_unit) ? gauge_length_unit : "mm"
-      }])
-    : $conds;
-  $conds := $exists(preload)
-    ? $append($conds, [{
-        "type": "pmdco:PMD_0000013",
-        "id":   $testId & "-condition-preload",
-        "parameter_label": "Pre-load",
-        "parameter_value": preload,
-        "parameter_unit":  $exists(preload_unit) ? preload_unit : "MPa"
-      }])
-    : $conds;
+    : $condQuals;
 
-  /* ── Measured results ─────────────────────────────────────────────────── */
-  $measured := $exists(results) and $count(results) > 0
+  /* ── Condition SMD nodes (go into OBI_0000299) ───────────────────────────── */
+  $condSmds := [];
+  $condSmds := $exists(strain_rate)
+    ? $append($condSmds, [{
+        "type":     "obo:IAO_0000109",
+        "id":       $testId & "-strain-rate-smd",
+        "is_about": $testId & "-strain-rate",
+        "has_value_spec": {
+          "type":               "obo:OBI_0001931",
+          "id":                 $testId & "-strain-rate-svs",
+          "is_about":           $testId & "-strain-rate",
+          "specifies_value_of": $testId & "-strain-rate",
+          "result_value":       strain_rate
+        }
+      }])
+    : $condSmds;
+  $condSmds := $exists(temperature)
+    ? $append($condSmds, [{
+        "type":     "obo:IAO_0000109",
+        "id":       $testId & "-temperature-smd",
+        "is_about": $testId & "-temperature",
+        "has_value_spec": {
+          "type":               "obo:OBI_0001931",
+          "id":                 $testId & "-temperature-svs",
+          "result_unit":        "unit:DEG_C",
+          "is_about":           $testId & "-temperature",
+          "specifies_value_of": $testId & "-temperature",
+          "result_value":       temperature
+        }
+      }])
+    : $condSmds;
+
+  /* ── Result SMD nodes ────────────────────────────────────────────────────── */
+  /* The quality instance is embedded in the is_about field (node object).     */
+  /* JSON-LD will expand it as a named node, producing:                        */
+  /*   quality rdf:type tto:TTO_XXXXX                                          */
+  /*   quality IAO_0000417 smd                                                 */
+  /* slug computation is inlined to avoid := inside map callback body.         */
+  $resultSmds := $exists(results) and $count(results) > 0
     ? $map(results, function($r, $i) {
         {
-          "type":         $lookup($propertyMap, $r.property),
-          "id":           $testId & "-result-" & $lowercase($r.property),
-          "result_value": $r.value,
-          "result_unit":  $lookup($unitMap, $r.unit)
+          "type":     "obo:IAO_0000109",
+          "id":       $testId & "-" & $replace($lowercase($trim($r.property)), /[^a-z0-9]+/, "-") & "-smd",
+          "is_about": {
+            "type": $lookup($propertyMap, $r.property),
+            "id":   $testId & "-" & $replace($lowercase($trim($r.property)), /[^a-z0-9]+/, "-"),
+            "is_quality_measured_as": $testId & "-" & $replace($lowercase($trim($r.property)), /[^a-z0-9]+/, "-") & "-smd"
+          },
+          "has_value_spec": {
+            "type":               "obo:OBI_0001931",
+            "id":                 $testId & "-" & $replace($lowercase($trim($r.property)), /[^a-z0-9]+/, "-") & "-svs",
+            "result_unit":        $lookup($unitMap, $r.unit),
+            "is_about":           $testId & "-" & $replace($lowercase($trim($r.property)), /[^a-z0-9]+/, "-"),
+            "specifies_value_of": $testId & "-" & $replace($lowercase($trim($r.property)), /[^a-z0-9]+/, "-"),
+            "result_value":       $r.value
+          }
         }
       })
     : undefined;
 
-  /* ── OO-LD output ─────────────────────────────────────────────────────── */
+  /* ── All SMD nodes (conditions first, then results) ─────────────────────── */
+  $allSmds := $exists($resultSmds)
+    ? $append($condSmds, $resultSmds)
+    : $condSmds;
+
+  /* ── TensileTestMethod node ──────────────────────────────────────────────── */
+  $method := $exists(test_standard)
+    ? {"type": "tto:TTO_0000054", "id": $methodId, "label": test_standard}
+    : {"type": "tto:TTO_0000054", "id": $methodId};
+
+  /* ── OO-LD output ────────────────────────────────────────────────────────── */
   $base := {
-    "conforms_to":          $schemaUri,
-    "type":                 "tto:TensileTest",
-    "id":                   $testId,
-    "label":                test_name,
-    "has_specified_input":  [specimen_iri]
+    "conforms_to":         $schemaUri,
+    "type":                "pmdco:PMD_0000974",
+    "id":                  $testId,
+    "label":               test_name,
+    "realizes":            [$method],
+    "has_specified_input": [$specimenIri]
   };
 
-  $withDate  := $exists(test_date)    ? $merge([$base,     {"date": test_date}])            : $base;
-  $withDesc  := $exists(description)  ? $merge([$withDate, {"description": description}])   : $withDate;
-  $withConds := $count($conds) > 0    ? $merge([$withDesc, {"has_process_condition": $conds}]) : $withDesc;
+  $withDate  := $exists(test_date)   ? $merge([$base,     {"date": test_date}])                      : $base;
+  $withDesc  := $exists(description) ? $merge([$withDate, {"description": description}])             : $withDate;
+  $withConds := $count($condQuals) > 0
+    ? $merge([$withDesc, {"has_process_attribute": $condQuals}])
+    : $withDesc;
 
-  $exists($measured)
-    ? $merge([$withConds, {"measured_properties": $measured}])
+  $count($allSmds) > 0
+    ? $merge([$withConds, {"measured_properties": $allSmds}])
     : $withConds
 )

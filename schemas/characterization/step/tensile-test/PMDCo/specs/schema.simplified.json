@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "schema.simplified.json",
-  "title": "Tensile Test (Simplified Input)",
-  "description": "A user-friendly form to describe a uniaxial tensile test and its results. Fill in the specimen IRI, test conditions, and the measured mechanical properties. This input will be automatically converted to a standardised RDF representation (TTO/PMDCo OO-LD).",
+  "title": "Tensile Test — PMDCo (Simplified Input)",
+  "description": "A user-friendly form to describe a uniaxial tensile test and its results using the PMDCo measurement pattern. Fill in the specimen IRI, test conditions, and the measured properties. Results are identified by free-text name rather than a fixed vocabulary, so any measured quantity can be recorded.",
   "type": "object",
   "required": ["test_name", "specimen_iri"],
   "additionalProperties": false,
@@ -26,7 +26,7 @@
     },
     "specimen_iri": {
       "title": "Specimen IRI",
-      "description": "The IRI of the specimen being tested. This must reference an existing node in the knowledge graph (e.g. one registered with the specimen/PMDCo schema).",
+      "description": "The IRI of the specimen being tested.",
       "type": "string",
       "format": "uri",
       "examples": ["https://example.org/specimens/316L-tensile-bar-1"]
@@ -45,15 +45,16 @@
     },
     "strain_rate": {
       "title": "Strain Rate",
-      "description": "Crosshead displacement rate or strain rate during the test. The value is stored as a dimensionless xsd:float; no unit IRI is emitted in the RDF graph, following the TTO reference data pattern.",
+      "description": "Crosshead displacement rate or strain rate during the test.",
       "type": "number",
       "exclusiveMinimum": 0,
       "examples": [0.00025, 0.002]
     },
     "strain_rate_unit": {
       "title": "Strain Rate Unit",
-      "description": "Unit label for the strain rate value (for human-readable context only). Not stored as a unit IRI in the RDF graph; the TTO reference data pattern stores strain rate as a dimensionless value.",
+      "description": "Unit for the strain rate value.",
       "type": "string",
+      "default": "1/s",
       "examples": ["1/s", "mm/s"]
     },
     "temperature": {
@@ -77,9 +78,10 @@
     },
     "preload": {
       "title": "Pre-load",
-      "description": "Pre-load or pre-force applied before the main test ramp.",
+      "description": "Pre-load force or stress applied before the test.",
       "type": "number",
-      "examples": [2, 5]
+      "exclusiveMinimum": 0,
+      "examples": [2.0]
     },
     "preload_unit": {
       "title": "Pre-load Unit",
@@ -94,35 +96,21 @@
       "items": {
         "title": "Result Entry",
         "type": "object",
-        "required": ["property", "value", "unit"],
+        "required": ["name", "value", "unit"],
         "additionalProperties": false,
         "properties": {
-          "property": {
-            "title": "Property",
-            "description": "Which mechanical property was determined.",
+          "name": {
+            "title": "Property Name",
+            "description": "Human-readable name of the measured property, e.g. 'Yield Strength', 'Tensile Strength', 'Elongation After Fracture'.",
             "type": "string",
-            "enum": [
-              "YieldStrength",
-              "UpperYieldStrength",
-              "LowerYieldStrength",
-              "TensileStrength",
-              "ProofStrength",
-              "PercentageElongationAfterFracture",
-              "PercentagePermanentElongation",
-              "PercentageReductionOfArea"
-            ],
-            "options": {
-              "enum_titles": [
-                "Yield Strength Rₑ  (tto:TTO_0000009)",
-                "Upper Yield Strength ReH  (tto:TTO_0000059)",
-                "Lower Yield Strength ReL  (tto:TTO_0000022)",
-                "Tensile Strength Rm  (tto:TTO_0000053)",
-                "Proof Strength Rp0.2  (tto:TTO_0000047)",
-                "Elongation After Fracture A  (tto:TTO_0000033)",
-                "Permanent Elongation Ag  (tto:TTO_0000035)",
-                "Reduction of Area Z  (tto:TTO_0000038)"
-              ]
-            }
+            "examples": [
+              "Yield Strength",
+              "Upper Yield Strength",
+              "Tensile Strength",
+              "Proof Strength Rp0.2",
+              "Elongation After Fracture",
+              "Reduction of Area"
+            ]
           },
           "value": {
             "title": "Value",
@@ -149,12 +137,13 @@
       "specimen_iri": "https://example.org/specimens/316L-tensile-bar-1",
       "test_standard": "ISO 6892-1",
       "strain_rate": 0.00025,
+      "strain_rate_unit": "1/s",
       "temperature": 23,
       "results": [
-        { "property": "YieldStrength",                    "value": 310, "unit": "MPa" },
-        { "property": "TensileStrength",                  "value": 620, "unit": "MPa" },
-        { "property": "PercentageElongationAfterFracture","value": 40,  "unit": "%" },
-        { "property": "PercentageReductionOfArea",        "value": 65,  "unit": "%" }
+        { "name": "Yield Strength",                    "value": 310, "unit": "MPa" },
+        { "name": "Tensile Strength",                  "value": 620, "unit": "MPa" },
+        { "name": "Elongation After Fracture",         "value": 40,  "unit": "%" },
+        { "name": "Reduction of Area",                 "value": 65,  "unit": "%" }
       ]
     }
   ]

@@ -1,0 +1,404 @@
+# OO-LD Schema for TensileTest (PMDCo measurement pattern)
+# Ontology: Platform MaterialDigital Core Ontology (PMDCo)
+#   https://w3id.org/pmd/co/
+#
+# PMDCo measurement pattern:
+#   https://github.com/materialdigital/core-ontology/tree/main/patterns/measurement
+#
+# This schema uses the generic PMDCo measurement pattern without TTO-specific
+# property class enumerations.  Results are labelled by name rather than typed
+# to TTO classes.  Use characterization/step/tensile-test/TTO/ when TTO
+# classification of individual measurement properties is required.
+#
+# Full graph pattern (OBI measurement pattern via PMDCo):
+#
+#   TensileTestingProcess  (pmdco:PMD_0000974)          ← subClassOf OBI:assay
+#     rdfs:label ──────────────────────────────────────── name string
+#     rdfs:comment ────────────────────────────────────── description  (optional)
+#     realizes ───────────────────────────────────────► EvaluantRole  [× 1+]  (bfo:BFO_0000055)
+#       type ─────────────────── obo:OBI_0000067
+#     has_specified_input ────────────────────────────► Specimen IRI  [× 1+]  (obi:OBI_0000293)
+#       ↳ (on specimen) has_role → same EvaluantRole   [obo:RO_0000087]
+#       ↳ (on specimen) has_quality → Quality IRI      [obo:RO_0000086]
+#     preceded_by ────────────────────────────────────► Process IRI  [× 0..N]
+#     has_process_attribute ──────────────────────────► ProcessAttribute  [× 0..N]  (pmdco:PMD_0000009)
+#     has_specified_output ───────────────────────────► MeasurementDatum  [× 0..N]  (obi:OBI_0000299)
+#       type ─────────────────── obo:IAO_0000109
+#       rdfs:label ──────────────── result name (e.g. "Yield Strength")
+#       is_about ────────────────► Specimen IRI         (iao:IAO_0000136)
+#       is_quality_measurement_of ► Quality IRI         (iao:IAO_0000221)
+#       has_value_spec ──────────► ScalarValueSpec       (obi:OBI_0001938)
+#         type ──────────────────── obo:OBI_0001931
+#         result_value ────────── xsd:double             (obi:OBI_0001937 has_specified_numeric_value)
+#         result_unit ─────────── unit IRI  (QUDT)       (iao:IAO_0000039)
+#         specifies_value_of ──► Quality IRI             (obi:OBI_0001927)
+
+"@context":
+  rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  rdfs: "http://www.w3.org/2000/01/rdf-schema#"
+  xsd: "http://www.w3.org/2001/XMLSchema#"
+  dcterms: "http://purl.org/dc/terms/"
+  conforms_to:
+    "@id": "http://purl.org/dc/terms/conformsTo"
+    "@type": "@id"
+  date:
+    "@id": "http://purl.org/dc/terms/date"
+    "@type": "xsd:dateTime"
+  obo: "http://purl.obolibrary.org/obo/"
+  obi:
+    "@id": "http://purl.obolibrary.org/obo/OBI_"
+    "@prefix": true
+  bfo:
+    "@id": "http://purl.obolibrary.org/obo/BFO_"
+    "@prefix": true
+  pmdco: "https://w3id.org/pmd/co/"
+  qudt: "http://qudt.org/schema/qudt/"
+  uqudt: "http://qudt.org/vocab/unit/"
+  type: "@type"
+  id: "@id"
+  label:
+    "@id": "rdfs:label"
+  description:
+    "@id": "rdfs:comment"
+  "@base": "https://w3id.org/pmd/co/test/shape_tensile_test_pmdco#"
+  # bfo:BFO_0000055  — the assay realizes the evaluant role
+  realizes:
+    "@id": "http://purl.obolibrary.org/obo/BFO_0000055"
+    "@type": "@id"
+    "@container": "@set"
+  # bfo:BFO_0000054  — inverse of realizes; set on the role node pointing back to the assay
+  realized_in:
+    "@id": "http://purl.obolibrary.org/obo/BFO_0000054"
+    "@type": "@id"
+  has_specified_input:
+    "@id": "obi:0000293"
+    "@type": "@id"
+    "@container": "@set"
+  preceded_by:
+    "@id": "bfo:0000062"
+    "@type": "@id"
+    "@container": "@set"
+  # pmdco:PMD_0000009 "has process attribute" — process-level quantitative conditions
+  has_process_attribute:
+    "@id": "pmdco:PMD_0000009"
+    "@type": "@id"
+    "@container": "@set"
+  parameter_label:
+    "@id": "rdfs:label"
+  parameter_value:
+    "@id": "qudt:value"
+    "@type": "xsd:double"
+  parameter_unit:
+    "@id": "qudt:hasUnit"
+  # obi:OBI_0000299  — measurement datum nodes are the specified outputs
+  measured_properties:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
+    "@container": "@set"
+  # iao:IAO_0000136  — datum / value-spec is about the evaluated entity
+  is_about:
+    "@id": "http://purl.obolibrary.org/obo/IAO_0000136"
+    "@type": "@id"
+  # iao:IAO_0000221  — datum is a measurement of this quality
+  is_quality_measurement_of:
+    "@id": "http://purl.obolibrary.org/obo/IAO_0000221"
+    "@type": "@id"
+  # obi:OBI_0001938  — scalar value specification embedded in each datum
+  has_value_spec:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0001938"
+  # obi:OBI_0001937  — canonical numeric value predicate for ScalarValueSpecification
+  result_value:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0001937"
+    "@type": "xsd:double"
+  # iao:IAO_0000039  — unit IRI
+  result_unit:
+    "@id": "http://purl.obolibrary.org/obo/IAO_0000039"
+    "@type": "@id"
+  # obi:OBI_0001927  — value spec points back to the quality it quantifies
+  specifies_value_of:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0001927"
+    "@type": "@id"
+
+# ── Time-series descriptor pattern ────────────────────────────────────────────
+# Controls how Transformer generates the column-level RDF when a parser returns
+# time-series data.  Follows the csvw + IAO_0000039 pattern used in the TTO
+# v3.0.0 reference data (S355_data_tto_pmdco3.ttl).
+timeseries_pattern:
+  container_type:        "http://www.w3.org/ns/csvw#Table"
+  column_predicate:      "http://www.w3.org/ns/csvw#column"
+  column_type:           "http://www.w3.org/ns/csvw#Column"
+  column_name_predicate: "http://www.w3.org/ns/csvw#name"
+  unit_predicate:        "http://purl.obolibrary.org/obo/IAO_0000039"
+  container_label:       "Raw time series"
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: PMDCo measurement pattern schema for a tensile test process
+x-schema-version: '1.0.0'
+x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/step/tensile-test/PMDCo/'
+title: Tensile Test (PMDCo)
+type: object
+
+required:
+  - type
+  - id
+  - label
+  - realizes
+
+properties:
+
+  type:
+    title: Type
+    type: string
+    readOnly: true
+    const: "pmdco:PMD_0000974"
+    default: "pmdco:PMD_0000974"
+    options:
+      enum_titles:
+        - pmdco:TensileTestingProcess
+
+  id:
+    title: ID
+    description: Identifier for this tensile test instance; managed by the consumer.
+    type: string
+    readOnly: true
+    default: tensile-test
+
+  label:
+    title: Test Name
+    description: >-
+      Human-readable name for this tensile test
+      (e.g. "Tensile test 316L bar 1").
+    type: string
+
+  description:
+    title: Description
+    description: Optional free-text description.
+    type: string
+    format: textarea
+
+  realizes:
+    title: Evaluant Role(s)
+    description: >-
+      The evaluant role (OBI_0000067) that this assay realizes.
+      The specimen declared in has_specified_input must assert
+      has_role (RO_0000087) pointing to this same role IRI.
+    type: array
+    minItems: 1
+    items:
+      type: object
+      title: Evaluant Role
+      required:
+        - type
+        - id
+        - realized_in
+      properties:
+        type:
+          title: Type
+          type: string
+          readOnly: true
+          const: "obo:OBI_0000067"
+          default: "obo:OBI_0000067"
+          options:
+            enum_titles:
+              - obi:EvaluantRole
+        id:
+          title: Role IRI
+          description: >-
+            IRI for this evaluant role node.
+            Must match the IRI used in the specimen's has_role assertion.
+          type: string
+          format: uri
+          default: evaluant-role-1
+        realized_in:
+          title: Realized In
+          description: >-
+            IRI of the assay that realizes this role (bfo:BFO_0000054).
+            Must point back to the enclosing TensileTestingProcess node.
+          type: string
+          format: uri
+    default: []
+
+  has_specified_input:
+    title: Specimen
+    description: >-
+      IRI of the specimen being tested. Typically one specimen per tensile test.
+      The specimen must have has_role pointing to the evaluant role declared
+      in realizes, and has_quality for each quality being measured.
+    type: array
+    minItems: 1
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  preceded_by:
+    title: Preceded By
+    description: IRIs of processes that directly precede this one.
+    type: array
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  has_process_attribute:
+    title: Test Conditions
+    description: >-
+      Quantitative conditions for this test (strain rate, temperature, gauge length, etc.)
+      and the test standard applied.
+      Maps to pmdco:PMD_0000009 "has process attribute".
+    type: array
+    items:
+      type: object
+      title: Process Attribute
+      required:
+        - type
+        - id
+        - parameter_label
+      properties:
+        type:
+          title: Type
+          type: string
+          readOnly: true
+          const: "pmdco:PMD_0000013"
+          default: "pmdco:PMD_0000013"
+          options:
+            enum_titles:
+              - pmdco:ParameterSpecification
+        id:
+          title: ID
+          type: string
+          readOnly: true
+          default: condition-1
+        parameter_label:
+          title: Condition Name
+          type: string
+        parameter_value:
+          title: Value
+          type: number
+        parameter_unit:
+          title: Unit
+          type: string
+    default: []
+
+  measured_properties:
+    title: Measured Properties
+    description: >-
+      Mechanical properties determined from this tensile test.
+      Each entry is a measurement datum (IAO_0000109) with a name label,
+      a reference back to the specimen (is_about), a reference to the
+      quality being measured (is_quality_measurement_of), and an embedded
+      scalar value specification carrying the numeric value and unit.
+    type: array
+    items:
+      type: object
+      title: Measurement Result
+      required:
+        - type
+        - id
+        - label
+        - is_about
+        - is_quality_measurement_of
+        - has_value_spec
+      properties:
+        type:
+          title: Type
+          type: string
+          readOnly: true
+          const: "obo:IAO_0000109"
+          default: "obo:IAO_0000109"
+          options:
+            enum_titles:
+              - iao:MeasurementDatum
+        id:
+          title: Datum ID
+          description: Identifier for the measurement datum node; managed by the consumer.
+          type: string
+          readOnly: true
+          default: result-1-smd
+        label:
+          title: Property Name
+          description: >-
+            Name of the measured property, e.g. "Yield Strength", "Tensile Strength",
+            "Elongation After Fracture", "Reduction of Area".
+          type: string
+        is_about:
+          title: Is About (Specimen)
+          description: >-
+            IRI of the specimen this datum was measured on.
+            Typically the same IRI as the has_specified_input of the process.
+          type: string
+          format: uri
+        is_quality_measurement_of:
+          title: Quality Measured
+          description: >-
+            IRI of the specimen quality (BFO_0000019) this datum measures.
+            Must match a quality IRI declared via has_quality on the specimen.
+          type: string
+          format: uri
+        has_value_spec:
+          title: Value Specification
+          description: Scalar value specification holding the numeric value and unit.
+          type: object
+          required:
+            - type
+            - id
+            - result_value
+            - result_unit
+            - specifies_value_of
+            - is_about
+          properties:
+            type:
+              title: Type
+              type: string
+              readOnly: true
+              const: "obo:OBI_0001931"
+              default: "obo:OBI_0001931"
+              options:
+                enum_titles:
+                  - obi:ScalarValueSpecification
+            id:
+              title: Value Spec ID
+              description: Identifier for the scalar value specification node.
+              type: string
+              readOnly: true
+              default: result-1-svs
+            result_value:
+              title: Value
+              description: >-
+                Numeric value of the measured property.
+                Stored as OBI_0001937 (has_specified_numeric_value), the canonical
+                predicate for ScalarValueSpecification.
+              type: number
+              minimum: 0
+            result_unit:
+              title: Unit
+              description: >-
+                QUDT unit IRI for the value.
+                Use uqudt:MegaPascal for stress properties (MPa),
+                uqudt:PERCENT for elongation and reduction of area.
+              type: string
+              enum:
+                - uqudt:MegaPascal
+                - uqudt:GigaPascal
+                - uqudt:PERCENT
+              options:
+                enum_titles:
+                  - MPa (megapascal)
+                  - GPa (gigapascal)
+                  - "% (percent)"
+            specifies_value_of:
+              title: Specifies Value Of (Quality)
+              description: >-
+                IRI of the specimen quality (BFO_0000019) this numeric value quantifies.
+                Must match the is_quality_measurement_of IRI of the parent datum.
+              type: string
+              format: uri
+            is_about:
+              title: Is About (Specimen)
+              description: >-
+                IRI of the specimen this value specification is about.
+                Typically the same as the is_about of the parent datum.
+              type: string
+              format: uri
+    default: []

@@ -1,63 +1,145 @@
-# SHACL shape for the TTO TensileTest pattern.
+# SHACL shape for the TTO TensileTest pattern (PMDCo 3 / TTO v3.0.0).
 #
-# Validates the tensile-test-specific nodes only.
-# Load alongside the base shape for complete validation:
-#   characterization/step/base/PMDCo/specs/shape.ttl  (assay node + process conditions)
+# Reference:
+#   https://github.com/materialdigital/tensile-test-ontology
 #
-# TTO reference:
-#   https://github.com/materialdigital/application-ontologies/tree/main/tensile_test_ontology_TTO
+# Pattern enforced here:
+#
+#   Process (pmdco:PMD_0000974)
+#     realizes (BFO_0000055) → TensileTestMethod (tto:TTO_0000054)   [× 1+]
+#     has_specified_input (OBI_0000293) → Specimen IRI               [× 1+]
+#     has_specified_output (OBI_0000299) → ScalarMeasurementDatum    [× 0+]
+#
+#   ScalarMeasurementDatum (IAO_0000109)
+#     is_about (IAO_0000136) → Quality IRI                           [× 1+]
+#     has_value_specification (OBI_0001938) → SVS                    [× 1]
+#
+#   ScalarValueSpecification (OBI_0001931)
+#     PMD_0000006 (has_value)     → xsd:float  (positive)           [× 1]
+#     IAO_0000039 (unit)          → IRI                              [× 0..1]
+#     OBI_0001927 (specifies_value_of) → IRI                        [× 1]
+#     IAO_0000136 (is_about)      → IRI                              [× 1]
 
+@prefix obi:   <http://purl.obolibrary.org/obo/OBI_> .
+@prefix iao:   <http://purl.obolibrary.org/obo/IAO_> .
+@prefix bfo:   <http://purl.obolibrary.org/obo/BFO_> .
+@prefix obo:   <http://purl.obolibrary.org/obo/> .
+@prefix pmdco: <https://w3id.org/pmd/co/> .
+@prefix tto:   <https://w3id.org/pmd/tto/> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix obi:     <http://purl.obolibrary.org/obo/OBI_> .
-@prefix iao:     <http://purl.obolibrary.org/obo/IAO_> .
-@prefix tto:     <https://w3id.org/pmd/tto/> .
-@prefix uqudt:   <https://qudt.org/vocab/unit/> .
-@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix sh:      <http://www.w3.org/ns/shacl#> .
-@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
-@prefix shape:   <https://w3id.org/pmd/co/shapes/characterization/tensile-test/> .
-@prefix :        <https://w3id.org/pmd/co/shapes/characterization/tensile-test/> .
-@base            <https://w3id.org/pmd/co/shapes/characterization/tensile-test/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix shape: <https://w3id.org/pmd/co/shapes/characterization/tensile-test-tto/> .
+@prefix :      <https://w3id.org/pmd/co/shapes/characterization/tensile-test-tto/> .
+@base          <https://w3id.org/pmd/co/shapes/characterization/tensile-test-tto/> .
 
-# ── TensileTest node ──────────────────────────────────────────────────────────
+# ── Tensile test process node ──────────────────────────────────────────────────
 
 shape:tensile_test
     a sh:NodeShape ;
-    sh:targetClass tto:TensileTest ;
+    sh:targetClass pmdco:PMD_0000974 ;
+
+    # Schema provenance
     sh:property [
-        sh:path <http://purl.obolibrary.org/obo/OBI_0000293> ;   # has_specified_input
+        sh:path dcterms:conformsTo ;
         sh:nodeKind sh:IRI ;
         sh:minCount 1 ;
-        sh:message "A TensileTest must have at least one has_specified_input (the specimen IRI)." ;
+        sh:message "A TensileTestingProcess must declare dcterms:conformsTo pointing to the versioned TTO schema IRI." ;
     ] ;
+
+    # realizes (BFO_0000055): process realizes a TensileTestMethod
+    sh:property [
+        sh:path bfo:0000055 ;
+        sh:minCount 1 ;
+        sh:class tto:TTO_0000054 ;
+        sh:message "A TensileTestingProcess must realize at least one TensileTestMethod (tto:TTO_0000054) via BFO_0000055." ;
+    ] ;
+
+    # has_specified_input (OBI_0000293): at least one specimen IRI
+    sh:property [
+        sh:path obi:0000293 ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:message "A TensileTestingProcess must have at least one has_specified_input (the specimen IRI)." ;
+    ] ;
+
+    # has_specified_output (OBI_0000299): at least one ScalarMeasurementDatum
+    sh:property [
+        sh:path obi:0000299 ;
+        sh:class obo:IAO_0000109 ;
+        sh:message "has_specified_output (OBI_0000299) must point to ScalarMeasurementDatum nodes (IAO_0000109)." ;
+    ] ;
+
     sh:closed false ;
     sh:ignoredProperties ( rdf:type ) .
 
-# ── Measurement result nodes ──────────────────────────────────────────────────
-# Targets the common superclass; requires reasoning to match TTO subclasses.
+# ── Scalar measurement datum nodes ────────────────────────────────────────────
 
-shape:measurement_result
+shape:scalar_measurement_datum
     a sh:NodeShape ;
-    sh:targetClass tto:MechanicalProperty ;   # superclass of all TTO result types
+    sh:targetClass obo:IAO_0000109 ;
+
+    # is_about (IAO_0000136): datum is about the quality instance it measures
     sh:property [
-        sh:path obi:0001937 ;   # has_specified_numeric_value
-        sh:datatype xsd:double ;
+        sh:path iao:0000136 ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:message "A ScalarMeasurementDatum must have is_about (IAO_0000136) pointing to the quality instance." ;
+    ] ;
+
+    # has_value_specification (OBI_0001938): exactly one SVS
+    sh:property [
+        sh:path obi:0001938 ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class obo:OBI_0001931 ;
+        sh:message "A ScalarMeasurementDatum must have exactly one has_value_specification (OBI_0001938) pointing to a ScalarValueSpecification." ;
+    ] ;
+
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .
+
+# ── Scalar value specification nodes ──────────────────────────────────────────
+
+shape:scalar_value_spec
+    a sh:NodeShape ;
+    sh:targetClass obo:OBI_0001931 ;
+
+    # PMD_0000006 (has_value): positive xsd:float
+    sh:property [
+        sh:path pmdco:PMD_0000006 ;
+        sh:datatype xsd:float ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:minExclusive 0.0 ;
-        sh:message "Measurement result value must be a positive number." ;
+        sh:message "A ScalarValueSpecification must have a positive numeric value via pmdco:PMD_0000006." ;
     ] ;
+
+    # IAO_0000039 (unit IRI): at most one (absent for dimensionless quantities such as strain rate)
     sh:property [
-        sh:path iao:0000039 ;   # has_measurement_unit_label
-        sh:minCount 1 ;
+        sh:path iao:0000039 ;
+        sh:nodeKind sh:IRI ;
         sh:maxCount 1 ;
-        sh:in (
-            uqudt:MegaPascal
-            uqudt:GigaPascal
-            uqudt:PERCENT
-        ) ;
-        sh:message "Result unit must be uqudt:MegaPascal, uqudt:GigaPascal, or uqudt:PERCENT." ;
+        sh:message "If present, the unit (IAO_0000039) on a ScalarValueSpecification must be an IRI." ;
     ] ;
+
+    # OBI_0001927 (specifies_value_of): points to the quality instance
+    sh:property [
+        sh:path obi:0001927 ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:message "A ScalarValueSpecification must have specifies_value_of (OBI_0001927) pointing to the quality instance." ;
+    ] ;
+
+    # IAO_0000136 (is_about): points to the quality instance
+    sh:property [
+        sh:path iao:0000136 ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:message "A ScalarValueSpecification must have is_about (IAO_0000136) pointing to the quality instance." ;
+    ] ;
+
     sh:closed false ;
     sh:ignoredProperties ( rdf:type ) .

@@ -1,45 +1,33 @@
-# OO-LD Schema for TensileTest (TTO pattern)
-# Ontology: Tensile Test Ontology (TTO)
+# OO-LD Schema for TensileTest (TTO + PMDCo 3 pattern)
+# Ontology: Tensile Test Ontology (TTO) v3.0.0
 #   https://w3id.org/pmd/tto/
-# Built on: Platform MaterialDigital Core Ontology (PMDCo)
+# Built on: Platform MaterialDigital Core Ontology (PMDCo) 3
 #   https://w3id.org/pmd/co/
 #
-# TTO reference:
-#   https://github.com/materialdigital/application-ontologies/tree/main/tensile_test_ontology_TTO
-#
-# This schema EXTENDS characterization/step/base/PMDCo/ via JSON Schema $ref + allOf.
-# It inherits:
-#   - the root class pattern (overridden here to tto:TensileTest)
-#   - has_specified_input   (specimen IRI)
-#   - preceded_by           (process chain)
-#   - has_process_condition (test conditions)
-#
-# It ADDS:
-#   - measured_properties   (array of embedded TTO result nodes)
+# Reference data:
+#   https://github.com/materialdigital/tensile-test-ontology
 #
 # Graph pattern:
 #
-#   TensileTest  (tto:TensileTest)
-#     rdfs:label ──────────────────────────────────────── name string
-#     rdfs:comment ────────────────────────────────────── description  (optional)
-#     has_specified_input ────────────────────────────► Specimen IRI  [× 1]
-#     preceded_by ────────────────────────────────────► Assay IRI  [× 0..N]
-#     has_process_condition ──────────────────────────► ProcessCondition  [× 0..N]
-#     has_specified_output ───────────────────────────► MeasurementResult  [× 0..N]
-#       type  ──────────────────── TTO class (YieldStrength, TensileStrength, …)
-#       result_value ────────────── xsd:double
-#       result_unit ─────────────── unit IRI  (QUDT)
-#
-# @context note:
-#   JSON Schema $ref does not merge @context blocks.  Until the toolchain
-#   supports automatic context merging, this schema re-declares all @context
-#   entries required by the base schema.  See the section marked
-#   "── Base context (mirrored) ──" below.
-#   If characterization/step/base/PMDCo/specs/schema.oold.yaml changes a context
-#   entry, update the mirrored section accordingly.
+#   Process (pmdco:PMD_0000974)
+#     rdfs:label ──────────────────────────────────── test name
+#     rdfs:comment ────────────────────────────────── description  (optional)
+#     realizes  (BFO_0000055) ──────────────────────► TensileTestMethod (tto:TTO_0000054)
+#       rdfs:label ─────────── test standard string  (optional)
+#     has_specified_input (OBI_0000293) ────────────► Specimen IRI  [× 1+]
+#     has_process_attribute (PMD_0000009) ──────────► Quality node  [× 0..N]
+#       e.g. tto:TTO_0000051 (strain rate)
+#            pmdco:PMD_0000967 (temperature)
+#       is_quality_measured_as (IAO_0000417) ───────► _smd
+#     has_specified_output (OBI_0000299) ───────────► _smd (IAO_0000109)  [× 0..N]
+#       is_about (IAO_0000136) ──────────────────────► Quality node
+#       has_value_spec (OBI_0001938) ────────────────► _svs (OBI_0001931)
+#         result_unit (IAO_0000039) ─────────────────── unit IRI  (QUDT)
+#         is_about (IAO_0000136) ──────────────────────► Quality node
+#         specifies_value_of (OBI_0001927) ────────────► Quality node
+#         result_value (PMD_0000006) ──────────────────── xsd:float
 
 "@context":
-  # ── TensileTest context ───────────────────────────────────────────────────
   rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   rdfs: "http://www.w3.org/2000/01/rdf-schema#"
   xsd: "http://www.w3.org/2001/XMLSchema#"
@@ -50,77 +38,93 @@
   date:
     "@id": "http://purl.org/dc/terms/date"
     "@type": "xsd:dateTime"
+  obo: "http://purl.obolibrary.org/obo/"
+  pmdco: "https://w3id.org/pmd/co/"
   tto: "https://w3id.org/pmd/tto/"
-  uqudt: "https://qudt.org/vocab/unit/"
+  # QUDT unit vocabulary (prefix used in TTO reference data)
+  unit: "http://qudt.org/vocab/unit/"
+  # CSV on the Web (csvw) — used for time-series column descriptor nodes
+  csvw: "http://www.w3.org/ns/csvw#"
   type: "@type"
   id: "@id"
   label:
     "@id": "rdfs:label"
   description:
     "@id": "rdfs:comment"
-  # Measured results are the specified outputs of the assay.
-  # They are embedded objects (created by the test), not external IRIs.
-  measured_properties:
-    "@id": "http://purl.obolibrary.org/obo/OBI_0000299"   # has_specified_output
+  # bfo:BFO_0000055 — process realizes the tensile test method
+  realizes:
+    "@id": "http://purl.obolibrary.org/obo/BFO_0000055"
     "@container": "@set"
-  result_value:
-    "@id": "http://purl.obolibrary.org/obo/OBI_0001937"   # has_specified_numeric_value
-    "@type": "xsd:double"
-  result_unit:
-    "@id": "http://purl.obolibrary.org/obo/IAO_0000039"   # has_measurement_unit_label
-    "@type": "@id"
-
-  # ── Base context (mirrored from characterization/step/base/PMDCo/specs/schema.oold.yaml) ──
-  # Keep in sync with that file.
-  obo: "http://purl.obolibrary.org/obo/"
-  obi:
-    "@id": "http://purl.obolibrary.org/obo/OBI_"
-    "@prefix": true
-  bfo:
-    "@id": "http://purl.obolibrary.org/obo/BFO_"
-    "@prefix": true
-  pmdco: "https://w3id.org/pmd/co/"
-  qudt: "http://qudt.org/schema/qudt/"
-  "@base": "https://w3id.org/pmd/co/test/shape_tensile_test#"
+  # obi:OBI_0000293 — specimen tested
   has_specified_input:
-    "@id": "obi:0000293"
+    "@id": "http://purl.obolibrary.org/obo/OBI_0000293"
     "@type": "@id"
     "@container": "@set"
-  preceded_by:
-    "@id": "bfo:0000062"
-    "@type": "@id"
+  # pmdco:PMD_0000009 — condition quality nodes (strain rate, temperature …)
+  has_process_attribute:
+    "@id": "https://w3id.org/pmd/co/PMD_0000009"
     "@container": "@set"
-  has_process_condition:
-    "@id": "pmdco:PMD_0000016"
+  # iao:IAO_0000417 — "is quality measured as": quality node → _smd
+  is_quality_measured_as:
+    "@id": "http://purl.obolibrary.org/obo/IAO_0000417"
     "@type": "@id"
+  # obi:OBI_0000299 — all scalar measurement datum nodes
+  measured_properties:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
     "@container": "@set"
-  parameter_label:
-    "@id": "rdfs:label"
-  parameter_value:
-    "@id": "qudt:value"
-    "@type": "xsd:double"
-  parameter_unit:
-    "@id": "qudt:hasUnit"
+  # iao:IAO_0000136 — datum / SVS is_about the quality instance
+  is_about:
+    "@id": "http://purl.obolibrary.org/obo/IAO_0000136"
+    "@type": "@id"
+  # obi:OBI_0001938 — has_value_specification
+  has_value_spec:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0001938"
+  # iao:IAO_0000039 — unit IRI
+  result_unit:
+    "@id": "http://purl.obolibrary.org/obo/IAO_0000039"
+    "@type": "@id"
+  # obi:OBI_0001927 — SVS specifies_value_of the quality
+  specifies_value_of:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0001927"
+    "@type": "@id"
+  # pmdco:PMD_0000006 — numeric value on ScalarValueSpecification
+  result_value:
+    "@id": "https://w3id.org/pmd/co/PMD_0000006"
+    "@type": "xsd:float"
+  "@base": "https://example.org/"
+
+# ── Time-series descriptor pattern ────────────────────────────────────────────
+# Controls how Transformer generates the column-level RDF when a parser returns
+# time-series data.  Follows the csvw + IAO_0000039 pattern used in the TTO
+# v3.0.0 reference data (S355_data_tto_pmdco3.ttl).
+#
+# container_type:       RDF class for the table-level descriptor node
+# column_predicate:     predicate linking the table node to each column node
+# column_type:          RDF class for each column descriptor node
+# column_name_predicate: predicate carrying the column's string name
+# unit_predicate:       predicate linking a column node to its unit IRI
+# container_label:      rdfs:label on the table-level node
+timeseries_pattern:
+  container_type:        "http://www.w3.org/ns/csvw#Table"
+  column_predicate:      "http://www.w3.org/ns/csvw#column"
+  column_type:           "http://www.w3.org/ns/csvw#Column"
+  column_name_predicate: "http://www.w3.org/ns/csvw#name"
+  unit_predicate:        "http://purl.obolibrary.org/obo/IAO_0000039"
+  container_label:       "Raw time series"
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
-$comment: Schema for a tto:TensileTest, extending characterization/step/base/PMDCo/
-x-schema-version: '2.0.0'
+$comment: TTO + PMDCo 3 schema for a tensile test process node
+x-schema-version: '3.0.0'
 x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/step/tensile-test/TTO/'
-x-schema-dependencies:
-  - schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/step/base/PMDCo/'
-    compatible-versions:
-      - '2.0.0'
-    property: (base schema via allOf)
-title: Tensile Test
+title: Tensile Test (TTO)
 type: object
-
-allOf:
-  - $ref: "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/step/base/PMDCo/"
 
 required:
   - type
   - id
   - label
+  - realizes
+  - has_specified_input
 
 properties:
 
@@ -128,11 +132,11 @@ properties:
     title: Type
     type: string
     readOnly: true
-    const: "tto:TensileTest"
-    default: "tto:TensileTest"
+    const: "pmdco:PMD_0000974"
+    default: "pmdco:PMD_0000974"
     options:
       enum_titles:
-        - tto:TensileTest
+        - pmdco:TensileTestingProcess
 
   id:
     title: ID
@@ -143,9 +147,7 @@ properties:
 
   label:
     title: Test Name
-    description: >-
-      Human-readable name for this tensile test
-      (e.g. "Tensile test 316L bar 1").
+    description: Human-readable name for this tensile test (e.g. "Tensile test 316L bar 1").
     type: string
 
   description:
@@ -154,130 +156,206 @@ properties:
     type: string
     format: textarea
 
-  has_specified_input:
-    title: Specimen
+  realizes:
+    title: Tensile Test Method
     description: >-
-      IRI of the specimen being tested. Typically one specimen per tensile test.
+      The tensile test method (tto:TTO_0000054) that this process realizes.
+      Corresponds to BFO_0000055 (realizes).
     type: array
-    items:
-      type: string
-      format: uri
-    uniqueItems: true
-    default: []
-
-  preceded_by:
-    title: Preceded By
-    description: IRIs of steps that directly precede this one.
-    type: array
-    items:
-      type: string
-      format: uri
-    uniqueItems: true
-    default: []
-
-  has_process_condition:
-    title: Test Conditions
-    description: >-
-      Quantitative conditions for this test (strain rate, temperature, gauge length, etc.)
-      and the test standard applied.
-    type: array
+    minItems: 1
     items:
       type: object
-      title: Test Condition
+      title: TensileTestMethod
       required:
         - type
         - id
-        - parameter_label
       properties:
         type:
           title: Type
           type: string
           readOnly: true
-          const: "pmdco:PMD_0000013"
-          default: "pmdco:PMD_0000013"
+          const: "tto:TTO_0000054"
+          default: "tto:TTO_0000054"
           options:
             enum_titles:
-              - pmdco:ProcessCondition
+              - tto:TensileTestMethod
         id:
-          title: ID
+          title: Method IRI
           type: string
           readOnly: true
-          default: condition-1
-        parameter_label:
-          title: Condition Name
+          default: method
+        label:
+          title: Test Standard
+          description: >-
+            Standard or norm applied (e.g. "ISO 6892-1").
+            Stored as rdfs:label on the method node.
           type: string
-        parameter_value:
-          title: Value
-          type: number
-        parameter_unit:
-          title: Unit
+    default: []
+
+  has_specified_input:
+    title: Specimen
+    description: IRI of the specimen being tested (OBI_0000293).
+    type: array
+    minItems: 1
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  has_process_attribute:
+    title: Test Conditions
+    description: >-
+      Condition quality nodes linked via pmdco:PMD_0000009.
+      Each entry is a TTO or PMDCo quality instance (e.g. strain rate, temperature)
+      that links to its measurement datum via IAO_0000417.
+    type: array
+    items:
+      type: object
+      title: Condition Quality Node
+      required:
+        - type
+        - id
+        - is_quality_measured_as
+      properties:
+        type:
+          title: Quality Type
+          description: TTO or PMDCo class IRI for this condition.
           type: string
+        id:
+          title: Quality IRI
+          type: string
+          readOnly: true
+        is_quality_measured_as:
+          title: Measured As (SMD IRI)
+          description: IRI of the ScalarMeasurementDatum for this condition (IAO_0000417).
+          type: string
+          format: uri
     default: []
 
   measured_properties:
     title: Measured Properties
     description: >-
-      Mechanical properties determined from this tensile test.
-      Each entry is typed to the appropriate TTO class and carries a numeric value
-      and a QUDT unit IRI.
+      Scalar measurement datum nodes (obo:IAO_0000109) that are the specified
+      outputs of this process (OBI_0000299).  Each datum embeds its quality
+      instance (via is_about) and its scalar value specification (via has_value_spec).
+      Both condition datums (strain rate, temperature) and result datums
+      (yield strength, tensile strength, etc.) appear here.
     type: array
     items:
       type: object
-      title: Measurement Result
+      title: ScalarMeasurementDatum
       required:
         - type
         - id
-        - result_value
-        - result_unit
+        - is_about
+        - has_value_spec
       properties:
         type:
-          title: Property Type
-          description: TTO class identifying which mechanical property this result represents.
-          type: string
-          enum:
-            - tto:YieldStrength
-            - tto:UpperYieldStrength
-            - tto:LowerYieldStrength
-            - tto:TensileStrength
-            - tto:ProofStrength
-            - tto:PercentageElongationAfterFracture
-            - tto:PercentagePermanentElongation
-            - tto:PercentageReductionOfArea
-          options:
-            enum_titles:
-              - Yield Strength  (Rₑ)
-              - Upper Yield Strength  (ReH)
-              - Lower Yield Strength  (ReL)
-              - Tensile Strength  (Rm)
-              - Proof Strength  (Rp)
-              - Elongation After Fracture  (A)
-              - Permanent Elongation  (Ag)
-              - Reduction of Area  (Z)
-        id:
-          title: ID
-          description: Identifier for this result node; managed by the consumer.
+          title: Type
           type: string
           readOnly: true
-          default: result-1
-        result_value:
-          title: Value
-          description: Numeric value of the measured property.
-          type: number
-          minimum: 0
-        result_unit:
-          title: Unit
-          description: >-
-            QUDT unit IRI for the value.
-            Use uqudt:MegaPascal for stress properties (MPa),
-            uqudt:PERCENT for elongation and reduction of area.
-          type: string
-          enum:
-            - uqudt:MegaPascal
-            - uqudt:GigaPascal
-            - uqudt:PERCENT
+          const: "obo:IAO_0000109"
+          default: "obo:IAO_0000109"
           options:
             enum_titles:
-              - MPa (megapascal)
-              - GPa (gigapascal)
-              - "% (percent)"
+              - iao:MeasurementDatum
+        id:
+          title: Datum IRI
+          type: string
+          readOnly: true
+          default: result-1-smd
+        is_about:
+          title: Quality Instance
+          description: >-
+            The quality node (TTO or PMDCo class instance) this datum measures.
+            May be provided as an IRI string or as an embedded node object
+            carrying the quality type and its IAO_0000417 back-link.
+          oneOf:
+            - type: string
+              format: uri
+            - type: object
+              required:
+                - type
+                - id
+                - is_quality_measured_as
+              properties:
+                type:
+                  title: Quality Type
+                  description: TTO or PMDCo class CURIE for this quality.
+                  type: string
+                  enum:
+                    - tto:TTO_0000009
+                    - tto:TTO_0000059
+                    - tto:TTO_0000022
+                    - tto:TTO_0000053
+                    - tto:TTO_0000047
+                    - tto:TTO_0000033
+                    - tto:TTO_0000035
+                    - tto:TTO_0000038
+                  options:
+                    enum_titles:
+                      - Yield Strength (Rₑ)
+                      - Upper Yield Strength (ReH)
+                      - Lower Yield Strength (ReL)
+                      - Tensile Strength (Rm)
+                      - Proof Strength Rp0.2
+                      - Elongation After Fracture (A)
+                      - Permanent Elongation (Ag)
+                      - Reduction of Area (Z)
+                id:
+                  title: Quality IRI
+                  type: string
+                  readOnly: true
+                  default: result-1
+                is_quality_measured_as:
+                  title: SMD IRI
+                  description: IRI of the ScalarMeasurementDatum for this quality (IAO_0000417).
+                  type: string
+                  format: uri
+        has_value_spec:
+          title: Value Specification
+          description: ScalarValueSpecification carrying the numeric value and unit.
+          type: object
+          required:
+            - type
+            - id
+            - result_value
+            - is_about
+            - specifies_value_of
+          properties:
+            type:
+              title: Type
+              type: string
+              readOnly: true
+              const: "obo:OBI_0001931"
+              default: "obo:OBI_0001931"
+              options:
+                enum_titles:
+                  - obi:ScalarValueSpecification
+            id:
+              title: SVS IRI
+              type: string
+              readOnly: true
+              default: result-1-svs
+            result_value:
+              title: Value
+              description: >-
+                Numeric value stored as pmdco:PMD_0000006 (has_value), typed xsd:float.
+              type: number
+              minimum: 0
+            result_unit:
+              title: Unit
+              description: QUDT unit IRI.
+              type: string
+            is_about:
+              title: Quality IRI
+              description: IRI of the quality instance this SVS is about (IAO_0000136).
+              type: string
+              format: uri
+            specifies_value_of:
+              title: Specifies Value Of
+              description: IRI of the quality instance this value quantifies (OBI_0001927).
+              type: string
+              format: uri
     default: []

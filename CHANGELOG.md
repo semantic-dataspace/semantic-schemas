@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-04-24
+
+### Changed
+
+- **`characterization/step/tensile-test/TTO/`** updated to schema v3.0.0 (breaking
+  graph structure change). Adopts the PMDCo3 / S355 measurement pattern:
+  process class changed to `pmdco:PMD_0000974`, condition predicate to
+  `pmdco:PMD_0000009`, result nodes restructured to `obi:OBI_0001931`
+  (ScalarValueSpecification) with `pmdco:PMD_0000006` for numeric values and
+  `obi:OBI_0001927` linking to TTO-typed property instance nodes.
+  QUDT unit prefix corrected from `https://` to `http://`.
+- **Time-series descriptor pattern** (TTO and PMDCo schemas): time-series metadata
+  now follows the `csvw:Table` / `csvw:column` / `csvw:Column` / `obo:IAO_0000039`
+  pattern used in the TTO/PMDCo3 S355 reference dataset, replacing the previous
+  `dcat:Dataset` / `qudt:hasUnit` pattern.  Both schemas now include a
+  `timeseries_pattern` config block that instructs `semantic-transformers` how to
+  serialise column descriptors.
+
+### Added
+
+- **`characterization/step/tensile-test/PMDCo/`** — new schema for tensile test
+  results using pure PMDCo3 classes (no TTO dependency). Follows the PMDCo
+  measurement pattern: process (`pmdco:PMD_0000974`) → measurement datum
+  (`obo:IAO_0000109`) → scalar value specification (`obo:OBI_0001931`).
+  Results are labelled by name rather than typed to TTO property classes.
+
+---
+
 ## [0.2.0] - 2026-04-13
 
 ### Added
