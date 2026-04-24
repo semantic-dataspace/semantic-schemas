@@ -79,12 +79,15 @@ shape:tensile_test
         sh:message "A TensileTestingProcess must have at least one has_specified_input (the specimen IRI)." ;
     ] ;
 
-    # has_specified_output (OBI_0000299): at least one MeasurementDatum
+    # has_specified_output (OBI_0000299): at least one output IRI.
+    # Includes both MeasurementDatum (IAO_0000109) nodes for scalar results and
+    # a csvw:Table node for the raw time-series data.  IAO_0000109 nodes are
+    # further validated by shape:measurement_datum below.
     sh:property [
         sh:path obi:0000299 ;
         sh:minCount 1 ;
-        sh:class obo:IAO_0000109 ;
-        sh:message "A TensileTestingProcess must have at least one has_specified_output that is a MeasurementDatum (IAO_0000109)." ;
+        sh:nodeKind sh:IRI ;
+        sh:message "A TensileTestingProcess must have at least one has_specified_output (OBI_0000299) pointing to an IRI node." ;
     ] ;
 
     sh:closed false ;
