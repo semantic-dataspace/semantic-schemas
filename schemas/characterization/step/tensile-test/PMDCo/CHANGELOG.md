@@ -5,6 +5,15 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.1.0] — 2026-04-27
+
+### Added
+
+- `x-transformers: [testxpert_iii]` — links the schema to the TestXpert III
+  parser in `semantic-transformers`.
+
+---
+
 ## [1.0.0] — 2026-04-24
 
 ### Added

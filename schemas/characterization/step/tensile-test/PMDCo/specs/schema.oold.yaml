@@ -134,6 +134,7 @@ $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: PMDCo measurement pattern schema for a tensile test process
 x-schema-version: '1.0.0'
 x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/step/tensile-test/PMDCo/'
+x-transformers: [testxpert_iii]
 title: Tensile Test (PMDCo)
 type: object
 

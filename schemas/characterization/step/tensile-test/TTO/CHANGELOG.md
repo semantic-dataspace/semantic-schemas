@@ -11,6 +11,15 @@ The schema IRI encodes the minor version: `…/TTO/#v<MAJOR>.<MINOR>.0`.
 
 ---
 
+## [3.0.2] — 2026-04-27
+
+### Added
+
+- `x-transformers: [testxpert_iii]` — links the schema to the TestXpert III
+  parser in `semantic-transformers`.
+
+---
+
 ## [3.0.1] — 2026-04-24
 
 ### Fixed

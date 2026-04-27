@@ -116,6 +116,7 @@ $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: TTO + PMDCo 3 schema for a tensile test process node
 x-schema-version: '3.0.0'
 x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/step/tensile-test/TTO/'
+x-transformers: [testxpert_iii]
 title: Tensile Test (TTO)
 type: object
 

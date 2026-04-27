@@ -82,6 +82,29 @@ unit:
 
 ---
 
+## The `x-transformers` extension
+
+Links this schema to one or more file-based parsers in the
+`semantic-transformers` repository. Each entry is a parser ID as declared
+in that repository. A parser reads a file (e.g. a measurement export, a
+spreadsheet, or any structured data file) and converts it to the schema's
+simplified input format.
+
+```yaml
+x-transformers: [testxpert_iii]
+```
+
+Multiple parsers are allowed:
+
+```yaml
+x-transformers: [testxpert_iii, instron_bluehill]
+```
+
+Only add `x-transformers` when a working parser exists in `semantic-transformers`
+for this schema.
+
+---
+
 ## Naming conventions
 
 | Element | Convention | Example |
@@ -194,6 +217,7 @@ support for a new instrument.
 - [ ] `type` property present, `readOnly: true`, `const` set to the root class CURIE
 - [ ] Every property key that should appear in RDF has a corresponding `@context` entry
 - [ ] `x-kitem` provided for every `format: kitem` field
+- [ ] `x-transformers` declared if one or more parsers exist in `semantic-transformers` for this schema
 - [ ] `title` present on every property (used as form label)
 - [ ] `description` present on every property (used as tooltip/hint)
 
