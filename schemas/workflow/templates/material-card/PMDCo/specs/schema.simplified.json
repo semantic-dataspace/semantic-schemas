@@ -5,10 +5,10 @@
   "x-schema-id": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/workflow/templates/material-card/",
   "x-schema-dependencies": [
     { "schema-id": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/measurement-device/PMDCo/", "compatible-versions": ["1.0.0"] },
-    { "schema-id": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/manufacturing/step/base/PMDCo/", "compatible-versions": ["2.0.0"] },
-    { "schema-id": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/process/PMDCo/", "compatible-versions": ["1.0.0"] },
-    { "schema-id": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/step/tensile-test/TTO/", "compatible-versions": ["2.0.0"] },
-    { "schema-id": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/simulation/step/model-calibration/PMDCo/", "compatible-versions": ["2.0.0"] },
+    { "schema-id": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/manufacturing/generic/PMDCo/", "compatible-versions": ["3.0.0"] },
+    { "schema-id": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/campaign/PMDCo/", "compatible-versions": ["2.0.0"] },
+    { "schema-id": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/tensile-test/TTO/", "compatible-versions": ["4.0.0"] },
+    { "schema-id": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/simulation/model-calibration/PMDCo/", "compatible-versions": ["3.0.0"] },
     { "schema-id": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/material-card/mechanical/PMDCo/", "compatible-versions": ["1.0.0"] }
   ],
   "title": "Material Card Workflow Template",
@@ -61,7 +61,7 @@
 
     "production": {
       "title": "Production Step",
-      "description": "Manufacturing step that produced the material batch. Routed to manufacturing/step/base/PMDCo/.",
+      "description": "Manufacturing step that produced the material batch. Routed to manufacturing/generic/PMDCo/.",
       "type": "object",
       "required": ["name"],
       "properties": {
@@ -85,7 +85,7 @@
 
     "characterization": {
       "title": "Characterization",
-      "description": "Tensile test conditions and results. Routed to characterization/process/PMDCo/ (provenance) and characterization/step/tensile-test/TTO/ (results).",
+      "description": "Tensile test conditions and results. Routed to characterization/campaign/PMDCo/ (provenance) and characterization/tensile-test/TTO/ (results).",
       "type": "object",
       "required": ["name", "results"],
       "properties": {
@@ -131,7 +131,7 @@
 
     "calibration": {
       "title": "Constitutive Model Calibration",
-      "description": "Flow curve fit parameters. Routed to simulation/step/model-calibration/PMDCo/.",
+      "description": "Flow curve fit parameters. Routed to simulation/model-calibration/PMDCo/.",
       "type": "object",
       "required": ["name", "model_type", "parameters"],
       "properties": {

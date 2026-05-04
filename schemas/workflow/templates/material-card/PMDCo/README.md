@@ -3,6 +3,14 @@
 A **fixed-structure template** for running a complete tensile-test-to-FEM-material-card
 workflow in one go.
 
+| | |
+|---|---|
+| **Version** | `1.0.0` |
+| **Ontology pattern** | — |
+| **Extends** | — |
+| **Includes** | — |
+| **Transformers** | — |
+
 Fill in one dictionary. Run the notebook. You get:
 
 - A connected record of every step (production, test, calibration, material card)
@@ -21,9 +29,9 @@ you supply the values.
 |---|---|---|
 | `workflow_name`, `operator_iri`, `specimen_iri`, `material_iri` | Shared identifiers | All steps |
 | `device` | Testing machine (name, model, serial, calibration date) | `measurement-device/PMDCo/` |
-| `production` | Manufacturing step that produced the batch | `manufacturing/step/base/PMDCo/` |
-| `characterization` | Test conditions + measured properties | `characterization/process/PMDCo/` + `characterization/step/tensile-test/TTO/` |
-| `calibration` | Constitutive model fit (model family + parameters) | `simulation/step/model-calibration/PMDCo/` |
+| `production` | Manufacturing step that produced the batch | `manufacturing/generic/PMDCo/` |
+| `characterization` | Test conditions + measured properties | `characterization/campaign/PMDCo/` + `characterization/tensile-test/TTO/` |
+| `calibration` | Constitutive model fit (model family + parameters) | `simulation/model-calibration/PMDCo/` |
 | `material_card` | Elastic constants (density, E, ν) | `material-card/mechanical/PMDCo/` |
 
 ---
@@ -53,7 +61,7 @@ docs/1_material_card_with_template.ipynb
 ## Relationship to other schemas
 
 This template sits above `workflow/PMDCo/` in the same way that
-`characterization/process/PMDCo/` sits above `characterization/step/base/PMDCo/`:
+`characterization/campaign/PMDCo/` sits above `characterization/generic/PMDCo/`:
 it enforces a fixed structure and orchestrates multiple sub-schemas so the user
 does not need to make structural decisions.
 
@@ -71,7 +79,7 @@ validated by the six sub-schemas' own SHACL shapes.
 
 ## Required provenance fields
 
-The `characterization` section is routed through `characterization/process/PMDCo/`,
+The `characterization` section is routed through `characterization/campaign/PMDCo/`,
 which enforces three required fields:
 
 | Field | Where it comes from |
@@ -88,5 +96,5 @@ A SHACL validation error is raised if any of the three is missing.
 
 - [Notebook 4 (with template)](docs/1_material_card_with_template.ipynb): full walkthrough
 - [Notebook 3 (without template)](../../../PMDCo/docs/3_material_card_without_template.ipynb): same scenario, step-by-step
-- [Characterization Process (PMDCo)](../../../../characterization/process/PMDCo/README.md): the process template pattern
+- [Characterization Campaign (PMDCo)](../../../../characterization/campaign/PMDCo/README.md): the campaign template pattern
 - [Schema patterns: process/ and template layers](../../../../../docs/4_schema-patterns.md)

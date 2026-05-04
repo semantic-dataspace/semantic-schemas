@@ -3,6 +3,14 @@
 Records a **physical specimen** (its name, mass, and chemical composition)
 following the [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/).
 
+| | |
+|---|---|
+| **Version** | `1.0.0` |
+| **Ontology pattern** | [PMDCo duality object material](https://github.com/materialdigital/core-ontology/tree/main/patterns/duality%20object%20material) |
+| **Extends** | — |
+| **Includes** | [`chemical-composition/PMDCo/`](../../chemical-composition/PMDCo/README.md) |
+| **Transformers** | — |
+
 This schema builds on the [Chemical Composition (PMDCo)](../../chemical-composition/PMDCo/README.md)
 schema: the composition sub-graph is produced by that schema's transform, which
 remains the single source of truth for element IRIs and naming conventions.

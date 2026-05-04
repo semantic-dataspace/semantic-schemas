@@ -5,6 +5,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-05-04
+
+### Changed
+
+Major rename of the intermediate folder level across all three process domains.
+The `step/base/` nesting was removed and the generic schemas are now addressable
+directly; the `process/` layer was renamed to `campaign/` to better reflect its
+role as a provenance-capturing container.
+
+| Old path | New path | Schema version |
+|---|---|---|
+| `characterization/step/base/PMDCo/` | `characterization/generic/PMDCo/` | v2.0.0 → v3.0.0 |
+| `characterization/process/PMDCo/` | `characterization/campaign/PMDCo/` | v1.0.0 → v2.0.0 |
+| `characterization/step/tensile-test/TTO/` | `characterization/tensile-test/TTO/` | v3.0.0 → v4.0.0 |
+| `characterization/step/tensile-test/PMDCo/` | `characterization/tensile-test/PMDCo/` | v1.0.0 → v2.0.0 |
+| `manufacturing/step/base/PMDCo/` | `manufacturing/generic/PMDCo/` | v2.0.0 → v3.0.0 |
+| `simulation/step/base/PMDCo/` | `simulation/generic/PMDCo/` | v2.0.0 → v3.0.0 |
+| `simulation/step/model-calibration/PMDCo/` | `simulation/model-calibration/PMDCo/` | v2.0.0 → v3.0.0 |
+
+All affected schemas received a MAJOR version bump. `x-schema-id` IRIs,
+`$schemaUri` constants in JSONata transforms, and SHACL `@prefix`/`@base`
+declarations were updated accordingly.
+
+The concept change: "step" implied a phase within a larger sequence, and
+"process" falsely implied that step schemas were not also processes. The new
+`generic/` name (no enforced provenance) and `campaign/` name (full provenance
+required: operator, device, specimen) make the distinction immediately clear.
+
+### Added
+
+- Forward-looking notes in `CATALOG.md` and `docs/4_schema-patterns.md` for two
+  planned schema families: `study/` (campaign-of-campaigns, cross-domain) and
+  `specimen/batch/` (batch provenance for identically prepared specimens).
+
+### Migration
+
+Update `conforms_to` IRI filters in SPARQL queries and any external `$ref`
+references to the old paths. See the table above for the exact mappings. The
+RDF graph structure of all schemas is unchanged; only the schema IRI recorded
+in `dcterms:conformsTo` differs.
+
+---
+
 ## [0.4.0] - 2026-04-27
 
 ### Added
@@ -290,5 +333,9 @@ schema CHANGELOGs for the exact old → new IRI mapping).
 - Performance and simulation domain extensions
 - Custom validators and schema composition tools
 - Web-based schema editor interface
-- `manufacturing/process/PMDCo/` and `simulation/process/PMDCo/` template layers
-  following the `characterization/process/PMDCo/` pattern
+- `manufacturing/campaign/PMDCo/` and `simulation/campaign/PMDCo/` provenance
+  templates following the `characterization/campaign/PMDCo/` pattern
+- `study/` schema: campaign-of-campaigns grouping multiple experiments under
+  one research question, potentially crossing domains
+- `specimen/batch/` schema: batch provenance for sets of specimens prepared
+  under identical conditions

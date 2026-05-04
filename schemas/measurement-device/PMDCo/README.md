@@ -5,9 +5,17 @@ manufacturer, model, serial number, and last calibration date, following the
 [OBI](http://purl.obolibrary.org/obo/obi.owl) /
 [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/) conventions.
 
+| | |
+|---|---|
+| **Version** | `1.0.0` |
+| **Ontology pattern** | — |
+| **Extends** | — |
+| **Includes** | — |
+| **Transformers** | — |
+
 Once registered, the device receives a stable IRI in the knowledge graph.
 That IRI is referenced in experiment records (e.g.
-[`characterization/process/PMDCo/`](../../characterization/process/PMDCo/README.md))
+[`characterization/campaign/PMDCo/`](../../characterization/campaign/PMDCo/README.md))
 to permanently link measurements to the instrument that produced them.
 
 ---
@@ -82,7 +90,7 @@ recognised, and unambiguous in engineering contexts.
 
 ## Further reading
 
-- [Characterization Process (PMDCo)](../../characterization/process/PMDCo/README.md): references this device IRI
+- [Characterization Campaign (PMDCo)](../../characterization/campaign/PMDCo/README.md): references this device IRI
 - [Expertise schema](../../expertise/README.md): links a person to the devices they operate
 - [OO-LD primer](../../docs/2_oold-primer.md): how the schema format works
 - [OBI Device class](http://purl.obolibrary.org/obo/OBI_0000968)

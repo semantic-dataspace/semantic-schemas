@@ -5,6 +5,14 @@ contains and in what proportions) following the
 [BWMD Materials Data Science Ontology](https://www.iwm.fraunhofer.de/ontologies/bwmd-ontology#)
 developed by Fraunhofer IWM.
 
+| | |
+|---|---|
+| **Version** | `1.0.0` |
+| **Ontology pattern** | — |
+| **Extends** | — |
+| **Includes** | — |
+| **Transformers** | — |
+
 Unlike the PMDCo variant, element fractions are expressed as **ranges**
 (`min_value` / `max_value`), which suits nominal compositions and tolerance
 bands.  All 118 IUPAC elements are supported.

@@ -140,13 +140,13 @@ Example for the `manufacturing` domain:
 ```text
 schemas/
   manufacturing/
-    step/
-      PMDCo/          ← leaf at domain/step level  →  generic manufacturing step
-      BWMD/           ← leaf                       →  same concept, different ontology
-      sintering/
-        PMDCo/        ← leaf under a named subfolder  →  specialised sintering step
-      welding/
-        PMDCo/        ← leaf                           →  specialised welding step
+    generic/
+      PMDCo/          ← leaf at domain/generic level  →  generic manufacturing step
+      BWMD/           ← leaf                          →  same concept, different ontology
+    sintering/
+      PMDCo/          ← leaf under a named subfolder  →  specialised sintering step
+    welding/
+      PMDCo/          ← leaf                          →  specialised welding step
     chain/
       PMDCo/          ← leaf at domain/chain level →  manufacturing process chain
 ```
@@ -166,6 +166,34 @@ following standard subfolders and files:
 | `specs/` | All schema files: `schema.oold.yaml`, `shape.ttl`, `schema.simplified.json`, `transform.simplified.jsonata` |
 | `docs/` | Notebooks, example files, and the schema `README.md` |
 | `CHANGELOG.md` | Version history for this schema (at the leaf root) |
+
+### README summary box
+
+Every schema `README.md` opens with a summary table immediately after the
+introductory paragraph:
+
+```markdown
+| | |
+|---|---|
+| **Version** | `2.0.0` |
+| **Ontology pattern** | [PMDCo measurement pattern][pmdco-measurement] |
+| **Extends** | — |
+| **Includes** | — |
+| **Transformers** | `testxpert_iii` |
+```
+
+| Field | What to put here |
+|---|---|
+| **Version** | Current `x-schema-version` from `specs/schema.oold.yaml` |
+| **Ontology pattern** | Link to the upstream ontology modelling pattern this schema follows (e.g. PMDCo measurement pattern, PMDCo process pattern). Use `—` if no named pattern exists. |
+| **Extends** | Link to the schema this one inherits from via `$ref` + `allOf` (inheritance). Use `—` if the schema does not extend another. |
+| **Includes** | Link to any schema whose sub-graph is delegated to via `$ref` inside a property (composition). Use `—` if none. |
+| **Transformers** | Parser ID(s) from `x-transformers` in `specs/schema.oold.yaml`. Use `—` if none. |
+
+**Extends** and **Includes** correspond to the two structural patterns described
+in [4_schema-patterns.md](4_schema-patterns.md): inheritance (`$ref` + `allOf`)
+and composition (`$ref` inside a property) respectively. A schema can have
+entries in both rows simultaneously.
 
 ### Schema versioning and CHANGELOG
 

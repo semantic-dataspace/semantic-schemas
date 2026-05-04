@@ -11,10 +11,10 @@
  *
  * Sub-schema routing:
  *   $.device_input          → measurement-device/PMDCo/   transform.simplified.jsonata
- *   $.production_input      → manufacturing/step/base/PMDCo/ transform.simplified.jsonata
- *   $.process_input         → characterization/process/PMDCo/ transform.simplified.jsonata
- *   $.tto_input             → characterization/step/tensile-test/TTO/ transform.simplified.jsonata
- *   $.calibration_input     → simulation/step/model-calibration/PMDCo/ transform.simplified.jsonata
+ *   $.production_input      → manufacturing/record/PMDCo/ transform.simplified.jsonata
+ *   $.process_input         → characterization/campaign/PMDCo/ transform.simplified.jsonata
+ *   $.tto_input             → characterization/tensile-test/TTO/ transform.simplified.jsonata
+ *   $.calibration_input     → simulation/model-calibration/PMDCo/ transform.simplified.jsonata
  *   $.material_card_input   → material-card/mechanical/PMDCo/ transform.simplified.jsonata
  *
  * Note: process_input.device_iri and process_input.step_reference are

@@ -21,20 +21,20 @@ The extending schema declares the base as a dependency and adds its own
 properties on top:
 
 ```yaml
-# schemas/characterization/step/tensile-test/TTO/specs/schema.oold.yaml
+# schemas/simulation/model-calibration/PMDCo/specs/schema.oold.yaml
 
 allOf:
-  - $ref: "https://.../characterization/step/base/PMDCo/"   # base schema
+  - $ref: "https://.../simulation/generic/PMDCo/"   # base schema
 
 properties:
-  type:
-    const: "tto:TensileTest"   # overrides the base class
-  measured_properties:         # new field, not in the base
+  model_type:                   # new field, not in the base
+    enum: [Hockett-Sherby, ...]
+  calibrated_parameters:        # new field, not in the base
     ...
 ```
 
-Think of it as subclassing: `tto:TensileTest` is-a `obi:Assay` (the base
-class), so the tensile test schema inherits the assay's structure and refines it.
+Think of it as subclassing: `model-calibration` is-a simulation step, so it
+inherits the generic simulation schema's structure and refines it.
 
 ### What carries over automatically
 
@@ -57,7 +57,7 @@ it relies on from the base, in full. In this repository these are clearly
 marked with a comment:
 
 ```yaml
-# ── Base context (mirrored from characterization/step/base/PMDCo/specs/schema.oold.yaml) ──
+# ── Base context (mirrored from simulation/generic/PMDCo/specs/schema.oold.yaml) ──
 # Keep in sync with that file.
 obi:
   "@id": "http://purl.obolibrary.org/obo/OBI_"
@@ -74,10 +74,10 @@ Any property from the base can be overridden in the extending schema:
 
 | What | How | Example |
 |---|---|---|
-| Root class (`type`) | Redeclare `type` with a new `const` | `tto:TensileTest` overrides `obi:Assay` |
-| Property title / description | Redeclare the property in `properties:` | Tensile test relabels `has_specified_input` as "Specimen" |
-| Default value | Redeclare with a new `default:` | `id` default changed from `characterization-step` to `tensile-test` |
-| Enum values | Redeclare with a refined `enum:` | `result_unit` restricted to MPa / GPa / % |
+| Root class (`type`) | Redeclare `type` with a new `const` | A sintering schema overrides `pmdco:ManufacturingProcess` with a more specific class |
+| Property title / description | Redeclare the property in `properties:` | A specialised schema relabels `has_specified_input` as "Feedstock" |
+| Default value | Redeclare with a new `default:` | `id` default changed from `simulation-generic` to `model-calibration` |
+| Enum values | Redeclare with a refined `enum:` | A flow-curve schema restricts `model_type` to a specific set of constitutive models |
 
 In JSON Schema `allOf`, conflicts between the base and the extension are
 **intersected**: a field value must satisfy both constraints simultaneously.
@@ -93,20 +93,18 @@ schema instance:
 
 ```python
 shapes = rdflib.Graph()
-shapes.parse("characterization/step/base/PMDCo/specs/shape.ttl")        # base
-shapes.parse("characterization/step/tensile-test/TTO/specs/shape.ttl")  # extension
+shapes.parse("simulation/generic/PMDCo/specs/shape.ttl")             # base
+shapes.parse("simulation/model-calibration/PMDCo/specs/shape.ttl")  # extension
 ```
 
 Set `inference="rdfs"` in pyshacl so that subclass relationships are
-resolved correctly (e.g. `tto:TensileTest` is recognised as a subclass of
-`obi:Assay` when the base shape targets `obi:Assay`).
+resolved correctly.
 
 ### Repository examples
 
 | Base schema | Extending schema | What was added |
 |---|---|---|
-| `characterization/step/base/PMDCo/` | `characterization/step/tensile-test/TTO/` | Typed result nodes (TTO classes), specimen required |
-| `simulation/step/base/PMDCo/` | `simulation/step/model-calibration/PMDCo/` | `model_type` enum, embedded parameter nodes |
+| `simulation/generic/PMDCo/` | `simulation/model-calibration/PMDCo/` | `model_type` enum, embedded parameter nodes |
 
 ---
 
@@ -213,7 +211,7 @@ chemical-composition schema's context that the combined RDF graph needs.
 | `$ref` location | Root level, inside `allOf` | Inside a property definition |
 | New schema adds | Extra fields to the same class | A distinct sub-graph of a different class |
 | Transform | One transform (may call base) | Two transforms, results merged |
-| Example | step/tensile-test/TTO extends step/base/PMDCo | specimen/PMDCo includes chemical-composition/PMDCo |
+| Example | model-calibration/PMDCo extends simulation/generic/PMDCo | specimen/PMDCo includes chemical-composition/PMDCo |
 
 ### Repository examples
 
@@ -283,8 +281,8 @@ a pointer.
 
 | Schema | References (by IRI) |
 |---|---|
-| `manufacturing/step/base/PMDCo/` | Input materials, output materials, preceding steps |
-| `characterization/step/base/PMDCo/` | Specimens or materials characterised |
+| `manufacturing/generic/PMDCo/` | Input materials, output materials, preceding steps |
+| `characterization/generic/PMDCo/` | Specimens or materials characterised |
 | `workflow/PMDCo/` | Detailed step instances (`reference`) |
 
 ---
@@ -294,10 +292,10 @@ a pointer.
 The patterns are not mutually exclusive. A single schema can use all three:
 
 ```text
-characterization/step/tensile-test/TTO/
-  Inheritance       extends characterization/step/base/PMDCo/
-  Reference by IRI  has_specified_input → Specimen IRI
-  Embedding         measured_properties → result nodes (TTO classes)
+simulation/model-calibration/PMDCo/
+  Inheritance       extends simulation/generic/PMDCo/
+  Reference by IRI  inputs / outputs → dataset IRIs
+  Embedding         calibrated_parameters → parameter nodes
 ```
 
 The key question for each relationship is: does the related object **exist
@@ -306,71 +304,82 @@ record (embedding)?
 
 ---
 
-## 5. The `process/` template layer
+## 5. The `campaign/` template layer
 
 In addition to the structural patterns above, the `characterization/` domain
-introduces a **template layer** that sits above the `step/` schemas.
+introduces a **template layer** that sits above the `generic/` and variant schemas.
 
 ```text
 characterization/
-  process/PMDCo/          ← template layer (fixed structure, required provenance)
-  step/
-    base/PMDCo/           ← generic step base
-    tensile-test/TTO/     ← specialised step variant
+  campaign/PMDCo/         ← template layer (fixed structure, required provenance)
+  generic/PMDCo/          ← generic base (no enforced provenance)
+  tensile-test/TTO/       ← specialised variant
 ```
 
 ### What the template layer does
 
-The `step/` schemas record measurement results. They leave operator, device, and
-specimen as optional — useful when you are integrating data from existing sources
-that may not carry all of this context.
+The `generic/` and variant schemas record measurement results. They leave
+operator, device, and specimen as optional — useful when you are integrating
+data from existing sources that may not carry all of this context.
 
-The `process/` schema is a **fixed-structure template**: it pre-decides that
+The `campaign/` schema is a **fixed-structure template**: it pre-decides that
 every experiment record must name who ran it, which device was used, and what
 specimen was tested. Those three slots are always present, always named the same
 way, always required. The user fills in values; no structural decisions are
 needed.
 
 ```text
-CharacterizationProcess  (obi:Assay)
-  prov:wasAssociatedWith ──► Expert IRI       [required]
-  schema:instrument      ──► Device IRI       [required]
-  has_specified_input    ──► Specimen IRI     [required]
-  dcterms:references     ──► Step result IRI  [optional]
+CharacterizationCampaign  (obi:Assay)
+  prov:wasAssociatedWith ──► Expert IRI          [required]
+  schema:instrument      ──► Device IRI          [required]
+  has_specified_input    ──► Specimen IRI        [required]
+  dcterms:references     ──► Result record IRI   [optional]
 ```
 
 `dcterms:references` (`step_reference`) is the link between the two layers:
-the `process/` record holds the provenance; the `step/` record holds the
-measurement results.
+the `campaign/` record holds the provenance; the `generic/` or variant record
+holds the measurement results.
 
 ### When to use each layer
 
 | Layer | Use when |
 |---|---|
-| `characterization/process/PMDCo/` | You want every record to be traceable (who + device + specimen mandatory) |
-| `characterization/step/base/PMDCo/` | You need a generic assay record without enforced provenance |
-| `characterization/step/tensile-test/TTO/` | You need typed tensile test result nodes |
+| `characterization/campaign/PMDCo/` | You want every record to be traceable (who + device + specimen mandatory) |
+| `characterization/generic/PMDCo/` | You need a generic assay record without enforced provenance |
+| `characterization/tensile-test/TTO/` | You need typed tensile test result nodes |
 
-The `process/` approach and the `step/` approach are not mutually exclusive.
-The recommended pattern is to create both: a `process/` record for provenance
-and a `step/` record for the measurement results, linked via `step_reference`.
+The `campaign/` approach and the `generic/` approach are not mutually exclusive.
+The recommended pattern is to create both: a `campaign/` record for provenance
+and a `generic/` or variant record for the measurement results, linked via
+`step_reference`.
 
 ### Extending the pattern
 
-The same `process/` + `step/base/` + `step/<variant>/` structure can be applied
+The same `campaign/` + `generic/` + `<variant>/` structure can be applied
 to `manufacturing/` and `simulation/` domains in the future. The pattern is:
 
 ```text
 <domain>/
-  process/<Ontology>/       ← template layer (enforces context fields)
-  step/
-    base/<Ontology>/        ← generic step base
-    <variant>/<Ontology>/   ← specialised variants
+  campaign/<Ontology>/      ← template layer (enforces context fields)
+  generic/<Ontology>/       ← generic base
+  <variant>/<Ontology>/     ← specialised variants
 ```
+
+For larger-scale data collection, the pattern extends further up:
+
+- A **`study/`** schema (not yet implemented) would group multiple campaigns
+  targeting the same research question — a campaign-of-campaigns, potentially
+  crossing domains (e.g. manufacture → characterise → simulate in one study).
+- A **`specimen/batch/`** schema (not yet implemented) would group a set of
+  specimens prepared under identical conditions, allowing a single provenance
+  record for the whole batch rather than one per specimen.
+
+These are forward-looking placeholders. When they are needed, they follow the
+same `campaign/` + `generic/` template-vs-record split described above.
 
 The pattern also applies at a higher level. `workflow/templates/material-card/PMDCo/`
 is a cross-schema template that sits above `workflow/PMDCo/` in the same way that
-`characterization/process/PMDCo/` sits above `characterization/step/base/PMDCo/`:
+`characterization/campaign/PMDCo/` sits above `characterization/generic/PMDCo/`:
 it pre-decides structure (six sub-schemas, required provenance) so the user only
 supplies values.
 
@@ -426,7 +435,7 @@ Does my schema contain sub-objects?
 
 - [OO-LD primer](2_oold-primer.md): what OO-LD is and how the schema format works
 - [Schema format reference](3_schema-format.md): folder structure, naming conventions, and the leaf-folder pattern
-- [Tensile Test (TTO)](../schemas/characterization/step/tensile-test/TTO/README.md): worked example of inheritance
-- [Constitutive Model Calibration (PMDCo)](../schemas/simulation/step/model-calibration/PMDCo/README.md): second inheritance example
+- [Constitutive Model Calibration (PMDCo)](../schemas/simulation/model-calibration/PMDCo/README.md): worked example of inheritance
+- [Tensile Test (TTO)](../schemas/characterization/tensile-test/TTO/README.md): standalone characterization schema
 - [Specimen (PMDCo)](../schemas/specimen/PMDCo/README.md): worked example of composition (chemical composition embedded)
-- [Manufacturing Step (PMDCo)](../schemas/manufacturing/step/base/PMDCo/README.md): worked example of IRI referencing
+- [Manufacturing Generic (PMDCo)](../schemas/manufacturing/generic/PMDCo/README.md): worked example of IRI referencing

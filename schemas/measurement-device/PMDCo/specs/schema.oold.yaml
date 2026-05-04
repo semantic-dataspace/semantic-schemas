@@ -22,7 +22,7 @@
 #   - Descriptive metadata (manufacturer, model, serial number) are mapped to
 #     schema.org terms which are stable, widely understood, and unambiguous.
 #   - calibration_date uses dcterms:date typed as xsd:date.
-#   - This schema is referenced by characterization/process/PMDCo/ which requires
+#   - This schema is referenced by characterization/campaign/PMDCo/ which requires
 #     a device IRI as a mandatory provenance field.
 
 "@context":

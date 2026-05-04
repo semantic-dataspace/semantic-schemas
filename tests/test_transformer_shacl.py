@@ -19,9 +19,9 @@ import rdflib
 
 SCHEMAS_ROOT     = Path(__file__).parent.parent / "schemas"
 
-TTO_SCHEMA_DIR   = SCHEMAS_ROOT / "characterization" / "step" / "tensile-test" / "TTO"
-PMDCO_SCHEMA_DIR = SCHEMAS_ROOT / "characterization" / "step" / "tensile-test" / "PMDCo"
-BASE_SCHEMA_DIR  = SCHEMAS_ROOT / "characterization" / "step" / "base" / "PMDCo"
+TTO_SCHEMA_DIR   = SCHEMAS_ROOT / "characterization" / "tensile-test" / "TTO"
+PMDCO_SCHEMA_DIR = SCHEMAS_ROOT / "characterization" / "tensile-test" / "PMDCo"
+BASE_SCHEMA_DIR  = SCHEMAS_ROOT / "characterization" / "generic" / "PMDCo"
 TTO_CSV_FILE     = TTO_SCHEMA_DIR   / "docs" / "example_tensile_test.TXT"
 PMDCO_CSV_FILE   = PMDCO_SCHEMA_DIR / "docs" / "example_tensile_test.TXT"
 

@@ -3,6 +3,14 @@
 Records the **areas of expertise of a materials science researcher**: which
 materials, methods, devices, and application fields they work with.
 
+| | |
+|---|---|
+| **Version** | `1.0.0` |
+| **Ontology pattern** | — |
+| **Extends** | — |
+| **Includes** | — |
+| **Transformers** | — |
+
 Each value is a link to a data container referred to as knowledge item (or k-item for short).
 
 ---

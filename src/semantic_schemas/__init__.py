@@ -137,7 +137,7 @@ class Schema:
         also :
             Additional Schema objects or Path objects whose shape files are
             loaded alongside this schema's own shape.  Use this when a schema
-            extends a base schema (e.g. tensile-test extends characterization/step).
+            extends a base schema (e.g. tensile-test extends characterization/generic).
 
         Returns
         -------

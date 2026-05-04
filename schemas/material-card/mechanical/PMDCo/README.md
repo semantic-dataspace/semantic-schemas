@@ -4,6 +4,14 @@ Records a **mechanical material card**: a structured dataset that collects
 elastic constants, discrete mechanical property values, and a fitted constitutive
 model into a single RDF-native object ready for use in FEM simulations.
 
+| | |
+|---|---|
+| **Version** | `1.0.0` |
+| **Ontology pattern** | — |
+| **Extends** | — |
+| **Includes** | — |
+| **Transformers** | — |
+
 Unlike the process schemas in this repository, this schema describes a **data
 artefact** (an `iao:DataSet`) rather than a process.
 
@@ -104,6 +112,6 @@ DataSet  (iao:IAO_0000100)
 
 ## Further reading
 
-- [Constitutive Model Calibration (PMDCo)](../../../simulation/step/model-calibration/PMDCo/README.md): the process that produces these parameters
+- [Constitutive Model Calibration (PMDCo)](../../../simulation/model-calibration/PMDCo/README.md): the process that produces these parameters
 - [Workflow example](../../../workflow/PMDCo/README.md): the full 4-step QA-to-FEM scenario
 - [OO-LD primer](../../../../docs/2_oold-primer.md): how the schema format works

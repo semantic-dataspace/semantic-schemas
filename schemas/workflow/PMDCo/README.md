@@ -4,6 +4,14 @@ Records a **multi-step workflow** spanning any combination of process domains
 (manufacturing, characterization, simulation, data management) in a single
 RDF graph node.
 
+| | |
+|---|---|
+| **Version** | `1.1.0` |
+| **Ontology pattern** | — |
+| **Extends** | — |
+| **Includes** | — |
+| **Transformers** | — |
+
 Each step carries an optional `reference` IRI pointing to its detailed schema
 instance so the workflow can combine PMDCo manufacturing steps, OBI assays,
 TTO tensile tests, and OBI computer simulations without coupling any of them
@@ -77,9 +85,9 @@ to express branching or merging.
 
 | `step_type` value | Domain | Schema |
 |---|---|---|
-| `pmdco:PMD_0000029` | Manufacturing | `manufacturing/step/base/PMDCo/` |
-| `obi:0000070` | Characterization | `characterization/step/base/PMDCo/` |
-| `obi:0000471` | Simulation | `simulation/step/base/PMDCo/` |
+| `pmdco:PMD_0000029` | Manufacturing | `manufacturing/generic/PMDCo/` |
+| `obi:0000070` | Characterization | `characterization/generic/PMDCo/` |
+| `obi:0000471` | Simulation | `simulation/generic/PMDCo/` |
 | *(omitted)* | Generic | `bfo:BFO_0000015` (plain process) |
 
 Mixing step types in a single workflow is intentional and supported. The
@@ -114,12 +122,12 @@ characterization results or calibrated model parameters.
 
 ## Further reading
 
-- [Manufacturing Step (PMDCo)](../../manufacturing/step/base/PMDCo/README.md)
+- [Manufacturing Generic (PMDCo)](../../manufacturing/generic/PMDCo/README.md)
 - [Material Card Template](../templates/material-card/PMDCo/README.md): fill-in-one-form approach (notebook 4)
-- [Characterization Process (PMDCo)](../../characterization/process/PMDCo/README.md)
-- [Characterization Step base (PMDCo)](../../characterization/step/base/PMDCo/README.md)
-- [Tensile Test (TTO)](../../characterization/step/tensile-test/TTO/README.md)
-- [Simulation Step (PMDCo)](../../simulation/step/base/PMDCo/README.md)
-- [Constitutive Model Calibration (PMDCo)](../../simulation/step/model-calibration/PMDCo/README.md)
+- [Characterization Campaign (PMDCo)](../../characterization/campaign/PMDCo/README.md)
+- [Characterization Generic (PMDCo)](../../characterization/generic/PMDCo/README.md)
+- [Tensile Test (TTO)](../../characterization/tensile-test/TTO/README.md)
+- [Simulation Generic (PMDCo)](../../simulation/generic/PMDCo/README.md)
+- [Constitutive Model Calibration (PMDCo)](../../simulation/model-calibration/PMDCo/README.md)
 - [Mechanical Material Card (PMDCo)](../../material-card/mechanical/PMDCo/README.md)
 - [OO-LD primer](../../../docs/2_oold-primer.md): how the schema format works
