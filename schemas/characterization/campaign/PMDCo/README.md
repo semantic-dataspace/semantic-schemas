@@ -5,14 +5,13 @@ The template pre-decides what to record: three slots are always present, always
 named the same way, always required. You fill in the values — no structural
 decisions needed.
 
-| | |
-|---|---|
-| **Version** | `2.0.0` |
-| **Ontology pattern** | — |
-| **Extends** | — |
-| **Includes** | — |
-| **Transformers** | — |
-
+<table>
+<tr><td><strong>Version</strong></td><td><code>2.0.0</code></td></tr>
+<tr><td><strong>Ontology pattern</strong></td><td>—</td></tr>
+<tr><td><strong>Extends</strong></td><td>—</td></tr>
+<tr><td><strong>Includes</strong></td><td>—</td></tr>
+<tr><td><strong>Transformers</strong></td><td>—</td></tr>
+</table>
 | Slot | What to fill in | Ontology property |
 |---|---|---|
 | `operator_iri` | IRI of the expert / technician who ran the experiment | `prov:wasAssociatedWith` |

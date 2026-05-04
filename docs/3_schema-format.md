@@ -172,14 +172,21 @@ following standard subfolders and files:
 Every schema `README.md` opens with a summary table immediately after the
 introductory paragraph:
 
-```markdown
-| | |
-|---|---|
-| **Version** | `2.0.0` |
-| **Ontology pattern** | [PMDCo measurement pattern][pmdco-measurement] |
-| **Extends** | — |
-| **Includes** | — |
-| **Transformers** | `testxpert_iii` |
+```html
+<table>
+<tr><td><strong>Version</strong></td><td><code>2.0.0</code></td></tr>
+<tr><td><strong>Ontology pattern</strong></td><td>
+<a href="https://github.com/materialdigital/core-ontology/tree/main/patterns/measurement">
+PMDCo measurement pattern</a>
+</td></tr>
+<tr><td><strong>Extends</strong></td><td>—</td></tr>
+<tr><td><strong>Includes</strong></td><td>—</td></tr>
+<tr><td><strong>Transformers</strong></td><td>
+<a href="https://github.com/semantic-dataspace/semantic-transformers/tree/main/
+src/semantic_transformers/parsers/characterization/tensile_test/testxpert_iii">
+<code>testxpert_iii</code></a>
+</td></tr>
+</table>
 ```
 
 | Field | What to put here |

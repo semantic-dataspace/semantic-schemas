@@ -4,14 +4,13 @@ Records a **mechanical material card**: a structured dataset that collects
 elastic constants, discrete mechanical property values, and a fitted constitutive
 model into a single RDF-native object ready for use in FEM simulations.
 
-| | |
-|---|---|
-| **Version** | `1.0.0` |
-| **Ontology pattern** | — |
-| **Extends** | — |
-| **Includes** | — |
-| **Transformers** | — |
-
+<table>
+<tr><td><strong>Version</strong></td><td><code>1.0.0</code></td></tr>
+<tr><td><strong>Ontology pattern</strong></td><td>—</td></tr>
+<tr><td><strong>Extends</strong></td><td>—</td></tr>
+<tr><td><strong>Includes</strong></td><td>—</td></tr>
+<tr><td><strong>Transformers</strong></td><td>—</td></tr>
+</table>
 Unlike the process schemas in this repository, this schema describes a **data
 artefact** (an `iao:DataSet`) rather than a process.
 

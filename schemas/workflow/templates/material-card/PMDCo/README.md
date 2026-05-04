@@ -3,14 +3,13 @@
 A **fixed-structure template** for running a complete tensile-test-to-FEM-material-card
 workflow in one go.
 
-| | |
-|---|---|
-| **Version** | `1.0.0` |
-| **Ontology pattern** | — |
-| **Extends** | — |
-| **Includes** | — |
-| **Transformers** | — |
-
+<table>
+<tr><td><strong>Version</strong></td><td><code>1.0.0</code></td></tr>
+<tr><td><strong>Ontology pattern</strong></td><td>—</td></tr>
+<tr><td><strong>Extends</strong></td><td>—</td></tr>
+<tr><td><strong>Includes</strong></td><td>—</td></tr>
+<tr><td><strong>Transformers</strong></td><td>—</td></tr>
+</table>
 Fill in one dictionary. Run the notebook. You get:
 
 - A connected record of every step (production, test, calibration, material card)

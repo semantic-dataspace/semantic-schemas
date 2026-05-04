@@ -4,14 +4,13 @@ Records a **multi-step workflow** spanning any combination of process domains
 (manufacturing, characterization, simulation, data management) in a single
 RDF graph node.
 
-| | |
-|---|---|
-| **Version** | `1.1.0` |
-| **Ontology pattern** | — |
-| **Extends** | — |
-| **Includes** | — |
-| **Transformers** | — |
-
+<table>
+<tr><td><strong>Version</strong></td><td><code>1.1.0</code></td></tr>
+<tr><td><strong>Ontology pattern</strong></td><td>—</td></tr>
+<tr><td><strong>Extends</strong></td><td>—</td></tr>
+<tr><td><strong>Includes</strong></td><td>—</td></tr>
+<tr><td><strong>Transformers</strong></td><td>—</td></tr>
+</table>
 Each step carries an optional `reference` IRI pointing to its detailed schema
 instance so the workflow can combine PMDCo manufacturing steps, OBI assays,
 TTO tensile tests, and OBI computer simulations without coupling any of them

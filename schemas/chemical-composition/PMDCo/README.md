@@ -4,14 +4,13 @@ Records the **chemical composition of a material** (which elements it
 contains and in what proportions) following the
 [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/).
 
-| | |
-|---|---|
-| **Version** | `1.0.0` |
-| **Ontology pattern** | — |
-| **Extends** | — |
-| **Includes** | — |
-| **Transformers** | — |
-
+<table>
+<tr><td><strong>Version</strong></td><td><code>1.0.0</code></td></tr>
+<tr><td><strong>Ontology pattern</strong></td><td>—</td></tr>
+<tr><td><strong>Extends</strong></td><td>—</td></tr>
+<tr><td><strong>Includes</strong></td><td>—</td></tr>
+<tr><td><strong>Transformers</strong></td><td>—</td></tr>
+</table>
 ---
 
 ## Quick start

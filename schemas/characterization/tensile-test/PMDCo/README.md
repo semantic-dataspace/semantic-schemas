@@ -4,14 +4,13 @@ Records a **uniaxial tensile test** and its results following the
 [PMDCo measurement pattern](https://github.com/materialdigital/core-ontology/tree/main/patterns/measurement),
 part of the [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/).
 
-| | |
-|---|---|
-| **Version** | `2.0.0` |
-| **Ontology pattern** | [PMDCo measurement pattern](https://github.com/materialdigital/core-ontology/tree/main/patterns/measurement) |
-| **Extends** | — |
-| **Includes** | — |
-| **Transformers** | [`testxpert_iii`](https://github.com/semantic-dataspace/semantic-transformers/tree/main/src/semantic_transformers/parsers/characterization/tensile_test/testxpert_iii) |
-
+<table>
+<tr><td><strong>Version</strong></td><td><code>2.0.0</code></td></tr>
+<tr><td><strong>Ontology pattern</strong></td><td><a href="https://github.com/materialdigital/core-ontology/tree/main/patterns/measurement">PMDCo measurement pattern</a></td></tr>
+<tr><td><strong>Extends</strong></td><td>—</td></tr>
+<tr><td><strong>Includes</strong></td><td>—</td></tr>
+<tr><td><strong>Transformers</strong></td><td><a href="https://github.com/semantic-dataspace/semantic-transformers/tree/main/src/semantic_transformers/parsers/characterization/tensile_test/testxpert_iii"><code>testxpert_iii</code></a></td></tr>
+</table>
 This schema uses generic PMDCo classes for all nodes.  Result properties are
 identified by a free-text name label rather than a fixed vocabulary.  Use
 [`tensile-test/TTO/`](../TTO/README.md) when classification of individual

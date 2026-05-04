@@ -5,14 +5,13 @@ following the
 [Tensile Test Ontology (TTO)](https://w3id.org/pmd/tto/) built on the
 [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/).
 
-| | |
-|---|---|
-| **Version** | `4.0.0` |
-| **Ontology pattern** | [Tensile Test Ontology (TTO)](https://github.com/materialdigital/tensile-test-ontology) |
-| **Extends** | — |
-| **Includes** | — |
-| **Transformers** | [`testxpert_iii`](https://github.com/semantic-dataspace/semantic-transformers/tree/main/src/semantic_transformers/parsers/characterization/tensile_test/testxpert_iii) |
-
+<table>
+<tr><td><strong>Version</strong></td><td><code>4.0.0</code></td></tr>
+<tr><td><strong>Ontology pattern</strong></td><td><a href="https://github.com/materialdigital/tensile-test-ontology">Tensile Test Ontology (TTO)</a></td></tr>
+<tr><td><strong>Extends</strong></td><td>—</td></tr>
+<tr><td><strong>Includes</strong></td><td>—</td></tr>
+<tr><td><strong>Transformers</strong></td><td><a href="https://github.com/semantic-dataspace/semantic-transformers/tree/main/src/semantic_transformers/parsers/characterization/tensile_test/testxpert_iii"><code>testxpert_iii</code></a></td></tr>
+</table>
 This schema is self-contained and follows the TTO reference data pattern
 from the [tensile-test-ontology](https://github.com/materialdigital/tensile-test-ontology)
 repository. Result properties are typed to TTO numeric class IRIs

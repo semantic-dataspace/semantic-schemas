@@ -3,14 +3,15 @@
 Records a **physical specimen** (its name, mass, and chemical composition)
 following the [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/).
 
-| | |
-|---|---|
-| **Version** | `1.0.0` |
-| **Ontology pattern** | [PMDCo duality object material](https://github.com/materialdigital/core-ontology/tree/main/patterns/duality%20object%20material) |
-| **Extends** | — |
-| **Includes** | [`chemical-composition/PMDCo/`](../../chemical-composition/PMDCo/README.md) |
-| **Transformers** | — |
-
+<table>
+<tr><td><strong>Version</strong></td><td><code>1.0.0</code></td></tr>
+<tr><td><strong>Ontology pattern</strong></td><td>
+<a href="https://github.com/materialdigital/core-ontology/tree/main/patterns/duality%20object%20material">PMDCo duality object material</a>
+</td></tr>
+<tr><td><strong>Extends</strong></td><td>—</td></tr>
+<tr><td><strong>Includes</strong></td><td><a href="../../chemical-composition/PMDCo/README.md"><code>chemical-composition/PMDCo/</code></a></td></tr>
+<tr><td><strong>Transformers</strong></td><td>—</td></tr>
+</table>
 This schema builds on the [Chemical Composition (PMDCo)](../../chemical-composition/PMDCo/README.md)
 schema: the composition sub-graph is produced by that schema's transform, which
 remains the single source of truth for element IRIs and naming conventions.

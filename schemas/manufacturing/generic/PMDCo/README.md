@@ -4,13 +4,15 @@ Records a **manufacturing process step** (its name, description, input and outpu
 materials, position in a process chain, and quantitative conditions) following the
 [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/).
 
-| | |
-|---|---|
-| **Version** | `3.0.0` |
-| **Ontology pattern** | [PMDCo input and output of processes](https://github.com/materialdigital/core-ontology/tree/main/patterns/input%20and%20output%20of%20processes) |
-| **Extends** | — |
-| **Includes** | — |
-| **Transformers** | — |
+<table>
+<tr><td><strong>Version</strong></td><td><code>3.0.0</code></td></tr>
+<tr><td><strong>Ontology pattern</strong></td><td>
+<a href="https://github.com/materialdigital/core-ontology/tree/main/patterns/input%20and%20output%20of%20processes">PMDCo input and output of processes</a>
+</td></tr>
+<tr><td><strong>Extends</strong></td><td>—</td></tr>
+<tr><td><strong>Includes</strong></td><td>—</td></tr>
+<tr><td><strong>Transformers</strong></td><td>—</td></tr>
+</table>
 
 ## Quick start
 

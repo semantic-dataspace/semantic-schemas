@@ -5,14 +5,13 @@ manufacturer, model, serial number, and last calibration date, following the
 [OBI](http://purl.obolibrary.org/obo/obi.owl) /
 [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/) conventions.
 
-| | |
-|---|---|
-| **Version** | `1.0.0` |
-| **Ontology pattern** | — |
-| **Extends** | — |
-| **Includes** | — |
-| **Transformers** | — |
-
+<table>
+<tr><td><strong>Version</strong></td><td><code>1.0.0</code></td></tr>
+<tr><td><strong>Ontology pattern</strong></td><td>—</td></tr>
+<tr><td><strong>Extends</strong></td><td>—</td></tr>
+<tr><td><strong>Includes</strong></td><td>—</td></tr>
+<tr><td><strong>Transformers</strong></td><td>—</td></tr>
+</table>
 Once registered, the device receives a stable IRI in the knowledge graph.
 That IRI is referenced in experiment records (e.g.
 [`characterization/campaign/PMDCo/`](../../characterization/campaign/PMDCo/README.md))

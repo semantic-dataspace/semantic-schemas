@@ -4,14 +4,13 @@ Records a **constitutive model calibration**: the computational process of
 fitting a flow-curve model (Hockett-Sherby, Swift, Voce, Hollomon, or
 Johnson-Cook) to experimental stress-strain data.
 
-| | |
-|---|---|
-| **Version** | `3.0.0` |
-| **Ontology pattern** | — |
-| **Extends** | [`simulation/generic/PMDCo/`](../generic/PMDCo/README.md) |
-| **Includes** | — |
-| **Transformers** | — |
-
+<table>
+<tr><td><strong>Version</strong></td><td><code>3.0.0</code></td></tr>
+<tr><td><strong>Ontology pattern</strong></td><td>—</td></tr>
+<tr><td><strong>Extends</strong></td><td><a href="../generic/PMDCo/README.md"><code>simulation/generic/PMDCo/</code></a></td></tr>
+<tr><td><strong>Includes</strong></td><td>—</td></tr>
+<tr><td><strong>Transformers</strong></td><td>—</td></tr>
+</table>
 This schema **extends** [`simulation/generic/PMDCo/`](../generic/PMDCo/README.md)
 via JSON Schema `$ref` / `allOf` and adds two specialised fields:
 

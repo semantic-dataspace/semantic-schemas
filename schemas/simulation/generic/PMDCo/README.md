@@ -5,14 +5,13 @@ model run, or any computer-executed calculation) following the
 [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/) and
 the [OBI ComputerSimulation](http://purl.obolibrary.org/obo/OBI_0000471) class.
 
-| | |
-|---|---|
-| **Version** | `3.0.0` |
-| **Ontology pattern** | — |
-| **Extends** | — |
-| **Includes** | — |
-| **Transformers** | — |
-
+<table>
+<tr><td><strong>Version</strong></td><td><code>3.0.0</code></td></tr>
+<tr><td><strong>Ontology pattern</strong></td><td>—</td></tr>
+<tr><td><strong>Extends</strong></td><td>—</td></tr>
+<tr><td><strong>Includes</strong></td><td>—</td></tr>
+<tr><td><strong>Transformers</strong></td><td>—</td></tr>
+</table>
 This is the **generic base** for all simulation schemas in this repository.
 Specialised schemas (such as `simulation/model-calibration/PMDCo/`) extend it via JSON
 Schema `$ref` to add domain-specific fields.

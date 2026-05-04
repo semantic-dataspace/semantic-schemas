@@ -5,14 +5,13 @@ analysis) following the
 [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/) and
 the [OBI Assay](http://purl.obolibrary.org/obo/OBI_0000070) class.
 
-| | |
-|---|---|
-| **Version** | `3.0.0` |
-| **Ontology pattern** | [PMDCo measurement pattern](https://github.com/materialdigital/core-ontology/tree/main/patterns/measurement) |
-| **Extends** | — |
-| **Includes** | — |
-| **Transformers** | — |
-
+<table>
+<tr><td><strong>Version</strong></td><td><code>3.0.0</code></td></tr>
+<tr><td><strong>Ontology pattern</strong></td><td><a href="https://github.com/materialdigital/core-ontology/tree/main/patterns/measurement">PMDCo measurement pattern</a></td></tr>
+<tr><td><strong>Extends</strong></td><td>—</td></tr>
+<tr><td><strong>Includes</strong></td><td>—</td></tr>
+<tr><td><strong>Transformers</strong></td><td>—</td></tr>
+</table>
 Specialised schemas can extend this one via JSON Schema `$ref` + `allOf` to add
 domain-specific result fields.
 
