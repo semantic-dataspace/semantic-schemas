@@ -29,10 +29,10 @@ jobs:
         run: |
           python -m venv .venv
           .venv/bin/pip install --upgrade pip
-          .venv/bin/pip install pyyaml
+          .venv/bin/pip install pyyaml pytest
 
       - name: Check manifest is up-to-date
-        run: .venv/bin/pytest tests/test_manifest.py -v
+        run: .venv/bin/pytest tests/test_manifest.py tests/test_schema_composition.py -v
 
   shacl:
     runs-on: ubuntu-latest
