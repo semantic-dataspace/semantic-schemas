@@ -23,7 +23,7 @@
    *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
    */
 
-  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/material-card/mechanical/PMDCo/#v1.0.0";
+  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/material-card/mechanical/PMDCo/#v0.1.0";
 
   /* ── Node ID ─────────────────────────────────────────────────────────── */
   $slug   := $replace($lowercase($trim(card_name)), /[^a-z0-9]+/, "-");

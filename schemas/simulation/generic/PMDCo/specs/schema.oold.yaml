@@ -77,8 +77,11 @@
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for an obi:ComputerSimulation (generic simulation step)
-x-schema-version: '3.0.0'
+x-schema-version: '0.1.0'
 x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/simulation/generic/PMDCo/'
+x-maturity: 'draft'
+x-process-step:
+  category: simulation
 title: Simulation Generic
 type: object
 required:

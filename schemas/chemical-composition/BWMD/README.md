@@ -6,7 +6,8 @@ contains and in what proportions) following the
 developed by Fraunhofer IWM.
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>1.0.0</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.1.0</code></td></tr>
+<tr><td><strong>Maturity</strong></td><td><code>stable</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>—</td></tr>
 <tr><td><strong>Extends</strong></td><td>—</td></tr>
 <tr><td><strong>Includes</strong></td><td>—</td></tr>

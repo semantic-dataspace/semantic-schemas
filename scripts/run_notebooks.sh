@@ -16,18 +16,31 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
 # ── Collect notebooks ──────────────────────────────────────────────────────
-if [ $# -ge 1 ] && [ "$1" != "--refresh" ]; then
-    # Single notebook passed as argument
+if [ $# -ge 1 ] && [ "$1" = "--refresh" ]; then
+    MODE="--refresh"
+    if [ $# -ge 2 ]; then
+        # Specific notebooks: ./scripts/run_notebooks.sh --refresh path/to/nb.ipynb ...
+        NOTEBOOKS=("${@:2}")
+    else
+        # All notebooks under schemas/, excluding checkpoint folders
+        mapfile -t NOTEBOOKS < <(
+            find schemas -name "*.ipynb" \
+                ! -path "*/.ipynb_checkpoints/*" \
+                | sort
+        )
+    fi
+elif [ $# -ge 1 ]; then
+    # Single/multiple notebooks in test mode
     NOTEBOOKS=("$@")
-    MODE="single"
+    MODE="test"
 else
-    # All notebooks under schemas/, excluding checkpoint folders
+    # All notebooks in test mode
     mapfile -t NOTEBOOKS < <(
         find schemas -name "*.ipynb" \
             ! -path "*/.ipynb_checkpoints/*" \
             | sort
     )
-    MODE="${1:-test}"
+    MODE="test"
 fi
 
 echo "Found ${#NOTEBOOKS[@]} notebook(s)."
@@ -48,10 +61,14 @@ if [ "$MODE" = "--refresh" ]; then
             "$nb"
     done
     echo ""
-    echo "Done. Commit the updated *.ipynb files together with any schema changes."
+    echo "Regenerating manifest …"
+    python scripts/generate_manifest.py
+    echo ""
+    echo "Done. Commit *.ipynb and schemas/manifest.json together with any schema changes."
 else
     # Test mode: execute and check for errors, do not save outputs
-    echo "Mode: test (pytest + nbmake)"
+    echo "Mode: test (pytest + nbmake + manifest check)"
     echo ""
     pytest --nbmake "${NOTEBOOKS[@]}"
+    pytest tests/test_manifest.py -v
 fi

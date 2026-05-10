@@ -5,7 +5,8 @@ elastic constants, discrete mechanical property values, and a fitted constitutiv
 model into a single RDF-native object ready for use in FEM simulations.
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>1.0.0</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.1.0</code></td></tr>
+<tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>—</td></tr>
 <tr><td><strong>Extends</strong></td><td>—</td></tr>
 <tr><td><strong>Includes</strong></td><td>—</td></tr>
@@ -112,5 +113,5 @@ DataSet  (iao:IAO_0000100)
 ## Further reading
 
 - [Constitutive Model Calibration (PMDCo)](../../../simulation/model-calibration/PMDCo/README.md): the process that produces these parameters
-- [Workflow example](../../../workflow/PMDCo/README.md): the full 4-step QA-to-FEM scenario
+- [Workflow example](../../../workflow/OBI/README.md): the full 4-step QA-to-FEM scenario
 - [OO-LD primer](../../../../docs/2_oold-primer.md): how the schema format works

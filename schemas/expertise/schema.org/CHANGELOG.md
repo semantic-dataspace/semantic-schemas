@@ -5,6 +5,24 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.1.0] — 2026-05-10
+
+### Deprecated
+
+- This schema is deprecated in favour of [Expertise (VIVO)](../VIVO/). The
+  VIVO schema expresses research-area expertise and instrument experience with
+  two distinct predicates (`vivo:hasResearchArea`, `vivo:hasExperienceIn`),
+  resolving the key limitation of this schema where all categories shared a
+  single `schema:knowsAbout` predicate. New records should use
+  `expertise/VIVO/` instead.
+- `x-maturity` set to `deprecated`.
+
+### Changed
+
+- Version numbering reset to `0.1.0` (SemVer 0.x pre-release convention).
+
+---
+
 ## [1.0.0] — 2026-04-27
 
 ### Added

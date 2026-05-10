@@ -5,6 +5,80 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2026-05-10
+
+### Breaking changes
+
+- **`workflow/PMDCo/` renamed to `workflow/OBI/`** and completely redesigned.
+  The workflow record is now a simple ordered list of step IRIs
+  (`bfo:has_part` with `@container: @list`) rather than embedded step nodes.
+  Root class changed from `bfo:Process` (BFO_0000015) to `obi:AnalyticProtocol`
+  (OBI_0000272). Simplified input changed: `workflow_name` renamed to `label`;
+  `steps` is now a plain array of URI strings.
+- **`characterization/campaign/PMDCo/` deleted.** The campaign schema has been
+  removed from the repository. Use `characterization/generic/PMDCo/` and attach
+  provenance fields directly to the generic step record.
+- **`workflow/templates/material-card/PMDCo/` deleted.** The template depended
+  on the now-deleted campaign schema and has been removed. The notebook
+  `workflow/OBI/docs/3_material_card_without_template.ipynb` covers the same
+  end-to-end scenario.
+- **Version reset.** All individual schema versions reset to `0.1.0`, adopting
+  the SemVer convention that major version 0 signals a pre-release draft. See
+  each schema's own CHANGELOG for the SPARQL migration snippet.
+
+### Added
+
+- **`expertise/VIVO/`** — new expertise schema using VIVO Core predicates.
+  Replaces `expertise/schema.org/` with predicate-level separation between
+  research-area expertise (`vivo:hasResearchArea`) and instrument experience
+  (`vivo:hasExperienceIn`). Includes OO-LD schema, SHACL shape, example, and
+  notebook.
+- **CHANGELOGs** added for six schemas that were missing them:
+  `chemical-composition/BWMD`, `chemical-composition/PMDCo`,
+  `material-card/mechanical/PMDCo`, `specimen/PMDCo`, `expertise/VIVO`,
+  `process-step/PMDCo`.
+
+### Deprecated
+
+- **`expertise/schema.org/`** marked deprecated (`x-maturity: deprecated`).
+  Migrate to `expertise/VIVO/`.
+
+### Fixed
+
+- **`measurement-device/PMDCo/`**: `manufacturer` field no longer causes SHACL
+  validation failures. The `"@type": "@id"` entry in the JSON-LD context was
+  treating plain string values as IRIs, violating the `sh:datatype xsd:string`
+  constraint.
+
+### Changed
+
+- **`scripts/run_notebooks.sh`** now accepts a notebook path argument together
+  with `--refresh`, enabling single-notebook output refresh
+  (`./scripts/run_notebooks.sh --refresh path/to/nb.ipynb`).
+- CATALOG.md updated: campaign and template rows removed; expertise split into
+  VIVO (active) and schema.org (deprecated).
+
+### Migration
+
+| Old path | New path |
+|---|---|
+| `workflow/PMDCo/` | `workflow/OBI/` |
+| `characterization/campaign/PMDCo/` | removed |
+| `workflow/templates/material-card/PMDCo/` | removed |
+| `expertise/schema.org/` | `expertise/VIVO/` (preferred) |
+
+Update `conforms_to` IRI filters:
+
+```sparql
+# workflow
+FILTER(STR(?conformsTo) = "…/workflow/PMDCo/#v2.0.0")   # old
+FILTER(STR(?conformsTo) = "…/workflow/OBI/#v0.1.0")     # new
+
+# all other schemas: replace /#v<old> with /#v0.1.0
+```
+
+---
+
 ## [0.5.0] - 2026-05-04
 
 ### Changed
@@ -333,8 +407,6 @@ schema CHANGELOGs for the exact old → new IRI mapping).
 - Performance and simulation domain extensions
 - Custom validators and schema composition tools
 - Web-based schema editor interface
-- `manufacturing/campaign/PMDCo/` and `simulation/campaign/PMDCo/` provenance
-  templates following the `characterization/campaign/PMDCo/` pattern
 - `study/` schema: campaign-of-campaigns grouping multiple experiments under
   one research question, potentially crossing domains
 - `specimen/batch/` schema: batch provenance for sets of specimens prepared

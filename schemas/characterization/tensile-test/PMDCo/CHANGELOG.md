@@ -5,6 +5,27 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.1.0] — 2026-05-10
+
+### Changed
+
+- Version numbering reset to `0.1.0`. All schemas in this repository adopted
+  the SemVer convention that major version 0 signals a pre-release draft. No
+  field or graph changes.
+
+### Migration
+
+Update `conforms_to` IRI filters in SPARQL queries:
+
+```sparql
+# old
+FILTER(STR(?conformsTo) = "…/characterization/tensile-test/#v3.0.0")
+# new
+FILTER(STR(?conformsTo) = "…/characterization/tensile-test/#v0.1.0")
+```
+
+---
+
 ## [2.0.0] — 2026-05-04
 
 ### Breaking changes

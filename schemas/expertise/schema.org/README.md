@@ -1,10 +1,16 @@
-# Expertise
+# Expertise (schema.org) — DEPRECATED
+
+> **This schema is deprecated.** Use [Expertise (VIVO)](../VIVO/README.md) instead.
+> VIVO provides predicate-level distinction between research-area expertise
+> (`vivo:hasResearchArea`) and instrument experience (`vivo:hasExperienceIn`),
+> which this schema cannot express with a single `schema:knowsAbout` property.
 
 Records the **areas of expertise of a materials science researcher**: which
 materials, methods, devices, and application fields they work with.
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>1.0.0</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.1.0</code></td></tr>
+<tr><td><strong>Maturity</strong></td><td><code>deprecated</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>—</td></tr>
 <tr><td><strong>Extends</strong></td><td>—</td></tr>
 <tr><td><strong>Includes</strong></td><td>—</td></tr>

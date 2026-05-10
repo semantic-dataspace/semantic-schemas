@@ -80,8 +80,11 @@
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for a pmdco:ManufacturingProcess (Input and Output of Processes pattern)
-x-schema-version: '3.0.0'
+x-schema-version: '0.1.0'
 x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/manufacturing/generic/PMDCo/'
+x-maturity: 'draft'
+x-process-step:
+  category: manufacturing
 title: Manufacturing Generic
 type: object
 required:

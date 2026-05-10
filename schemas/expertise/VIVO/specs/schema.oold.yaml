@@ -1,0 +1,162 @@
+# OO-LD Schema for Expert Expertise Profile (VIVO pattern)
+# Ontology: VIVO Core Ontology
+#   https://vivoweb.org/ontology/core
+#   https://github.com/vivo-project/VIVO
+#
+# Graph pattern:
+#
+#   foaf:Person
+#     vivo:hasResearchArea ─────────────────────► material IRI        [× 0..N]
+#     vivo:hasResearchArea ─────────────────────► modelling IRI       [× 0..N]
+#     vivo:hasResearchArea ─────────────────────► application IRI     [× 0..N]
+#     vivo:hasResearchArea ─────────────────────► method IRI          [× 0..N]
+#     vivo:hasExperienceIn ─────────────────────► measurement device  [× 0..N]
+#     vivo:hasExperienceIn ─────────────────────► production device   [× 0..N]
+#
+# Semantic distinction by property:
+#   vivo:hasResearchArea  — academic or scientific domain the person studies or publishes in
+#   vivo:hasExperienceIn  — practical experience with equipment or instruments
+#
+# Both properties have foaf:Person in their domain and owl:Thing in their range.
+# The rdf:type of the referenced vocabulary term (owl:Class from vocabulary.materials-data.space)
+# provides additional type-level semantics within each set.
+#
+# Vocabulary source:
+#   https://vocabulary.materials-data.space
+
+"@context":
+  vivo: "http://vivoweb.org/ontology/core#"
+  foaf: "http://xmlns.com/foaf/0.1/"
+  dcterms: "http://purl.org/dc/terms/"
+  type: "@type"
+  id: "@id"
+  conforms_to:
+    "@id": "http://purl.org/dc/terms/conformsTo"
+    "@type": "@id"
+
+  # Research areas: scientific and engineering domains the person works in.
+  # All four map to vivo:hasResearchArea; semantic distinction between
+  # materials / modelling / application / method is carried by the rdf:type
+  # of the referenced vocabulary term.
+  materials:
+    "@id": "vivo:hasResearchArea"
+    "@type": "@id"
+    "@container": "@set"
+  material_modelling:
+    "@id": "vivo:hasResearchArea"
+    "@type": "@id"
+    "@container": "@set"
+  application_fields:
+    "@id": "vivo:hasResearchArea"
+    "@type": "@id"
+    "@container": "@set"
+  methods:
+    "@id": "vivo:hasResearchArea"
+    "@type": "@id"
+    "@container": "@set"
+
+  # Instrument experience: practical hands-on knowledge of equipment.
+  # vivo:hasExperienceIn distinguishes device expertise from research-area
+  # expertise at the predicate level, not just at the object type level.
+  measurement_devices:
+    "@id": "vivo:hasExperienceIn"
+    "@type": "@id"
+    "@container": "@set"
+  production_devices:
+    "@id": "vivo:hasExperienceIn"
+    "@type": "@id"
+    "@container": "@set"
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: >-
+  OO-LD Schema for Expert Expertise Profile using the VIVO Core Ontology.
+  Research area expertise (materials, modelling, methods, application fields) is
+  expressed with vivo:hasResearchArea. Instrument expertise (measurement and
+  production devices) uses vivo:hasExperienceIn to distinguish hands-on device
+  knowledge from scientific domain knowledge at the predicate level.
+  All objects are IRIs from vocabulary.materials-data.space.
+x-schema-version: '0.1.0'
+x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/expertise/VIVO/'
+x-maturity: 'draft'
+title: Expertise (VIVO)
+description: Expertise profile of a domain expert in materials science
+type: object
+required:
+  - type
+
+properties:
+  type:
+    title: Type
+    description: RDF type of this instance
+    type: string
+    readOnly: true
+    const: "foaf:Person"
+    default: "foaf:Person"
+
+  conforms_to:
+    title: Schema
+    description: Versioned IRI of the schema used to create this instance
+    type: string
+    readOnly: true
+    const: "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/expertise/VIVO/#v0.1.0"
+    default: "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/expertise/VIVO/#v0.1.0"
+
+  materials:
+    title: Materials
+    description: Materials the expert has expertise in (vivo:hasResearchArea)
+    type: array
+    x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/material/use-cases/base/terms"
+    items:
+      type: string
+    uniqueItems: true
+    default: []
+
+  material_modelling:
+    title: Material Modelling
+    description: Modelling and simulation approaches the expert has expertise in (vivo:hasResearchArea)
+    type: array
+    x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/material-modelling-method/use-cases/base/terms"
+    items:
+      type: string
+    uniqueItems: true
+    default: []
+
+  application_fields:
+    title: Application Fields
+    description: Application domains and industries the expert works in (vivo:hasResearchArea)
+    type: array
+    x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/application-field/use-cases/base/terms"
+    items:
+      type: string
+    uniqueItems: true
+    default: []
+
+  methods:
+    title: Methods
+    description: Scientific and engineering methods the expert has expertise in (vivo:hasResearchArea)
+    type: array
+    x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/method/use-cases/base/terms"
+    items:
+      type: string
+    uniqueItems: true
+    default: []
+
+  measurement_devices:
+    title: Measurement Devices
+    description: Measurement and characterisation devices the expert has hands-on experience with (vivo:hasExperienceIn)
+    type: array
+    x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-device/use-cases/base/terms"
+    items:
+      type: string
+    uniqueItems: true
+    default: []
+
+  production_devices:
+    title: Production Devices
+    description: Manufacturing and production devices the expert has hands-on experience with (vivo:hasExperienceIn)
+    type: array
+    x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/production-device/use-cases/base/terms"
+    items:
+      type: string
+    uniqueItems: true
+    default: []

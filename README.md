@@ -104,6 +104,7 @@ OO-LD (Object-Oriented Linked Data) format itself.
 | [docs/2_oold-primer.md](docs/2_oold-primer.md) | How the OO-LD (Object-Oriented Linked Data) schema format works |
 | [docs/3_schema-format.md](docs/3_schema-format.md) | Field reference for writing and reviewing schemas |
 | [docs/4_schema-patterns.md](docs/4_schema-patterns.md) | Inheritance and composition between schemas |
+| [docs/5_llm-schema-guide.md](docs/5_llm-schema-guide.md) | Step-by-step guide for drafting a new schema with an LLM |
 
 ---
 

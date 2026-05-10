@@ -112,10 +112,21 @@ timeseries_pattern:
   unit_predicate:        "http://purl.obolibrary.org/obo/IAO_0000039"
   container_label:       "Raw time series"
 
+allOf:
+  - $ref: "../../../../process-step/PMDCo/specs/schema.oold.yaml"
+
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: TTO + PMDCo 3 schema for a tensile test process node
-x-schema-version: '4.0.0'
+x-schema-version: '0.1.0'
 x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/tensile-test/TTO/'
+x-maturity: 'draft'
+x-process-step:
+  category: characterization
+# x-transformers lists the backend parser IDs that can ingest instrument files for this schema.
+# The webform-builder adapter uses this to inject a File upload field into the form and expose
+# Webform.transformers to the consuming application.  The application is responsible for routing
+# the uploaded file to the appropriate backend service and pre-filling the form with its output.
+# Supported IDs: testxpert_iii (ZwickRoell TestXpert III export files, .TXT format).
 x-transformers: [testxpert_iii]
 title: Tensile Test (TTO)
 type: object
@@ -188,14 +199,29 @@ properties:
         label:
           title: Test Standard
           description: >-
-            Standard or norm applied (e.g. "ISO 6892-1").
+            Standard or norm applied.
             Stored as rdfs:label on the method node.
           type: string
+          enum:
+            - ISO 6892-1:2019
+            - ASTM E8/E8M-22
+            - DIN EN ISO 6892-1:2020
+            - EN 10002-1
+            - JIS Z 2241:2011
+          options:
+            enum_titles:
+              - ISO 6892-1:2019 (international)
+              - ASTM E8/E8M-22 (US)
+              - DIN EN ISO 6892-1:2020 (Germany)
+              - EN 10002-1 (European, superseded)
+              - JIS Z 2241:2011 (Japan)
     default: []
 
   has_specified_input:
     title: Specimen
-    description: IRI of the specimen being tested (OBI_0000293).
+    description: >-
+      The material sample (specimen) that was tested.
+      Select the corresponding entry from the knowledge graph.
     type: array
     minItems: 1
     items:
@@ -207,31 +233,73 @@ properties:
   has_process_attribute:
     title: Test Conditions
     description: >-
-      Condition quality nodes linked via pmdco:PMD_0000009.
-      Each entry is a TTO or PMDCo quality instance (e.g. strain rate, temperature)
-      that links to its measurement datum via IAO_0000417.
+      Quantitative conditions applied during the test (strain rate, temperature, etc.).
+      Each entry is typed to a TTO or PMDCo quality class and carries the measured value
+      and unit directly.  The transformer generates the linked SMD node from this data.
     type: array
     items:
       type: object
-      title: Condition Quality Node
+      title: Test Condition
       required:
         - type
         - id
         - is_quality_measured_as
+        - result_value
+        - result_unit
       properties:
         type:
-          title: Quality Type
-          description: TTO or PMDCo class IRI for this condition.
+          title: Condition Type
           type: string
+          enum:
+            - tto:TTO_0000051
+            - pmdco:PMD_0000967
+            - tto:TTO_0000052
+            - tto:TTO_0000055
+          options:
+            enum_titles:
+              - Strain Rate
+              - Temperature
+              - Test Speed
+              - Gauge Length
         id:
           title: Quality IRI
           type: string
           readOnly: true
+          default: condition-1
         is_quality_measured_as:
           title: Measured As (SMD IRI)
-          description: IRI of the ScalarMeasurementDatum for this condition (IAO_0000417).
           type: string
-          format: uri
+          readOnly: true
+          default: ""
+        result_value:
+          title: Value
+          type: number
+          minimum: 0
+        result_unit:
+          title: Unit
+          type: string
+          enum:
+            - unit:PER-SEC
+            - unit:MilliM-PER-MIN
+            - unit:MilliM-PER-SEC
+            - unit:DEG_C
+            - unit:K
+            - unit:MilliM
+          options:
+            enum_titles:
+              - "1/s (strain rate)"
+              - "mm/min (speed)"
+              - "mm/s (speed)"
+              - "°C (Celsius)"
+              - "K (Kelvin)"
+              - "mm (length)"
+          x-depends-on:
+            field: type
+            values:
+              tto:TTO_0000051: [unit:PER-SEC]
+              pmdco:PMD_0000967: [unit:DEG_C, unit:K]
+              tto:TTO_0000052: [unit:MilliM-PER-MIN, unit:MilliM-PER-SEC]
+              tto:TTO_0000055: [unit:MilliM]
     default: []
 
   measured_properties:
@@ -267,53 +335,48 @@ properties:
           readOnly: true
           default: result-1-smd
         is_about:
-          title: Quality Instance
-          description: >-
-            The quality node (TTO or PMDCo class instance) this datum measures.
-            May be provided as an IRI string or as an embedded node object
-            carrying the quality type and its IAO_0000417 back-link.
-          oneOf:
-            - type: string
-              format: uri
-            - type: object
-              required:
-                - type
-                - id
-                - is_quality_measured_as
-              properties:
-                type:
-                  title: Quality Type
-                  description: TTO or PMDCo class CURIE for this quality.
-                  type: string
-                  enum:
-                    - tto:TTO_0000009
-                    - tto:TTO_0000059
-                    - tto:TTO_0000022
-                    - tto:TTO_0000053
-                    - tto:TTO_0000047
-                    - tto:TTO_0000033
-                    - tto:TTO_0000035
-                    - tto:TTO_0000038
-                  options:
-                    enum_titles:
-                      - Yield Strength (Rₑ)
-                      - Upper Yield Strength (ReH)
-                      - Lower Yield Strength (ReL)
-                      - Tensile Strength (Rm)
-                      - Proof Strength Rp0.2
-                      - Elongation After Fracture (A)
-                      - Permanent Elongation (Ag)
-                      - Reduction of Area (Z)
-                id:
-                  title: Quality IRI
-                  type: string
-                  readOnly: true
-                  default: result-1
-                is_quality_measured_as:
-                  title: SMD IRI
-                  description: IRI of the ScalarMeasurementDatum for this quality (IAO_0000417).
-                  type: string
-                  format: uri
+          title: Property Type
+          description: TTO quality class that this measurement datum characterises.
+          type: object
+          required:
+            - type
+            - id
+            - is_quality_measured_as
+          properties:
+            type:
+              title: Property Type
+              description: TTO quality class CURIE for this measured property.
+              type: string
+              enum:
+                - tto:TTO_0000009
+                - tto:TTO_0000059
+                - tto:TTO_0000022
+                - tto:TTO_0000053
+                - tto:TTO_0000047
+                - tto:TTO_0000033
+                - tto:TTO_0000035
+                - tto:TTO_0000038
+              options:
+                enum_titles:
+                  - Yield Strength (Re)
+                  - Upper Yield Strength (ReH)
+                  - Lower Yield Strength (ReL)
+                  - Tensile Strength (Rm)
+                  - Proof Strength (Rp0.2)
+                  - Elongation After Fracture (A)
+                  - Uniform Elongation (Ag)
+                  - Reduction of Area (Z)
+            id:
+              title: Quality IRI
+              type: string
+              readOnly: true
+              default: result-1
+            is_quality_measured_as:
+              title: SMD IRI
+              description: IRI of the datum for this quality (auto-linked by transformer).
+              type: string
+              readOnly: true
+              default: result-1-smd
         has_value_spec:
           title: Value Specification
           description: ScalarValueSpecification carrying the numeric value and unit.
@@ -322,8 +385,7 @@ properties:
             - type
             - id
             - result_value
-            - is_about
-            - specifies_value_of
+            - result_unit
           properties:
             type:
               title: Type
@@ -341,22 +403,33 @@ properties:
               default: result-1-svs
             result_value:
               title: Value
-              description: >-
-                Numeric value stored as pmdco:PMD_0000006 (has_value), typed xsd:float.
+              description: Numeric measurement value.
               type: number
               minimum: 0
             result_unit:
               title: Unit
-              description: QUDT unit IRI.
               type: string
+              enum:
+                - unit:MegaPascal
+                - unit:GigaPascal
+                - unit:PERCENT
+                - unit:MilliMETER--PER--MilliMETER
+              options:
+                enum_titles:
+                  - MPa (megapascal)
+                  - GPa (gigapascal)
+                  - "% (percent)"
+                  - mm/mm (dimensionless strain)
             is_about:
               title: Quality IRI
-              description: IRI of the quality instance this SVS is about (IAO_0000136).
+              description: IRI of the quality this SVS is about (auto-filled).
               type: string
-              format: uri
+              readOnly: true
+              default: result-1
             specifies_value_of:
               title: Specifies Value Of
-              description: IRI of the quality instance this value quantifies (OBI_0001927).
+              description: IRI of the quality this value quantifies (auto-filled).
               type: string
-              format: uri
+              readOnly: true
+              default: result-1
     default: []

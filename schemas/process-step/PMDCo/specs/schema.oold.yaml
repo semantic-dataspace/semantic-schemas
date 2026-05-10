@@ -1,0 +1,143 @@
+# OO-LD Schema for Process Step (PMDCo / OBI base pattern)
+# Ontology: Platform MaterialDigital Core Ontology (PMDCo) / OBI / PROV-O
+#   https://w3id.org/pmd/co/
+#   http://purl.obolibrary.org/obo/obi.owl
+#   http://www.w3.org/ns/prov
+#
+# This schema defines the BASE PATTERN that all process step schemas must satisfy.
+# Step-specific schemas (tensile test, simulation, …) compose with this schema
+# using JSON Schema allOf + $ref:
+#
+#   allOf:
+#     - $ref: "../../../process-step/PMDCo/specs/schema.oold.yaml"
+#
+# The allOf composition is resolved by resolveSchemaRefs() before form parsing.
+# Properties in the step-specific schema override base properties of the same name.
+# Required fields are unioned: a step inherits all required fields from this schema.
+#
+# Graph pattern:
+#
+#   obo:OBI_0000070  (PlannedProcess)
+#     rdfs:label ───────────────────────────────── step name
+#     rdfs:comment ─────────────────────────────── notes  (optional)
+#     dcterms:date ─────────────────────────────── execution date  (optional)
+#     obo:OBI_0000293 ──────────────────────────── inputs  [× 0..N]  (specimens, materials)
+#     prov:wasAssociatedWith ───────────────────── operator  (optional, person IRI)
+#     schema:instrument ────────────────────────── instrument / device  (optional, device IRI)
+
+"@context":
+  rdf:     "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  rdfs:    "http://www.w3.org/2000/01/rdf-schema#"
+  xsd:     "http://www.w3.org/2001/XMLSchema#"
+  dcterms: "http://purl.org/dc/terms/"
+  prov:    "http://www.w3.org/ns/prov#"
+  schema:  "https://schema.org/"
+  obo:     "http://purl.obolibrary.org/obo/"
+  pmdco:   "https://w3id.org/pmd/co/"
+  type:    "@type"
+  id:      "@id"
+  label:
+    "@id": "rdfs:label"
+  notes:
+    "@id": "rdfs:comment"
+  date:
+    "@id": "dcterms:date"
+    "@type": "xsd:dateTime"
+  # obi:OBI_0000293 — material entities that are consumed or observed by this process
+  has_specified_input:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0000293"
+    "@type": "@id"
+    "@container": "@set"
+  # prov:wasAssociatedWith — agent (person) responsible for executing this process
+  operator:
+    "@id": "http://www.w3.org/ns/prov#wasAssociatedWith"
+    "@type": "@id"
+  # schema:instrument — physical instrument or device used to carry out this process
+  instrument:
+    "@id": "https://schema.org/instrument"
+    "@type": "@id"
+  "@base": "https://example.org/"
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: >-
+  Base pattern schema for a PMDCo/OBI process step.
+  Compose with this schema using allOf + $ref in step-specific schemas.
+  Do not use this schema directly unless recording a generic uncategorised step.
+x-schema-version: '0.1.0'
+x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/process-step/PMDCo/'
+x-maturity: 'draft'
+x-hidden: true
+# Marks this schema as a valid process step.
+# Step-specific schemas set category to characterization | simulation | manufacturing | preparation.
+x-process-step:
+  category: generic
+title: Process Step (PMDCo)
+description: A single process step — the base pattern for all workflow steps.
+type: object
+
+required:
+  - type
+  - id
+  - label
+
+properties:
+
+  type:
+    title: Type
+    type: string
+    readOnly: true
+    const: "obo:OBI_0000070"
+    default: "obo:OBI_0000070"
+    options:
+      enum_titles:
+        - obi:PlannedProcess
+
+  id:
+    title: ID
+    description: Identifier for this process step instance; managed by the consumer.
+    type: string
+    readOnly: true
+    default: process-step
+
+  label:
+    title: Step Name
+    description: Human-readable name for this process step.
+    type: string
+
+  notes:
+    title: Notes
+    description: Free-text observations, remarks, or execution log summary.
+    type: string
+    format: textarea
+
+  date:
+    title: Execution Date / Time
+    description: Date and time at which this process step was performed (ISO 8601 YYYY-MM-DDTHH:MM).
+    type: string
+    format: date-time
+
+  has_specified_input:
+    title: Inputs
+    description: >-
+      Material entities (specimens, samples, datasets) consumed or observed by this step.
+      Select the corresponding entries from the knowledge graph.
+    type: array
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  operator:
+    title: Operator
+    description: Person who performed this process step.
+    type: string
+    format: uri
+
+  instrument:
+    title: Instrument / Device
+    description: >-
+      Physical instrument or device used to carry out this step.
+      Select the registered device from the knowledge graph.
+    type: string
+    format: uri

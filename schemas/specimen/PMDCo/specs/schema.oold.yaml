@@ -128,14 +128,15 @@ $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: >-
   Schema for a bfo:Object (Specimen) bearing a pmdco:Mass quality and a
   pmdco:ChemicalComposition quality (composed via $ref).
-x-schema-version: '1.0.0'
+x-schema-version: '0.1.0'
 x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/specimen/PMDCo/'
+x-maturity: 'draft'
 # Schemas referenced by $ref and the versions they were tested against.
 # Update this table when either schema releases a new version.
 x-schema-dependencies:
   - schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/chemical-composition/PMDCo/'
     compatible-versions:
-      - '1.0.0'
+      - '0.1.0'
     property: has_composition
 title: Specimen
 type: object

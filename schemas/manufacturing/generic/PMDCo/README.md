@@ -5,7 +5,8 @@ materials, position in a process chain, and quantitative conditions) following t
 [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/).
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>3.0.0</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.1.0</code></td></tr>
+<tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>
 <a href="https://github.com/materialdigital/core-ontology/tree/main/patterns/input%20and%20output%20of%20processes">PMDCo input and output of processes</a>
 </td></tr>

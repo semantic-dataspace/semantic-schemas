@@ -6,7 +6,8 @@ manufacturer, model, serial number, and last calibration date, following the
 [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/) conventions.
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>1.0.0</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.1.0</code></td></tr>
+<tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>—</td></tr>
 <tr><td><strong>Extends</strong></td><td>—</td></tr>
 <tr><td><strong>Includes</strong></td><td>—</td></tr>

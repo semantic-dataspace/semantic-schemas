@@ -1,0 +1,96 @@
+{
+  "tree": [
+    {
+      "path": "schemas/characterization/generic/PMDCo/specs/schema.oold.yaml",
+      "maturity": "draft"
+    },
+    {
+      "path": "schemas/characterization/generic/PMDCo/specs/shape.ttl"
+    },
+    {
+      "path": "schemas/characterization/tensile-test/PMDCo/specs/schema.oold.yaml",
+      "maturity": "draft"
+    },
+    {
+      "path": "schemas/characterization/tensile-test/PMDCo/specs/shape.ttl"
+    },
+    {
+      "path": "schemas/characterization/tensile-test/TTO/specs/schema.oold.yaml",
+      "maturity": "draft"
+    },
+    {
+      "path": "schemas/characterization/tensile-test/TTO/specs/shape.ttl"
+    },
+    {
+      "path": "schemas/chemical-composition/BWMD/specs/schema.oold.yaml",
+      "maturity": "stable"
+    },
+    {
+      "path": "schemas/chemical-composition/BWMD/specs/shape.ttl"
+    },
+    {
+      "path": "schemas/chemical-composition/PMDCo/specs/schema.oold.yaml",
+      "maturity": "stable"
+    },
+    {
+      "path": "schemas/chemical-composition/PMDCo/specs/shape.ttl"
+    },
+    {
+      "path": "schemas/expertise/VIVO/specs/schema.oold.yaml",
+      "maturity": "draft"
+    },
+    {
+      "path": "schemas/expertise/schema.org/specs/schema.oold.yaml",
+      "maturity": "deprecated"
+    },
+    {
+      "path": "schemas/manufacturing/generic/PMDCo/specs/schema.oold.yaml",
+      "maturity": "draft"
+    },
+    {
+      "path": "schemas/manufacturing/generic/PMDCo/specs/shape.ttl"
+    },
+    {
+      "path": "schemas/material-card/mechanical/PMDCo/specs/schema.oold.yaml",
+      "maturity": "draft"
+    },
+    {
+      "path": "schemas/material-card/mechanical/PMDCo/specs/shape.ttl"
+    },
+    {
+      "path": "schemas/measurement-device/PMDCo/specs/schema.oold.yaml",
+      "maturity": "draft"
+    },
+    {
+      "path": "schemas/measurement-device/PMDCo/specs/shape.ttl"
+    },
+    {
+      "path": "schemas/simulation/generic/PMDCo/specs/schema.oold.yaml",
+      "maturity": "draft"
+    },
+    {
+      "path": "schemas/simulation/generic/PMDCo/specs/shape.ttl"
+    },
+    {
+      "path": "schemas/simulation/model-calibration/PMDCo/specs/schema.oold.yaml",
+      "maturity": "draft"
+    },
+    {
+      "path": "schemas/simulation/model-calibration/PMDCo/specs/shape.ttl"
+    },
+    {
+      "path": "schemas/specimen/PMDCo/specs/schema.oold.yaml",
+      "maturity": "draft"
+    },
+    {
+      "path": "schemas/specimen/PMDCo/specs/shape.ttl"
+    },
+    {
+      "path": "schemas/workflow/OBI/specs/schema.oold.yaml",
+      "maturity": "draft"
+    },
+    {
+      "path": "schemas/workflow/OBI/specs/shape.ttl"
+    }
+  ]
+}

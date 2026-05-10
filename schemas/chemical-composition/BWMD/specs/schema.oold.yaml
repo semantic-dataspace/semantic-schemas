@@ -49,8 +49,9 @@
     "@id": "bwmd:hasUnitSymbol"
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
-x-schema-version: '1.0.0'
+x-schema-version: '0.1.0'
 x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/chemical-composition/BWMD/'
+x-maturity: 'stable'
 title: Chemical Composition (BWMD)
 description: Chemical composition of a material described using the BWMD ontology
 type: object

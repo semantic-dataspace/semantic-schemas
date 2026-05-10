@@ -283,7 +283,7 @@ a pointer.
 |---|---|
 | `manufacturing/generic/PMDCo/` | Input materials, output materials, preceding steps |
 | `characterization/generic/PMDCo/` | Specimens or materials characterised |
-| `workflow/PMDCo/` | Detailed step instances (`reference`) |
+| `workflow/OBI/` | Detailed step instances (`reference`) |
 
 ---
 
@@ -304,101 +304,7 @@ record (embedding)?
 
 ---
 
-## 5. The `campaign/` template layer
-
-In addition to the structural patterns above, the `characterization/` domain
-introduces a **template layer** that sits above the `generic/` and variant schemas.
-
-```text
-characterization/
-  campaign/PMDCo/         ← template layer (fixed structure, required provenance)
-  generic/PMDCo/          ← generic base (no enforced provenance)
-  tensile-test/TTO/       ← specialised variant
-```
-
-### What the template layer does
-
-The `generic/` and variant schemas record measurement results. They leave
-operator, device, and specimen as optional — useful when you are integrating
-data from existing sources that may not carry all of this context.
-
-The `campaign/` schema is a **fixed-structure template**: it pre-decides that
-every experiment record must name who ran it, which device was used, and what
-specimen was tested. Those three slots are always present, always named the same
-way, always required. The user fills in values; no structural decisions are
-needed.
-
-```text
-CharacterizationCampaign  (obi:Assay)
-  prov:wasAssociatedWith ──► Expert IRI          [required]
-  schema:instrument      ──► Device IRI          [required]
-  has_specified_input    ──► Specimen IRI        [required]
-  dcterms:references     ──► Result record IRI   [optional]
-```
-
-`dcterms:references` (`step_reference`) is the link between the two layers:
-the `campaign/` record holds the provenance; the `generic/` or variant record
-holds the measurement results.
-
-### When to use each layer
-
-| Layer | Use when |
-|---|---|
-| `characterization/campaign/PMDCo/` | You want every record to be traceable (who + device + specimen mandatory) |
-| `characterization/generic/PMDCo/` | You need a generic assay record without enforced provenance |
-| `characterization/tensile-test/TTO/` | You need typed tensile test result nodes |
-
-The `campaign/` approach and the `generic/` approach are not mutually exclusive.
-The recommended pattern is to create both: a `campaign/` record for provenance
-and a `generic/` or variant record for the measurement results, linked via
-`step_reference`.
-
-### Extending the pattern
-
-The same `campaign/` + `generic/` + `<variant>/` structure can be applied
-to `manufacturing/` and `simulation/` domains in the future. The pattern is:
-
-```text
-<domain>/
-  campaign/<Ontology>/      ← template layer (enforces context fields)
-  generic/<Ontology>/       ← generic base
-  <variant>/<Ontology>/     ← specialised variants
-```
-
-For larger-scale data collection, the pattern extends further up:
-
-- A **`study/`** schema (not yet implemented) would group multiple campaigns
-  targeting the same research question — a campaign-of-campaigns, potentially
-  crossing domains (e.g. manufacture → characterise → simulate in one study).
-- A **`specimen/batch/`** schema (not yet implemented) would group a set of
-  specimens prepared under identical conditions, allowing a single provenance
-  record for the whole batch rather than one per specimen.
-
-These are forward-looking placeholders. When they are needed, they follow the
-same `campaign/` + `generic/` template-vs-record split described above.
-
-The pattern also applies at a higher level. `workflow/templates/material-card/PMDCo/`
-is a cross-schema template that sits above `workflow/PMDCo/` in the same way that
-`characterization/campaign/PMDCo/` sits above `characterization/generic/PMDCo/`:
-it pre-decides structure (six sub-schemas, required provenance) so the user only
-supplies values.
-
-```text
-workflow/
-  templates/
-    material-card/          ← cross-schema template (orchestrates six sub-schemas)
-  PMDCo/                    ← generic workflow schema
-```
-
-The template does not introduce a new RDF class; the graphs it produces are
-validated by the six sub-schemas' own SHACL shapes. Its spec files are a
-`schema.simplified.json` (validates the template input) and a
-`transform.simplified.jsonata` (routes each section to the correct sub-schema
-input format). No OO-LD schema or SHACL shape is needed at the template level.
-
----
-
-## 6. Decision guide
+## 5. Decision guide
 
 ```text
 Is my new schema a specialisation of an existing schema?
@@ -419,7 +325,7 @@ Does my schema contain sub-objects?
 
 ---
 
-## 7. Known limitations and open questions
+## 6. Known limitations and open questions
 
 | Topic | Status |
 |---|---|

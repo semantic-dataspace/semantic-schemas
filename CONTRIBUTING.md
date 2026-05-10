@@ -91,11 +91,37 @@ source .venv/bin/activate
 Commit the resulting `*.ipynb` changes together with any schema changes so
 that the rendered output on GitHub stays in sync.
 
-> **Tip.** To run or refresh a single notebook only, pass its path directly:
+> **Tip.** To test or refresh a single notebook, pass its path directly:
 >
 > ```bash
+> # Test only (no output saved):
 > ./scripts/run_notebooks.sh schemas/<domain>/<Ontology>/docs/<name>.ipynb
+>
+> # Execute and save outputs in-place:
+> ./scripts/run_notebooks.sh --refresh schemas/<domain>/<Ontology>/docs/<name>.ipynb
 > ```
+
+### 3b. Regenerate manifest.json
+
+`schemas/manifest.json` is a **generated index** derived from the schema YAML files.
+It must be kept in sync with the filesystem — CI will fail if it is stale.
+
+After adding, removing, or changing `x-maturity` in any schema, regenerate it:
+
+```bash
+source .venv/bin/activate
+python scripts/generate_manifest.py
+```
+
+The `--refresh` mode of `run_notebooks.sh` does this automatically.
+
+**What the manifest contains:**
+
+- One entry per `schema.oold.yaml` (with its `maturity` field mirrored from `x-maturity`)
+- One entry per sibling `shape.ttl` (path only)
+- Schemas that set `x-hidden: true` are excluded (they are `$ref` composition targets, not directly usable)
+
+Do not edit `manifest.json` by hand — any manual change will be overwritten by the generator.
 
 ### 4. Validate locally
 
@@ -139,14 +165,18 @@ Reviewers will check:
 
 ## Versioning
 
-Every schema must declare two metadata fields in `schema.oold.yaml`:
+Every schema must declare three metadata fields in `schema.oold.yaml`:
 
 ```yaml
 x-schema-version: '1.0.0'
-x-schema-id: 'https://github.com/<org>/semantic-schemas/tree/main/schemas/<domain>/<Ontology>'
+x-schema-id:      'https://github.com/<org>/semantic-schemas/tree/main/schemas/<domain>/<Ontology>'
+x-maturity:       'draft'
 ```
 
 `x-schema-id` is the stable base IRI for the schema folder.  It does not change between versions.
+
+`x-maturity` must be one of `draft`, `stable`, or `deprecated`.  New schemas start as `draft`.
+After changing `x-maturity`, run `python scripts/generate_manifest.py` to keep the manifest in sync.
 
 Follow [Semantic Versioning](https://semver.org/): increment the **patch** for bug fixes (wrong IRI,
 typo), the **minor** for additive changes (new optional field), and the **major** for breaking

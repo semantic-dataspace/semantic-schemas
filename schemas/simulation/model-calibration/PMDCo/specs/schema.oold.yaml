@@ -97,18 +97,21 @@
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for a constitutive model calibration, extending simulation/generic/PMDCo/
-x-schema-version: '3.0.0'
+x-schema-version: '0.1.0'
 x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/simulation/model-calibration/PMDCo/'
+x-maturity: 'draft'
+x-process-step:
+  category: simulation
 x-schema-dependencies:
   - schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/simulation/generic/PMDCo/'
     compatible-versions:
-      - '2.0.0'
+      - '0.1.0'
     property: (base schema via allOf)
 title: Constitutive Model Calibration
 type: object
 
 allOf:
-  - $ref: "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/simulation/generic/PMDCo/"
+  - $ref: "../../../generic/PMDCo/specs/schema.oold.yaml"
 
 required:
   - type

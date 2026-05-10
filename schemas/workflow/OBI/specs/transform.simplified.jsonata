@@ -1,0 +1,35 @@
+(
+  /*
+   * Workflow (OBI) — simplified JSON → OO-LD JSON  v2.0.0
+   *
+   * Input fields (see schema.simplified.json):
+   *   label          string   required  — human-readable workflow name
+   *   id             string   optional  — IRI slug; derived from label if omitted
+   *   description    string   optional
+   *   responsible    string   optional  — person IRI (dcterms:creator)
+   *   steps          array    required  — ordered list of process step IRIs
+   *
+   * Each step IRI must resolve to an independently recorded process step
+   * instance (e.g. a tensile test, a simulation run, a sample preparation
+   * step) described with one of the x-process-step schemas.
+   * The step ordering in this list is the intended execution sequence.
+   *
+   * Run with the jsonata-python CLI:
+   *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
+   */
+
+  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/workflow/OBI/#v0.1.0";
+
+  $wfSlug := $replace($lowercase($trim(label)), /[^a-z0-9]+/, "-");
+  $wfId   := $exists(id) ? id : "workflow-" & $wfSlug;
+
+  $base := {
+    "conforms_to": $schemaUri,
+    "type":        "obo:OBI_0000272",
+    "id":          $wfId,
+    "label":       label,
+    "steps":       steps
+  };
+  $withDesc        := $exists(description)  ? $merge([$base,      {"description":  description}])  : $base;
+  $exists(responsible) ? $merge([$withDesc, {"responsible": responsible}]) : $withDesc
+)

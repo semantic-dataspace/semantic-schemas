@@ -1,0 +1,25 @@
+# Changelog — Chemical Composition (PMDCo)
+
+All notable changes to this schema are documented here.
+Versions follow [Semantic Versioning](https://semver.org/):
+
+- **MAJOR**: breaking changes (renamed fields, removed properties, incompatible graph structure)
+- **MINOR**: backwards-compatible additions (new optional fields)
+- **PATCH**: corrections that do not affect the graph structure (typos, description fixes)
+
+The schema IRI encodes the minor version: `.../chemical-composition/PMDCo/#v<MAJOR>.<MINOR>.0`.
+
+---
+
+## [0.1.0] — 2026-05-10
+
+### Added
+
+- Initial release.
+- `pmdco:PMD_0000551` (ChemicalComposition) node linked to a material IRI.
+- Element fraction entries with `pmdco:PMD_0000069` (hasElementSymbol) and
+  `qudt:value` (fraction value, `xsd:double`).
+- `qudt:hasUnit` per entry accepting `mass%`, `vol%`, or `mol%`.
+- SHACL shape validating composition node and fraction entries.
+
+---

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.simplified.json",
+  "title": "Workflow (Simplified Input)",
+  "description": "Lightweight container for an ordered sequence of process step IRIs. Each step must already be recorded independently using an x-process-step schema (tensile test, simulation, sample preparation, etc.). This schema provides the human-readable envelope and provenance context.",
+  "type": "object",
+  "required": ["label", "steps"],
+  "additionalProperties": false,
+  "properties": {
+    "label": {
+      "title": "Workflow Name",
+      "description": "Human-readable name for this workflow or experiment. Example: 'QA-to-FEM material card workflow — 316L batch 1'.",
+      "type": "string",
+      "minLength": 1
+    },
+    "id": {
+      "title": "Workflow ID",
+      "description": "Optional. IRI slug for the workflow node. Auto-derived from label if omitted.",
+      "type": "string"
+    },
+    "description": {
+      "title": "Description",
+      "description": "Optional free-text description of the workflow goal and context.",
+      "type": "string"
+    },
+    "responsible": {
+      "title": "Responsible Person",
+      "description": "Optional. IRI of the person accountable for this workflow.",
+      "type": "string",
+      "format": "uri"
+    },
+    "steps": {
+      "title": "Process Steps",
+      "description": "Ordered list of process step IRIs that make up this workflow. Each IRI must resolve to an instance recorded with an x-process-step schema. The order reflects the intended execution sequence.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "format": "uri"
+      }
+    }
+  }
+}

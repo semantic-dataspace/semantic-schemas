@@ -1,0 +1,10 @@
+{
+  "label":       "QA-to-FEM material card workflow, 316L batch 1",
+  "description": "Four-step workflow: material production, mechanical characterization, constitutive model calibration, and FEM material card export.",
+  "steps": [
+    "https://example.org/manufacturing/316L-production-batch-1",
+    "https://example.org/characterization/tensile-test-316L-batch-1",
+    "https://example.org/simulations/hs-calibration-316L-batch-1",
+    "https://example.org/material-cards/316L-hs-v1"
+  ]
+}
