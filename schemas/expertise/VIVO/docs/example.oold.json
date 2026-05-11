@@ -1,26 +1,86 @@
 {
   "type": "foaf:Person",
-  "conforms_to": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/expertise/VIVO/#v0.1.0",
+  "conforms_to": "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/expertise/VIVO/#v0.2.0",
   "materials": [
-    "https://dsms.example.org/api/knowledge/mat-steel-316l",
-    "https://dsms.example.org/api/knowledge/mat-alsi10mg"
+    {
+      "id": "https://dsms.example.org/api/knowledge/mat-steel-316l",
+      "expertise_level": "expert"
+    },
+    {
+      "id": "https://dsms.example.org/api/knowledge/mat-alsi10mg",
+      "expertise_level": "competent"
+    }
   ],
   "material_modelling": [
-    "https://dsms.example.org/api/knowledge/sim-fem",
-    "https://dsms.example.org/api/knowledge/sim-dft"
+    {
+      "id": "https://dsms.example.org/api/knowledge/sim-fem",
+      "expertise_level": "proficient"
+    },
+    {
+      "id": "https://dsms.example.org/api/knowledge/sim-dft",
+      "expertise_level": "novice"
+    }
   ],
   "methods": [
-    "https://dsms.example.org/api/knowledge/method-tensile-testing",
-    "https://dsms.example.org/api/knowledge/method-ebsd"
+    {
+      "id": "https://dsms.example.org/api/knowledge/method-tensile-testing",
+      "expertise_level": "expert"
+    },
+    {
+      "id": "https://dsms.example.org/api/knowledge/method-ebsd",
+      "expertise_level": "competent"
+    }
   ],
   "application_fields": [
-    "https://dsms.example.org/api/knowledge/app-aerospace"
+    {
+      "id": "https://dsms.example.org/api/knowledge/app-aerospace",
+      "expertise_level": "proficient"
+    }
   ],
   "measurement_devices": [
-    "https://dsms.example.org/api/knowledge/dev-sem",
-    "https://dsms.example.org/api/knowledge/dev-xrd"
+    {
+      "id": "https://dsms.example.org/api/knowledge/dev-sem",
+      "expertise_level": "expert"
+    },
+    {
+      "id": "https://dsms.example.org/api/knowledge/dev-xrd",
+      "expertise_level": "competent"
+    }
   ],
   "production_devices": [
-    "https://dsms.example.org/api/knowledge/dev-lpbf"
+    {
+      "id": "https://dsms.example.org/api/knowledge/dev-lpbf",
+      "expertise_level": "proficient"
+    }
+  ],
+  "projects": [
+    "https://dsms.example.org/api/knowledge/proj-laser-additive-mfg",
+    "https://dsms.example.org/api/knowledge/proj-fatigue-life-prediction"
+  ],
+  "publications": [
+    {
+      "type": "bibo:Document",
+      "title": "Microstructure and mechanical properties of selective laser melted 316L stainless steel",
+      "doi": "10.1016/j.msea.2020.139123",
+      "year": 2020,
+      "venue": "Materials Science and Engineering: A",
+      "authors": [
+        {
+          "id": "https://dsms.example.org/api/knowledge/expert-123",
+          "corresponding_author": true
+        },
+        {
+          "id": "https://dsms.example.org/api/knowledge/expert-456",
+          "corresponding_author": false
+        }
+      ]
+    },
+    {
+      "type": "bibo:Document",
+      "title": "Fatigue behaviour of AlSi10Mg produced by laser powder bed fusion",
+      "doi": "10.1016/j.ijfatigue.2021.106412",
+      "year": 2021,
+      "venue": "International Journal of Fatigue"
+    }
   ]
 }

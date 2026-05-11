@@ -1,25 +1,41 @@
 # OO-LD Schema for Expert Expertise Profile (VIVO pattern)
 # Ontology: VIVO Core Ontology
 #   https://vivoweb.org/ontology/core
-#   https://github.com/vivo-project/VIVO
+#   https://github.com/vivo-ontologies/vivo-ontology
 #
 # Graph pattern:
 #
 #   foaf:Person
 #     vivo:hasResearchArea ─────────────────────► material IRI        [× 0..N]
+#       schema:proficiencyLevel ──────────────────► "novice"|"competent"|"proficient"|"expert"
 #     vivo:hasResearchArea ─────────────────────► modelling IRI       [× 0..N]
+#       schema:proficiencyLevel ──────────────────► "novice"|…
 #     vivo:hasResearchArea ─────────────────────► application IRI     [× 0..N]
+#       schema:proficiencyLevel ──────────────────► "novice"|…
 #     vivo:hasResearchArea ─────────────────────► method IRI          [× 0..N]
-#     vivo:hasExperienceIn ─────────────────────► measurement device  [× 0..N]
-#     vivo:hasExperienceIn ─────────────────────► production device   [× 0..N]
+#       schema:proficiencyLevel ──────────────────► "novice"|…
+#     vivo:hasResearchArea ─────────────────────► measurement device  [× 0..N]
+#       schema:proficiencyLevel ──────────────────► "novice"|…
+#     vivo:hasResearchArea ─────────────────────► production device   [× 0..N]
+#       schema:proficiencyLevel ──────────────────► "novice"|…
+#     foaf:made ───────────────────────────────► bibo:Document       [× 0..N]
+#       dcterms:title / bibo:doi / dcterms:issued / schema:url
+#       dcterms:contributor ──────────────────────► foaf:Person IRI   [× 0..N, ordered]
+#         vivo:isCorrespondingAuthor ───────────────► xsd:boolean
+#       schema:isPartOf ──────────────────────────► "Journal / Conference name"
 #
-# Semantic distinction by property:
-#   vivo:hasResearchArea  — academic or scientific domain the person studies or publishes in
-#   vivo:hasExperienceIn  — practical experience with equipment or instruments
+# Semantic distinction for expertise fields:
+#   All six expertise fields use vivo:hasResearchArea (the only VIVO property for
+#   person-to-concept relationships). Distinction between research domains and
+#   instrument experience is carried by the rdf:type of the linked vocabulary term.
+#   Note: vivo:hasExperienceIn does not exist in VIVO Core; collapsed here.
 #
-# Both properties have foaf:Person in their domain and owl:Thing in their range.
-# The rdf:type of the referenced vocabulary term (owl:Class from vocabulary.materials-data.space)
-# provides additional type-level semantics within each set.
+# Publication authorship:
+#   Full VIVO compliance would use the vivo:Authorship reification class.
+#   This schema uses a simplified flat model: foaf:made links the person directly
+#   to bibo:Document nodes; author ordering and corresponding-author status
+#   are captured via dcterms:contributor (@list) and vivo:isCorrespondingAuthor.
+#   Limitation: publications are blank nodes (no @id); mint IRIs from DOIs externally.
 #
 # Vocabulary source:
 #   https://vocabulary.materials-data.space
@@ -28,6 +44,8 @@
   vivo: "http://vivoweb.org/ontology/core#"
   foaf: "http://xmlns.com/foaf/0.1/"
   dcterms: "http://purl.org/dc/terms/"
+  schema: "https://schema.org/"
+  bibo: "http://purl.org/ontology/bibo/"
   type: "@type"
   id: "@id"
   conforms_to:
@@ -40,42 +58,74 @@
   # of the referenced vocabulary term.
   materials:
     "@id": "vivo:hasResearchArea"
-    "@type": "@id"
     "@container": "@set"
   material_modelling:
     "@id": "vivo:hasResearchArea"
-    "@type": "@id"
     "@container": "@set"
   application_fields:
     "@id": "vivo:hasResearchArea"
-    "@type": "@id"
     "@container": "@set"
   methods:
     "@id": "vivo:hasResearchArea"
-    "@type": "@id"
     "@container": "@set"
 
-  # Instrument experience: practical hands-on knowledge of equipment.
-  # vivo:hasExperienceIn distinguishes device expertise from research-area
-  # expertise at the predicate level, not just at the object type level.
+  # Instrument experience: hands-on knowledge of measurement / production equipment.
+  # vivo:hasResearchArea is reused here (vivo:hasExperienceIn does not exist in
+  # VIVO Core); the rdf:type of the linked vocabulary term distinguishes devices
+  # from scientific domains.
   measurement_devices:
-    "@id": "vivo:hasExperienceIn"
-    "@type": "@id"
+    "@id": "vivo:hasResearchArea"
     "@container": "@set"
   production_devices:
-    "@id": "vivo:hasExperienceIn"
+    "@id": "vivo:hasResearchArea"
+    "@container": "@set"
+
+  # Self-reported level on the vocabulary term node.
+  # schema:proficiencyLevel is used here as a pragmatic annotation predicate;
+  # the value is one of: novice, competent, proficient, expert.
+  expertise_level:
+    "@id": "schema:proficiencyLevel"
+
+  # Publications — foaf:made (foaf:Agent foaf:made foaf:Document) links the person
+  # to their works. Replaces the fabricated vivo:authorOf.
+  publications:
+    "@id": "foaf:made"
+    "@container": "@set"
+  title:
+    "@id": "dcterms:title"
+  doi:
+    "@id": "bibo:doi"
+  year:
+    "@id": "dcterms:issued"
+  url:
+    "@id": "schema:url"
+  authors:
+    "@id": "dcterms:contributor"
+    "@container": "@list"
+  corresponding_author:
+    "@id": "vivo:isCorrespondingAuthor"
+  venue:
+    "@id": "schema:isPartOf"
+
+  # Projects the expert has been involved in (past or present).
+  # vivo:relates is a symmetric VIVO property with no temporal constraint;
+  # it is preferred over foaf:currentProject / foaf:pastProject, which are
+  # temporally scoped and cannot cover a general involvement list.
+  projects:
+    "@id": "vivo:relates"
     "@type": "@id"
     "@container": "@set"
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: >-
   OO-LD Schema for Expert Expertise Profile using the VIVO Core Ontology.
-  Research area expertise (materials, modelling, methods, application fields) is
-  expressed with vivo:hasResearchArea. Instrument expertise (measurement and
-  production devices) uses vivo:hasExperienceIn to distinguish hands-on device
-  knowledge from scientific domain knowledge at the predicate level.
-  All objects are IRIs from vocabulary.materials-data.space.
-x-schema-version: '0.1.0'
+  All six expertise fields (research domains and instrument experience) use
+  vivo:hasResearchArea; the rdf:type of the linked vocabulary term distinguishes
+  them. Self-reported expertise level uses schema:proficiencyLevel.
+  Publications use foaf:made (person to document); publication type is bibo:Document.
+  Author order is preserved via dcterms:contributor with @container @list;
+  corresponding-author status uses vivo:isCorrespondingAuthor (a real VIVO property).
+x-schema-version: '0.2.0'
 x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/expertise/VIVO/'
 x-maturity: 'draft'
 title: Expertise (VIVO)
@@ -98,65 +148,188 @@ properties:
     description: Versioned IRI of the schema used to create this instance
     type: string
     readOnly: true
-    const: "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/expertise/VIVO/#v0.1.0"
-    default: "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/expertise/VIVO/#v0.1.0"
+    const: "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/expertise/VIVO/#v0.2.0"
+    default: "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/expertise/VIVO/#v0.2.0"
 
   materials:
     title: Materials
-    description: Materials the expert has expertise in (vivo:hasResearchArea)
+    description: Materials the expert has expertise in
     type: array
-    x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/material/use-cases/base/terms"
     items:
-      type: string
-    uniqueItems: true
+      type: object
+      required: [id]
+      properties:
+        id:
+          title: Material
+          type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/material/use-cases/base/terms"
+        expertise_level:
+          title: Expertise Level
+          type: string
+          enum: [novice, competent, proficient, expert]
     default: []
 
   material_modelling:
     title: Material Modelling
-    description: Modelling and simulation approaches the expert has expertise in (vivo:hasResearchArea)
+    description: Modelling and simulation approaches the expert has expertise in
     type: array
-    x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/material-modelling-method/use-cases/base/terms"
     items:
-      type: string
-    uniqueItems: true
+      type: object
+      required: [id]
+      properties:
+        id:
+          title: Modelling Approach
+          type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/material-modelling-method/use-cases/base/terms"
+        expertise_level:
+          title: Expertise Level
+          type: string
+          enum: [novice, competent, proficient, expert]
     default: []
 
   application_fields:
     title: Application Fields
-    description: Application domains and industries the expert works in (vivo:hasResearchArea)
+    description: Application domains and industries the expert works in
     type: array
-    x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/application-field/use-cases/base/terms"
     items:
-      type: string
-    uniqueItems: true
+      type: object
+      required: [id]
+      properties:
+        id:
+          title: Application Field
+          type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/application-field/use-cases/base/terms"
+        expertise_level:
+          title: Expertise Level
+          type: string
+          enum: [novice, competent, proficient, expert]
     default: []
 
   methods:
     title: Methods
-    description: Scientific and engineering methods the expert has expertise in (vivo:hasResearchArea)
+    description: Scientific and engineering methods the expert has expertise in
     type: array
-    x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/method/use-cases/base/terms"
     items:
-      type: string
-    uniqueItems: true
+      type: object
+      required: [id]
+      properties:
+        id:
+          title: Method
+          type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/method/use-cases/base/terms"
+        expertise_level:
+          title: Expertise Level
+          type: string
+          enum: [novice, competent, proficient, expert]
     default: []
 
   measurement_devices:
     title: Measurement Devices
-    description: Measurement and characterisation devices the expert has hands-on experience with (vivo:hasExperienceIn)
+    description: Measurement and characterisation devices the expert has hands-on experience with
     type: array
-    x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-device/use-cases/base/terms"
     items:
-      type: string
-    uniqueItems: true
+      type: object
+      required: [id]
+      properties:
+        id:
+          title: Device
+          type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-device/use-cases/base/terms"
+        expertise_level:
+          title: Expertise Level
+          type: string
+          enum: [novice, competent, proficient, expert]
     default: []
 
   production_devices:
     title: Production Devices
-    description: Manufacturing and production devices the expert has hands-on experience with (vivo:hasExperienceIn)
+    description: Manufacturing and production devices the expert has hands-on experience with
     type: array
-    x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/production-device/use-cases/base/terms"
+    items:
+      type: object
+      required: [id]
+      properties:
+        id:
+          title: Device
+          type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/production-device/use-cases/base/terms"
+        expertise_level:
+          title: Expertise Level
+          type: string
+          enum: [novice, competent, proficient, expert]
+    default: []
+
+  projects:
+    title: Projects
+    description: >
+      Research or engineering projects the expert has been involved in
+      (past or present)
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds:
+        - project
     items:
       type: string
+      format: uri
     uniqueItems: true
+    default: []
+
+  publications:
+    title: Publications
+    description: Selected publications authored by this expert
+    type: array
+    items:
+      type: object
+      required: [title]
+      properties:
+        type:
+          title: Type
+          type: string
+          const: "bibo:Document"
+          default: "bibo:Document"
+          readOnly: true
+        doi:
+          title: DOI
+          description: "Enter a DOI to auto-fill the fields below, e.g. 10.1016/j.msea.2020.139123"
+          type: string
+        title:
+          title: Title
+          description: Full title of the publication
+          type: string
+        year:
+          title: Year
+          description: Year of publication
+          type: integer
+          minimum: 1900
+          maximum: 2100
+        url:
+          title: URL
+          description: Full URL for publications not covered by a DOI
+          type: string
+          format: uri
+        authors:
+          title: Authors
+          description: Authors of this publication in order; mark the corresponding author
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                title: Author
+                type: string
+                format: uri
+                x-kitem:
+                  ktypeIds:
+                    - experts
+              corresponding_author:
+                title: Main Author
+                description: Mark as the main author
+                type: boolean
+                default: false
+          default: []
+        venue:
+          title: Journal / Conference
+          description: Name of the journal or conference
+          type: string
     default: []

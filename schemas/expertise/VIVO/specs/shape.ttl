@@ -1,0 +1,115 @@
+# SHACL shape for the Expertise (VIVO) schema.
+# Validates JSON-LD output produced by the OO-LD schema at:
+#   schemas/expertise/VIVO/specs/schema.oold.yaml
+#
+# Coverage:
+#   PersonShape      — required dcterms:conformsTo; expertise items via vivo:hasResearchArea
+#   ExpertiseItem    — optional schema:proficiencyLevel must be a valid enum value
+#   PublicationShape — required dcterms:title; valid year range; correct bibo:Document type
+#
+# Out of scope (known limitations):
+#   - Author list members (dcterms:contributor uses rdf:List; per-item path traversal
+#     requires complex SPARQL property paths not portable across all SHACL processors).
+#   - vivo:isCorrespondingAuthor domain compliance (domain is vivo:Authorship; we use a
+#     simplified flat model without the Authorship reification node).
+
+@prefix bibo:    <http://purl.org/ontology/bibo/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix schema:  <https://schema.org/> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix vivo:    <http://vivoweb.org/ontology/core#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix :        <https://github.com/semantic-dataspace/semantic-schemas/shapes/expertise/vivo/> .
+
+# ── Expert (foaf:Person) ──────────────────────────────────────────────────
+
+:PersonShape
+    a sh:NodeShape ;
+    sh:targetClass foaf:Person ;
+    sh:property [
+        sh:path dcterms:conformsTo ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "An expert profile must declare dcterms:conformsTo pointing to the versioned schema IRI." ;
+    ] ;
+    sh:property [
+        sh:path vivo:hasResearchArea ;
+        sh:node :ExpertiseItemShape ;
+        sh:message "Each vivo:hasResearchArea value must satisfy the expertise item shape." ;
+    ] ;
+    sh:property [
+        sh:path vivo:relates ;
+        sh:nodeKind sh:IRI ;
+        sh:message "Each vivo:relates value must be an IRI (project reference)." ;
+    ] ;
+    sh:property [
+        sh:path foaf:made ;
+        sh:node :PublicationShape ;
+        sh:message "Each foaf:made value must satisfy the publication shape." ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .
+
+# ── Expertise item (vocabulary IRI + optional proficiency level) ──────────
+
+:ExpertiseItemShape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path schema:proficiencyLevel ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ( "novice" "competent" "proficient" "expert" ) ;
+        sh:message "Expertise level must be one of: novice, competent, proficient, expert." ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .
+
+# ── Publication (bibo:Document) ───────────────────────────────────────────
+
+:PublicationShape
+    a sh:NodeShape ;
+    sh:targetClass bibo:Document ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue bibo:Document ;
+        sh:minCount 1 ;
+        sh:message "A publication must be typed as bibo:Document." ;
+    ] ;
+    sh:property [
+        sh:path dcterms:title ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A publication must have exactly one dcterms:title." ;
+    ] ;
+    sh:property [
+        sh:path bibo:doi ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:message "If present, DOI must be a single string value." ;
+    ] ;
+    sh:property [
+        sh:path dcterms:issued ;
+        sh:datatype xsd:integer ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1900 ;
+        sh:maxInclusive 2100 ;
+        sh:message "Publication year must be an integer between 1900 and 2100." ;
+    ] ;
+    sh:property [
+        sh:path schema:url ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:message "If present, URL must be a single string value." ;
+    ] ;
+    sh:property [
+        sh:path schema:isPartOf ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:message "If present, venue must be a single string value." ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .

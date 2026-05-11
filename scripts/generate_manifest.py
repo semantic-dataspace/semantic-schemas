@@ -2,11 +2,13 @@
 """
 generate_manifest.py — rebuild schemas/manifest.json from the filesystem.
 
-Scans every schema.oold.yaml under schemas/, reads x-maturity, and writes
-a fresh manifest.json.  Schemas that set x-hidden: true are omitted from the
-manifest (they exist as $ref composition targets only, not for direct use).
+Scans every schema.oold.yaml under schemas/, reads x-maturity, x-schema-version,
+and writes a fresh manifest.json.  Schemas that set x-hidden: true are omitted
+(they exist as $ref composition targets only, not for direct use).
 
-Also discovers sibling shape.ttl files and includes them as path-only entries.
+The shape.ttl sibling is folded into the same entry as "shapePath" rather than
+being a separate entry.  A "group" field is derived from the first path segment
+under schemas/ (e.g. "characterization", "expertise").
 
 Usage:
     python scripts/generate_manifest.py           # regenerate manifest.json
@@ -37,19 +39,32 @@ def build_manifest() -> dict:
             continue
 
         rel = str(yaml_path.relative_to(REPO_ROOT))
+
+        # Derive group from the first path segment under schemas/
+        # e.g. schemas/characterization/generic/PMDCo/... → "characterization"
+        domain_parts = yaml_path.relative_to(SCHEMAS_DIR).parts
+        group = domain_parts[0] if domain_parts else None
+
         entry: dict = {"path": rel}
+
+        if group:
+            entry["group"] = group
 
         maturity = data.get("x-maturity")
         if maturity:
             entry["maturity"] = maturity
 
-        entries.append(entry)
+        version = data.get("x-schema-version")
+        if version:
+            entry["version"] = str(version)
 
         shape = yaml_path.parent / "shape.ttl"
         if shape.exists():
-            entries.append({"path": str(shape.relative_to(REPO_ROOT))})
+            entry["shapePath"] = str(shape.relative_to(REPO_ROOT))
 
-    return {"tree": entries}
+        entries.append(entry)
+
+    return {"version": 1, "tree": entries}
 
 
 def main() -> None:

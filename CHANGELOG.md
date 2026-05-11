@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] - 2026-05-11
+
+### Breaking changes
+
+- **Manifest format v1.** `schemas/manifest.json` now carries `"version": 1` at the
+  root and each entry has a new structure: separate `shape.ttl` entries are gone —
+  the SHACL shape path is now inlined as `"shapePath"` on the schema entry.
+  Consumers that iterated over all entries to find shape files must be updated.
+- **`expertise/VIVO/` v0.2.0** — the six expertise arrays (`materials`,
+  `material_modelling`, `application_fields`, `methods`, `measurement_devices`,
+  `production_devices`) now contain objects `{"id": "…IRI…", "expertise_level": "…"}`
+  instead of plain IRI strings. Wrap existing values: `"https://…"` → `{"id": "https://…"}`.
+
+### Added
+
+- **Manifest `group` and `version` fields.** Each manifest entry now carries the
+  domain group (e.g. `"characterization"`, `"expertise"`) and the schema's
+  `x-schema-version` value, enabling consumers to filter and display without
+  fetching the full schema YAML.
+- **`expertise/VIVO/` v0.2.0** — `publications` field (array of `vivo:Publication`
+  nodes via `vivo:authorOf`) and per-item `expertise_level` annotation
+  (`schema:proficiencyLevel`: `novice` | `competent` | `proficient` | `expert`).
+- **`expertise/VIVO/specs/shape.ttl`** — SHACL shape for the VIVO expertise schema.
+
+---
+
 ## [0.6.0] - 2026-05-10
 
 ### Breaking changes

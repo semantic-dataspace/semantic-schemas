@@ -11,6 +11,30 @@ The schema IRI encodes the minor version: `.../expertise/VIVO/#v<MAJOR>.<MINOR>.
 
 ---
 
+## [0.2.0] — 2026-05-10
+
+### Added
+
+- `publications` field: array of `vivo:Publication` nodes linked via `vivo:authorOf`.
+  Each entry supports `title` (required), `doi` (`bibo:doi`), `year` (`dcterms:issued`),
+  `url` (`schema:url`), `venue` (`schema:isPartOf`, journal or conference name as string),
+  and `coauthors` (`dcterms:contributor`, IRI references to person profiles).
+- `expertise_level` on each expertise item: self-reported proficiency annotation stored
+  as `schema:proficiencyLevel` on the vocabulary term node.
+  Allowed values: `novice`, `competent`, `proficient`, `expert`.
+
+### Changed
+
+- **Breaking**: all six expertise fields (`materials`, `material_modelling`,
+  `application_fields`, `methods`, `measurement_devices`, `production_devices`) now
+  contain objects with `id` (vocabulary IRI) and optional `expertise_level`, instead
+  of plain IRI strings.  Update existing data by wrapping each string value:
+  `"https://…/mat-steel"` → `{"id": "https://…/mat-steel"}`.
+- Namespaces `schema:` (`https://schema.org/`) and `bibo:` (`http://purl.org/ontology/bibo/`)
+  added to JSON-LD `@context`.
+
+---
+
 ## [0.1.0] — 2026-05-10
 
 ### Added

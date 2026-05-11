@@ -6,7 +6,7 @@ the [Materials Dataspace vocabulary](https://vocabulary.materials-data.space/)
 at runtime, so the form always reflects the current controlled vocabulary.
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>0.1.0</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.2.0</code></td></tr>
 <tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>VIVO Core 1.15 / FOAF (<code>foaf:Person</code>)</td></tr>
 <tr><td><strong>Extends</strong></td><td>—</td></tr>
@@ -64,8 +64,33 @@ but loses that distinction.
 | `methods` | no | `method` | `vivo:hasResearchArea` |
 | `measurement_devices` | no | `measurement-device` | `vivo:hasExperienceIn` |
 | `production_devices` | no | `production-device` | `vivo:hasExperienceIn` |
+| `publications` | no | — | `vivo:authorOf` |
 
 All multi-value fields are serialised as `@set` in JSON-LD.
+
+### Expertise level
+
+Each item in the six expertise arrays is an object with an `id` (the vocabulary IRI) and an optional `expertise_level`:
+
+| Value | Meaning |
+|---|---|
+| `novice` | Aware of the topic; limited practical exposure |
+| `competent` | Can work with supervision or guidance |
+| `proficient` | Works independently; broad practical knowledge |
+| `expert` | Deep mastery; able to teach or lead in this area |
+
+Mapped to `schema:proficiencyLevel` on the vocabulary term node.
+
+### Publication fields
+
+| Field | Required | Predicate |
+|---|---|---|
+| `title` | yes | `dcterms:title` |
+| `doi` | no | `bibo:doi` |
+| `year` | no | `dcterms:issued` |
+| `url` | no | `schema:url` |
+| `venue` | no | `schema:isPartOf` (journal / conference name as string) |
+| `coauthors` | no | `dcterms:contributor` (IRI references to person profiles) |
 
 ---
 
@@ -75,11 +100,21 @@ All multi-value fields are serialised as `@set` in JSON-LD.
 foaf:Person
   rdfs:label            person name
   vivo:hasResearchArea ─► material IRI  [× 0..N]
+                            schema:proficiencyLevel  "novice"|"competent"|"proficient"|"expert"
   vivo:hasResearchArea ─► material modelling IRI  [× 0..N]
+                            schema:proficiencyLevel  …
   vivo:hasResearchArea ─► application field IRI  [× 0..N]
+                            schema:proficiencyLevel  …
   vivo:hasResearchArea ─► method IRI  [× 0..N]
+                            schema:proficiencyLevel  …
   vivo:hasExperienceIn ─► measurement device IRI  [× 0..N]
+                            schema:proficiencyLevel  …
   vivo:hasExperienceIn ─► production device IRI  [× 0..N]
+                            schema:proficiencyLevel  …
+  vivo:authorOf ────────► vivo:Publication  [× 0..N]
+                            dcterms:title / bibo:doi / dcterms:issued
+                            schema:url / schema:isPartOf
+                            dcterms:contributor ─► foaf:Person IRI  [× 0..N]
 ```
 
 ---
