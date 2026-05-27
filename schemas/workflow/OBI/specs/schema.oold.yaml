@@ -55,7 +55,7 @@ $comment: >-
   Steps are recorded with x-process-step schemas; this schema provides the ordered
   envelope. Replaces workflow/PMDCo/ v1.1.0 and characterization/campaign/PMDCo/.
 x-schema-version: '0.1.0'
-x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/workflow/OBI/'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/workflow-OBI-v0.1.0/schemas/workflow/OBI/specs/schema.oold.yaml'
 x-maturity: 'draft'
 title: Workflow (OBI)
 description: Ordered sequence of process steps forming an experiment or campaign

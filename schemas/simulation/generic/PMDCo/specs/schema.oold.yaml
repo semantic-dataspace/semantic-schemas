@@ -78,7 +78,7 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for an obi:ComputerSimulation (generic simulation step)
 x-schema-version: '0.1.0'
-x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/simulation/generic/PMDCo/'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/simulation-generic-PMDCo-v0.1.0/schemas/simulation/generic/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'draft'
 x-process-step:
   category: simulation

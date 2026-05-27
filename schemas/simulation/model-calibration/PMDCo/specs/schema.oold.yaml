@@ -98,7 +98,7 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for a constitutive model calibration, extending simulation/generic/PMDCo/
 x-schema-version: '0.1.0'
-x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/simulation/model-calibration/PMDCo/'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/simulation-model-calibration-PMDCo-v0.1.0/schemas/simulation/model-calibration/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'draft'
 x-process-step:
   category: simulation

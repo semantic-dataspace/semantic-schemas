@@ -126,7 +126,7 @@ $comment: >-
   Author order is preserved via dcterms:contributor with @container @list;
   corresponding-author status uses vivo:isCorrespondingAuthor (a real VIVO property).
 x-schema-version: '0.2.0'
-x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/expertise/VIVO/'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/expertise-VIVO-v0.2.0/schemas/expertise/VIVO/specs/schema.oold.yaml'
 x-maturity: 'draft'
 title: Expertise (VIVO)
 description: Expertise profile of a domain expert in materials science

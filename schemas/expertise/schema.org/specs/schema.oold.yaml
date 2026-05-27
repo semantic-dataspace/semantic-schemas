@@ -61,7 +61,7 @@ $comment: >-
   of the referenced entity, not by distinct property IRIs. Sub-properties
   of schema:knowsAbout are planned in a future semantic-schemas vocabulary.
 x-schema-version: '0.1.0'
-x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/expertise/schema.org/'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/expertise-schema.org-v0.1.0/schemas/expertise/schema.org/specs/schema.oold.yaml'
 x-maturity: 'deprecated'
 title: Expertise
 description: Expertise profile of a domain expert in materials science

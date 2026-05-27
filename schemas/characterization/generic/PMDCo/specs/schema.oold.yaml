@@ -77,7 +77,7 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for an obi:Assay (generic characterization record)
 x-schema-version: '0.1.0'
-x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/generic/PMDCo/'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/characterization-generic-PMDCo-v0.1.0/schemas/characterization/generic/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'draft'
 x-process-step:
   category: characterization

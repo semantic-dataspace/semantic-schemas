@@ -129,7 +129,7 @@ $comment: >-
   Schema for a bfo:Object (Specimen) bearing a pmdco:Mass quality and a
   pmdco:ChemicalComposition quality (composed via $ref).
 x-schema-version: '0.1.0'
-x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/specimen/PMDCo/'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/specimen-PMDCo-v0.1.0/schemas/specimen/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'draft'
 # Schemas referenced by $ref and the versions they were tested against.
 # Update this table when either schema releases a new version.

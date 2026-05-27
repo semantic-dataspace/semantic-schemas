@@ -118,7 +118,7 @@ allOf:
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: TTO + PMDCo 3 schema for a tensile test process node
 x-schema-version: '0.1.1'
-x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/tensile-test/TTO/'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/tensile-test-TTO-v0.1.1/schemas/characterization/tensile-test/TTO/specs/schema.oold.yaml'
 x-maturity: 'draft'
 x-process-step:
   category: characterization

@@ -137,7 +137,7 @@ allOf:
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: PMDCo measurement pattern schema for a tensile test process
 x-schema-version: '0.2.0'
-x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/tensile-test/PMDCo/'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/tensile-test-PMDCo-v0.2.0/schemas/characterization/tensile-test/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'draft'
 x-process-step:
   category: characterization

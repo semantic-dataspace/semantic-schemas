@@ -64,7 +64,7 @@ $comment: >-
   Compose with this schema using allOf + $ref in step-specific schemas.
   Do not use this schema directly unless recording a generic uncategorised step.
 x-schema-version: '0.1.0'
-x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/process-step/PMDCo/'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/process-step-PMDCo-v0.1.0/schemas/process-step/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'draft'
 x-hidden: true
 # Marks this schema as a valid process step.

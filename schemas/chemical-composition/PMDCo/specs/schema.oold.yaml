@@ -91,10 +91,7 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for a pmdco:ChemicalComposition
 x-schema-version: '0.1.0'
-# Stable IRI identifying this schema. The transform appends the version to form
-# the versioned IRI that is written into every generated OO-LD and RDF output.
-# Update both this base IRI and x-schema-version when the schema is released.
-x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/chemical-composition/PMDCo/'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/chemical-composition-PMDCo-v0.1.0/schemas/chemical-composition/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'stable'
 title: Chemical Composition
 type: object

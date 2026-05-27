@@ -50,7 +50,7 @@
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 x-schema-version: '0.1.0'
-x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/chemical-composition/BWMD/'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/chemical-composition-BWMD-v0.1.0/schemas/chemical-composition/BWMD/specs/schema.oold.yaml'
 x-maturity: 'stable'
 title: Chemical Composition (BWMD)
 description: Chemical composition of a material described using the BWMD ontology

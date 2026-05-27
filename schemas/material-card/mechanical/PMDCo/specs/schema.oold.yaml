@@ -115,7 +115,7 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for a mechanical material card (IAO:DataSet)
 x-schema-version: '0.1.0'
-x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/material-card/mechanical/PMDCo/'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/material-card-mechanical-PMDCo-v0.1.0/schemas/material-card/mechanical/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'draft'
 title: Mechanical Material Card
 type: object
