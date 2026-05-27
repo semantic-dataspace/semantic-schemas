@@ -1,10 +1,10 @@
 (
   /*
-   * Tensile Test (PMDCo measurement pattern) — simplified JSON → OO-LD JSON
+   * Tensile Test (PMDCo measurement pattern): simplified JSON → OO-LD JSON
    *
    * Input fields (see schema.simplified.json):
    *   test_name         string   required
-   *   specimen_iri      string   required — IRI of the specimen node
+   *   specimen_iri      string   required: IRI of the specimen node
    *   test_id           string   optional, derived from test_name if omitted
    *   description       string   optional
    *   test_standard     string   optional
@@ -30,7 +30,7 @@
     "%":   "uqudt:PERCENT"
   };
 
-  /* ── Node IDs — capture input fields as $ variables so closures work ── */
+  /* ── Node IDs: capture input fields as $ variables so closures work ── */
   /* specimen_iri and test_name are document fields, not $ variables;       */
   /* capture them here so they resolve correctly inside $map callbacks.    */
   $specimenIri := specimen_iri;

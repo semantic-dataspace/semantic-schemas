@@ -4,9 +4,9 @@
 #   https://www.iwm.fraunhofer.de/ontologies/bwmd-ontology#
 #
 # Validates:
-#   bwmd:ChemicalComposition  — label, one BaseElementOfComposition, ≥1 WeightFraction
-#   bwmd:BaseElementOfComposition — element_symbol from IUPAC periodic table
-#   bwmd:WeightFraction           — element_symbol, min/max value in [0, 100], unit
+#   bwmd:ChemicalComposition : label, one BaseElementOfComposition, ≥1 WeightFraction
+#   bwmd:BaseElementOfComposition: element_symbol from IUPAC periodic table
+#   bwmd:WeightFraction          : element_symbol, min/max value in [0, 100], unit
 
 @prefix bwmd:    <https://www.iwm.fraunhofer.de/ontologies/bwmd-ontology#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .

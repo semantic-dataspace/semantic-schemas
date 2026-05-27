@@ -116,7 +116,7 @@ class Schema:
         data :
             Simplified input dict (as filled in by the user).
         base :
-            Optional base IRI — see :meth:`parse` for details.
+            Optional base IRI: see :meth:`parse` for details.
         """
         oold_doc = self.transform(data)
         return self._parse_oold(self._get_context(), oold_doc, base=base)

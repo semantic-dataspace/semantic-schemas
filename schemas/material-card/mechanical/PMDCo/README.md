@@ -23,7 +23,7 @@ Copy [`docs/example.input.json`](docs/example.input.json) and fill in your value
 
 ```json
 {
-  "card_name":    "316L stainless steel — Hockett-Sherby v1",
+  "card_name":    "316L stainless steel: Hockett-Sherby v1",
   "material_iri": "https://example.org/materials/316L-batch-1",
   "density":          { "value": 7.93,  "unit": "g/cm³" },
   "youngs_modulus":   { "value": 193.0, "unit": "GPa" },

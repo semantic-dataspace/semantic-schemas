@@ -86,7 +86,7 @@
   expertise_level:
     "@id": "schema:proficiencyLevel"
 
-  # Publications — foaf:made (foaf:Agent foaf:made foaf:Document) links the person
+  # Publications: foaf:made (foaf:Agent foaf:made foaf:Document) links the person
   # to their works. Replaces the fabricated vivo:authorOf.
   publications:
     "@id": "foaf:made"

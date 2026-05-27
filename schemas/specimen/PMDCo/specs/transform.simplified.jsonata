@@ -1,6 +1,6 @@
 (
   /*
-   * Specimen (PMDCo) — simplified JSON → OO-LD JSON  (specimen envelope only)
+   * Specimen (PMDCo): simplified JSON → OO-LD JSON  (specimen envelope only)
    *
    * This transform produces the specimen node and the mass quality block.
    * The has_composition block is intentionally NOT included here.
@@ -20,7 +20,7 @@
    *   specimen_name  string   required
    *   specimen_id    string   optional, derived from specimen_name if omitted
    *   mass_value     number   optional
-   *   mass_unit      string   optional — "g" | "kg" | "mg"  (default "g")
+   *   mass_unit      string   optional: "g" | "kg" | "mg"  (default "g")
    *
    * Run with the jsonata-python CLI:
    *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
@@ -59,6 +59,6 @@
     "id":    $specId,
     "label": specimen_name,
     "mass":  $massBlock
-    /* has_composition is merged in by the caller — see docs/specimen_workflow.ipynb */
+    /* has_composition is merged in by the caller; see docs/specimen_workflow.ipynb */
   }
 )

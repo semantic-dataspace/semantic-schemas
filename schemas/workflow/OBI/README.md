@@ -33,7 +33,7 @@ step schema be reused across workflows without duplication.
 {
   "type": "obo:OBI_0000272",
   "id": "workflow-316L-batch1",
-  "label": "QA-to-FEM workflow — 316L batch 1",
+  "label": "QA-to-FEM workflow: 316L batch 1",
   "description": "Full characterisation and model calibration campaign for 316L batch 1.",
   "responsible": "https://example.org/person/jane-doe",
   "steps": [
@@ -80,7 +80,7 @@ without relying on blank-node ordering.
 
 ## Related schemas
 
-- [Process Step (PMDCo)](../../process-step/PMDCo/README.md) — base pattern for all workflow steps
+- [Process Step (PMDCo)](../../process-step/PMDCo/README.md): base pattern for all workflow steps
 - [Tensile Test (PMDCo)](../../characterization/tensile-test/PMDCo/README.md)
 - [Tensile Test (TTO)](../../characterization/tensile-test/TTO/README.md)
 - [Characterization Generic (PMDCo)](../../characterization/generic/PMDCo/README.md)

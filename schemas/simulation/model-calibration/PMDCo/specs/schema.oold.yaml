@@ -103,7 +103,7 @@ x-maturity: 'draft'
 x-process-step:
   category: simulation
 x-schema-dependencies:
-  - schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/simulation/generic/PMDCo/'
+  - schema-id: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/simulation-generic-PMDCo-v0.1.0/schemas/simulation/generic/PMDCo/specs/schema.oold.yaml'
     compatible-versions:
       - '0.1.0'
     property: (base schema via allOf)

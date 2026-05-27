@@ -1,11 +1,11 @@
-# Changelog — Tensile Test (PMDCo)
+# Changelog: Tensile Test (PMDCo)
 
 All notable changes to this schema are documented here.
 Versions follow [Semantic Versioning](https://semver.org/).
 
 ---
 
-## [0.2.0] — 2026-05-27
+## [0.2.0] - 2026-05-27
 
 ### Changed (breaking)
 
@@ -19,7 +19,7 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ---
 
-## [0.1.0] — 2026-05-10
+## [0.1.0] - 2026-05-10
 
 ### Changed
 
@@ -40,7 +40,7 @@ FILTER(STR(?conformsTo) = "…/characterization/tensile-test/#v0.1.0")
 
 ---
 
-## [2.0.0] — 2026-05-04
+## [2.0.0] - 2026-05-04
 
 ### Breaking changes
 
@@ -64,16 +64,16 @@ FILTER(?schema = <…/characterization/tensile-test/PMDCo/#v2.0.0>)
 
 ---
 
-## [1.1.0] — 2026-04-27
+## [1.1.0] - 2026-04-27
 
 ### Added
 
-- `x-transformers: [testxpert_iii]` — links the schema to the TestXpert III
+- `x-transformers: [testxpert_iii]`: links the schema to the TestXpert III
   parser in `semantic-transformers`.
 
 ---
 
-## [1.0.0] — 2026-04-24
+## [1.0.0] - 2026-04-24
 
 ### Added
 

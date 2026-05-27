@@ -6,7 +6,7 @@
 #      https://github.com/materialdigital/core-ontology/tree/main/patterns/duality%20object%20material
 #      (no shape.ttl exists upstream; constraints here are derived from the example data)
 #
-#   2. Material Property (Quality) — for the Mass quality + ScalarValueSpecification
+#   2. Material Property (Quality): for the Mass quality + ScalarValueSpecification
 #      https://github.com/materialdigital/core-ontology/tree/main/patterns/material%20property%20(quality)
 #
 # Chemical composition is validated by loading this file alongside:

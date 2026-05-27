@@ -104,7 +104,7 @@ that the rendered output on GitHub stays in sync.
 ### 3b. Regenerate manifest.json
 
 `schemas/manifest.json` is a **generated index** derived from the schema YAML files.
-It must be kept in sync with the filesystem — CI will fail if it is stale.
+It must be kept in sync with the filesystem; CI will fail if it is stale.
 
 After adding, removing, or changing `x-maturity` in any schema, regenerate it:
 
@@ -121,7 +121,7 @@ The `--refresh` mode of `run_notebooks.sh` does this automatically.
 - One entry per sibling `shape.ttl` (path only)
 - Schemas that set `x-hidden: true` are excluded (they are `$ref` composition targets, not directly usable)
 
-Do not edit `manifest.json` by hand — any manual change will be overwritten by the generator.
+Do not edit `manifest.json` by hand; any manual change will be overwritten by the generator.
 
 ### 4. Validate locally
 

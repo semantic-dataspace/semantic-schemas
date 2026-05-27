@@ -1,6 +1,6 @@
 (
   /*
-   * Mechanical Material Card (PMDCo / IAO) — simplified JSON → OO-LD JSON
+   * Mechanical Material Card (PMDCo / IAO): simplified JSON → OO-LD JSON
    *
    * Input fields (see schema.simplified.json):
    *   card_name              string   required

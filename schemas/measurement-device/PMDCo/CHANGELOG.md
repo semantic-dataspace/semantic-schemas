@@ -1,17 +1,17 @@
-# Changelog — Measurement Device (PMDCo/OBI)
+# Changelog: Measurement Device (PMDCo/OBI)
 
 All notable changes to this schema are documented here.
 Versions follow [Semantic Versioning](https://semver.org/):
 
-- **MAJOR** — breaking changes (renamed fields, removed properties, incompatible graph structure)
-- **MINOR** — backwards-compatible additions (new optional fields)
-- **PATCH** — corrections that do not affect the graph structure (typos, description fixes)
+- **MAJOR**: breaking changes (renamed fields, removed properties, incompatible graph structure)
+- **MINOR**: backwards-compatible additions (new optional fields)
+- **PATCH**: corrections that do not affect the graph structure (typos, description fixes)
 
 The schema IRI encodes the minor version: `…/PMDCo/#v<MAJOR>.<MINOR>.0`.
 
 ---
 
-## [0.1.0] — 2026-05-10
+## [0.1.0] - 2026-05-10
 
 ### Fixed
 
@@ -37,7 +37,7 @@ FILTER(STR(?conformsTo) = "…/measurement-device/PMDCo/#v0.1.0")
 
 ---
 
-## [1.0.0] — 2026-04-13
+## [1.0.0] - 2026-04-13
 
 - Initial release.
 - `obi:Device` (OBI_0000968) node with `rdfs:label` and `dcterms:conformsTo`.

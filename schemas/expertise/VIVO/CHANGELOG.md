@@ -1,4 +1,4 @@
-# Changelog — Expertise (VIVO)
+# Changelog: Expertise (VIVO)
 
 All notable changes to this schema are documented here.
 Versions follow [Semantic Versioning](https://semver.org/):
@@ -11,7 +11,7 @@ The schema IRI encodes the minor version: `.../expertise/VIVO/#v<MAJOR>.<MINOR>.
 
 ---
 
-## [0.2.0] — 2026-05-10
+## [0.2.0] - 2026-05-10
 
 ### Added
 
@@ -35,7 +35,7 @@ The schema IRI encodes the minor version: `.../expertise/VIVO/#v<MAJOR>.<MINOR>.
 
 ---
 
-## [0.1.0] — 2026-05-10
+## [0.1.0] - 2026-05-10
 
 ### Added
 

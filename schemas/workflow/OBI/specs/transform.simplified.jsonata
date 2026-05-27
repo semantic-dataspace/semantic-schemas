@@ -1,13 +1,13 @@
 (
   /*
-   * Workflow (OBI) — simplified JSON → OO-LD JSON  v2.0.0
+   * Workflow (OBI): simplified JSON → OO-LD JSON  v2.0.0
    *
    * Input fields (see schema.simplified.json):
-   *   label          string   required  — human-readable workflow name
-   *   id             string   optional  — IRI slug; derived from label if omitted
+   *   label          string   required: human-readable workflow name
+   *   id             string   optional: IRI slug; derived from label if omitted
    *   description    string   optional
-   *   responsible    string   optional  — person IRI (dcterms:creator)
-   *   steps          array    required  — ordered list of process step IRIs
+   *   responsible    string   optional: person IRI (dcterms:creator)
+   *   steps          array    required: ordered list of process step IRIs
    *
    * Each step IRI must resolve to an independently recorded process step
    * instance (e.g. a tensile test, a simulation run, a sample preparation

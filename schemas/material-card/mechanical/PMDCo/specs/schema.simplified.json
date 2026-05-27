@@ -9,7 +9,7 @@
   "properties": {
     "card_name": {
       "title": "Card Name",
-      "description": "A human-readable name for this material card. Example: '316L stainless steel — Hockett-Sherby v1'.",
+      "description": "A human-readable name for this material card. Example: '316L stainless steel: Hockett-Sherby v1'.",
       "type": "string",
       "minLength": 1
     },

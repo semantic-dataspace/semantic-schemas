@@ -14,7 +14,7 @@
 #      - value (if present) must be xsd:double
 #
 # Note: Inputs/outputs reference materials that are independent knowledge-graph
-# nodes. This shape does not attempt to validate their internal structure —
+# nodes. This shape does not attempt to validate their internal structure;
 # load the appropriate material or specimen shape for that.
 
 @prefix dcterms: <http://purl.org/dc/terms/> .

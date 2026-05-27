@@ -26,12 +26,12 @@ for schema_path in sorted(root.glob(SCHEMA_GLOB)):
     try:
         schema = yaml.safe_load(schema_path.read_text())
     except Exception as exc:  # noqa: BLE001
-        errors.append(f"{schema_path.relative_to(root)}: could not parse YAML — {exc}")
+        errors.append(f"{schema_path.relative_to(root)}: could not parse YAML: {exc}")
         continue
 
     version = schema.get("x-schema-version")
     if not version:
-        continue  # base or internal schema without a version header — skip
+        continue  # base or internal schema without a version header: skip
 
     if not readme_path.exists():
         errors.append(
@@ -47,7 +47,7 @@ for schema_path in sorted(root.glob(SCHEMA_GLOB)):
     if not match:
         errors.append(
             f"{readme_path.relative_to(root)}: "
-            f"no version row found — add "
+            f"no version row found: add "
             f"<td><code>{version}</code></td> to the metadata table"
         )
         continue

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "schema.simplified.json",
-  "title": "Tensile Test — PMDCo (Simplified Input)",
+  "title": "Tensile Test: PMDCo (Simplified Input)",
   "description": "A user-friendly form to describe a uniaxial tensile test and its results using the PMDCo measurement pattern. Fill in the specimen IRI, test conditions, and the measured properties. Results are identified by free-text name rather than a fixed vocabulary, so any measured quantity can be recorded.",
   "type": "object",
   "required": ["test_name", "specimen_iri"],

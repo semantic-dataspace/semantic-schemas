@@ -1,6 +1,6 @@
 (
   /*
-   * Measurement Device (PMDCo) — simplified JSON → OO-LD JSON
+   * Measurement Device (PMDCo): simplified JSON → OO-LD JSON
    *
    * Input fields (see schema.simplified.json):
    *   device_name       string   required
@@ -21,7 +21,7 @@
    */
 
   /*
-   * Schema provenance — injected automatically into every output.
+   * Schema provenance: injected automatically into every output.
    * Update $schemaUri whenever x-schema-version in specs/schema.oold.yaml changes.
    */
   $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/measurement-device-PMDCo-v0.1.0/schemas/measurement-device/PMDCo/specs/schema.oold.yaml";

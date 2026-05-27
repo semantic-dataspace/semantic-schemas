@@ -91,8 +91,8 @@ I provided. Requirements:
 - type must be a readOnly const set to the root class CURIE.
 - Use xsd:double for numeric measurement values.
 - Use "@type": "@id" for any field that holds an IRI (not a literal).
-- Set x-schema-id to:
-  https://github.com/[org]/semantic-schemas/tree/main/schemas/[domain]/[Ontology]/
+- Set x-schema-uri to:
+  https://raw.githubusercontent.com/[org]/semantic-schemas/[tag]/schemas/[domain]/[Ontology]/specs/schema.oold.yaml
 - Set x-schema-version to 1.0.0.
 ```
 
@@ -152,7 +152,7 @@ The transform receives the simplified JSON object and must produce the OO-LD
 document described by specs/schema.oold.yaml.
 
 Requirements:
-- Declare $schemaUri := "[x-schema-id]#v[x-schema-version]" at the top.
+- Declare $schemaUri := "[x-schema-uri]#v[x-schema-version]" at the top.
 - Derive a URL-safe slug from the name field using $replace/$lowercase/$trim.
 - Use $lookup(map, key) for any enum to IRI mapping (not map[key]; that is
   a known jsonata-python bug that returns the whole map object).
@@ -163,7 +163,7 @@ Requirements:
 **What to check.**
 
 - All `$lookup(map, key)` calls, not `map[key]`.
-- `$schemaUri` matches the `x-schema-id` and `x-schema-version` in the schema.
+- `$schemaUri` matches `x-schema-uri` in the schema.
 - Optional fields are wrapped in `$exists()`.
 - The output keys exactly match the JSON Schema `properties` keys (not the context IRI names).
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-generate_manifest.py — rebuild schemas/manifest.json from the filesystem.
+generate_manifest.py: rebuild schemas/manifest.json from the filesystem.
 
 Scans every schema.oold.yaml under schemas/, reads x-maturity, x-schema-version,
 and writes a fresh manifest.json.  Schemas that set x-hidden: true are omitted

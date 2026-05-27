@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "schema.simplified.json",
-  "title": "Chemical Composition — BWMD (Simplified Input)",
+  "title": "Chemical Composition: BWMD (Simplified Input)",
   "description": "A user-friendly form to describe the chemical composition of a material using the BWMD ontology. Provide a label, the balance element, and the weight fractions of each alloying element.",
   "type": "object",
   "required": ["label", "base_element", "fractions"],

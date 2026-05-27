@@ -1,11 +1,11 @@
-# Changelog — Expertise (schema.org)
+# Changelog: Expertise (schema.org)
 
 All notable changes to this schema are documented here.
 Versions follow [Semantic Versioning](https://semver.org/).
 
 ---
 
-## [0.1.0] — 2026-05-10
+## [0.1.0] - 2026-05-10
 
 ### Deprecated
 
@@ -23,7 +23,7 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ---
 
-## [1.0.0] — 2026-04-27
+## [1.0.0] - 2026-04-27
 
 ### Added
 

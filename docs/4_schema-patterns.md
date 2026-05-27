@@ -131,7 +131,7 @@ references the other schema's root URI:
 
 ```yaml
 has_composition:
-  $ref: "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/chemical-composition/PMDCo/"
+  $ref: "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/chemical-composition-PMDCo-v0.1.0/schemas/chemical-composition/PMDCo/specs/schema.oold.yaml"
 ```
 
 This is different from inheritance. In inheritance the `$ref` appears **at

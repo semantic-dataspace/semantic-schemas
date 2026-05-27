@@ -1,17 +1,17 @@
-# Changelog — Constitutive Model Calibration (PMDCo)
+# Changelog: Constitutive Model Calibration (PMDCo)
 
 All notable changes to this schema are documented here.
 Versions follow [Semantic Versioning](https://semver.org/):
 
-- **MAJOR** — breaking changes (renamed fields, removed properties, incompatible graph structure)
-- **MINOR** — backwards-compatible additions (new optional fields)
-- **PATCH** — corrections that do not affect the graph structure (typos, description fixes)
+- **MAJOR**: breaking changes (renamed fields, removed properties, incompatible graph structure)
+- **MINOR**: backwards-compatible additions (new optional fields)
+- **PATCH**: corrections that do not affect the graph structure (typos, description fixes)
 
 The schema IRI encodes the minor version: `…/PMDCo/#v<MAJOR>.<MINOR>.0`.
 
 ---
 
-## [0.1.0] — 2026-05-10
+## [0.1.0] - 2026-05-10
 
 ### Changed
 
@@ -32,7 +32,7 @@ FILTER(STR(?conformsTo) = "…/simulation/model-calibration/#v0.1.0")
 
 ---
 
-## [3.0.0] — 2026-05-04
+## [3.0.0] - 2026-05-04
 
 ### Breaking changes
 
@@ -58,7 +58,7 @@ FILTER(STR(?conformsTo) = "…/simulation/model-calibration/PMDCo/#v3.0.0")
 
 ---
 
-## [2.0.0] — 2026-04-13
+## [2.0.0] - 2026-04-13
 
 ### Breaking changes
 
@@ -87,7 +87,7 @@ FILTER(STR(?conformsTo) = "…/simulation/step/model-calibration/PMDCo/#v2.0.0")
 
 ---
 
-## [1.0.0] — 2026-04-09
+## [1.0.0] - 2026-04-09
 
 - Initial release.
 - Constitutive model calibration schema extending `simulation/step/PMDCo/`.

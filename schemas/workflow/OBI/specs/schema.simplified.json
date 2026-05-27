@@ -9,7 +9,7 @@
   "properties": {
     "label": {
       "title": "Workflow Name",
-      "description": "Human-readable name for this workflow or experiment. Example: 'QA-to-FEM material card workflow — 316L batch 1'.",
+      "description": "Human-readable name for this workflow or experiment. Example: 'QA-to-FEM material card workflow: 316L batch 1'.",
       "type": "string",
       "minLength": 1
     },

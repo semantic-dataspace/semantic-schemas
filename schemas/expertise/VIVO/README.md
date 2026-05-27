@@ -31,18 +31,18 @@ expertise profiles directly interoperable with those systems.
 - Records must integrate with institutional CRIS/VIVO systems or SPARQL endpoints
   that query `vivo:hasResearchArea` / `vivo:hasExperienceIn` directly
 - You need to distinguish **scientific domain expertise** (research areas) from
-  **hands-on instrument experience** (device expertise) at the predicate level —
+  **hands-on instrument experience** (device expertise) at the predicate level,
   not just by the type of the referenced entity
 - Provenance or federation with external research-information infrastructure matters
 
 ### How this differs from Expertise (schema.org)
 
-| | Expertise (VIVO) — **this schema** | Expertise (schema.org) — *deprecated* |
+| | Expertise (VIVO): **this schema** | Expertise (schema.org): *deprecated* |
 |---|---|---|
 | Ontology | VIVO Core 1.15 | schema.org |
 | Research-area predicate | `vivo:hasResearchArea` | `schema:knowsAbout` |
 | Device-experience predicate | `vivo:hasExperienceIn` | `schema:knowsAbout` |
-| Predicate-level distinction | Yes — two predicates | No — one flat predicate |
+| Predicate-level distinction | Yes: two predicates | No: one flat predicate |
 | Ecosystem fit | CRIS / VIVO systems | General web / schema.org consumers |
 
 The key difference is **predicate granularity**: VIVO uses two distinct
@@ -57,14 +57,14 @@ but loses that distinction.
 
 | Field | Required | Vocabulary namespace | Predicate |
 |---|---|---|---|
-| `label` | yes | — | `rdfs:label` |
+| `label` | yes |: | `rdfs:label` |
 | `materials` | no | `material` | `vivo:hasResearchArea` |
 | `material_modelling` | no | `material-modelling` | `vivo:hasResearchArea` |
 | `application_fields` | no | `application-field` | `vivo:hasResearchArea` |
 | `methods` | no | `method` | `vivo:hasResearchArea` |
 | `measurement_devices` | no | `measurement-device` | `vivo:hasExperienceIn` |
 | `production_devices` | no | `production-device` | `vivo:hasExperienceIn` |
-| `publications` | no | — | `vivo:authorOf` |
+| `publications` | no |: | `vivo:authorOf` |
 
 All multi-value fields are serialised as `@set` in JSON-LD.
 
@@ -134,5 +134,5 @@ where `<namespace>` is one of `material`, `material-modelling`,
 
 ## Related schemas
 
-- [Expertise (schema.org)](../schema.org/README.md) — deprecated predecessor; used `schema:knowsAbout` for all fields
+- [Expertise (schema.org)](../schema.org/README.md): Deprecated predecessor; used `schema:knowsAbout` for all fields
 - [Measurement Device (PMDCo)](../../measurement-device/PMDCo/README.md)

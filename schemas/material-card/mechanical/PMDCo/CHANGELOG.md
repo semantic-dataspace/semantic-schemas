@@ -1,4 +1,4 @@
-# Changelog — Mechanical Material Card (PMDCo)
+# Changelog: Mechanical Material Card (PMDCo)
 
 All notable changes to this schema are documented here.
 Versions follow [Semantic Versioning](https://semver.org/):
@@ -11,7 +11,7 @@ The schema IRI encodes the minor version: `.../material-card/mechanical/PMDCo/#v
 
 ---
 
-## [0.1.0] — 2026-05-10
+## [0.1.0] - 2026-05-10
 
 ### Added
 

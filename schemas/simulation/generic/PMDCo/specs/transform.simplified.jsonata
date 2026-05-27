@@ -1,14 +1,14 @@
 (
   /*
-   * Simulation Generic (PMDCo / OBI) — simplified JSON → OO-LD JSON
+   * Simulation Generic (PMDCo / OBI): simplified JSON → OO-LD JSON
    *
    * Input fields (see schema.simplified.json):
    *   step_name   string   required
    *   step_id     string   optional, derived from step_name if omitted
    *   description string   optional
-   *   inputs      array    optional — each item is a dataset/material IRI string
-   *   outputs     array    optional — each item is a dataset/result IRI string
-   *   preceded_by array    optional — each item is a process IRI string
+   *   inputs      array    optional: each item is a dataset/material IRI string
+   *   outputs     array    optional: each item is a dataset/result IRI string
+   *   preceded_by array    optional: each item is a process IRI string
    *   conditions  array    optional
    *     name      string   required
    *     value     number   optional

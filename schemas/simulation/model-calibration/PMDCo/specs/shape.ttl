@@ -7,7 +7,7 @@
 #     your_graph.ttl
 #
 # Validates:
-#   1. ComputerSimulation node (OBI_0000471) — inherited rules from base shape
+#   1. ComputerSimulation node (OBI_0000471): inherited rules from base shape
 #   2. ModelCalibration-specific: must have dcterms:type (model_type)
 #   3. ModelParameter nodes (IAO_0000027 DataItem reused as parameter carrier):
 #      - must have rdfs:label (param_name)

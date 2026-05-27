@@ -1,9 +1,9 @@
 (
   /*
-   * Chemical Composition (BWMD) — simplified JSON → OO-LD JSON
+   * Chemical Composition (BWMD): simplified JSON → OO-LD JSON
    *
    * Input fields (see schema.simplified.json):
-   *   label         string   required — human-readable composition name
+   *   label         string   required: human-readable composition name
    *   base_element  object   required
    *     symbol      string   IUPAC element symbol (balance element)
    *   fractions     array    required
@@ -22,9 +22,9 @@
    */
 
   /*
-   * Schema provenance — injected automatically into every output.
+   * Schema provenance: injected automatically into every output.
    * Update $schemaUri whenever x-schema-version in specs/schema.oold.yaml changes.
-   * Format: <x-schema-id>#v<x-schema-version>
+   * Format: <x-schema-uri> (pinned raw URL, no version suffix needed)
    */
   $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/chemical-composition-BWMD-v0.1.0/schemas/chemical-composition/BWMD/specs/schema.oold.yaml";
 

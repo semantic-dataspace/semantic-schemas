@@ -1,14 +1,14 @@
 (
   /*
-   * Manufacturing Generic (PMDCo) — simplified JSON → OO-LD JSON
+   * Manufacturing Generic (PMDCo): simplified JSON → OO-LD JSON
    *
    * Input fields (see schema.simplified.json):
    *   process_name  string   required
    *   process_id    string   optional, derived from process_name if omitted
    *   description   string   optional
-   *   inputs        array    optional — each item is a material IRI string
-   *   outputs       array    optional — each item is a material IRI string
-   *   preceded_by   array    optional — each item is a process IRI string
+   *   inputs        array    optional: each item is a material IRI string
+   *   outputs       array    optional: each item is a material IRI string
+   *   preceded_by   array    optional: each item is a process IRI string
    *   conditions    array    optional
    *     name        string   required
    *     value       number   optional
@@ -24,9 +24,9 @@
    */
 
   /*
-   * Schema provenance — injected automatically into every output.
+   * Schema provenance: injected automatically into every output.
    * Update $schemaUri whenever x-schema-version in specs/schema.oold.yaml changes.
-   * Format: <x-schema-id>/v<x-schema-version>
+   * Format: <x-schema-uri> (pinned raw URL, no version suffix needed)
    */
   $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/manufacturing-generic-PMDCo-v0.1.0/schemas/manufacturing/generic/PMDCo/specs/schema.oold.yaml";
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# run_notebooks.sh — execute and validate all workflow notebooks
+# run_notebooks.sh: execute and validate all workflow notebooks
 #
 # Usage:
 #   ./scripts/run_notebooks.sh              # run all notebooks (test mode)

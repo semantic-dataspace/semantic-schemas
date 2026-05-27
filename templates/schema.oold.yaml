@@ -57,10 +57,10 @@ $comment: 'OO-LD Schema for <ConceptName> based on <Ontology>.'
 # Increment PATCH for bug fixes, MINOR for new optional fields, MAJOR for breaking changes.
 # Keep a matching entry in CHANGELOG.md in this folder.
 x-schema-version: '1.0.0'
-# Stable base IRI for this schema. Combined with x-schema-version in the
-# JSONata transform to form the versioned IRI stamped on every output.
-# Replace with the actual URL of this schema folder in the repository.
-x-schema-id: 'https://github.com/<org>/semantic-schemas/tree/main/schemas/<domain>/<Ontology>/'
+# Pinned raw URL for this schema at its release tag. Used in the JSONata
+# transform as $schemaUri and stamped on every output via dcterms:conformsTo.
+# Replace <tag> with the per-schema release tag (e.g. my-schema-PMDCo-v1.0.0).
+x-schema-uri: 'https://raw.githubusercontent.com/<org>/semantic-schemas/<tag>/schemas/<domain>/<Ontology>/specs/schema.oold.yaml'
 
 # Human-readable name (used as the form title):
 title: MySchema

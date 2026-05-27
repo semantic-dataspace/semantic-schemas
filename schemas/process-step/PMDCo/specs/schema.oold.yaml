@@ -43,16 +43,16 @@
   date:
     "@id": "dcterms:date"
     "@type": "xsd:dateTime"
-  # obi:OBI_0000293 — material entities that are consumed or observed by this process
+  # obi:OBI_0000293: material entities that are consumed or observed by this process
   has_specified_input:
     "@id": "http://purl.obolibrary.org/obo/OBI_0000293"
     "@type": "@id"
     "@container": "@set"
-  # prov:wasAssociatedWith — agent (person) responsible for executing this process
+  # prov:wasAssociatedWith: agent (person) responsible for executing this process
   operator:
     "@id": "http://www.w3.org/ns/prov#wasAssociatedWith"
     "@type": "@id"
-  # schema:instrument — physical instrument or device used to carry out this process
+  # schema:instrument: physical instrument or device used to carry out this process
   instrument:
     "@id": "https://schema.org/instrument"
     "@type": "@id"
@@ -72,7 +72,7 @@ x-hidden: true
 x-process-step:
   category: generic
 title: Process Step (PMDCo)
-description: A single process step — the base pattern for all workflow steps.
+description: "A single process step: the base pattern for all workflow steps."
 type: object
 
 required:

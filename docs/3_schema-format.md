@@ -158,7 +158,7 @@ same rule: their position in the tree signals their role, not a special name.
 
 ## Leaf folder contents
 
-Every leaf node — the ontology folder at the bottom of the tree — uses the
+Every leaf node (the ontology folder at the bottom of the tree) uses the
 following standard subfolders and files:
 
 | Path | Purpose |
@@ -206,9 +206,9 @@ entries in both rows simultaneously.
 
 Each schema is versioned independently using [Semantic Versioning](https://semver.org/):
 
-- **MAJOR** — breaking changes: renamed or removed fields, incompatible graph structure.
-- **MINOR** — backwards-compatible additions: new optional fields, new conditions.
-- **PATCH** — corrections that do not affect the graph: typos, description fixes, example updates.
+- **MAJOR**: breaking changes: renamed or removed fields, incompatible graph structure.
+- **MINOR**: backwards-compatible additions: new optional fields, new conditions.
+- **PATCH**: corrections that do not affect the graph: typos, description fixes, example updates.
 
 The version is declared in `x-schema-version` inside `schema.oold.yaml` and recorded in the
 schema's `CHANGELOG.md`. The repository also carries a global version (`pyproject.toml`, repo tag)

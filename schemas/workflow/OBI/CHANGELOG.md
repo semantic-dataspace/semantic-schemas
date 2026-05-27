@@ -1,17 +1,17 @@
-# Changelog — Workflow (OBI)
+# Changelog: Workflow (OBI)
 
 All notable changes to this schema are documented here.
 Versions follow [Semantic Versioning](https://semver.org/):
 
-- **MAJOR** — breaking changes (renamed fields, removed properties, incompatible graph structure)
-- **MINOR** — backwards-compatible additions (new optional fields, new conditions)
-- **PATCH** — corrections that do not affect the graph structure (typos, description fixes, example updates)
+- **MAJOR**: breaking changes (renamed fields, removed properties, incompatible graph structure)
+- **MINOR**: backwards-compatible additions (new optional fields, new conditions)
+- **PATCH**: corrections that do not affect the graph structure (typos, description fixes, example updates)
 
 The schema IRI encodes the minor version: `…/OBI/#v<MAJOR>.<MINOR>.0`.
 
 ---
 
-## [0.1.0] — 2026-05-10
+## [0.1.0] - 2026-05-10
 
 ### Breaking changes
 
@@ -51,7 +51,7 @@ Replace embedded step dicts in simplified input with plain IRIs:
 
 ---
 
-## [1.1.0] — 2026-04-10
+## [1.1.0] - 2026-04-10
 
 ### Changed
 
@@ -73,7 +73,7 @@ The generated RDF triple is unchanged (`dcterms:references`).
 
 ---
 
-## [1.0.0] — initial release
+## [1.0.0] - initial release
 
 - `bfo:Process` (BFO_0000015) workflow node with `rdfs:label` and
   `rdfs:comment`

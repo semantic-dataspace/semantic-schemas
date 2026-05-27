@@ -55,9 +55,9 @@ captured. Use `generic/` as a base when adding domain-specific result fields.
 For larger-scale data collection, two further schema families are planned but not
 yet implemented:
 
-- **`study/`** — groups multiple experiments under one research question, potentially
+- **`study/`**: groups multiple experiments under one research question, potentially
   crossing domains.
-- **`specimen/batch/`** — a batch record for specimens prepared under identical
+- **`specimen/batch/`**: a batch record for specimens prepared under identical
   conditions, so one provenance entry covers the whole set.
 
 ---

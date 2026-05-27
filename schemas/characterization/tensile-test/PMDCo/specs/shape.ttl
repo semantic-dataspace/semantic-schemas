@@ -20,7 +20,7 @@
 #     has_specified_output → MeasurementDatum (IAO_0000109)     OBI_0000299
 #
 #   MeasurementDatum (IAO_0000109)
-#     rdfs:label                  — property name string
+#     rdfs:label                 : property name string
 #     is_about                  → Specimen                      IAO_0000136
 #     is_quality_measurement_of → Quality (BFO_0000019)         IAO_0000221
 #     has_value_specification   → ScalarValueSpec (OBI_0001931) OBI_0001938
@@ -140,7 +140,7 @@ shape:scalar_value_spec
     a sh:NodeShape ;
     sh:targetClass obo:OBI_0001931 ;   # ScalarValueSpecification
 
-    # has_specified_numeric_value (OBI_0001937) — canonical predicate
+    # has_specified_numeric_value (OBI_0001937): canonical predicate
     sh:property [
         sh:path obi:0001937 ;
         sh:datatype xsd:double ;

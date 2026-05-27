@@ -1,6 +1,6 @@
 (
   /*
-   * Chemical Composition (PMDCo) — simplified JSON → OO-LD JSON
+   * Chemical Composition (PMDCo): simplified JSON → OO-LD JSON
    *
    * Input fields (see schema.simplified.json):
    *   material_name  string   required
@@ -21,9 +21,9 @@
    */
 
   /*
-   * Schema provenance — injected automatically into every output.
+   * Schema provenance: injected automatically into every output.
    * Update $schemaUri whenever x-schema-version in specs/schema.oold.yaml changes.
-   * Format: <x-schema-id>/v<x-schema-version>
+   * Format: <x-schema-uri> (pinned raw URL, no version suffix needed)
    */
   $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/chemical-composition-PMDCo-v0.1.0/schemas/chemical-composition/PMDCo/specs/schema.oold.yaml";
 

@@ -3,9 +3,9 @@
 #   schemas/expertise/VIVO/specs/schema.oold.yaml
 #
 # Coverage:
-#   PersonShape      — required dcterms:conformsTo; expertise items via vivo:hasResearchArea
-#   ExpertiseItem    — optional schema:proficiencyLevel must be a valid enum value
-#   PublicationShape — required dcterms:title; valid year range; correct bibo:Document type
+#   PersonShape     : required dcterms:conformsTo; expertise items via vivo:hasResearchArea
+#   ExpertiseItem   : optional schema:proficiencyLevel must be a valid enum value
+#   PublicationShape: required dcterms:title; valid year range; correct bibo:Document type
 #
 # Out of scope (known limitations):
 #   - Author list members (dcterms:contributor uses rdf:List; per-item path traversal

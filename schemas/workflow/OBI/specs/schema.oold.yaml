@@ -41,7 +41,7 @@
   responsible:
     "@id": "http://purl.org/dc/terms/creator"
     "@type": "@id"
-  # bfo:BFO_0000051 — this workflow has these process steps as parts (ordered list)
+  # bfo:BFO_0000051: this workflow has these process steps as parts (ordered list)
   steps:
     "@id": "http://purl.obolibrary.org/obo/BFO_0000051"
     "@type": "@id"

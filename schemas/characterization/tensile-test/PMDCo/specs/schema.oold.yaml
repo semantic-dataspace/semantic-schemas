@@ -61,12 +61,12 @@
   description:
     "@id": "rdfs:comment"
   "@base": "https://w3id.org/pmd/co/test/shape_tensile_test_pmdco#"
-  # bfo:BFO_0000055  — the assay realizes the evaluant role
+  # bfo:BFO_0000055 : the assay realizes the evaluant role
   realizes:
     "@id": "http://purl.obolibrary.org/obo/BFO_0000055"
     "@type": "@id"
     "@container": "@set"
-  # bfo:BFO_0000054  — inverse of realizes; set on the role node pointing back to the assay
+  # bfo:BFO_0000054 : inverse of realizes; set on the role node pointing back to the assay
   realized_in:
     "@id": "http://purl.obolibrary.org/obo/BFO_0000054"
     "@type": "@id"
@@ -78,7 +78,7 @@
     "@id": "bfo:0000062"
     "@type": "@id"
     "@container": "@set"
-  # pmdco:PMD_0000009 "has process attribute" — process-level quantitative conditions
+  # pmdco:PMD_0000009 "has process attribute": process-level quantitative conditions
   has_process_attribute:
     "@id": "pmdco:PMD_0000009"
     "@type": "@id"
@@ -91,30 +91,30 @@
   parameter_unit:
     "@id": "qudt:hasUnit"
     "@type": "@id"
-  # obi:OBI_0000299  — measurement datum nodes are the specified outputs
+  # obi:OBI_0000299 : measurement datum nodes are the specified outputs
   measured_properties:
     "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
     "@container": "@set"
-  # iao:IAO_0000136  — datum / value-spec is about the evaluated entity
+  # iao:IAO_0000136 : datum / value-spec is about the evaluated entity
   is_about:
     "@id": "http://purl.obolibrary.org/obo/IAO_0000136"
     "@type": "@id"
-  # iao:IAO_0000221  — datum is a measurement of this quality
+  # iao:IAO_0000221 : datum is a measurement of this quality
   is_quality_measurement_of:
     "@id": "http://purl.obolibrary.org/obo/IAO_0000221"
     "@type": "@id"
-  # obi:OBI_0001938  — scalar value specification embedded in each datum
+  # obi:OBI_0001938 : scalar value specification embedded in each datum
   has_value_spec:
     "@id": "http://purl.obolibrary.org/obo/OBI_0001938"
-  # obi:OBI_0001937  — canonical numeric value predicate for ScalarValueSpecification
+  # obi:OBI_0001937 : canonical numeric value predicate for ScalarValueSpecification
   result_value:
     "@id": "http://purl.obolibrary.org/obo/OBI_0001937"
     "@type": "xsd:double"
-  # iao:IAO_0000039  — unit IRI
+  # iao:IAO_0000039 : unit IRI
   result_unit:
     "@id": "http://purl.obolibrary.org/obo/IAO_0000039"
     "@type": "@id"
-  # obi:OBI_0001927  — value spec points back to the quality it quantifies
+  # obi:OBI_0001927 : value spec points back to the quality it quantifies
   specifies_value_of:
     "@id": "http://purl.obolibrary.org/obo/OBI_0001927"
     "@type": "@id"
@@ -193,7 +193,7 @@ properties:
     title: Evaluant Role(s)
     description: >-
       The evaluant role (OBI_0000067) that this assay realizes.
-      Structural RDF plumbing — managed automatically by the transformer.
+      Structural RDF plumbing: managed automatically by the transformer.
     type: array
     readOnly: true
     minItems: 1
@@ -242,7 +242,7 @@ properties:
     default: []
 
   # preceded_by (BFO_0000062) links this process to earlier processes such as
-  # heat treatment or sample preparation — not to the specimen itself.
+  # heat treatment or sample preparation: not to the specimen itself.
   # Hidden from the form: it is an advanced temporal provenance link that most
   # users do not need and that can be added directly to the JSON-LD output
   # when required.

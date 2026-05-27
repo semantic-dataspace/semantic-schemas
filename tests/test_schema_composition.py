@@ -9,7 +9,7 @@ Covers:
   - x-process-step annotation: every schema whose root type is a workflow step
     class must declare x-process-step with a category.
 
-These tests do not execute transforms or validate RDF — they are fast static
+These tests do not execute transforms or validate RDF: they are fast static
 checks on the YAML content.
 """
 
@@ -21,8 +21,9 @@ from pathlib import Path
 
 SCHEMAS_ROOT = Path(__file__).parent.parent / "schemas"
 
-# Canonical IRI prefix for resolving x-schema-dependencies schema-ids
-_SCHEMA_BASE = "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/"
+# Canonical raw prefix for resolving x-schema-dependencies schema-ids
+_RAW_BASE = "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/"
+_RAW_SCHEMAS_SEG = "/schemas/"
 
 # Type constants that identify a schema as a workflow process step
 _STEP_TYPES = {
@@ -78,12 +79,30 @@ def _step_schemas() -> list[tuple[str, Path]]:
 
 
 def _iri_to_schema_dir(schema_id_iri: str) -> Path | None:
-    """Convert an x-schema-id IRI to a local directory path, or None."""
-    if not schema_id_iri.startswith(_SCHEMA_BASE):
+    """Convert a pinned raw x-schema-dependencies schema-id IRI to a local directory path.
+
+    Expected format:
+      https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/<tag>/schemas/<path>/specs/schema.oold.yaml
+    """
+    if not schema_id_iri.startswith(_RAW_BASE):
         return None
-    rel = schema_id_iri[len(_SCHEMA_BASE):].rstrip("/")
-    candidate = SCHEMAS_ROOT / rel
+    rest = schema_id_iri[len(_RAW_BASE):]
+    seg_pos = rest.find(_RAW_SCHEMAS_SEG)
+    if seg_pos == -1:
+        return None
+    rel = rest[seg_pos + len(_RAW_SCHEMAS_SEG):]
+    if "/specs/" in rel:
+        rel = rel[:rel.index("/specs/")]
+    candidate = SCHEMAS_ROOT / rel.rstrip("/")
     return candidate if candidate.is_dir() else None
+
+
+def _dep_schema_label(dep: dict) -> str:
+    """Extract a short label from a schema-id IRI for use in test IDs."""
+    sid = dep["schema-id"].rstrip("/")
+    if "/specs/" in sid:
+        sid = sid[:sid.index("/specs/")]
+    return sid.split("/")[-1]
 
 
 # ---------------------------------------------------------------------------
@@ -155,7 +174,7 @@ _DEP_SCHEMAS = _schemas_with_dependencies()
 @pytest.mark.parametrize(
     "schema_id,yaml_path,dep",
     _DEP_SCHEMAS,
-    ids=[f"{s[0]}→{s[2]['schema-id'].split('/')[-2]}" for s in _DEP_SCHEMAS],
+    ids=[f"{s[0]}→{_dep_schema_label(s[2])}" for s in _DEP_SCHEMAS],
 )
 def test_schema_dependency_exists(schema_id: str, yaml_path: Path, dep: dict) -> None:
     """x-schema-dependencies schema-id must map to a schema directory in this repo."""
@@ -163,7 +182,8 @@ def test_schema_dependency_exists(schema_id: str, yaml_path: Path, dep: dict) ->
     assert target_dir is not None, (
         f"{schema_id}: x-schema-dependencies references unknown schema:\n"
         f"  {dep['schema-id']}\n"
-        f"  IRI must start with {_SCHEMA_BASE}"
+        f"  IRI must be a pinned raw URL:\n"
+        f"  {_RAW_BASE}<tag>/schemas/<path>/specs/schema.oold.yaml"
     )
     assert target_dir.is_dir(), (
         f"{schema_id}: x-schema-dependencies directory does not exist:\n"
@@ -178,7 +198,7 @@ def test_schema_dependency_exists(schema_id: str, yaml_path: Path, dep: dict) ->
 @pytest.mark.parametrize(
     "schema_id,yaml_path,dep",
     _DEP_SCHEMAS,
-    ids=[f"{s[0]}→{s[2]['schema-id'].split('/')[-2]}" for s in _DEP_SCHEMAS],
+    ids=[f"{s[0]}→{_dep_schema_label(s[2])}" for s in _DEP_SCHEMAS],
 )
 def test_schema_dependency_version_current(
     schema_id: str, yaml_path: Path, dep: dict

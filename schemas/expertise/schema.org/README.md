@@ -1,4 +1,4 @@
-# Expertise (schema.org) — DEPRECATED
+# Expertise (schema.org): DEPRECATED
 
 > **This schema is deprecated.** Use [Expertise (VIVO)](../VIVO/README.md) instead.
 > VIVO provides predicate-level distinction between research-area expertise

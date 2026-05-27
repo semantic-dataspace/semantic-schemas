@@ -45,7 +45,7 @@ def _shacl_violations(report: rdflib.Graph) -> list[str]:
 
 
 # ---------------------------------------------------------------------------
-# TTO schema — TestXpertIII parser
+# TTO schema: TestXpertIII parser
 # ---------------------------------------------------------------------------
 
 @pytest.fixture(scope="module")
@@ -109,7 +109,7 @@ def test_tto_transformer_graph_has_timeseries_table(tto_transformer_result):
 
 
 # ---------------------------------------------------------------------------
-# PMDCo schema — TestXpertIII parser
+# PMDCo schema: TestXpertIII parser
 # ---------------------------------------------------------------------------
 
 @pytest.fixture(scope="module")

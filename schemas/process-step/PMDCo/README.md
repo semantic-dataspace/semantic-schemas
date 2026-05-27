@@ -4,7 +4,7 @@ Defines the **base pattern** that all workflow step schemas must satisfy.
 Step-specific schemas (tensile test, simulation, manufacturing, etc.) extend
 this schema using JSON Schema `allOf + $ref` composition.
 
-Do not use this schema directly to record data — use one of the step-specific
+Do not use this schema directly to record data; use one of the step-specific
 schemas instead.  This schema is not listed in the playground; it exists solely
 as a shared base for `$ref` composition.
 
@@ -74,4 +74,4 @@ obo:OBI_0000070  (PlannedProcess)
 
 ## Related
 
-- [Workflow (OBI)](../../workflow/OBI/README.md) — ordered container of step IRIs
+- [Workflow (OBI)](../../workflow/OBI/README.md): ordered container of step IRIs

@@ -48,3 +48,16 @@ repos:
         entry: python scripts/check_readme_versions.py
         pass_filenames: false
         additional_dependencies: [pyyaml]
+
+  # ── Schema structural tests ───────────────────────────────────────────────
+  # Runs the fast static checks: allOf refs resolve, x-schema-dependencies
+  # point to known schemas at compatible versions, step schemas declare
+  # x-process-step.  Catches issues that would otherwise only fail in CI.
+  - repo: local
+    hooks:
+      - id: schema-composition-tests
+        name: Schema structural tests
+        language: python
+        entry: python -m pytest tests/test_schema_composition.py -q
+        pass_filenames: false
+        additional_dependencies: [pytest, pyyaml]

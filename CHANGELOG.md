@@ -10,10 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Breaking changes
 
 - **Manifest format v1.** `schemas/manifest.json` now carries `"version": 1` at the
-  root and each entry has a new structure: separate `shape.ttl` entries are gone —
+  root and each entry has a new structure: separate `shape.ttl` entries are gone;
   the SHACL shape path is now inlined as `"shapePath"` on the schema entry.
   Consumers that iterated over all entries to find shape files must be updated.
-- **`expertise/VIVO/` v0.2.0** — the six expertise arrays (`materials`,
+- **`expertise/VIVO/` v0.2.0**: the six expertise arrays (`materials`,
   `material_modelling`, `application_fields`, `methods`, `measurement_devices`,
   `production_devices`) now contain objects `{"id": "…IRI…", "expertise_level": "…"}`
   instead of plain IRI strings. Wrap existing values: `"https://…"` → `{"id": "https://…"}`.
@@ -24,10 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   domain group (e.g. `"characterization"`, `"expertise"`) and the schema's
   `x-schema-version` value, enabling consumers to filter and display without
   fetching the full schema YAML.
-- **`expertise/VIVO/` v0.2.0** — `publications` field (array of `vivo:Publication`
+- **`expertise/VIVO/` v0.2.0**: `publications` field (array of `vivo:Publication`
   nodes via `vivo:authorOf`) and per-item `expertise_level` annotation
   (`schema:proficiencyLevel`: `novice` | `competent` | `proficient` | `expert`).
-- **`expertise/VIVO/specs/shape.ttl`** — SHACL shape for the VIVO expertise schema.
+- **`expertise/VIVO/specs/shape.ttl`**: SHACL shape for the VIVO expertise schema.
 
 ---
 
@@ -54,7 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **`expertise/VIVO/`** — new expertise schema using VIVO Core predicates.
+- **`expertise/VIVO/`**: new expertise schema using VIVO Core predicates.
   Replaces `expertise/schema.org/` with predicate-level separation between
   research-area expertise (`vivo:hasResearchArea`) and instrument experience
   (`vivo:hasExperienceIn`). Includes OO-LD schema, SHACL shape, example, and
@@ -157,7 +157,7 @@ in `dcterms:conformsTo` differs.
   Documented in `docs/3_schema-format.md`.
 - **`characterization/step/tensile-test/PMDCo/`** and
   **`characterization/step/tensile-test/TTO/`**: `x-transformers: [testxpert_iii]`
-  added — both tensile-test schemas now advertise the TestXpert III parser.
+  added; both tensile-test schemas now advertise the TestXpert III parser.
 - **`expertise/schema.org/`**: expertise schema moved to the standard
   `<domain>/<Ontology>/specs/` structure (`schema.org` ontology folder).
   The old `expertise/specs/` location has been removed.
@@ -205,7 +205,7 @@ in `dcterms:conformsTo` differs.
 
 ### Added
 
-- **`characterization/step/tensile-test/PMDCo/`** — new schema for tensile test
+- **`characterization/step/tensile-test/PMDCo/`**: new schema for tensile test
   results using pure PMDCo3 classes (no TTO dependency). Follows the PMDCo
   measurement pattern: process (`pmdco:PMD_0000974`) → measurement datum
   (`obo:IAO_0000109`) → scalar value specification (`obo:OBI_0001931`).
@@ -217,24 +217,24 @@ in `dcterms:conformsTo` differs.
 
 ### Added
 
-- **`measurement-device/PMDCo/`** — new schema for registering physical measurement
+- **`measurement-device/PMDCo/`**: new schema for registering physical measurement
   and characterization instruments. Records name, manufacturer, model, serial number,
   and last calibration date. Root class: `obi:OBI_0000968` (Device). Includes
   simplified input schema, OO-LD schema, JSONata transform, SHACL shape, example
   input, and step-by-step notebook (`1_device_workflow.ipynb`).
-- **`characterization/process/PMDCo/`** — new fixed-structure template for
+- **`characterization/process/PMDCo/`**: new fixed-structure template for
   characterization experiments. Enforces three mandatory fields (operator via
   `prov:wasAssociatedWith`, device via `schema:instrument`, specimen via
   `obi:has_specified_input`). Optional `step_reference` links to a detailed result
   node. Includes all spec files and notebook (`1_characterization_process_workflow.ipynb`).
-- **`workflow/templates/material-card/PMDCo/`** — new cross-schema workflow template
+- **`workflow/templates/material-card/PMDCo/`**: new cross-schema workflow template
   sitting above `workflow/PMDCo/`. A single input dictionary drives all six sub-schemas
   (device, manufacturing step, characterization process + TTO result, model calibration,
   material card). Includes `specs/schema.simplified.json`, `specs/transform.simplified.jsonata`,
   `README.md`, `docs/workflow_template.input.json`, and beginner-oriented notebook
   `docs/1_material_card_with_template.ipynb`. No new RDF class; validated by the
   six sub-schemas' own SHACL shapes.
-- **`scripts/run_notebooks.sh`** — helper script to run all notebooks in test mode
+- **`scripts/run_notebooks.sh`**: helper script to run all notebooks in test mode
   (`./scripts/run_notebooks.sh`) or refresh outputs in-place for documentation
   (`./scripts/run_notebooks.sh --refresh`). Supports a single-notebook path argument.
 

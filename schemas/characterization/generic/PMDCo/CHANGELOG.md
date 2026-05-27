@@ -1,17 +1,17 @@
-# Changelog — Characterization Generic (PMDCo)
+# Changelog: Characterization Generic (PMDCo)
 
 All notable changes to this schema are documented here.
 Versions follow [Semantic Versioning](https://semver.org/):
 
-- **MAJOR** — breaking changes (renamed fields, removed properties, incompatible graph structure)
-- **MINOR** — backwards-compatible additions (new optional fields)
-- **PATCH** — corrections that do not affect the graph structure (typos, description fixes)
+- **MAJOR**: breaking changes (renamed fields, removed properties, incompatible graph structure)
+- **MINOR**: backwards-compatible additions (new optional fields)
+- **PATCH**: corrections that do not affect the graph structure (typos, description fixes)
 
 The schema IRI encodes the minor version: `…/generic/PMDCo/#v<MAJOR>.<MINOR>.0`.
 
 ---
 
-## [0.1.0] — 2026-05-10
+## [0.1.0] - 2026-05-10
 
 ### Changed
 
@@ -32,7 +32,7 @@ FILTER(STR(?conformsTo) = "…/characterization/generic/#v0.1.0")
 
 ---
 
-## [3.0.0] — 2026-05-04
+## [3.0.0] - 2026-05-04
 
 ### Breaking changes
 
@@ -58,7 +58,7 @@ FILTER(?schema = <…/characterization/generic/PMDCo/#v3.0.0>)
 
 ---
 
-## [2.0.0] — 2026-04-13
+## [2.0.0] - 2026-04-13
 
 ### Changed
 
@@ -84,7 +84,7 @@ FILTER(?schema = <…/characterization/step/base/PMDCo/#v2.0.0>)
 
 ---
 
-## [1.0.0] — initial release (at path characterization/step/PMDCo/)
+## [1.0.0] - initial release (at path characterization/step/PMDCo/)
 
 - `obi:Assay` (OBI_0000070) node with `rdfs:label` and `dcterms:conformsTo`
 - `has_specified_input` linking to specimen/material IRIs

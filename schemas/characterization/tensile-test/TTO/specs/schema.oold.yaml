@@ -43,7 +43,7 @@
   tto: "https://w3id.org/pmd/tto/"
   # QUDT unit vocabulary (prefix used in TTO reference data)
   unit: "http://qudt.org/vocab/unit/"
-  # CSV on the Web (csvw) — used for time-series column descriptor nodes
+  # CSV on the Web (csvw): used for time-series column descriptor nodes
   csvw: "http://www.w3.org/ns/csvw#"
   type: "@type"
   id: "@id"
@@ -51,43 +51,43 @@
     "@id": "rdfs:label"
   description:
     "@id": "rdfs:comment"
-  # bfo:BFO_0000055 — process realizes the tensile test method
+  # bfo:BFO_0000055: process realizes the tensile test method
   realizes:
     "@id": "http://purl.obolibrary.org/obo/BFO_0000055"
     "@container": "@set"
-  # obi:OBI_0000293 — specimen tested
+  # obi:OBI_0000293: specimen tested
   has_specified_input:
     "@id": "http://purl.obolibrary.org/obo/OBI_0000293"
     "@type": "@id"
     "@container": "@set"
-  # pmdco:PMD_0000009 — condition quality nodes (strain rate, temperature …)
+  # pmdco:PMD_0000009: condition quality nodes (strain rate, temperature …)
   has_process_attribute:
     "@id": "https://w3id.org/pmd/co/PMD_0000009"
     "@container": "@set"
-  # iao:IAO_0000417 — "is quality measured as": quality node → _smd
+  # iao:IAO_0000417: "is quality measured as": quality node → _smd
   is_quality_measured_as:
     "@id": "http://purl.obolibrary.org/obo/IAO_0000417"
     "@type": "@id"
-  # obi:OBI_0000299 — all scalar measurement datum nodes
+  # obi:OBI_0000299: all scalar measurement datum nodes
   measured_properties:
     "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
     "@container": "@set"
-  # iao:IAO_0000136 — datum / SVS is_about the quality instance
+  # iao:IAO_0000136: datum / SVS is_about the quality instance
   is_about:
     "@id": "http://purl.obolibrary.org/obo/IAO_0000136"
     "@type": "@id"
-  # obi:OBI_0001938 — has_value_specification
+  # obi:OBI_0001938: has_value_specification
   has_value_spec:
     "@id": "http://purl.obolibrary.org/obo/OBI_0001938"
-  # iao:IAO_0000039 — unit IRI
+  # iao:IAO_0000039: unit IRI
   result_unit:
     "@id": "http://purl.obolibrary.org/obo/IAO_0000039"
     "@type": "@id"
-  # obi:OBI_0001927 — SVS specifies_value_of the quality
+  # obi:OBI_0001927: SVS specifies_value_of the quality
   specifies_value_of:
     "@id": "http://purl.obolibrary.org/obo/OBI_0001927"
     "@type": "@id"
-  # pmdco:PMD_0000006 — numeric value on ScalarValueSpecification
+  # pmdco:PMD_0000006: numeric value on ScalarValueSpecification
   result_value:
     "@id": "https://w3id.org/pmd/co/PMD_0000006"
     "@type": "xsd:double"
