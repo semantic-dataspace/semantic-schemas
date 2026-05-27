@@ -169,9 +169,13 @@ Every schema must declare three metadata fields in `schema.oold.yaml`:
 
 ```yaml
 x-schema-version: '1.0.0'
-x-schema-id:      'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/<domain>/<Ontology>'
+x-schema-uri:     'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/<tag>/schemas/<domain>/<Ontology>/specs/schema.oold.yaml'
 x-maturity:       'draft'
 ```
+
+`x-schema-uri` is the stable, versioned raw URL of this schema file, pinned to its
+per-schema git tag. It is used by tooling to stamp `dcterms:conformsTo` on every
+generated record and to provide the "View specification" link in the webform builder.
 
 `x-maturity` must be one of `draft`, `stable`, or `deprecated`. New schemas start as `draft`.
 After changing it, run `python scripts/generate_manifest.py` to keep the manifest in sync.
@@ -188,8 +192,9 @@ including per-schema git tags, `dcterms:conformsTo` stamping, and SPARQL usage.
 ### Releasing a schema version
 
 1. Update `x-schema-version` in `specs/schema.oold.yaml`.
-2. Update `$schemaUri` in `specs/transform.simplified.jsonata` to the new per-schema tag URL.
-3. Update `version` in `schemas/manifest.json` for this entry.
-4. Add an entry to the schema's `CHANGELOG.md`.
-5. Commit and push.
-6. Create and push the per-schema git tag, e.g. `git tag tensile-test-PMDCo-v0.2.0 && git push origin tensile-test-PMDCo-v0.2.0`.
+2. Update `x-schema-uri` in `specs/schema.oold.yaml` to the new per-schema tag URL.
+3. Update `$schemaUri` in `specs/transform.simplified.jsonata` to the same URL.
+4. Update `version` in `schemas/manifest.json` for this entry.
+5. Add an entry to the schema's `CHANGELOG.md`.
+6. Commit and push.
+7. Create and push the per-schema git tag, e.g. `git tag tensile-test-PMDCo-v0.2.0 && git push origin tensile-test-PMDCo-v0.2.0`.

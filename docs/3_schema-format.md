@@ -266,11 +266,12 @@ The `manifest.json` also carries a `version` field per entry as a convenience fo
 #### How to release a schema version
 
 1. Update `x-schema-version` in `specs/schema.oold.yaml`.
-2. Update `$schemaUri` in `specs/transform.simplified.jsonata` to the new per-schema tag URL.
-3. Update `version` in `schemas/manifest.json` for this entry.
-4. Add an entry to the schema's `CHANGELOG.md`.
-5. Commit and push.
-6. Create the per-schema git tag (e.g. `tensile-test-PMDCo-v0.2.0`) pointing to that commit and push it.
+2. Update `x-schema-uri` in `specs/schema.oold.yaml` to the new per-schema tag URL.
+3. Update `$schemaUri` in `specs/transform.simplified.jsonata` to the same URL.
+4. Update `version` in `schemas/manifest.json` for this entry.
+5. Add an entry to the schema's `CHANGELOG.md`.
+6. Commit and push.
+7. Create the per-schema git tag (e.g. `tensile-test-PMDCo-v0.2.0`) pointing to that commit and push it.
 
 Instrument parsers in `semantic-transformers` each keep their own
 `CHANGELOG.md` inside the parser folder (e.g.
