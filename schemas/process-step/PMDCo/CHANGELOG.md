@@ -11,6 +11,15 @@ The schema IRI encodes the minor version: `.../process-step/PMDCo/#v<MAJOR>.<MIN
 
 ---
 
+## [0.2.0] — 2026-05-27
+
+### Added
+
+- `x-kitem: ktypeIds: ["expert"]` on `operator` — renders a k-item picker in the webform builder.
+- `x-kitem: ktypeIds: ["measurement-device"]` on `instrument` — same.
+
+---
+
 ## [0.1.0] — 2026-05-10
 
 ### Added

@@ -63,8 +63,8 @@ $comment: >-
   Base pattern schema for a PMDCo/OBI process step.
   Compose with this schema using allOf + $ref in step-specific schemas.
   Do not use this schema directly unless recording a generic uncategorised step.
-x-schema-version: '0.1.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/process-step-PMDCo-v0.1.0/schemas/process-step/PMDCo/specs/schema.oold.yaml'
+x-schema-version: '0.2.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/process-step-PMDCo-v0.2.0/schemas/process-step/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'draft'
 x-hidden: true
 # Marks this schema as a valid process step.
@@ -131,6 +131,8 @@ properties:
   operator:
     title: Operator
     description: Person who performed this process step.
+    x-kitem:
+      ktypeIds: ["expert"]
     type: string
     format: uri
 
@@ -139,5 +141,7 @@ properties:
     description: >-
       Physical instrument or device used to carry out this step.
       Select the registered device from the knowledge graph.
+    x-kitem:
+      ktypeIds: ["measurement-device"]
     type: string
     format: uri
