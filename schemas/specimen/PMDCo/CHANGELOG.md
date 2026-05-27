@@ -11,6 +11,22 @@ The schema IRI encodes the minor version: `.../specimen/PMDCo/#v<MAJOR>.<MINOR>.
 
 ---
 
+## [0.2.0] - 2026-05-27
+
+### Changed
+
+- **Breaking:** replaced the inline `elements` chemical-composition array and
+  the `comp_id` / `specimen_id` internal-identifier fields with a single
+  `material` field (`x-kitem`, `ktypeIds: ["material"]`) that references an
+  existing Material record in the knowledge graph.
+- Graph pattern updated to follow the PMDCo duality pattern strictly:
+  `Specimen → schema:material → Material IRI`; chemical composition is now a
+  quality of the Material, not embedded in the specimen document.
+- Removed JSON Schema `$ref` dependency on `chemical-composition/PMDCo/`.
+- `x-schema-version` bumped to `0.2.0`; `conforms_to` IRI updated accordingly.
+
+---
+
 ## [0.1.0] - 2026-05-10
 
 ### Added

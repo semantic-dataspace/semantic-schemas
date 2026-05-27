@@ -5,7 +5,7 @@ elastic constants, discrete mechanical property values, and a fitted constitutiv
 model into a single RDF-native object ready for use in FEM simulations.
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>0.1.0</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.2.0</code></td></tr>
 <tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>—</td></tr>
 <tr><td><strong>Extends</strong></td><td>—</td></tr>
@@ -14,6 +14,22 @@ model into a single RDF-native object ready for use in FEM simulations.
 </table>
 Unlike the process schemas in this repository, this schema describes a **data
 artefact** (an `iao:DataSet`) rather than a process.
+
+## Why `mechanical/` exists as a sub-folder
+
+Material cards are simulation-domain-specific. Different simulation types need
+fundamentally different property sets, so each card type is a separate schema
+under `material-card/<type>/`:
+
+| Type | Typical properties | Used in |
+|---|---|---|
+| `mechanical` *(this schema)* | Elastic constants, yield / tensile strength, flow curves | Forming, crash, structural FEM |
+| `thermal` *(planned)* | Thermal conductivity, specific heat, expansion coefficient | Heat-transfer FEM |
+| `fatigue` *(planned)* | S-N curves, Paris law parameters | Fatigue life prediction |
+| `damage` *(planned)* | Fracture toughness, damage initiation criteria | Damage mechanics FEM |
+
+Each type maps to different ontology terms and has its own SHACL shape, so a
+single flat schema would mix unrelated vocabularies.
 
 ---
 
@@ -24,7 +40,7 @@ Copy [`docs/example.input.json`](docs/example.input.json) and fill in your value
 ```json
 {
   "card_name":    "316L stainless steel: Hockett-Sherby v1",
-  "material_iri": "https://example.org/materials/316L-batch-1",
+  "material": "https://example.org/materials/316L-batch-1",
   "density":          { "value": 7.93,  "unit": "g/cm³" },
   "youngs_modulus":   { "value": 193.0, "unit": "GPa" },
   "poissons_ratio":   { "value": 0.29 },
@@ -48,7 +64,7 @@ Copy [`docs/example.input.json`](docs/example.input.json) and fill in your value
 | Field | Required | Description |
 |---|---|---|
 | `card_name` | yes | Human-readable card name |
-| `material_iri` | yes | IRI of the material described by this card |
+| `material` | yes | Material described by this card (select from knowledge graph) |
 | `description` | no | Free-text description |
 | `density` | no | Mass density (value + unit) |
 | `youngs_modulus` | no | Elastic modulus (value + unit) |

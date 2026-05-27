@@ -157,6 +157,12 @@ Reviewers will check:
 
 ## Updating an existing schema
 
+Before touching any file, work through
+**[docs/schema-update-checklist.md](docs/schema-update-checklist.md)**.
+It lists every file that must change, the order to change them, verification
+commands, and common pitfalls. The checklist is designed to be used by both
+human contributors and LLM agents.
+
 - **Bug fixes** (wrong IRI, typo): open a PR directly with a brief description.
 - **Breaking changes** (removing fields, changing structure): open an issue first.
 - Do **not** edit another contributor's schema to change its ontological pattern. Create a new variant instead.

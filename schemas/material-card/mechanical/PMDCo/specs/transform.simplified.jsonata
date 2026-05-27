@@ -6,7 +6,7 @@
    *   card_name              string   required
    *   card_id                string   optional, derived from card_name if omitted
    *   description            string   optional
-   *   material_iri           string   required (IRI)
+   *   material               string   required (IRI, kitem: material)
    *   density                object   optional  {value, unit?}
    *   youngs_modulus         object   optional  {value, unit?}
    *   poissons_ratio         object   optional  {value, unit?}
@@ -23,7 +23,7 @@
    *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
    */
 
-  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/material-card-mechanical-PMDCo-v0.1.0/schemas/material-card/mechanical/PMDCo/specs/schema.oold.yaml";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/material-card-mechanical-PMDCo-v0.2.0/schemas/material-card/mechanical/PMDCo/specs/schema.oold.yaml";
 
   /* ── Node ID ─────────────────────────────────────────────────────────── */
   $slug   := $replace($lowercase($trim(card_name)), /[^a-z0-9]+/, "-");
@@ -100,7 +100,7 @@
     "type":        "iao:0000100",
     "id":          $cardId,
     "label":       card_name,
-    "material_iri": material_iri
+    "material": material
   };
 
   $withDesc := $exists(description)

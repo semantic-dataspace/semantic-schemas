@@ -63,7 +63,7 @@
     "@id": "rdfs:label"
   description:
     "@id": "rdfs:comment"
-  material_iri:
+  material:
     "@id": "http://purl.org/dc/terms/references"
     "@type": "@id"
   # Scalar material properties (each maps to a PMDCo ValueObject)
@@ -114,8 +114,8 @@
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for a mechanical material card (IAO:DataSet)
-x-schema-version: '0.1.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/material-card-mechanical-PMDCo-v0.1.0/schemas/material-card/mechanical/PMDCo/specs/schema.oold.yaml'
+x-schema-version: '0.2.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/material-card-mechanical-PMDCo-v0.2.0/schemas/material-card/mechanical/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'draft'
 title: Mechanical Material Card
 type: object
@@ -123,7 +123,7 @@ required:
   - type
   - id
   - label
-  - material_iri
+  - material
 
 properties:
 
@@ -157,11 +157,13 @@ properties:
     type: string
     format: textarea
 
-  material_iri:
-    title: Material IRI
+  material:
+    title: Material
     description: >-
-      IRI of the material that this card describes.
-      References an existing knowledge-graph node.
+      The material that this card describes.
+      Links to an existing material record in the knowledge graph.
+    x-kitem:
+      ktypeIds: ["material"]
     type: string
     format: uri
 

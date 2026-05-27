@@ -1,7 +1,7 @@
 {
   "card_name":    "316L stainless steel, Hockett-Sherby v1",
   "description":  "Mechanical material card for 316L austenitic stainless steel, batch 1. Includes elastic constants, TTO mechanical properties from tensile test, and Hockett-Sherby flow curve parameters calibrated from the same test.",
-  "material_iri": "https://example.org/materials/316L-batch-1",
+  "material": "https://example.org/materials/316L-batch-1",
   "density":      { "value": 7.93,  "unit": "g/cm³" },
   "youngs_modulus": { "value": 193.0, "unit": "GPa" },
   "poissons_ratio": { "value": 0.29 },

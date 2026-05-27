@@ -4,7 +4,7 @@
   "title": "Mechanical Material Card (Simplified Input)",
   "description": "A user-friendly form to describe a mechanical material card: a structured dataset that collects elastic constants, discrete mechanical properties, and a fitted constitutive model for use in FEM simulations. This input will be automatically converted to a standardised RDF representation (IAO/PMDCo OO-LD).",
   "type": "object",
-  "required": ["card_name", "material_iri"],
+  "required": ["card_name", "material"],
   "additionalProperties": false,
   "properties": {
     "card_name": {
@@ -23,9 +23,12 @@
       "description": "Optional free-text description.",
       "type": "string"
     },
-    "material_iri": {
-      "title": "Material IRI",
-      "description": "IRI of the material this card describes. Must be an existing knowledge-graph node.",
+    "material": {
+      "title": "Material",
+      "description": "The material this card describes. Select an existing material from the knowledge graph.",
+      "x-kitem": {
+        "ktypeIds": ["material"]
+      },
       "type": "string",
       "format": "uri"
     },

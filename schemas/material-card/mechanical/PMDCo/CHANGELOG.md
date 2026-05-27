@@ -11,6 +11,17 @@ The schema IRI encodes the minor version: `.../material-card/mechanical/PMDCo/#v
 
 ---
 
+## [0.2.0] - 2026-05-27
+
+### Changed
+
+- **Breaking:** renamed `material_iri` (plain URI field) to `material`
+  (`x-kitem`, `ktypeIds: ["material"]`), enabling the playground kitem picker
+  to select an existing Material record from the knowledge graph.
+- `x-schema-version` bumped to `0.2.0`; `conforms_to` IRI updated accordingly.
+
+---
+
 ## [0.1.0] - 2026-05-10
 
 ### Added
