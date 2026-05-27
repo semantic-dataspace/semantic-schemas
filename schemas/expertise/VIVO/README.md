@@ -57,14 +57,14 @@ but loses that distinction.
 
 | Field | Required | Vocabulary namespace | Predicate |
 |---|---|---|---|
-| `label` | yes |: | `rdfs:label` |
+| `label` | yes | — | `rdfs:label` |
 | `materials` | no | `material` | `vivo:hasResearchArea` |
 | `material_modelling` | no | `material-modelling` | `vivo:hasResearchArea` |
 | `application_fields` | no | `application-field` | `vivo:hasResearchArea` |
 | `methods` | no | `method` | `vivo:hasResearchArea` |
 | `measurement_devices` | no | `measurement-device` | `vivo:hasExperienceIn` |
 | `production_devices` | no | `production-device` | `vivo:hasExperienceIn` |
-| `publications` | no |: | `vivo:authorOf` |
+| `publications` | no | — | `vivo:authorOf` |
 
 All multi-value fields are serialised as `@set` in JSON-LD.
 
