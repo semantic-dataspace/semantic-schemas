@@ -36,3 +36,15 @@ repos:
     hooks:
       - id: markdownlint
         args: [--config, .markdownlint.yaml, --fix]
+
+  # ── Schema / README version sync ──────────────────────────────────────────
+  # Ensures every README.md version header matches x-schema-version in the
+  # companion schema.oold.yaml.  Update both together or the commit is blocked.
+  - repo: local
+    hooks:
+      - id: check-readme-versions
+        name: Check README version headers match schema versions
+        language: python
+        entry: python scripts/check_readme_versions.py
+        pass_filenames: false
+        additional_dependencies: [pyyaml]

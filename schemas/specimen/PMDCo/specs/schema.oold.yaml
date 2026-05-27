@@ -134,7 +134,7 @@ x-maturity: 'draft'
 # Schemas referenced by $ref and the versions they were tested against.
 # Update this table when either schema releases a new version.
 x-schema-dependencies:
-  - schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/chemical-composition/PMDCo/'
+  - schema-id: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/chemical-composition-PMDCo-v0.1.0/schemas/chemical-composition/PMDCo/specs/schema.oold.yaml'
     compatible-versions:
       - '0.1.0'
     property: has_composition
@@ -260,4 +260,4 @@ properties:
       graph back-reference is consistent.
     # Canonical schema URI; toolchain must resolve this to the local file.
     # Resolves to: schemas/chemical-composition/PMDCo/specs/schema.oold.yaml
-    $ref: "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/chemical-composition/PMDCo/"
+    $ref: "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/chemical-composition-PMDCo-v0.1.0/schemas/chemical-composition/PMDCo/specs/schema.oold.yaml"
