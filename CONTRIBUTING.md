@@ -169,57 +169,27 @@ Every schema must declare three metadata fields in `schema.oold.yaml`:
 
 ```yaml
 x-schema-version: '1.0.0'
-x-schema-id:      'https://github.com/<org>/semantic-schemas/tree/main/schemas/<domain>/<Ontology>'
+x-schema-id:      'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/<domain>/<Ontology>'
 x-maturity:       'draft'
 ```
 
-`x-schema-id` is the stable base IRI for the schema folder.  It does not change between versions.
+`x-maturity` must be one of `draft`, `stable`, or `deprecated`. New schemas start as `draft`.
+After changing it, run `python scripts/generate_manifest.py` to keep the manifest in sync.
 
-`x-maturity` must be one of `draft`, `stable`, or `deprecated`.  New schemas start as `draft`.
-After changing `x-maturity`, run `python scripts/generate_manifest.py` to keep the manifest in sync.
+### Schema versions vs. repository releases
 
-Follow [Semantic Versioning](https://semver.org/): increment the **patch** for bug fixes (wrong IRI,
-typo), the **minor** for additive changes (new optional field), and the **major** for breaking
-changes (removed or renamed field, structural overhaul).
+Schemas are versioned independently from the repository. A schema version bump does **not**
+trigger a global repository release. The global version (`pyproject.toml`, repo tag) covers
+collection-level changes only: manifest format, tooling, Python package.
 
-### Automatic provenance stamping
+See [docs/3_schema-format.md](docs/3_schema-format.md) for the full versioning convention
+including per-schema git tags, `dcterms:conformsTo` stamping, and SPARQL usage.
 
-Every schema's `specs/transform.simplified.jsonata` must declare a `$schemaUri` constant formed by appending the version to `x-schema-id`:
+### Releasing a schema version
 
-```jsonata
-$schemaUri := "<x-schema-id>#v<x-schema-version>";
-```
-
-The transform injects `"conforms_to": $schemaUri` into the root of the OO-LD output.  Because
-`conforms_to` maps to `dcterms:conformsTo` in the `@context`, the versioned schema IRI is
-automatically carried through to the generated RDF as:
-
-```turtle
-<instance> dcterms:conformsTo <schema-id/vX.Y.Z> .
-```
-
-Users do not need to provide any provenance information; it is stamped on every output by the
-transform.  When bumping the schema version, update **both** `x-schema-version` in
-`schema.oold.yaml` and `$schemaUri` in `transform.jsonata`.
-
-### Change history
-
-Each schema folder must contain a `CHANGELOG.md` at its root that records what changed
-in each version. Follow the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format:
-
-```markdown
-## [1.1.0] — 2026-04-01
-
-### Added
-- Optional `notes` field.
-
-## [1.0.0] — 2026-01-15
-
-- Initial release.
-```
-
-The full convention (MAJOR/MINOR/PATCH semantics, schema IRI versioning, and the
-relationship to instrument-parser changelogs in `semantic-transformers`) is documented
-in [docs/3_schema-format.md](docs/3_schema-format.md).
-
-Users who need the exact schema files for a past version can use `git log -- schemas/<domain>/<ontology>/` to find the corresponding commit.
+1. Update `x-schema-version` in `specs/schema.oold.yaml`.
+2. Update `$schemaUri` in `specs/transform.simplified.jsonata` to the new per-schema tag URL.
+3. Update `version` in `schemas/manifest.json` for this entry.
+4. Add an entry to the schema's `CHANGELOG.md`.
+5. Commit and push.
+6. Create and push the per-schema git tag, e.g. `git tag tensile-test-PMDCo-v0.2.0 && git push origin tensile-test-PMDCo-v0.2.0`.

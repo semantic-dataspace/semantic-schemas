@@ -11,6 +11,15 @@ The schema IRI encodes the minor version: `…/TTO/#v<MAJOR>.<MINOR>.0`.
 
 ---
 
+## [0.1.1] — 2026-05-27
+
+### Added
+
+- `x-kitem: ktypeIds: ["specimen"]` on the `has_specified_input` field so the
+  webform renders it as a knowledge-graph item picker scoped to specimen entries.
+
+---
+
 ## [0.1.0] — 2026-05-10
 
 ### Changed

@@ -14,7 +14,7 @@
    *     unit       string   optional
    */
 
-  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/generic/PMDCo/#v0.1.0";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/characterization-generic-PMDCo-v0.1.0/schemas/characterization/generic/PMDCo/specs/schema.oold.yaml";
 
   $slug   := $replace($lowercase($trim(step_name)), /[^a-z0-9]+/, "-");
   $stepId := $exists(step_id) ? step_id : "char-generic-" & $slug;

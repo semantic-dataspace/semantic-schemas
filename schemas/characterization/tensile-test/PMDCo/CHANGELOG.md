@@ -5,6 +5,20 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.2.0] — 2026-05-27
+
+### Changed (breaking)
+
+- `has_specified_input` added to the `required` list. Records that previously
+  omitted the specimen link are no longer valid against this schema.
+
+### Added
+
+- `x-kitem: ktypeIds: ["specimen"]` on the `has_specified_input` field so the
+  webform renders it as a knowledge-graph item picker scoped to specimen entries.
+
+---
+
 ## [0.1.0] — 2026-05-10
 
 ### Changed

@@ -24,7 +24,7 @@
    * Schema provenance — injected automatically into every output.
    * Update $schemaUri whenever x-schema-version in specs/schema.oold.yaml changes.
    */
-  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/measurement-device/PMDCo/#v0.1.0";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/measurement-device-PMDCo-v0.1.0/schemas/measurement-device/PMDCo/specs/schema.oold.yaml";
 
   /* ── Node ID ─────────────────────────────────────────────────────────── */
   $slug  := $replace($lowercase($trim(device_name)), /[^a-z0-9]+/, "-");

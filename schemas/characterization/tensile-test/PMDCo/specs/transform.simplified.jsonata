@@ -21,7 +21,7 @@
    *     unit            string   "MPa" | "GPa" | "%"
    */
 
-  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/tensile-test/PMDCo/#v0.1.0";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/tensile-test-PMDCo-v0.2.0/schemas/characterization/tensile-test/PMDCo/specs/schema.oold.yaml";
 
   /* ── Unit label → QUDT unit IRI ──────────────────────────────────────── */
   $unitMap := {

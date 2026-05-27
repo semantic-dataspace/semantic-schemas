@@ -17,7 +17,7 @@
    *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
    */
 
-  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/simulation/model-calibration/PMDCo/#v0.1.0";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/simulation-model-calibration-PMDCo-v0.1.0/schemas/simulation/model-calibration/PMDCo/specs/schema.oold.yaml";
 
   /* ── Node IDs ────────────────────────────────────────────────────────── */
   $slug   := $replace($lowercase($trim(step_name)), /[^a-z0-9]+/, "-");

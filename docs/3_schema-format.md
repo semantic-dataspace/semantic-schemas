@@ -202,20 +202,75 @@ in [4_schema-patterns.md](4_schema-patterns.md): inheritance (`$ref` + `allOf`)
 and composition (`$ref` inside a property) respectively. A schema can have
 entries in both rows simultaneously.
 
-### Schema versioning and CHANGELOG
+### Schema versioning
 
-Each schema leaf folder keeps a `CHANGELOG.md` at its root, following
-[Semantic Versioning](https://semver.org/) and the
-[Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format:
+Each schema is versioned independently using [Semantic Versioning](https://semver.org/):
 
-- **MAJOR** — breaking changes: renamed or removed fields, incompatible graph
-  structure.
-- **MINOR** — backwards-compatible additions: new optional fields, new
-  conditions.
-- **PATCH** — corrections that do not affect the graph: typos, description
-  fixes, example updates.
+- **MAJOR** — breaking changes: renamed or removed fields, incompatible graph structure.
+- **MINOR** — backwards-compatible additions: new optional fields, new conditions.
+- **PATCH** — corrections that do not affect the graph: typos, description fixes, example updates.
 
-The schema IRI encodes the minor version: `…/<Ontology>/#v<MAJOR>.<MINOR>.0`.
+The version is declared in `x-schema-version` inside `schema.oold.yaml` and recorded in the
+schema's `CHANGELOG.md`. The repository also carries a global version (`pyproject.toml`, repo tag)
+that covers collection-level changes only: manifest format, tooling, Python package.
+**Schema content changes do not bump the global version.**
+
+#### Per-schema git tags and stable URLs
+
+Every schema release gets its own git tag:
+
+```text
+<domain>-<ontology>-v<version>
+tensile-test-PMDCo-v0.2.0
+```
+
+This tag is the basis for the stable, resolvable URL used everywhere: in `dcterms:conformsTo`,
+in `$ref` resolution, and in tooling:
+
+```text
+https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/<tag>/schemas/<domain>/<Ontology>/specs/schema.oold.yaml
+```
+
+Example:
+
+```text
+https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/tensile-test-PMDCo-v0.2.0/schemas/characterization/tensile-test/PMDCo/specs/schema.oold.yaml
+```
+
+This URL is stable (immutable tag), resolvable (raw file), and unambiguous (schema version is in the tag, not mixed with the collection version).
+
+#### Provenance stamping
+
+Every schema's `transform.simplified.jsonata` declares a `$schemaUri` pointing to the raw file
+at its per-schema tag:
+
+```jsonata
+$schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/<tag>/schemas/<domain>/<Ontology>/specs/schema.oold.yaml";
+```
+
+The transform injects `"conforms_to": $schemaUri` into every output record. Because `conforms_to`
+maps to `dcterms:conformsTo` in the `@context`, every generated RDF graph carries:
+
+```turtle
+<instance> dcterms:conformsTo <https://raw.githubusercontent.com/…/tensile-test-PMDCo-v0.2.0/…/schema.oold.yaml> .
+```
+
+SPARQL consumers can filter on this IRI directly to select records for a specific schema version:
+
+```sparql
+FILTER(?schema = <https://raw.githubusercontent.com/…/tensile-test-PMDCo-v0.2.0/…/schema.oold.yaml>)
+```
+
+The `manifest.json` also carries a `version` field per entry as a convenience for UI display, so consumers do not need to fetch the YAML to show the version.
+
+#### How to release a schema version
+
+1. Update `x-schema-version` in `specs/schema.oold.yaml`.
+2. Update `$schemaUri` in `specs/transform.simplified.jsonata` to the new per-schema tag URL.
+3. Update `version` in `schemas/manifest.json` for this entry.
+4. Add an entry to the schema's `CHANGELOG.md`.
+5. Commit and push.
+6. Create the per-schema git tag (e.g. `tensile-test-PMDCo-v0.2.0`) pointing to that commit and push it.
 
 Instrument parsers in `semantic-transformers` each keep their own
 `CHANGELOG.md` inside the parser folder (e.g.

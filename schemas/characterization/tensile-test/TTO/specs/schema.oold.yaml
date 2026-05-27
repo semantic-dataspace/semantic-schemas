@@ -117,7 +117,7 @@ allOf:
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: TTO + PMDCo 3 schema for a tensile test process node
-x-schema-version: '0.1.0'
+x-schema-version: '0.1.1'
 x-schema-id: 'https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/characterization/tensile-test/TTO/'
 x-maturity: 'draft'
 x-process-step:
@@ -222,6 +222,8 @@ properties:
     description: >-
       The material sample (specimen) that was tested.
       Select the corresponding entry from the knowledge graph.
+    x-kitem:
+      ktypeIds: ["specimen"]
     type: array
     minItems: 1
     items:

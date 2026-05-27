@@ -28,7 +28,7 @@
    * Update $schemaUri whenever x-schema-version in specs/schema.oold.yaml changes.
    * Format: <x-schema-id>/v<x-schema-version>
    */
-  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/manufacturing/generic/PMDCo/#v0.1.0";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/manufacturing-generic-PMDCo-v0.1.0/schemas/manufacturing/generic/PMDCo/specs/schema.oold.yaml";
 
   /* ── Node IDs ────────────────────────────────────────────────────────── */
   $slug      := $replace($lowercase($trim(process_name)), /[^a-z0-9]+/, "-");

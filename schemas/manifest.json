@@ -12,14 +12,14 @@
       "path": "schemas/characterization/tensile-test/PMDCo/specs/schema.oold.yaml",
       "group": "characterization",
       "maturity": "draft",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "shapePath": "schemas/characterization/tensile-test/PMDCo/specs/shape.ttl"
     },
     {
       "path": "schemas/characterization/tensile-test/TTO/specs/schema.oold.yaml",
       "group": "characterization",
       "maturity": "draft",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "shapePath": "schemas/characterization/tensile-test/TTO/specs/shape.ttl"
     },
     {

@@ -18,7 +18,7 @@
    *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
    */
 
-  $schemaUri := "https://github.com/semantic-dataspace/semantic-schemas/tree/main/schemas/workflow/OBI/#v0.1.0";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/workflow-OBI-v0.1.0/schemas/workflow/OBI/specs/schema.oold.yaml";
 
   $wfSlug := $replace($lowercase($trim(label)), /[^a-z0-9]+/, "-");
   $wfId   := $exists(id) ? id : "workflow-" & $wfSlug;
