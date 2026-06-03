@@ -29,7 +29,7 @@ The bump determines the new version string used in all subsequent steps.
 - [ ] Bump `x-schema-version` to the new version string.
 - [ ] Update `x-schema-uri`: replace the old per-schema git tag in the URL with the new one
   (e.g. `specimen-PMDCo-v0.1.0` → `specimen-PMDCo-v0.2.0`).
-  The tag does not need to exist yet; it is created after merging (step 12).
+  The tag does not need to exist yet; it is created in step 13.
 - [ ] Update `@context`: rename or add/remove key–IRI mappings for any changed field names.
   If a field is **renamed but the RDF predicate stays the same**, only the JSON key in
   `@context` changes; the predicate IRI is unchanged.
@@ -281,7 +281,7 @@ A triple count of 0 indicates a JSON-LD parsing problem (wrong `@context` mappin
 
 ---
 
-## 12. Commit and tag
+## 12. Commit
 
 - [ ] Stage files **by name**; do not use `git add .` or `git add -A` (risks committing
   `.env`, binary artefacts, or unrelated changes):
@@ -302,14 +302,39 @@ A triple count of 0 indicates a JSON-LD parsing problem (wrong `@context` mappin
 - [ ] Write a commit message that names the schema and version:
   `schema(<schema-slug>): bump to vX.Y.Z: <one-line reason>`
 - [ ] Do **not** add a `Co-Authored-By:` trailer unless explicitly requested.
-- [ ] After merging, create the per-schema git tag:
+
+---
+
+## 13. Push and tag
+
+> Do not stop after committing. All three sub-steps below are required.
+
+- [ ] Push the branch to the remote:
 
   ```bash
-  git tag <schema-slug>-vX.Y.Z
-  git push origin <schema-slug>-vX.Y.Z
+  git push
+  ```
+
+- [ ] Create the per-schema tag on the schema commit (note the commit SHA
+  so the tag lands on the right commit if you made a follow-up fix):
+
+  ```bash
+  git tag <schema-slug>-vX.Y.Z <commit-sha>
   ```
 
   The tag slug must exactly match the tag embedded in `x-schema-uri`.
+
+- [ ] Push the tag:
+
+  ```bash
+  git push origin <schema-slug>-vX.Y.Z
+  ```
+
+- [ ] Verify the tag is visible on the remote:
+
+  ```bash
+  git ls-remote --tags origin | grep <schema-slug>
+  ```
 
 ---
 
