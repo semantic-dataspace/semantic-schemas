@@ -29,7 +29,7 @@ The bump determines the new version string used in all subsequent steps.
 - [ ] Bump `x-schema-version` to the new version string.
 - [ ] Update `x-schema-uri`: replace the old per-schema git tag in the URL with the new one
   (e.g. `specimen-PMDCo-v0.1.0` → `specimen-PMDCo-v0.2.0`).
-  The tag does not need to exist yet; it is created after merging (step 11).
+  The tag does not need to exist yet; it is created after merging (step 12).
 - [ ] Update `@context`: rename or add/remove key–IRI mappings for any changed field names.
   If a field is **renamed but the RDF predicate stays the same**, only the JSON key in
   `@context` changes; the predicate IRI is unchanged.
@@ -164,7 +164,7 @@ After any shape edit, re-run end-to-end validation (step 10).
 - [ ] Update the example to match the new simplified schema exactly.
 - [ ] Remove deleted fields; add new fields with realistic example values.
 - [ ] The example is used by the transform verification command in step 3 and by the
-  notebook; it must be valid input for the transform.
+  notebook (step 8); it must be valid input for the transform.
 
 ---
 
@@ -273,7 +273,15 @@ A triple count of 0 indicates a JSON-LD parsing problem (wrong `@context` mappin
 
 ---
 
-## 11. Commit and tag
+## 11. `CATALOG.md`
+
+- [ ] If the schema's description (`What it records` column) changed meaningfully, update the row.
+- [ ] If the schema's folder path changed (e.g., restructured into a variant sub-folder), update the `Folder` link.
+- [ ] No change is needed for pure version bumps that do not alter the description or path.
+
+---
+
+## 12. Commit and tag
 
 - [ ] Stage files **by name**; do not use `git add .` or `git add -A` (risks committing
   `.env`, binary artefacts, or unrelated changes):
@@ -287,7 +295,8 @@ A triple count of 0 indicates a JSON-LD parsing problem (wrong `@context` mappin
           schemas/<path>/README.md \
           schemas/<path>/docs/example.input.json \
           schemas/<path>/docs/<name>.ipynb \
-          schemas/manifest.json
+          schemas/manifest.json \
+          CATALOG.md
   ```
 
 - [ ] Write a commit message that names the schema and version:
@@ -306,14 +315,14 @@ A triple count of 0 indicates a JSON-LD parsing problem (wrong `@context` mappin
 
 ## Quick reference: which files change for common update types
 
-| Update | oold.yaml | simplified.json | transform | shape.ttl | CHANGELOG | README | example.json | notebook |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| Description / typo fix | patch | — | — | — | patch | maybe | — | maybe |
-| Add optional field | minor | minor | minor | maybe | minor | yes | yes | yes |
-| Rename field (same predicate) | minor | minor | minor | **no** | minor | yes | yes | yes |
-| Rename field (new predicate) | minor | minor | minor | **yes** | minor | yes | yes | yes |
-| Remove field | **major** | major | major | maybe | major | yes | yes | yes |
-| Replace inline sub-schema with kitem | **major** | major | major | maybe | major | yes | yes | yes |
-| Change graph pattern | **major** | major | major | **yes** | major | yes | yes | yes |
+| Update | oold.yaml | simplified.json | transform | shape.ttl | CHANGELOG | README | CATALOG.md | example.json | notebook |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Description / typo fix | patch | — | — | — | patch | maybe | — | — | maybe |
+| Add optional field | minor | minor | minor | maybe | minor | yes | maybe | yes | yes |
+| Rename field (same predicate) | minor | minor | minor | **no** | minor | yes | maybe | yes | yes |
+| Rename field (new predicate) | minor | minor | minor | **yes** | minor | yes | maybe | yes | yes |
+| Remove field | **major** | major | major | maybe | major | yes | maybe | yes | yes |
+| Replace inline sub-schema with kitem | **major** | major | major | maybe | major | yes | maybe | yes | yes |
+| Change graph pattern | **major** | major | major | **yes** | major | yes | maybe | yes | yes |
 
 `—` = no change needed; `maybe` = check manually using the decision rules above.
