@@ -29,7 +29,7 @@ The bump determines the new version string used in all subsequent steps.
 - [ ] Bump `x-schema-version` to the new version string.
 - [ ] Update `x-schema-uri`: replace the old per-schema git tag in the URL with the new one
   (e.g. `specimen-PMDCo-v0.1.0` → `specimen-PMDCo-v0.2.0`).
-  The tag does not need to exist yet; it is created in step 13.
+  The tag does not need to exist yet; it is created in step 14.
 - [ ] Update `@context`: rename or add/remove key–IRI mappings for any changed field names.
   If a field is **renamed but the RDF predicate stays the same**, only the JSON key in
   `@context` changes; the predicate IRI is unchanged.
@@ -281,7 +281,20 @@ A triple count of 0 indicates a JSON-LD parsing problem (wrong `@context` mappin
 
 ---
 
-## 12. Commit
+## 12. Update `schemas/manifest.json`
+
+- [ ] Find the entry in `schemas/manifest.json` whose `"path"` matches this schema and
+  set `"version"` to the new version string.
+
+  The manifest is the source of truth used by the sibling
+  [knowledge-types](https://github.com/semantic-dataspace/knowledge-types) test suite to
+  verify that every k-type's `semantic_schemas` reference is consistent with the
+  published schema version. Skipping this step will break those tests for any k-type that
+  references this schema.
+
+---
+
+## 13. Commit
 
 - [ ] Stage files **by name**; do not use `git add .` or `git add -A` (risks committing
   `.env`, binary artefacts, or unrelated changes):
@@ -305,7 +318,7 @@ A triple count of 0 indicates a JSON-LD parsing problem (wrong `@context` mappin
 
 ---
 
-## 13. Push and tag
+## 14. Push and tag
 
 > Do not stop after committing. All three sub-steps below are required.
 

@@ -88,7 +88,7 @@
       "path": "schemas/specimen/PMDCo/specs/schema.oold.yaml",
       "group": "specimen",
       "maturity": "draft",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "shapePath": "schemas/specimen/PMDCo/specs/shape.ttl"
     },
     {
