@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "schema.simplified.json",
   "title": "Specimen (Simplified Input)",
-  "description": "A user-friendly form to describe a physical specimen: its name, mass, and the material it is made of. This input is automatically converted to a standardised RDF representation following the PMDCo duality-object-material pattern.",
+  "description": "A user-friendly form to describe a physical specimen: its name, mass, material identity, and optional physical source. This input is automatically converted to a standardised RDF representation following the PMDCo duality-object-material pattern and PROV-O provenance pattern.",
   "type": "object",
   "required": ["specimen_name"],
   "additionalProperties": false,
@@ -30,9 +30,18 @@
     },
     "material": {
       "title": "Material",
-      "description": "The material this specimen is made of. Select an existing material from the knowledge graph.",
+      "description": "Abstract alloy or substance identity of this specimen (PMDCo duality pattern). Select an existing material record from the knowledge graph. Can be auto-populated from source when source is set.",
       "x-kitem": {
         "ktypeIds": ["material"]
+      },
+      "type": "string",
+      "format": "uri"
+    },
+    "source": {
+      "title": "Source",
+      "description": "The specific semi-finished product (e.g. metal sheet) this specimen was cut or prepared from. Select an existing semi-finished-product record from the knowledge graph.",
+      "x-kitem": {
+        "ktypeIds": ["semi-finished-product"]
       },
       "type": "string",
       "format": "uri"
@@ -43,7 +52,8 @@
       "specimen_name": "316L Tensile Bar #1",
       "mass_value": 50.3,
       "mass_unit": "g",
-      "material": "https://example.org/material-316l"
+      "material": "https://example.org/material-316l",
+      "source": "https://example.org/sheet-42"
     }
   ]
 }

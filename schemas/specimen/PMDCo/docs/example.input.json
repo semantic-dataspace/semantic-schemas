@@ -2,5 +2,6 @@
   "specimen_name": "316L Tensile Bar #1",
   "mass_value": 50.3,
   "mass_unit": "g",
-  "material": "https://example.org/material-316l"
+  "material": "https://example.org/material-316l",
+  "source": "https://example.org/sheet-42"
 }

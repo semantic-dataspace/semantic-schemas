@@ -7,12 +7,13 @@
    *   mass_value     number   optional
    *   mass_unit      string   optional: "g" | "kg" | "mg"  (default "g")
    *   material       string   optional: IRI of an existing material kitem
+   *   source         string   optional: IRI of an existing semi-finished-product kitem
    *
    * Run with the jsonata-python CLI:
    *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
    */
 
-  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/specimen-PMDCo-v0.2.0/schemas/specimen/PMDCo/specs/schema.oold.yaml";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/specimen-PMDCo-v0.3.0/schemas/specimen/PMDCo/specs/schema.oold.yaml";
 
   /* ── Mass unit label → Unit Ontology IRI ────────────────────────────── */
   $massUnitMap := {
@@ -45,6 +46,7 @@
     "id":       $specId,
     "label":    specimen_name,
     "mass":     $massBlock,
-    "material": material
+    "material": material,
+    "source":   source
   }
 )

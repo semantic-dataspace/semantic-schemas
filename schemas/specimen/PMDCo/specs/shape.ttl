@@ -5,9 +5,17 @@
 #   1. Duality Object / Material
 #      https://github.com/materialdigital/core-ontology/tree/main/patterns/duality%20object%20material
 #      (no shape.ttl exists upstream; constraints here are derived from the example data)
+#      schema:material links the specimen to its abstract material identity (alloy,
+#      composition). Optional but recommended for PMDCo compliance.
 #
 #   2. Material Property (Quality): for the Mass quality + ScalarValueSpecification
 #      https://github.com/materialdigital/core-ontology/tree/main/patterns/material%20property%20(quality)
+#
+#   3. Physical provenance (PROV-O)
+#      prov:wasDerivedFrom links the specimen to the specific semi-finished product
+#      (e.g. metal sheet) it was cut or prepared from. When present, schema:material
+#      can be derived transitively via the semi-finished product's own schema:material
+#      link; the UI should offer to auto-populate it.
 #
 # Chemical composition is validated by loading this file alongside:
 #   chemical-composition/PMDCo/specs/shape.ttl
@@ -21,8 +29,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix obo:     <http://purl.obolibrary.org/obo/> .
 @prefix pmd:     <https://w3id.org/pmd/co/> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema:  <https://schema.org/> .
 @prefix sh:      <http://www.w3.org/ns/shacl#> .
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 @prefix shape:   <https://w3id.org/pmd/co/shapes/specimen/> .
@@ -47,6 +57,18 @@ shape:specimen
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:message "A Specimen must have exactly one rdfs:label." ;
+    ] ;
+    sh:property [
+        sh:path schema:material ;
+        sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+        sh:message "schema:material must be a single IRI reference to a material k-item." ;
+    ] ;
+    sh:property [
+        sh:path prov:wasDerivedFrom ;
+        sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+        sh:message "prov:wasDerivedFrom must be a single IRI reference to a semi-finished-product k-item." ;
     ] ;
     sh:closed false ;
     sh:ignoredProperties ( rdf:type ) .

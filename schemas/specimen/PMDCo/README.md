@@ -1,13 +1,14 @@
 # Specimen (PMDCo)
 
-Records a **physical specimen** (its name, mass, and the material it is made of)
-following the [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/).
+Records a **physical specimen** (its name, mass, material identity, and optional physical source)
+following the [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/) and PROV-O.
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>0.2.0</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.3.0</code></td></tr>
 <tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>
-<a href="https://github.com/materialdigital/core-ontology/tree/main/patterns/duality%20object%20material">PMDCo duality object material</a>
+<a href="https://github.com/materialdigital/core-ontology/tree/main/patterns/duality%20object%20material">PMDCo duality object material</a>,
+<a href="https://www.w3.org/TR/prov-o/">PROV-O wasDerivedFrom</a>
 </td></tr>
 <tr><td><strong>Extends</strong></td><td>—</td></tr>
 <tr><td><strong>Includes</strong></td><td>—</td></tr>
@@ -41,7 +42,8 @@ Copy [`docs/example.input.json`](docs/example.input.json) and fill in your value
   "specimen_name": "316L Tensile Bar #1",
   "mass_value": 50.3,
   "mass_unit": "g",
-  "material": "https://example.org/material-316l"
+  "material": "https://example.org/material-316l",
+  "source": "https://example.org/sheet-42"
 }
 ```
 
@@ -50,7 +52,8 @@ Copy [`docs/example.input.json`](docs/example.input.json) and fill in your value
 | `specimen_name` | yes | Name or identifier for the specimen |
 | `mass_value` | no | Mass of the specimen as a positive number |
 | `mass_unit` | no | `"g"` (gram), `"kg"` (kilogram), or `"mg"` (milligram) |
-| `material` | no | IRI of an existing material record in the knowledge graph |
+| `material` | no | IRI of an existing material record; abstract alloy identity (PMDCo duality) |
+| `source` | no | IRI of an existing semi-finished-product record; physical piece the specimen was cut from |
 
 ### Convert to RDF (Python)
 
@@ -123,6 +126,9 @@ Specimen  (bfo:BFO_0000030, Object)
       has_measurement_unit_label ───────────── unit IRI  (g · kg · mg)
   schema:material ──────────────────────────► Material IRI  [optional, kitem]
                                                (ChemicalComposition is a quality of Material)
+  prov:wasDerivedFrom ──────────────────────► Semi-finished product IRI  [optional, kitem]
+                                               (e.g. metal sheet; its schema:material gives
+                                               the alloy identity transitively)
 ```
 
 </details>

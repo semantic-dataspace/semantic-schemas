@@ -11,6 +11,27 @@ The schema IRI encodes the minor version: `.../specimen/PMDCo/#v<MAJOR>.<MINOR>.
 
 ---
 
+## [0.3.0] - 2026-06-03
+
+### Added
+
+- `source` field (`prov:wasDerivedFrom`) linking the specimen to the specific
+  semi-finished product (e.g. metal sheet) it was cut or prepared from,
+  following the PROV-O provenance pattern. Optional; when set, `material` can
+  be auto-populated from `source.made_of`.
+- SHACL property constraints for `schema:material` (maxCount 1, IRI) and
+  `prov:wasDerivedFrom` (maxCount 1, IRI) added to `shape:specimen`.
+- `prov:` and `schema:` namespace prefixes added to `shape.ttl`.
+
+### Changed
+
+- `material` field description updated to clarify it follows the PMDCo duality
+  object/material pattern for abstract alloy identity.
+- Schema header comment and `$comment` updated to document both the duality
+  pattern and the new physical provenance pattern.
+
+---
+
 ## [0.2.0] - 2026-05-27
 
 ### Changed
