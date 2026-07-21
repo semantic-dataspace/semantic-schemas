@@ -58,8 +58,8 @@
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for an obi:Device (measurement instrument / characterization equipment)
-x-schema-version: '0.1.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/measurement-device-PMDCo-v0.1.0/schemas/measurement-device/PMDCo/specs/schema.oold.yaml'
+x-schema-version: '0.2.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/measurement-device-PMDCo-v0.2.0/schemas/measurement-device/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'draft'
 title: Measurement Device
 type: object
@@ -72,10 +72,12 @@ properties:
 
   type:
     title: Type
-    type: string
+    type: array
+    items:
+      type: string
     readOnly: true
-    const: "obi:0000968"
-    default: "obi:0000968"
+    const: ["obi:0000968"]
+    default: ["obi:0000968"]
     options:
       enum_titles:
         - obi:Device

@@ -49,8 +49,8 @@
     "@id": "bwmd:hasUnitSymbol"
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
-x-schema-version: '0.1.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/chemical-composition-BWMD-v0.1.0/schemas/chemical-composition/BWMD/specs/schema.oold.yaml'
+x-schema-version: '0.2.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/chemical-composition-BWMD-v0.2.0/schemas/chemical-composition/BWMD/specs/schema.oold.yaml'
 x-maturity: 'stable'
 title: Chemical Composition (BWMD)
 description: Chemical composition of a material described using the BWMD ontology
@@ -59,10 +59,12 @@ type: object
 properties:
   type:
     title: Type
-    type: string
+    type: array
+    items:
+      type: string
     readOnly: true
-    const: "bwmd:ChemicalComposition"
-    default: "bwmd:ChemicalComposition"
+    const: ["bwmd:ChemicalComposition"]
+    default: ["bwmd:ChemicalComposition"]
 
   label:
     title: Label
@@ -78,10 +80,12 @@ properties:
     properties:
       type:
         title: Type
-        type: string
+        type: array
+        items:
+          type: string
         readOnly: true
-        const: "bwmd:BaseElementOfComposition"
-        default: "bwmd:BaseElementOfComposition"
+        const: ["bwmd:BaseElementOfComposition"]
+        default: ["bwmd:BaseElementOfComposition"]
       element_symbol:
         title: Element Symbol
         description: IUPAC element symbol of the balance element
@@ -111,10 +115,12 @@ properties:
       properties:
         type:
           title: Type
-          type: string
+          type: array
+          items:
+            type: string
           readOnly: true
-          const: "bwmd:WeightFraction"
-          default: "bwmd:WeightFraction"
+          const: ["bwmd:WeightFraction"]
+          default: ["bwmd:WeightFraction"]
         element_symbol:
           title: Element Symbol
           description: IUPAC symbol of the alloying element

@@ -34,6 +34,24 @@ jobs:
       - name: Check manifest is up-to-date
         run: .venv/bin/pytest tests/test_manifest.py tests/test_schema_composition.py -v
 
+  json-schemas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install --upgrade pip
+          .venv/bin/pip install pyyaml
+
+      - name: Check JSON schemas are up-to-date
+        run: .venv/bin/python scripts/convert_to_json.py --check
+
   shacl:
     runs-on: ubuntu-latest
     steps:

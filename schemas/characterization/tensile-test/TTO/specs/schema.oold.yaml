@@ -117,8 +117,8 @@ allOf:
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: TTO + PMDCo 3 schema for a tensile test process node
-x-schema-version: '0.1.1'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/tensile-test-TTO-v0.1.1/schemas/characterization/tensile-test/TTO/specs/schema.oold.yaml'
+x-schema-version: '0.2.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/tensile-test-TTO-v0.2.0/schemas/characterization/tensile-test/TTO/specs/schema.oold.yaml'
 x-maturity: 'draft'
 x-process-step:
   category: characterization
@@ -142,10 +142,12 @@ properties:
 
   type:
     title: Type
-    type: string
+    type: array
+    items:
+      type: string
     readOnly: true
-    const: "pmdco:PMD_0000974"
-    default: "pmdco:PMD_0000974"
+    const: ["pmdco:PMD_0000974"]
+    default: ["pmdco:PMD_0000974"]
     options:
       enum_titles:
         - pmdco:TensileTestingProcess
@@ -184,10 +186,12 @@ properties:
       properties:
         type:
           title: Type
-          type: string
+          type: array
+          items:
+            type: string
           readOnly: true
-          const: "tto:TTO_0000054"
-          default: "tto:TTO_0000054"
+          const: ["tto:TTO_0000054"]
+          default: ["tto:TTO_0000054"]
           options:
             enum_titles:
               - tto:TensileTestMethod
@@ -222,8 +226,7 @@ properties:
     description: >-
       The material sample (specimen) that was tested.
       Select the corresponding entry from the knowledge graph.
-    x-kitem:
-      ktypeIds: ["specimen"]
+    x-ktype: [specimen]
     type: array
     minItems: 1
     items:
@@ -251,7 +254,9 @@ properties:
       properties:
         type:
           title: Condition Type
-          type: string
+          type: array
+          items:
+            type: string
           enum:
             - tto:TTO_0000051
             - pmdco:PMD_0000967
@@ -324,10 +329,12 @@ properties:
       properties:
         type:
           title: Type
-          type: string
+          type: array
+          items:
+            type: string
           readOnly: true
-          const: "obo:IAO_0000109"
-          default: "obo:IAO_0000109"
+          const: ["obo:IAO_0000109"]
+          default: ["obo:IAO_0000109"]
           options:
             enum_titles:
               - iao:MeasurementDatum
@@ -348,7 +355,9 @@ properties:
             type:
               title: Property Type
               description: TTO quality class CURIE for this measured property.
-              type: string
+              type: array
+              items:
+                type: string
               enum:
                 - tto:TTO_0000009
                 - tto:TTO_0000059
@@ -391,10 +400,12 @@ properties:
           properties:
             type:
               title: Type
-              type: string
+              type: array
+              items:
+                type: string
               readOnly: true
-              const: "obo:OBI_0001931"
-              default: "obo:OBI_0001931"
+              const: ["obo:OBI_0001931"]
+              default: ["obo:OBI_0001931"]
               options:
                 enum_titles:
                   - obi:ScalarValueSpecification

@@ -1,0 +1,155 @@
+# OO-LD Schema for Dataset (DCAT)
+# Primary ontology: W3C Data Catalog Vocabulary (DCAT 3)
+#   https://www.w3.org/TR/vocab-dcat-3/
+# Supporting vocabulary: Dublin Core Terms (DCTERMS)
+#   https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+#
+# Graph pattern:
+#
+#   dcat:Dataset
+#     rdfs:label ──────────────────────────────────────── name string
+#     dcterms:description ──────────────────────────────── description string  (optional)
+#     dcterms:identifier ─────────────────────────────── identifier string  (optional)
+#     dcat:keyword ───────────────────────────────────── keyword strings  [× 0..N]  (optional)
+#     dcterms:format ──────────────────────────────────── file format string  (optional)
+#     dcterms:created ─────────────────────────────────── creation date  (optional)
+#     dcterms:modified ────────────────────────────────── last modification date  (optional)
+#     dcterms:license ─────────────────────────────────── license label or IRI  (optional)
+#     dcterms:hasPart ─────────────────────────────────► Dataset IRI  [× 0..N]  (optional)
+#                                                       ► Document IRI  [× 0..N]  (optional)
+#
+# Design notes:
+#   - rdfs:label is used for the name field for consistency with the platform k-item
+#     label convention; dcterms:title is the strict DCAT equivalent.
+#   - dcterms:hasPart is the DCAT-native property for dataset composition (DCAT 3 §6.7).
+#     Use it when this dataset aggregates sub-datasets or documents (e.g. a measurement
+#     campaign containing individual measurement series, images, and test reports).
+
+"@context":
+  rdf:     "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  rdfs:    "http://www.w3.org/2000/01/rdf-schema#"
+  xsd:     "http://www.w3.org/2001/XMLSchema#"
+  dcterms: "http://purl.org/dc/terms/"
+  dcat:    "http://www.w3.org/ns/dcat#"
+  "@base": "https://example.org/dataset#"
+  type: "@type"
+  id:   "@id"
+  label:
+    "@id": "rdfs:label"
+  description:
+    "@id": "http://purl.org/dc/terms/description"
+  identifier:
+    "@id": "http://purl.org/dc/terms/identifier"
+  keywords:
+    "@id": "http://www.w3.org/ns/dcat#keyword"
+    "@container": "@set"
+  format:
+    "@id": "http://purl.org/dc/terms/format"
+  created:
+    "@id": "http://purl.org/dc/terms/created"
+    "@type": "xsd:date"
+  modified:
+    "@id": "http://purl.org/dc/terms/modified"
+    "@type": "xsd:date"
+  license:
+    "@id": "http://purl.org/dc/terms/license"
+  has_part:
+    "@id": "http://purl.org/dc/terms/hasPart"
+    "@type": "@id"
+    "@container": "@set"
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: Generic metadata schema for a dcat:Dataset k-item.
+x-schema-version: '0.1.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/dataset-generic-DCAT-v0.1.0/schemas/dataset/generic/DCAT/specs/schema.oold.yaml'
+x-maturity: 'draft'
+title: Dataset
+type: object
+required:
+  - type
+  - id
+  - label
+
+properties:
+
+  type:
+    title: Type
+    type: array
+    items:
+      type: string
+    readOnly: true
+    const: ["dcat:Dataset"]
+    default: ["dcat:Dataset"]
+    options:
+      enum_titles:
+        - dcat:Dataset
+
+  id:
+    title: ID
+    description: Identifier for this dataset instance; managed by the consumer.
+    type: string
+    readOnly: true
+    default: dataset
+
+  label:
+    title: Dataset Name
+    description: Human-readable name for this dataset.
+    type: string
+
+  description:
+    title: Description
+    description: Free-text description of the dataset content and origin.
+    type: string
+    format: textarea
+
+  identifier:
+    title: Identifier
+    description: >-
+      External identifier for this dataset (e.g. DOI, repository accession number,
+      internal reference code).
+    type: string
+
+  keywords:
+    title: Keywords
+    description: Terms that describe the subject or topic of this dataset.
+    type: array
+    items:
+      type: string
+    uniqueItems: true
+    default: []
+
+  format:
+    title: Format
+    description: File format or media type (e.g. CSV, HDF5, JSON, TIFF, Parquet).
+    type: string
+
+  created:
+    title: Created
+    description: Date on which this dataset was first created (YYYY-MM-DD).
+    type: string
+    format: date
+
+  modified:
+    title: Last Modified
+    description: Date on which this dataset was most recently changed (YYYY-MM-DD).
+    type: string
+    format: date
+
+  license:
+    title: License
+    description: License under which this dataset is published (e.g. CC-BY-4.0, MIT).
+    type: string
+
+  has_part:
+    title: Parts
+    description: >-
+      Sub-datasets or documents that are part of this dataset (dcterms:hasPart).
+      Use for container datasets such as measurement campaigns that group individual
+      measurement series, raw data files, images, or reports.
+    x-ktype: [dataset, document]
+    type: array
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []

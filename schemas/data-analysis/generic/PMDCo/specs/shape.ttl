@@ -1,0 +1,63 @@
+# SHACL shape for the PMDCo DataAnalysis (OBI DataTransformation) pattern.
+#
+# Source:
+#   OBI DataTransformation (OBI_0200000)
+#   http://purl.obolibrary.org/obo/OBI_0200000
+#
+# Validates:
+#   1. DataTransformation node (OBI_0200000)
+#      - must have rdfs:label
+#      - must have dcterms:conformsTo
+#      - has_specified_input must be IRIs (at least one required)
+#      - has_specified_output must be IRIs
+#      - operator (prov:wasAssociatedWith) must be an IRI
+#
+# Input and output IRIs reference dataset nodes recorded independently
+# with dataset/generic/DCAT. This shape does not validate their content.
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix obi:     <http://purl.obolibrary.org/obo/OBI_> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix shape:   <https://w3id.org/pmd/co/shapes/data-analysis/generic/> .
+@base            <https://w3id.org/pmd/co/shapes/data-analysis/generic/> .
+
+shape:data_transformation
+    a sh:NodeShape ;
+    sh:targetClass <http://purl.obolibrary.org/obo/OBI_0200000> ;   # obi:DataTransformation
+    sh:property [
+        sh:path dcterms:conformsTo ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A DataTransformation must declare dcterms:conformsTo pointing to the versioned schema IRI." ;
+    ] ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A DataTransformation must have exactly one rdfs:label." ;
+    ] ;
+    sh:property [
+        sh:path <http://purl.obolibrary.org/obo/OBI_0000293> ;   # has_specified_input
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:message "A DataTransformation must reference at least one input dataset via has_specified_input (OBI_0000293)." ;
+    ] ;
+    sh:property [
+        sh:path <http://purl.obolibrary.org/obo/OBI_0000299> ;   # has_specified_output
+        sh:nodeKind sh:IRI ;
+        sh:message "Each has_specified_output value must be an IRI referencing a dataset node." ;
+    ] ;
+    sh:property [
+        sh:path prov:wasAssociatedWith ;
+        sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+        sh:message "The operator (prov:wasAssociatedWith) must be an IRI referencing a person node." ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .

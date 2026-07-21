@@ -9,7 +9,7 @@ Records the **areas of expertise of a materials science researcher**: which
 materials, methods, devices, and application fields they work with.
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>0.1.0</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.2.0</code></td></tr>
 <tr><td><strong>Maturity</strong></td><td><code>deprecated</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>—</td></tr>
 <tr><td><strong>Extends</strong></td><td>—</td></tr>

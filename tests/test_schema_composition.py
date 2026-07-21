@@ -32,6 +32,7 @@ _STEP_TYPES = {
     "pmdco:PMD_0000974", # TensileTestingProcess
     "pmdco:PMD_0000029", # ManufacturingProcess
     "obi:0000471",       # ComputerSimulation
+    "obi:0200000",       # DataTransformation (data-analysis steps)
 }
 
 
@@ -72,8 +73,10 @@ def _step_schemas() -> list[tuple[str, Path]]:
     result = []
     for schema_id, yaml_path in _all_schemas():
         data = yaml.safe_load(yaml_path.read_text())
-        root_type = (data.get("properties") or {}).get("type", {}).get("const", "")
-        if root_type in _STEP_TYPES:
+        const = (data.get("properties") or {}).get("type", {}).get("const", "")
+        # const is a list (array form) or a string (legacy); normalise to list
+        types = const if isinstance(const, list) else [const]
+        if any(t in _STEP_TYPES for t in types):
             result.append((schema_id, yaml_path))
     return result
 

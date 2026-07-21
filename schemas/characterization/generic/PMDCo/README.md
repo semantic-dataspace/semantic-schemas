@@ -6,7 +6,7 @@ analysis) following the
 the [OBI Assay](http://purl.obolibrary.org/obo/OBI_0000070) class.
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>0.1.0</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.2.0</code></td></tr>
 <tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td><a href="https://github.com/materialdigital/core-ontology/tree/main/patterns/measurement">PMDCo measurement pattern</a></td></tr>
 <tr><td><strong>Extends</strong></td><td>—</td></tr>

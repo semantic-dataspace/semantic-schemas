@@ -1,0 +1,12 @@
+{
+  "type": ["dcat:Catalog"],
+  "id": "catalog-316L-campaign-1",
+  "label": "316L Stainless Steel: Measurement Campaign 1",
+  "description": "Catalog grouping all measurement and analysis datasets from the first 316L characterization campaign.",
+  "keywords": ["316L", "stainless steel", "measurement campaign"],
+  "created": "2026-03-10",
+  "dataset": [
+    "https://example.org/datasets/tensile-raw-316L-batch-1",
+    "https://example.org/datasets/yield-strength-316L-batch-1"
+  ]
+}

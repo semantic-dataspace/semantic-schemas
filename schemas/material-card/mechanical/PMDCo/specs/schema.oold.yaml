@@ -114,8 +114,8 @@
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for a mechanical material card (IAO:DataSet)
-x-schema-version: '0.2.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/material-card-mechanical-PMDCo-v0.2.0/schemas/material-card/mechanical/PMDCo/specs/schema.oold.yaml'
+x-schema-version: '0.3.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/material-card-mechanical-PMDCo-v0.3.0/schemas/material-card/mechanical/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'draft'
 title: Mechanical Material Card
 type: object
@@ -129,10 +129,12 @@ properties:
 
   type:
     title: Type
-    type: string
+    type: array
+    items:
+      type: string
     readOnly: true
-    const: "iao:0000100"
-    default: "iao:0000100"
+    const: ["iao:0000100"]
+    default: ["iao:0000100"]
     options:
       enum_titles:
         - iao:DataSet
@@ -162,8 +164,7 @@ properties:
     description: >-
       The material that this card describes.
       Links to an existing material record in the knowledge graph.
-    x-kitem:
-      ktypeIds: ["material"]
+    x-ktype: [material]
     type: string
     format: uri
 
@@ -243,7 +244,9 @@ properties:
         type:
           title: Property Type
           description: TTO class identifying which mechanical property this represents.
-          type: string
+          type: array
+          items:
+            type: string
           enum:
             - tto:YieldStrength
             - tto:UpperYieldStrength

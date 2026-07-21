@@ -1,0 +1,44 @@
+# SHACL shape for the DCAT Catalog pattern.
+#
+# Source:
+#   W3C Data Catalog Vocabulary (DCAT 3)
+#   https://www.w3.org/TR/vocab-dcat-3/
+#
+# Validates:
+#   dcat:Catalog node (subclass of dcat:Dataset)
+#   - inherits all constraints from dataset/generic/DCAT/specs/shape.ttl
+#     (both shapes are applied when validating a catalog node; load both
+#     shape graphs or merge them before running pyshacl)
+#   - dcat:dataset values must be IRIs referencing member dataset nodes
+#
+# Note: dcat:Catalog is a subclass of dcat:Dataset. The dataset/generic shape
+# targets dcat:Dataset and therefore also applies to dcat:Catalog instances
+# when rdfs inference is enabled (pyshacl --inference rdfs). Without inference,
+# load both shape files.
+# Load alongside dataset/generic/DCAT/specs/shape.ttl
+
+@prefix dcat:    <http://www.w3.org/ns/dcat#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix shape:   <https://w3id.org/pmd/co/shapes/dataset/catalog/> .
+@base            <https://w3id.org/pmd/co/shapes/dataset/catalog/> .
+
+shape:catalog
+    a sh:NodeShape ;
+    sh:targetClass dcat:Catalog ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A Catalog must have exactly one rdfs:label." ;
+    ] ;
+    sh:property [
+        sh:path dcat:dataset ;
+        sh:nodeKind sh:IRI ;
+        sh:message "Each dcat:dataset value must be an IRI referencing a dataset node." ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .

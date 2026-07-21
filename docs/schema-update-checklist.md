@@ -35,16 +35,17 @@ The bump determines the new version string used in all subsequent steps.
   `@context` changes; the predicate IRI is unchanged.
 - [ ] Update `properties`: add, remove, or rename property definitions to match the new schema.
 - [ ] Update `required` list to reflect mandatory fields.
-- [ ] Add `x-kitem: { ktypeIds: ["<ktype-id>"] }` to any field that picks an entity from the
-  knowledge graph.
+- [ ] Add `x-ktype: ["<ktype-id>"]` to any field that picks an entity from the knowledge graph.
 
-**Verify:**
+**Verify and regenerate JSON:**
 
 ```bash
 python -c "import yaml; yaml.safe_load(open('schemas/<path>/specs/schema.oold.yaml'))"
+python scripts/convert_to_json.py
 ```
 
-Must produce no output (no exception).
+The first command must produce no output (no exception). The second regenerates
+`schema.oold.generated.json` for every schema and must exit cleanly.
 
 > **Pitfall: YAML colon in unquoted strings.** Any `description:` value that
 > contains `:` (colon-space) will break YAML parsing unless the value is quoted:
@@ -170,7 +171,21 @@ After any shape edit, re-run end-to-end validation (step 10).
 
 ## 8. `docs/*.ipynb` (Jupyter notebooks)
 
-Work cell by cell. Do **not** hand-edit output cells; use `--refresh` instead.
+First, determine which situation applies:
+
+**Schema has no notebook** (e.g. newly created schemas without a full worked example):
+
+- [ ] Verify that `docs/example.input.json` is present and uses the correct
+  field names for the schema (OO-LD names for schemas without a transform,
+  simplified names for schemas with one).
+- [ ] Ensure `README.md` links to [`docs/6_usage-guide.md`](6_usage-guide.md)
+  in its **Further reading** section so readers know how to run the schema
+  without a notebook.
+- No notebook file needs to be created unless a full worked example adds
+  meaningful value beyond the usage guide.
+
+**Schema has an existing notebook** — work cell by cell. Do **not** hand-edit
+output cells; use `--refresh` instead.
 
 - [ ] **Markdown cells:** update any field-reference tables, prose descriptions, or
   graph-pattern ASCII diagrams that mention old field names.
@@ -213,8 +228,8 @@ grep -rn "\$ref.*<schema-slug>" schemas/ --include="*.yaml"
 # Find schemas with mirrored @context blocks (comment pattern used in this repo)
 grep -rn "mirrored from" schemas/ --include="*.yaml"
 
-# Find schemas with x-kitem references to a k-type you renamed or removed
-grep -rn 'ktypeIds.*"<ktype-id>"' schemas/ --include="*.yaml" --include="*.json"
+# Find schemas with x-ktype references to a k-type you renamed or removed
+grep -rn 'x-ktype:.*"<ktype-id>"' schemas/ --include="*.yaml"
 ```
 
 For each hit:
@@ -222,7 +237,7 @@ For each hit:
 - **`$ref` dependency:** if the referenced schema's `@context` changed, the depending
   schema contains a hand-copied mirror of that context (marked with a comment like
   `── <schema> context (mirrored) ──`). Update that mirror block to match.
-- **`x-kitem` reference:** if a k-type ID changed, update the `ktypeIds` value in every
+- **`x-ktype` reference:** if a k-type ID changed, update the `x-ktype` list in every
   schema that references it.
 
 ---
@@ -283,14 +298,15 @@ A triple count of 0 indicates a JSON-LD parsing problem (wrong `@context` mappin
 
 ## 12. Update `schemas/manifest.json`
 
-- [ ] Find the entry in `schemas/manifest.json` whose `"path"` matches this schema and
-  set `"version"` to the new version string.
+The manifest lists only **directly-instantiable schemas**: those that have an
+`example.input.json`, could be referenced by a k-type, and represent a concrete
+record type a user would create. Base schemas used only as an `allOf $ref`
+composition target (e.g. `process-step/PMDCo`) are intentionally excluded.
 
-  The manifest is the source of truth used by the sibling
-  [knowledge-types](https://github.com/semantic-dataspace/knowledge-types) test suite to
-  verify that every k-type's `semantic_schemas` reference is consistent with the
-  published schema version. Skipping this step will break those tests for any k-type that
-  references this schema.
+- [ ] If this schema is directly instantiable and already has a manifest entry,
+  find it and set `"version"` to the new version string.
+- [ ] If this is a new directly-instantiable schema with no entry yet, add one.
+- [ ] If this is a base/composition schema, no manifest change is needed.
 
 ---
 

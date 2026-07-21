@@ -58,6 +58,10 @@
     "@id": "obi:0000293"   # OBI_0000293  has_specified_input
     "@type": "@id"
     "@container": "@set"
+  has_specified_output:
+    "@id": "obi:0000299"   # OBI_0000299  has_specified_output
+    "@type": "@id"
+    "@container": "@set"
   preceded_by:
     "@id": "bfo:0000062"   # BFO_0000062  preceded_by
     "@type": "@id"
@@ -76,8 +80,8 @@
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for an obi:Assay (generic characterization record)
-x-schema-version: '0.1.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/characterization-generic-PMDCo-v0.1.0/schemas/characterization/generic/PMDCo/specs/schema.oold.yaml'
+x-schema-version: '0.2.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/characterization-generic-PMDCo-v0.2.0/schemas/characterization/generic/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'draft'
 x-process-step:
   category: characterization
@@ -92,10 +96,12 @@ properties:
 
   type:
     title: Type
-    type: string
+    type: array
+    items:
+      type: string
     readOnly: true
-    const: "obi:0000070"
-    default: "obi:0000070"
+    const: ["obi:0000070"]
+    default: ["obi:0000070"]
     options:
       enum_titles:
         - obi:Assay
@@ -123,8 +129,22 @@ properties:
   has_specified_input:
     title: Inputs
     description: >-
-      Specimens or materials characterised by this step,
-      referenced by their IRI in the knowledge graph.
+      Specimens or materials characterised by this step.
+      Select the corresponding entries from the knowledge graph.
+    x-ktype: [specimen, material]
+    type: array
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  has_specified_output:
+    title: Outputs
+    description: >-
+      The post-test specimen or dataset produced by this characterization step,
+      e.g. a deformed specimen returned after testing or a raw measurement file.
+    x-ktype: [specimen, dataset]
     type: array
     items:
       type: string
@@ -135,8 +155,9 @@ properties:
   preceded_by:
     title: Preceded By
     description: >-
-      Steps that directly precede this one in the characterization workflow,
-      referenced by their IRI.
+      Processes that directly precede this step in the workflow.
+      Select the corresponding process entries from the knowledge graph.
+    x-ktype: [process]
     type: array
     items:
       type: string
@@ -160,10 +181,12 @@ properties:
       properties:
         type:
           title: Type
-          type: string
+          type: array
+          items:
+            type: string
           readOnly: true
-          const: "pmdco:PMD_0000013"
-          default: "pmdco:PMD_0000013"
+          const: ["pmdco:PMD_0000013"]
+          default: ["pmdco:PMD_0000013"]
           options:
             enum_titles:
               - pmdco:ProcessCondition

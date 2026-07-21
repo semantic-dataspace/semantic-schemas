@@ -10,8 +10,8 @@
 #   ManufacturingProcess  (pmdco:PMD_0000029)
 #     rdfs:label ──────────────────────────────────────── name string
 #     rdfs:comment ────────────────────────────────────── description string  (optional)
-#     has_specified_input ────────────────────────────► Material IRI  [× 0..N]
-#     has_specified_output ───────────────────────────► Material IRI  [× 0..N]
+#     has_specified_input ────────────────────────────► Material / SemiFinishedProduct IRI  [× 0..N]
+#     has_specified_output ───────────────────────────► Material / Specimen IRI  [× 0..N]
 #     preceded_by ────────────────────────────────────► ManufacturingProcess IRI  [× 0..N]  (optional)
 #     has_process_condition ──────────────────────────► ProcessCondition (pmdco:PMD_0000013)  [× 0..N]  (optional)
 #       rdfs:label ──────── parameter name
@@ -80,8 +80,8 @@
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for a pmdco:ManufacturingProcess (Input and Output of Processes pattern)
-x-schema-version: '0.1.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/manufacturing-generic-PMDCo-v0.1.0/schemas/manufacturing/generic/PMDCo/specs/schema.oold.yaml'
+x-schema-version: '0.2.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/manufacturing-generic-PMDCo-v0.2.0/schemas/manufacturing/generic/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'draft'
 x-process-step:
   category: manufacturing
@@ -96,10 +96,12 @@ properties:
 
   type:
     title: Type
-    type: string
+    type: array
+    items:
+      type: string
     readOnly: true
-    const: "pmdco:PMD_0000029"
-    default: "pmdco:PMD_0000029"
+    const: ["pmdco:PMD_0000029"]
+    default: ["pmdco:PMD_0000029"]
     options:
       enum_titles:
         - pmdco:ManufacturingProcess
@@ -127,8 +129,9 @@ properties:
   has_specified_input:
     title: Inputs
     description: >-
-      Materials (or other objects) consumed or used by this process.
-      Each entry is an IRI referencing an existing knowledge-graph node.
+      Materials or semi-finished products consumed or transformed by this process.
+      Select the corresponding entries from the knowledge graph.
+    x-ktype: [material, semi-finished-product]
     type: array
     items:
       type: string
@@ -139,8 +142,9 @@ properties:
   has_specified_output:
     title: Outputs
     description: >-
-      Materials (or other objects) produced by this process.
-      Each entry is an IRI referencing an existing knowledge-graph node.
+      Materials or specimens produced by this process.
+      Select the corresponding entries from the knowledge graph.
+    x-ktype: [material, specimen]
     type: array
     items:
       type: string
@@ -152,7 +156,8 @@ properties:
     title: Preceded By
     description: >-
       Processes that directly precede this one in the process chain.
-      Each entry is an IRI referencing another ManufacturingProcess node.
+      Select the corresponding process entries from the knowledge graph.
+    x-ktype: [process]
     type: array
     items:
       type: string
@@ -177,10 +182,12 @@ properties:
       properties:
         type:
           title: Type
-          type: string
+          type: array
+          items:
+            type: string
           readOnly: true
-          const: "pmdco:PMD_0000013"
-          default: "pmdco:PMD_0000013"
+          const: ["pmdco:PMD_0000013"]
+          default: ["pmdco:PMD_0000013"]
           options:
             enum_titles:
               - pmdco:ProcessCondition

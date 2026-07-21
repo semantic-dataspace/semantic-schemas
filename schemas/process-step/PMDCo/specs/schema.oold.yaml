@@ -48,6 +48,16 @@
     "@id": "http://purl.obolibrary.org/obo/OBI_0000293"
     "@type": "@id"
     "@container": "@set"
+  # obi:OBI_0000299: entities (specimens, datasets) produced as outputs of this process
+  has_specified_output:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
+    "@type": "@id"
+    "@container": "@set"
+  # bfo:BFO_0000062: process that directly precedes this one in the workflow
+  preceded_by:
+    "@id": "http://purl.obolibrary.org/obo/BFO_0000062"
+    "@type": "@id"
+    "@container": "@set"
   # prov:wasAssociatedWith: agent (person) responsible for executing this process
   operator:
     "@id": "http://www.w3.org/ns/prov#wasAssociatedWith"
@@ -63,8 +73,8 @@ $comment: >-
   Base pattern schema for a PMDCo/OBI process step.
   Compose with this schema using allOf + $ref in step-specific schemas.
   Do not use this schema directly unless recording a generic uncategorised step.
-x-schema-version: '0.2.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/process-step-PMDCo-v0.2.0/schemas/process-step/PMDCo/specs/schema.oold.yaml'
+x-schema-version: '0.3.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/process-step-PMDCo-v0.3.0/schemas/process-step/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'draft'
 x-hidden: true
 # Marks this schema as a valid process step.
@@ -84,10 +94,12 @@ properties:
 
   type:
     title: Type
-    type: string
+    type: array
+    items:
+      type: string
     readOnly: true
-    const: "obo:OBI_0000070"
-    default: "obo:OBI_0000070"
+    const: ["obo:OBI_0000070"]
+    default: ["obo:OBI_0000070"]
     options:
       enum_titles:
         - obi:PlannedProcess
@@ -119,8 +131,35 @@ properties:
   has_specified_input:
     title: Inputs
     description: >-
-      Material entities (specimens, samples, datasets) consumed or observed by this step.
+      Material entities (specimens, samples) consumed or observed by this step.
       Select the corresponding entries from the knowledge graph.
+    x-ktype: [specimen, material]
+    type: array
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  has_specified_output:
+    title: Outputs
+    description: >-
+      Specimens, materials, or datasets produced as outputs of this step.
+      Select the corresponding entries from the knowledge graph.
+    x-ktype: [specimen, material, dataset]
+    type: array
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  preceded_by:
+    title: Preceded By
+    description: >-
+      Processes that directly precede this step in the workflow.
+      Select the corresponding process entries from the knowledge graph.
+    x-ktype: [process]
     type: array
     items:
       type: string
@@ -131,8 +170,7 @@ properties:
   operator:
     title: Operator
     description: Person who performed this process step.
-    x-kitem:
-      ktypeIds: ["expert"]
+    x-ktype: [expert]
     type: string
     format: uri
 
@@ -141,7 +179,6 @@ properties:
     description: >-
       Physical instrument or device used to carry out this step.
       Select the registered device from the knowledge graph.
-    x-kitem:
-      ktypeIds: ["measurement-device"]
+    x-ktype: [measurement-device]
     type: string
     format: uri

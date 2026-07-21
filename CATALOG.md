@@ -16,7 +16,10 @@ All schemas currently available in this repository.
 | Tensile Test | PMDCo | Uniaxial tensile test using the PMDCo measurement pattern; result properties identified by free-text label rather than a fixed vocabulary | [schemas/characterization/tensile-test/PMDCo/](schemas/characterization/tensile-test/PMDCo/) |
 | Simulation Generic | PMDCo | Generic base for computational simulation steps (FEM, data-fitting, ML inference); extend this to add domain-specific result fields | [schemas/simulation/generic/PMDCo/](schemas/simulation/generic/PMDCo/) |
 | Constitutive Model Calibration | PMDCo | Fitting a flow-curve model (Hockett-Sherby, Swift, Voce, Hollomon, Johnson-Cook) to experimental stress-strain data; extends Simulation Generic | [schemas/simulation/model-calibration/PMDCo/](schemas/simulation/model-calibration/PMDCo/) |
+| Data Analysis Generic | PMDCo/OBI | A data analysis step (OBI DataTransformation): input datasets, output datasets, and the analyst responsible | [schemas/data-analysis/generic/PMDCo/](schemas/data-analysis/generic/PMDCo/) |
 | Mechanical Material Card | PMDCo | Structured dataset collecting elastic constants, discrete mechanical properties, and a fitted constitutive model for FEM use | [schemas/material-card/mechanical/PMDCo/](schemas/material-card/mechanical/PMDCo/) |
+| Dataset | DCAT | Metadata for a single dataset: name, description, keywords, format, dates, license, and optional links to sub-datasets or documents | [schemas/dataset/generic/DCAT/](schemas/dataset/generic/DCAT/) |
+| Dataset Catalog | DCAT | A named collection of datasets (dcat:Catalog) grouping members by campaign or provenance context; extends Dataset | [schemas/dataset/catalog/DCAT/](schemas/dataset/catalog/DCAT/) |
 | Workflow | OBI | Multi-step workflow spanning manufacturing, characterization, and simulation; each step references its domain-specific schema instance by IRI | [schemas/workflow/OBI/](schemas/workflow/OBI/) |
 
 ---
@@ -32,6 +35,8 @@ All schemas currently available in this repository.
 | `manufacturing` | 1 | Generic manufacturing step base (`generic/`) |
 | `characterization` | 3 | Generic base (`generic/`) and specialised variants (e.g. `tensile-test/`) |
 | `simulation` | 2 | Generic simulation base (`generic/`) and constitutive model calibration (`model-calibration/`) |
+| `data-analysis` | 1 | Generic data analysis step base (`generic/`) for OBI DataTransformation workflows |
+| `dataset` | 2 | Dataset metadata (`generic/`) and catalog grouping (`catalog/`) following DCAT 3 |
 | `material-card` | 1 | Structured datasets for FEM material input |
 | `workflow` | 1 | Multi-step workflow records |
 
@@ -39,8 +44,8 @@ All schemas currently available in this repository.
 
 ## Domain structure
 
-All three process domains (`characterization/`, `manufacturing/`, `simulation/`) share
-the same two-level pattern:
+The four process domains (`characterization/`, `manufacturing/`, `simulation/`,
+`data-analysis/`) share the same two-level pattern:
 
 ```text
 <domain>/
@@ -50,8 +55,18 @@ the same two-level pattern:
     TTO/   or PMDCo/
 ```
 
-`generic/` and variant schemas are used when only measurement results need to be
+`generic/` and variant schemas are used when only step results need to be
 captured. Use `generic/` as a base when adding domain-specific result fields.
+
+The `dataset/` domain follows a similar pattern but uses DCAT as its ontology:
+
+```text
+dataset/
+  generic/          ← generic dcat:Dataset metadata schema
+    DCAT/
+  catalog/          ← dcat:Catalog grouping, extends dataset/generic/DCAT
+    DCAT/
+```
 
 For larger-scale data collection, two further schema families are planned but not
 yet implemented:

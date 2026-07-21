@@ -18,6 +18,8 @@ import yaml
 
 __all__ = ["Schema"]
 
+_schema_cache: "dict[tuple[str, str | None], Schema]" = {}
+
 
 class Schema:
     """
@@ -120,6 +122,74 @@ class Schema:
         """
         oold_doc = self.transform(data)
         return self._parse_oold(self._get_context(), oold_doc, base=base)
+
+    @classmethod
+    def from_url(
+        cls,
+        schema_url: str,
+        github_token: str | None = None,
+    ) -> "Schema":
+        """Create a Schema by fetching its spec files from a GitHub tree URL.
+
+        Downloads ``specs/schema.oold.yaml`` and, if it exists,
+        ``specs/transform.simplified.jsonata`` from the given GitHub tree URL.
+        The returned Schema supports :meth:`transform`, :meth:`parse`, and
+        :meth:`to_graph` exactly like a locally-loaded Schema.
+
+        Parameters
+        ----------
+        schema_url :
+            A GitHub ``/tree/`` URL pointing to the schema folder, e.g.
+            ``https://github.com/org/repo/tree/tag/path/to/schema``.
+        github_token :
+            Optional GitHub personal-access token.  Falls back to the
+            ``GITHUB_TOKEN`` environment variable when omitted.
+        """
+        import os
+        import re
+
+        import requests as _requests
+
+        m = re.match(
+            r"^https://github\.com/([^/]+/[^/]+)/tree/([^/]+)/(.+?)/?$",
+            schema_url,
+        )
+        if not m:
+            raise ValueError(
+                f"Cannot parse GitHub tree URL: {schema_url!r}. "
+                "Expected the form https://github.com/org/repo/tree/tag/path."
+            )
+        specs_base = (
+            f"https://raw.githubusercontent.com/{m[1]}/{m[2]}/{m[3]}/specs/"
+        )
+
+        token = github_token or os.environ.get("GITHUB_TOKEN")
+        cache_key = (schema_url, token)
+        if cache_key in _schema_cache:
+            return _schema_cache[cache_key]
+
+        headers = {"Authorization": f"Bearer {token}"} if token else {}
+
+        def _get(path: str) -> str | None:
+            resp = _requests.get(specs_base + path, headers=headers, timeout=15)
+            if resp.status_code == 404:
+                return None
+            resp.raise_for_status()
+            return resp.text
+
+        oold_raw = _get("schema.oold.yaml")
+        if oold_raw is None:
+            raise RuntimeError(
+                f"schema.oold.yaml not found at {specs_base}. "
+                "Check that schema_url points to a valid schema folder."
+            )
+
+        instance = cls.__new__(cls)
+        instance.dir = None
+        instance._context = yaml.safe_load(oold_raw).get("@context", {})
+        instance._transform_src = _get("transform.simplified.jsonata")
+        _schema_cache[cache_key] = instance
+        return instance
 
     def validate(
         self,
