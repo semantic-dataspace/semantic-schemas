@@ -1,0 +1,81 @@
+# SHACL shape for the DCAT Dataset pattern.
+#
+# Source:
+#   W3C Data Catalog Vocabulary (DCAT 3)
+#   https://www.w3.org/TR/vocab-dcat-3/
+#
+# Validates:
+#   dcat:Dataset node
+#   - must have rdfs:label
+#   - date fields (created, modified) must be xsd:date if present
+#   - has_part (dcterms:hasPart) values must be IRIs
+#
+# Subclass shapes (e.g. dataset/catalog/DCAT) add further constraints
+# for their additional properties.
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dcat:    <http://www.w3.org/ns/dcat#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix shape:   <https://w3id.org/pmd/co/shapes/dataset/generic/> .
+@base            <https://w3id.org/pmd/co/shapes/dataset/generic/> .
+
+shape:dataset
+    a sh:NodeShape ;
+    sh:targetClass dcat:Dataset ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A Dataset must have exactly one rdfs:label." ;
+    ] ;
+    sh:property [
+        sh:path dcterms:description ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:message "Dataset description must be a plain string." ;
+    ] ;
+    sh:property [
+        sh:path dcterms:identifier ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:message "Dataset identifier must be a plain string." ;
+    ] ;
+    sh:property [
+        sh:path dcat:keyword ;
+        sh:datatype xsd:string ;
+        sh:message "Each keyword must be a plain string." ;
+    ] ;
+    sh:property [
+        sh:path dcterms:format ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:message "Dataset format must be a plain string (e.g. CSV, HDF5)." ;
+    ] ;
+    sh:property [
+        sh:path dcterms:created ;
+        sh:datatype xsd:date ;
+        sh:maxCount 1 ;
+        sh:message "Dataset created date must be an xsd:date." ;
+    ] ;
+    sh:property [
+        sh:path dcterms:modified ;
+        sh:datatype xsd:date ;
+        sh:maxCount 1 ;
+        sh:message "Dataset modified date must be an xsd:date." ;
+    ] ;
+    sh:property [
+        sh:path dcterms:license ;
+        sh:maxCount 1 ;
+        sh:message "Dataset license must be at most one value." ;
+    ] ;
+    sh:property [
+        sh:path dcterms:hasPart ;
+        sh:nodeKind sh:IRI ;
+        sh:message "Each has_part value must be an IRI referencing a dataset or document node." ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .

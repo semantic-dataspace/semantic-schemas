@@ -77,8 +77,8 @@
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for an obi:ComputerSimulation (generic simulation step)
-x-schema-version: '0.1.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/simulation-generic-PMDCo-v0.1.0/schemas/simulation/generic/PMDCo/specs/schema.oold.yaml'
+x-schema-version: '0.2.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/simulation-generic-PMDCo-v0.2.0/schemas/simulation/generic/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'draft'
 x-process-step:
   category: simulation
@@ -93,10 +93,12 @@ properties:
 
   type:
     title: Type
-    type: string
+    type: array
+    items:
+      type: string
     readOnly: true
-    const: "obi:0000471"
-    default: "obi:0000471"
+    const: ["obi:0000471"]
+    default: ["obi:0000471"]
     options:
       enum_titles:
         - obi:ComputerSimulation
@@ -173,10 +175,12 @@ properties:
       properties:
         type:
           title: Type
-          type: string
+          type: array
+          items:
+            type: string
           readOnly: true
-          const: "pmdco:PMD_0000013"
-          default: "pmdco:PMD_0000013"
+          const: ["pmdco:PMD_0000013"]
+          default: ["pmdco:PMD_0000013"]
           options:
             enum_titles:
               - pmdco:ProcessCondition

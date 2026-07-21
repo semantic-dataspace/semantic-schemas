@@ -5,6 +5,17 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.3.0] - 2026-07-17
+
+### Changed
+
+- `type` field const and default changed from a single string (`const: "VALUE"`) to a
+  single-element array (`const: ["VALUE"]`) to align with JSON-LD, where `@type`
+  naturally supports multiple values.
+- `x-kitem: {ktypeIds: [...]}` annotations replaced by the flatter `x-ktype: [...]` form on all IRI reference fields.
+
+---
+
 ## [0.2.0] - 2026-05-27
 
 ### Changed (breaking)

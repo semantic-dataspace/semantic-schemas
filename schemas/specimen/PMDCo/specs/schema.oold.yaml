@@ -88,8 +88,8 @@ $comment: >-
   and optionally to the specific semi-finished product it was prepared from via
   prov:wasDerivedFrom. When source is set, schema:material can be derived from
   source.made_of; the UI should offer to populate it automatically.
-x-schema-version: '0.3.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/specimen-PMDCo-v0.3.0/schemas/specimen/PMDCo/specs/schema.oold.yaml'
+x-schema-version: '0.4.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/specimen-PMDCo-v0.4.0/schemas/specimen/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'draft'
 title: Specimen
 type: object
@@ -102,10 +102,12 @@ properties:
 
   type:
     title: Type
-    type: string
+    type: array
+    items:
+      type: string
     readOnly: true
-    const: "bfo:0000030"
-    default: "bfo:0000030"
+    const: ["bfo:0000030"]
+    default: ["bfo:0000030"]
     options:
       enum_titles:
         - bfo:Object
@@ -138,10 +140,12 @@ properties:
     properties:
       type:
         title: Type
-        type: string
+        type: array
+        items:
+          type: string
         readOnly: true
-        const: "pmdco:PMD_0020133"
-        default: "pmdco:PMD_0020133"
+        const: ["pmdco:PMD_0020133"]
+        default: ["pmdco:PMD_0020133"]
         options:
           enum_titles:
             - pmdco:Mass
@@ -169,10 +173,12 @@ properties:
         properties:
           type:
             title: Type
-            type: string
+            type: array
+            items:
+              type: string
             readOnly: true
-            const: "obi:0001931"
-            default: "obi:0001931"
+            const: ["obi:0001931"]
+            default: ["obi:0001931"]
             options:
               enum_titles:
                 - obi:ScalarValueSpecification
@@ -195,7 +201,7 @@ properties:
               - "uo:0000021"
               - "uo:0000022"
               - "uo:0000023"
-            default: "uo:0000021"
+            default: ["uo:0000021"]
             options:
               enum_titles:
                 - gram (g)
@@ -209,8 +215,7 @@ properties:
       duality object/material pattern. Links to a material k-item carrying
       composition and designation data. Can be auto-populated from source.made_of
       when source is set.
-    x-kitem:
-      ktypeIds: ["material"]
+    x-ktype: [material]
     type: string
     format: uri
 
@@ -220,7 +225,6 @@ properties:
       The specific semi-finished product (e.g. metal sheet) this specimen was
       cut or prepared from. Links to a semi-finished-product k-item carrying
       physical provenance such as lot number, supplier, and dimensions.
-    x-kitem:
-      ktypeIds: ["semi-finished-product"]
+    x-ktype: [semi-finished-product]
     type: string
     format: uri

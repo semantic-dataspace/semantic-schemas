@@ -1,0 +1,10 @@
+{
+  "type": ["obi:0200000"],
+  "id": "data-analysis-yield-strength-316L",
+  "conforms_to": "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/data-analysis-generic-PMDCo-v0.1.0/schemas/data-analysis/generic/PMDCo/specs/schema.oold.yaml",
+  "label": "Yield strength evaluation, 316L batch 1",
+  "notes": "Automated evaluation of 0.2 % yield strength from tensile test force-displacement data.",
+  "has_specified_input": ["https://example.org/datasets/tensile-raw-316L-batch-1"],
+  "has_specified_output": ["https://example.org/datasets/yield-strength-316L-batch-1"],
+  "operator": "https://example.org/persons/doe-jane"
+}

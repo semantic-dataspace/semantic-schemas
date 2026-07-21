@@ -125,8 +125,8 @@ $comment: >-
   Publications use foaf:made (person to document); publication type is bibo:Document.
   Author order is preserved via dcterms:contributor with @container @list;
   corresponding-author status uses vivo:isCorrespondingAuthor (a real VIVO property).
-x-schema-version: '0.2.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/expertise-VIVO-v0.2.0/schemas/expertise/VIVO/specs/schema.oold.yaml'
+x-schema-version: '0.3.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/expertise-VIVO-v0.3.0/schemas/expertise/VIVO/specs/schema.oold.yaml'
 x-maturity: 'draft'
 title: Expertise (VIVO)
 description: Expertise profile of a domain expert in materials science
@@ -138,10 +138,12 @@ properties:
   type:
     title: Type
     description: RDF type of this instance
-    type: string
+    type: array
+    items:
+      type: string
     readOnly: true
-    const: "foaf:Person"
-    default: "foaf:Person"
+    const: ["foaf:Person"]
+    default: ["foaf:Person"]
 
   conforms_to:
     title: Schema
@@ -266,9 +268,7 @@ properties:
       (past or present)
     type: array
     format: kitem
-    x-kitem:
-      ktypeIds:
-        - project
+    x-ktype: [project]
     items:
       type: string
       format: uri
@@ -285,9 +285,11 @@ properties:
       properties:
         type:
           title: Type
-          type: string
-          const: "bibo:Document"
-          default: "bibo:Document"
+          type: array
+          items:
+            type: string
+          const: ["bibo:Document"]
+          default: ["bibo:Document"]
           readOnly: true
         doi:
           title: DOI
@@ -319,9 +321,7 @@ properties:
                 title: Author
                 type: string
                 format: uri
-                x-kitem:
-                  ktypeIds:
-                    - experts
+                x-ktype: [experts]
               corresponding_author:
                 title: Main Author
                 description: Mark as the main author

@@ -6,7 +6,7 @@ the [Materials Dataspace vocabulary](https://vocabulary.materials-data.space/)
 at runtime, so the form always reflects the current controlled vocabulary.
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>0.2.0</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.3.0</code></td></tr>
 <tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>VIVO Core 1.15 / FOAF (<code>foaf:Person</code>)</td></tr>
 <tr><td><strong>Extends</strong></td><td>—</td></tr>

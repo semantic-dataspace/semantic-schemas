@@ -5,7 +5,7 @@ fitting a flow-curve model (Hockett-Sherby, Swift, Voce, Hollomon, or
 Johnson-Cook) to experimental stress-strain data.
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>0.1.0</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.2.0</code></td></tr>
 <tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>—</td></tr>
 <tr><td><strong>Extends</strong></td><td><a href="../generic/PMDCo/README.md"><code>simulation/generic/PMDCo/</code></a></td></tr>

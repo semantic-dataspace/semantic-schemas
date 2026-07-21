@@ -5,97 +5,118 @@
       "path": "schemas/characterization/generic/PMDCo/specs/schema.oold.yaml",
       "group": "characterization",
       "maturity": "draft",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "shapePath": "schemas/characterization/generic/PMDCo/specs/shape.ttl"
     },
     {
       "path": "schemas/characterization/tensile-test/PMDCo/specs/schema.oold.yaml",
       "group": "characterization",
       "maturity": "draft",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "shapePath": "schemas/characterization/tensile-test/PMDCo/specs/shape.ttl"
     },
     {
       "path": "schemas/characterization/tensile-test/TTO/specs/schema.oold.yaml",
       "group": "characterization",
       "maturity": "draft",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "shapePath": "schemas/characterization/tensile-test/TTO/specs/shape.ttl"
     },
     {
       "path": "schemas/chemical-composition/BWMD/specs/schema.oold.yaml",
       "group": "chemical-composition",
       "maturity": "stable",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "shapePath": "schemas/chemical-composition/BWMD/specs/shape.ttl"
     },
     {
       "path": "schemas/chemical-composition/PMDCo/specs/schema.oold.yaml",
       "group": "chemical-composition",
       "maturity": "stable",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "shapePath": "schemas/chemical-composition/PMDCo/specs/shape.ttl"
+    },
+    {
+      "path": "schemas/data-analysis/generic/PMDCo/specs/schema.oold.yaml",
+      "group": "data-analysis",
+      "maturity": "draft",
+      "version": "0.1.0",
+      "shapePath": "schemas/data-analysis/generic/PMDCo/specs/shape.ttl"
+    },
+    {
+      "path": "schemas/dataset/catalog/DCAT/specs/schema.oold.yaml",
+      "group": "dataset",
+      "maturity": "draft",
+      "version": "0.1.0",
+      "shapePath": "schemas/dataset/catalog/DCAT/specs/shape.ttl"
+    },
+    {
+      "path": "schemas/dataset/generic/DCAT/specs/schema.oold.yaml",
+      "group": "dataset",
+      "maturity": "draft",
+      "version": "0.1.0",
+      "shapePath": "schemas/dataset/generic/DCAT/specs/shape.ttl"
     },
     {
       "path": "schemas/expertise/VIVO/specs/schema.oold.yaml",
       "group": "expertise",
       "maturity": "draft",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "shapePath": "schemas/expertise/VIVO/specs/shape.ttl"
     },
     {
       "path": "schemas/expertise/schema.org/specs/schema.oold.yaml",
       "group": "expertise",
       "maturity": "deprecated",
-      "version": "0.1.0"
+      "version": "0.2.0"
     },
     {
       "path": "schemas/manufacturing/generic/PMDCo/specs/schema.oold.yaml",
       "group": "manufacturing",
       "maturity": "draft",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "shapePath": "schemas/manufacturing/generic/PMDCo/specs/shape.ttl"
     },
     {
       "path": "schemas/material-card/mechanical/PMDCo/specs/schema.oold.yaml",
       "group": "material-card",
       "maturity": "draft",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "shapePath": "schemas/material-card/mechanical/PMDCo/specs/shape.ttl"
     },
     {
       "path": "schemas/measurement-device/PMDCo/specs/schema.oold.yaml",
       "group": "measurement-device",
       "maturity": "draft",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "shapePath": "schemas/measurement-device/PMDCo/specs/shape.ttl"
     },
     {
       "path": "schemas/simulation/generic/PMDCo/specs/schema.oold.yaml",
       "group": "simulation",
       "maturity": "draft",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "shapePath": "schemas/simulation/generic/PMDCo/specs/shape.ttl"
     },
     {
       "path": "schemas/simulation/model-calibration/PMDCo/specs/schema.oold.yaml",
       "group": "simulation",
       "maturity": "draft",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "shapePath": "schemas/simulation/model-calibration/PMDCo/specs/shape.ttl"
     },
     {
       "path": "schemas/specimen/PMDCo/specs/schema.oold.yaml",
       "group": "specimen",
       "maturity": "draft",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "shapePath": "schemas/specimen/PMDCo/specs/shape.ttl"
     },
     {
       "path": "schemas/workflow/OBI/specs/schema.oold.yaml",
       "group": "workflow",
       "maturity": "draft",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "shapePath": "schemas/workflow/OBI/specs/shape.ttl"
     }
   ]

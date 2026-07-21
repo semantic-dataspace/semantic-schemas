@@ -1,0 +1,12 @@
+{
+  "type": ["dcat:Dataset"],
+  "id": "dataset-tensile-316L-batch-1",
+  "label": "Tensile test results, 316L batch 1",
+  "description": "Force-displacement curves and derived mechanical properties from uniaxial tensile tests on 316L stainless steel, batch 1.",
+  "identifier": "doi:10.5281/zenodo.000001",
+  "keywords": ["tensile test", "316L", "stainless steel", "yield strength"],
+  "format": "CSV",
+  "created": "2026-03-10",
+  "modified": "2026-03-12",
+  "license": "CC-BY-4.0"
+}

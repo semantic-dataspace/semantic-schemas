@@ -8,7 +8,7 @@ envelope and provenance context; the full process graph is reconstructed by
 following the step IRIs.
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>0.1.0</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.2.0</code></td></tr>
 <tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>OBI AnalyticProtocol (<code>obo:OBI_0000272</code>)</td></tr>
 <tr><td><strong>Extends</strong></td><td>—</td></tr>

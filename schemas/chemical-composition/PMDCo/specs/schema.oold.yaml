@@ -90,8 +90,8 @@
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for a pmdco:ChemicalComposition
-x-schema-version: '0.1.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/chemical-composition-PMDCo-v0.1.0/schemas/chemical-composition/PMDCo/specs/schema.oold.yaml'
+x-schema-version: '0.2.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/chemical-composition-PMDCo-v0.2.0/schemas/chemical-composition/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'stable'
 title: Chemical Composition
 type: object
@@ -104,7 +104,9 @@ required:
 properties:
   type:
     title: Type
-    type: string
+    type: array
+    items:
+      type: string
     readOnly: true
     enum:
       - pmdco:PMD_0000551
@@ -142,7 +144,9 @@ properties:
     properties:
       type:
         title: Type
-        type: string
+        type: array
+        items:
+          type: string
         readOnly: true
         enum:
           - pmdco:PMD_0025002
@@ -174,7 +178,9 @@ properties:
           properties:
             type:
               title: Type
-              type: string
+              type: array
+              items:
+                type: string
               readOnly: true
               enum:
                 - pmdco:PMD_0025997
@@ -202,7 +208,9 @@ properties:
                 type:
                   title: Chemical Element
                   description: The chemical element this fraction refers to
-                  type: string
+                  type: array
+                  items:
+                    type: string
                   # Only elements with confirmed PMDCo PortionOf* IRIs are listed.
                   # Source: https://materialdigital.github.io/core-ontology/
                   enum:
@@ -383,7 +391,9 @@ properties:
                   properties:
                     type:
                       title: Proportion Type
-                      type: string
+                      type: array
+                      items:
+                        type: string
                       readOnly: true
                       enum:
                         - pmdco:PMD_0020101

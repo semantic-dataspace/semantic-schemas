@@ -2,9 +2,8 @@
 # Format: JSON Schema (draft 2020-12) + JSON-LD @context
 # Reference: https://github.com/OO-LD/oold-python
 #
-# K-item fields use the x-kitem extension (x- prefix = valid JSON Schema extension).
-# Each x-kitem.ktypeIds entry is the ktype_id used to query the DSMS knowledge graph API:
-#   GET /api/knowledge?ktype_id=<ktype_id>
+# IRI reference fields use x-oold-range (OO-LD standard) with x-ktype to identify
+# the target k-type for the DSMS knowledge graph picker.
 
 "@context":
   schema: "https://schema.org/"
@@ -60,8 +59,8 @@ $comment: >-
   field types (materials, methods, devices, …) is carried by the rdf:type
   of the referenced entity, not by distinct property IRIs. Sub-properties
   of schema:knowsAbout are planned in a future semantic-schemas vocabulary.
-x-schema-version: '0.1.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/expertise-schema.org-v0.1.0/schemas/expertise/schema.org/specs/schema.oold.yaml'
+x-schema-version: '0.2.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/expertise-schema.org-v0.2.0/schemas/expertise/schema.org/specs/schema.oold.yaml'
 x-maturity: 'deprecated'
 title: Expertise
 description: Expertise profile of a domain expert in materials science
@@ -73,10 +72,12 @@ properties:
   type:
     title: Type
     description: RDF type of this instance
-    type: string
+    type: array
+    items:
+      type: string
     readOnly: true
-    const: "foaf:Person"
-    default: "foaf:Person"
+    const: ["foaf:Person"]
+    default: ["foaf:Person"]
 
   conforms_to:
     title: Schema
@@ -91,9 +92,7 @@ properties:
     description: Materials the expert has expertise in
     type: array
     format: kitem
-    x-kitem:
-      ktypeIds:
-        - material
+    x-ktype: [material]
     items:
       type: string
       format: uri
@@ -105,9 +104,7 @@ properties:
     description: Material modelling and simulation approaches the expert has expertise in
     type: array
     format: kitem
-    x-kitem:
-      ktypeIds:
-        - simulation
+    x-ktype: [simulation]
     items:
       type: string
       format: uri
@@ -119,9 +116,7 @@ properties:
     description: Measurement and characterisation devices the expert has expertise in
     type: array
     format: kitem
-    x-kitem:
-      ktypeIds:
-        - measurement_device
+    x-ktype: [measurement_device]
     items:
       type: string
       format: uri
@@ -133,9 +128,7 @@ properties:
     description: Manufacturing and production devices the expert has expertise in
     type: array
     format: kitem
-    x-kitem:
-      ktypeIds:
-        - production_device
+    x-ktype: [production_device]
     items:
       type: string
       format: uri
@@ -147,9 +140,7 @@ properties:
     description: Application domains and industries the expert works in
     type: array
     format: kitem
-    x-kitem:
-      ktypeIds:
-        - application_field
+    x-ktype: [application_field]
     items:
       type: string
       format: uri
@@ -161,9 +152,7 @@ properties:
     description: Scientific and engineering methods the expert has expertise in
     type: array
     format: kitem
-    x-kitem:
-      ktypeIds:
-        - method
+    x-ktype: [method]
     items:
       type: string
       format: uri
