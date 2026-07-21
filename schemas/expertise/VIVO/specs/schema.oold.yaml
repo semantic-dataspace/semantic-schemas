@@ -125,8 +125,8 @@ $comment: >-
   Publications use foaf:made (person to document); publication type is bibo:Document.
   Author order is preserved via dcterms:contributor with @container @list;
   corresponding-author status uses vivo:isCorrespondingAuthor (a real VIVO property).
-x-schema-version: '0.3.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/expertise-VIVO-v0.3.0/schemas/expertise/VIVO/specs/schema.oold.yaml'
+x-schema-version: '0.3.1'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/expertise-VIVO-v0.3.1/schemas/expertise/VIVO/specs/schema.oold.generated.json'
 x-maturity: 'draft'
 title: Expertise (VIVO)
 description: Expertise profile of a domain expert in materials science

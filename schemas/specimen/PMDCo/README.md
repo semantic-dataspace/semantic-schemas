@@ -4,7 +4,7 @@ Records a **physical specimen** (its name, mass, material identity, and optional
 following the [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/) and PROV-O.
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>0.4.0</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.4.1</code></td></tr>
 <tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>
 <a href="https://github.com/materialdigital/core-ontology/tree/main/patterns/duality%20object%20material">PMDCo duality object material</a>,

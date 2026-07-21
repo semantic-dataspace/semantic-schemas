@@ -5,6 +5,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] - 2026-07-21
+
+### Added
+
+- **`simulation/FEA/CalculiX/PMDCo/` v0.1.0**: new schema for finite element
+  analysis simulations using CalculiX. Fields: `material_system`, `element_type`,
+  `solver_version`, `solver_invocation`, `keywords`. Ontology pattern: OBI
+  ComputerSimulation + PROV-O Activity. Extends `process-step/PMDCo`.
+- **`simulation/MD/LAMMPS/PMDCo/` v0.1.0**: new schema for molecular dynamics
+  simulations using LAMMPS. Fields: `material_system`, `lammps_version`,
+  `force_field`, `atom_count`, `temperature_K`, `timesteps`, `keywords`.
+  Custom predicates under the `fairsim:` namespace. Extends `process-step/PMDCo`.
+- **`simulation/CALPHAD/ThermoCalc/PMDCo/` v0.1.0**: new schema for CALPHAD
+  thermodynamic simulations using ThermoCalc. Fields: `alloy_system`,
+  `thermocalc_version`, `thermodynamic_database`, `calculated_property`,
+  `keywords`. Extends `process-step/PMDCo`.
+
+### Changed
+
+- **`simulation/generic/PMDCo/` v0.3.0**: now formally extends
+  `process-step/PMDCo` via `allOf + $ref`. Added `operator` field
+  (`prov:wasAssociatedWith`, single IRI) and `x-schema-dependencies`
+  referencing `process-step-PMDCo-v0.3.0`.
+- **`@context` auto-merge in build toolchain** (`scripts/convert_to_json.py`):
+  when generating `schema.oold.generated.json`, the script now deep-merges
+  `@context` entries from all `allOf $ref` targets transitively into the child.
+  Child entries override base entries. Child YAML files now declare only their
+  own schema-specific context entries; inherited entries are no longer duplicated
+  in the source.
+- **`x-schema-uri` updated** in all schemas to point to
+  `schema.oold.generated.json` instead of `schema.oold.yaml`.
+- **`@base` removed** from all schema YAML files. The field was set to a
+  placeholder IRI and had no effect on the generated JSON artifact.
+- **`docs/4_schema-patterns.md`**: updated to document the `@context`
+  auto-merge behaviour; the "What does NOT carry over" section replaced by
+  "What carries over automatically" covering both JSON Schema rules and
+  context merging. Known limitations table and decision guide updated.
+
+---
+
 ## [0.7.0] - 2026-05-11
 
 ### Breaking changes

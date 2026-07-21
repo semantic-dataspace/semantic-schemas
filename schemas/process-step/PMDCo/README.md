@@ -9,7 +9,7 @@ schemas instead.  This schema is not listed in the playground; it exists solely
 as a shared base for `$ref` composition.
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>0.3.0</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.3.1</code></td></tr>
 <tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>OBI PlannedProcess (<code>obo:OBI_0000070</code>)</td></tr>
 <tr><td><strong>Extends</strong></td><td>—</td></tr>

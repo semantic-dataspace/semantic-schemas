@@ -8,6 +8,7 @@
    *   description string   optional
    *   inputs      array    optional: each item is a dataset/material IRI string
    *   outputs     array    optional: each item is a dataset/result IRI string
+   *   operator    string   optional: IRI of the person responsible (prov:wasAssociatedWith)
    *   preceded_by array    optional: each item is a process IRI string
    *   conditions  array    optional
    *     name      string   required
@@ -18,7 +19,7 @@
    *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
    */
 
-  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/simulation-generic-PMDCo-v0.1.0/schemas/simulation/generic/PMDCo/specs/schema.oold.yaml";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/simulation-generic-PMDCo-v0.3.0/schemas/simulation/generic/PMDCo/specs/schema.oold.generated.json";
 
   /* ── Node IDs ────────────────────────────────────────────────────────── */
   $slug   := $replace($lowercase($trim(step_name)), /[^a-z0-9]+/, "-");
@@ -40,7 +41,7 @@
   /* ── OO-LD output ────────────────────────────────────────────────────── */
   $base := {
     "conforms_to": $schemaUri,
-    "type":        "obi:0000471",
+    "type":        ["obi:0000471"],
     "id":          $stepId,
     "label":       step_name
   };
@@ -61,7 +62,11 @@
     ? $merge([$withOutputs, {"preceded_by": preceded_by}])
     : $withOutputs;
 
+  $withOperator := $exists(operator) and $length($trim(operator)) > 0
+    ? $merge([$withPreceded, {"operator": operator}])
+    : $withPreceded;
+
   $exists($conditions)
-    ? $merge([$withPreceded, {"has_process_condition": $conditions}])
-    : $withPreceded
+    ? $merge([$withOperator, {"has_process_condition": $conditions}])
+    : $withOperator
 )

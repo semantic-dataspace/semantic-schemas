@@ -11,6 +11,23 @@ The schema IRI encodes the minor version: `…/PMDCo/#v<MAJOR>.<MINOR>.0`.
 
 ---
 
+## [0.2.1] - 2026-07-21
+
+### Changed
+
+- Redundant `@context` entries removed from the YAML source; all inherited
+  entries from `simulation/generic/PMDCo` and `process-step/PMDCo` are now
+  merged at build time by `scripts/convert_to_json.py`. The generated JSON
+  artifact is unchanged.
+- `@base` removed from the YAML source (had no effect on the generated JSON).
+- `x-schema-uri` corrected to reference `schema.oold.generated.json` instead
+  of `schema.oold.yaml`; the generated JSON is the canonical versioned artifact.
+- Stale comment about manual `@context` mirroring replaced with a note about
+  the build-time auto-merge. `x-schema-dependencies` updated to reference
+  `simulation-generic-PMDCo-v0.3.0`.
+
+---
+
 ## [0.2.0] - 2026-07-17
 
 ### Changed

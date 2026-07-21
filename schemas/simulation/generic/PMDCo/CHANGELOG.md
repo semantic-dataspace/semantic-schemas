@@ -11,6 +11,28 @@ The schema IRI encodes the minor version: `…/PMDCo/#v<MAJOR>.<MINOR>.0`.
 
 ---
 
+## [0.3.0] - 2026-07-21
+
+### Added
+
+- `operator` field (`prov:wasAssociatedWith`, single IRI) inherited from and
+  consistent with `process-step/PMDCo`.
+- `allOf + $ref` dependency on `process-step/PMDCo` (v0.3.0): the generic
+  simulation schema now formally extends the universal base. All shared fields
+  (`label`, `date`, `has_specified_input`, `has_specified_output`,
+  `preceded_by`, `operator`, `instrument`) are inherited via allOf.
+- `x-schema-dependencies` declaring the `process-step-PMDCo-v0.3.0` dependency.
+
+### Changed
+
+- `@context` in the YAML source now declares only simulation-specific entries;
+  inherited entries from `process-step/PMDCo` are merged at build time by
+  `scripts/convert_to_json.py`. The generated JSON artifact is unchanged.
+- `x-schema-uri` updated to point to `schema.oold.generated.json` (the artifact
+  with the fully merged context) instead of the YAML source.
+
+---
+
 ## [0.2.0] - 2026-07-17
 
 ### Changed

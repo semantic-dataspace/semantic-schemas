@@ -24,26 +24,12 @@
 #   Johnson-Cook:   sigma = (A + B*eps_p^n) * (1 + C*ln(eps_dot*)) * (1 - T*^m)
 #
 # @context note:
-#   JSON Schema $ref does not merge @context blocks.  Until the toolchain
-#   supports automatic context merging, this schema re-declares all @context
-#   entries required by the base schema.  See the section marked
-#   "── Base context (mirrored) ──" below.
+#   This schema only declares its own additions to @context.  The base context
+#   entries (prefixes, type, label, has_specified_input, etc.) are inherited
+#   from simulation/generic/PMDCo/ and process-step/PMDCo/ and merged
+#   automatically by scripts/convert_to_json.py at build time.
 
 "@context":
-  # ── Model calibration context ─────────────────────────────────────────────
-  rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-  rdfs: "http://www.w3.org/2000/01/rdf-schema#"
-  xsd: "http://www.w3.org/2001/XMLSchema#"
-  dcterms: "http://purl.org/dc/terms/"
-  conforms_to:
-    "@id": "http://purl.org/dc/terms/conformsTo"
-    "@type": "@id"
-  type: "@type"
-  id: "@id"
-  label:
-    "@id": "rdfs:label"
-  description:
-    "@id": "rdfs:comment"
   # Calibrated model type: stored as a plain string annotation
   model_type:
     "@id": "http://purl.org/dc/terms/type"
@@ -59,54 +45,19 @@
   param_unit:
     "@id": "http://qudt.org/schema/qudt/hasUnit"
 
-  # ── Base context (mirrored from simulation/generic/PMDCo/specs/schema.oold.yaml) ──
-  # Keep in sync with that file.
-  obo: "http://purl.obolibrary.org/obo/"
-  obi:
-    "@id": "http://purl.obolibrary.org/obo/OBI_"
-    "@prefix": true
-  bfo:
-    "@id": "http://purl.obolibrary.org/obo/BFO_"
-    "@prefix": true
-  pmdco: "https://w3id.org/pmd/co/"
-  qudt: "http://qudt.org/schema/qudt/"
-  "@base": "https://w3id.org/pmd/co/test/shape_model_calibration#"
-  has_specified_input:
-    "@id": "obi:0000293"
-    "@type": "@id"
-    "@container": "@set"
-  has_specified_output:
-    "@id": "obi:0000299"
-    "@type": "@id"
-    "@container": "@set"
-  preceded_by:
-    "@id": "bfo:0000062"
-    "@type": "@id"
-    "@container": "@set"
-  has_process_condition:
-    "@id": "pmdco:PMD_0000016"
-    "@type": "@id"
-    "@container": "@set"
-  parameter_label:
-    "@id": "rdfs:label"
-  parameter_value:
-    "@id": "qudt:value"
-    "@type": "xsd:double"
-  parameter_unit:
-    "@id": "qudt:hasUnit"
-
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for a constitutive model calibration, extending simulation/generic/PMDCo/
-x-schema-version: '0.2.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/simulation-model-calibration-PMDCo-v0.2.0/schemas/simulation/model-calibration/PMDCo/specs/schema.oold.yaml'
+x-schema-version: '0.2.1'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/simulation-model-calibration-PMDCo-v0.2.1/schemas/simulation/model-calibration/PMDCo/specs/schema.oold.generated.json'
 x-maturity: 'draft'
 x-process-step:
   category: simulation
 x-schema-dependencies:
-  - schema-id: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/simulation-generic-PMDCo-v0.1.0/schemas/simulation/generic/PMDCo/specs/schema.oold.yaml'
+  - schema-id: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/simulation-generic-PMDCo-v0.3.0/schemas/simulation/generic/PMDCo/specs/schema.oold.generated.json'
     compatible-versions:
       - '0.1.0'
       - '0.2.0'
+      - '0.3.0'
     property: (base schema via allOf)
 title: Constitutive Model Calibration
 type: object

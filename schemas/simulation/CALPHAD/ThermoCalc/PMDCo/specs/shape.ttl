@@ -1,0 +1,51 @@
+# SHACL shape for the ThermoCalc CALPHAD simulation schema.
+#
+# Validates:
+#   - Must have rdfs:label
+#   - Must have dcterms:description (purpose)
+#   - Must have at least one dcat:keyword
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dcat:    <http://www.w3.org/ns/dcat#> .
+@prefix obi:     <http://purl.obolibrary.org/obo/OBI_> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix shape:   <https://w3id.org/pmd/fairsim/shapes/simulation/CALPHAD/ThermoCalc/> .
+@base            <https://w3id.org/pmd/fairsim/shapes/simulation/CALPHAD/ThermoCalc/> .
+
+shape:ThermoCalcSimulation
+    a sh:NodeShape ;
+    sh:targetClass obi:0000471 ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A ThermoCalc simulation must have exactly one rdfs:label." ;
+    ] ;
+    sh:property [
+        sh:path dcterms:description ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A ThermoCalc simulation must have a dcterms:description (purpose)." ;
+    ] ;
+    sh:property [
+        sh:path dcat:keyword ;
+        sh:minCount 1 ;
+        sh:message "A ThermoCalc simulation must have at least one dcat:keyword." ;
+    ] ;
+    sh:property [
+        sh:path <http://purl.obolibrary.org/obo/OBI_0000293> ;
+        sh:nodeKind sh:IRI ;
+        sh:message "Each has_specified_input value must be an IRI." ;
+    ] ;
+    sh:property [
+        sh:path <http://purl.obolibrary.org/obo/OBI_0000299> ;
+        sh:nodeKind sh:IRI ;
+        sh:message "Each has_specified_output value must be an IRI." ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .

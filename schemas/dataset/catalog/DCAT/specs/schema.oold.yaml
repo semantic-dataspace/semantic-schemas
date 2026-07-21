@@ -26,8 +26,8 @@
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for a dcat:Catalog grouping member datasets.
-x-schema-version: '0.1.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/dataset-catalog-DCAT-v0.1.0/schemas/dataset/catalog/DCAT/specs/schema.oold.yaml'
+x-schema-version: '0.1.1'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/dataset-catalog-DCAT-v0.1.1/schemas/dataset/catalog/DCAT/specs/schema.oold.generated.json'
 x-maturity: 'draft'
 title: Dataset Catalog
 type: object

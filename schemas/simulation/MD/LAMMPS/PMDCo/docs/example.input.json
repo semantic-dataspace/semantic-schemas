@@ -1,0 +1,24 @@
+{
+  "type": ["obi:0000471", "prov:Activity"],
+  "id": "https://example.org/sim/md-lammps-2024-001",
+  "label": "DLC/squalane lubrication MD simulation",
+  "purpose": "Investigate friction coefficient and wear mechanisms of DLC-coated surfaces with squalane lubricant under boundary lubrication conditions.",
+  "project": "https://example.org/project/tribology-2024",
+  "date": "2024-02-10",
+  "operator": "https://orcid.org/0000-0002-3456-7890",
+  "material_system": "DLC coating + squalane lubricant",
+  "lammps_version": "29 Oct 2020",
+  "force_field": "AIREBO + LJ/Coulomb",
+  "atom_count": 24754,
+  "temperature_K": 300.0,
+  "timesteps": 1000000,
+  "keywords": ["MD", "tribology", "DLC", "lubrication", "friction"],
+  "has_specified_input": [
+    "https://example.org/dataset/dlc-squalane-initial-config"
+  ],
+  "has_specified_output": [
+    "https://example.org/dataset/dlc-traj-001",
+    "https://example.org/dataset/dlc-friction-001"
+  ],
+  "preceded_by": []
+}

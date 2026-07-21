@@ -1,0 +1,213 @@
+# OO-LD Schema for MD Simulation with LAMMPS
+# Ontology: OBI ComputerSimulation + PROV-O Activity
+#   OBI_0000471: http://purl.obolibrary.org/obo/OBI_0000471
+#   prov:Activity: http://www.w3.org/ns/prov#Activity
+# This schema EXTENDS process-step/PMDCo via allOf + $ref.
+# The @context declares only schema-specific entries; inherited entries from the base are
+# merged automatically by the toolchain (see scripts/convert_to_json.py).
+#
+# Graph pattern:
+#
+#   ComputerSimulation + prov:Activity
+#     rdfs:label ──────────────────────── name string
+#     dcterms:description ─────────────── purpose/description string
+#     dcterms:isPartOf ────────────────► project IRI
+#     dcterms:created ─────────────────── run date (xsd:date)
+#     prov:wasAssociatedWith ──────────► person IRI (single)
+#     dcterms:subject ─────────────────── material system string
+#     schema:softwareVersion ──────────── LAMMPS version string
+#     fairsim:forceField ──────────────── force field description string
+#     fairsim:atomCount ───────────────── number of atoms (xsd:integer)
+#     fairsim:temperature ─────────────── temperature in K (xsd:double)
+#     fairsim:timesteps ───────────────── number of MD timesteps (xsd:integer)
+#     dcat:keyword ────────────────────── keyword strings [@container @set]
+#     obi:0000293 ─────────────────────► input dataset IRIs
+#     obi:0000299 ─────────────────────► output dataset IRIs
+#     bfo:0000062 ─────────────────────► preceding process IRIs
+
+"@context":
+  dcat: "http://www.w3.org/ns/dcat#"
+  fairsim: "https://w3id.org/pmd/fairsim/"
+  obi:
+    "@id": "http://purl.obolibrary.org/obo/OBI_"
+    "@prefix": true
+  bfo:
+    "@id": "http://purl.obolibrary.org/obo/BFO_"
+    "@prefix": true
+  qudt: "http://qudt.org/schema/qudt/"
+  conforms_to:
+    "@id": "http://purl.org/dc/terms/conformsTo"
+    "@type": "@id"
+  purpose:
+    "@id": "http://purl.org/dc/terms/description"
+  project:
+    "@id": "http://purl.org/dc/terms/isPartOf"
+    "@type": "@id"
+  date:
+    "@id": "http://purl.org/dc/terms/created"
+    "@type": "xsd:date"
+  material_system:
+    "@id": "http://purl.org/dc/terms/subject"
+  lammps_version:
+    "@id": "https://schema.org/softwareVersion"
+  force_field:
+    "@id": "https://w3id.org/pmd/fairsim/forceField"
+  atom_count:
+    "@id": "https://w3id.org/pmd/fairsim/atomCount"
+    "@type": "xsd:integer"
+  temperature_K:
+    "@id": "https://w3id.org/pmd/fairsim/temperature"
+    "@type": "xsd:double"
+  timesteps:
+    "@id": "https://w3id.org/pmd/fairsim/timesteps"
+    "@type": "xsd:integer"
+  keywords:
+    "@id": "http://www.w3.org/ns/dcat#keyword"
+    "@container": "@set"
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: Schema for an MD simulation step using LAMMPS (OBI ComputerSimulation + PROV-O Activity)
+x-schema-version: '0.1.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/simulation-MD-LAMMPS-PMDCo-v0.1.0/schemas/simulation/MD/LAMMPS/PMDCo/specs/schema.oold.generated.json'
+x-maturity: 'draft'
+x-process-step:
+  category: simulation
+x-schema-dependencies:
+  - schema-id: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/process-step-PMDCo-v0.3.0/schemas/process-step/PMDCo/specs/schema.oold.generated.json'
+    compatible-versions:
+      - '0.3.0'
+      - '0.3.1'
+    property: (base schema via allOf)
+title: MD Simulation (LAMMPS)
+type: object
+
+allOf:
+  - $ref: "../../../../../process-step/PMDCo/specs/schema.oold.yaml"
+
+required:
+  - type
+  - id
+  - label
+
+properties:
+
+  type:
+    title: Type
+    type: array
+    items:
+      type: string
+    readOnly: true
+    const: ["obi:0000471", "prov:Activity"]
+    default: ["obi:0000471", "prov:Activity"]
+    options:
+      enum_titles:
+        - obi:ComputerSimulation
+        - prov:Activity
+
+  id:
+    title: ID
+    description: IRI for this simulation instance.
+    type: string
+    readOnly: true
+    default: md-lammps-sim
+
+  label:
+    title: Simulation Name
+    description: Human-readable name for this MD simulation run.
+    type: string
+
+  purpose:
+    title: Purpose
+    description: Why this simulation was run; the scientific or engineering question it addresses.
+    type: string
+    format: textarea
+
+  project:
+    title: Project
+    description: IRI of the project this simulation belongs to.
+    type: string
+    format: uri
+
+  date:
+    title: Date
+    description: Date when the simulation was executed (YYYY-MM-DD).
+    type: string
+    format: date
+
+  operator:
+    title: Operator
+    description: IRI of the person who ran or is responsible for this simulation.
+    x-ktype: [expert]
+    type: string
+    format: uri
+
+  material_system:
+    title: Material System
+    description: Free-text description of the material(s) simulated (e.g. "DLC + squalane lubricant").
+    type: string
+
+  lammps_version:
+    title: LAMMPS Version
+    description: Version string of LAMMPS used (e.g. "29 Oct 2020").
+    type: string
+
+  force_field:
+    title: Force Field
+    description: Force field(s) used in the simulation (e.g. "OPLS-AA + LJ/Coulomb").
+    type: string
+
+  atom_count:
+    title: Atom Count
+    description: Total number of atoms in the simulation box.
+    type: integer
+    minimum: 0
+
+  temperature_K:
+    title: Temperature (K)
+    description: Simulation temperature in Kelvin.
+    type: number
+    minimum: 0
+
+  timesteps:
+    title: Timesteps
+    description: Total number of MD timesteps in the simulation run.
+    type: integer
+    minimum: 0
+
+  keywords:
+    title: Keywords
+    description: Descriptive keywords for findability (e.g. MD, lubrication, tribology).
+    type: array
+    items:
+      type: string
+    uniqueItems: true
+    default: []
+
+  has_specified_input:
+    title: Inputs
+    description: Datasets or material nodes consumed by this simulation, referenced by IRI.
+    type: array
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  has_specified_output:
+    title: Outputs
+    description: Datasets or result nodes produced by this simulation, referenced by IRI.
+    type: array
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  preceded_by:
+    title: Preceded By
+    description: Steps that directly precede this one in the workflow, referenced by IRI.
+    type: array
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []

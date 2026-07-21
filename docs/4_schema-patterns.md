@@ -42,31 +42,16 @@ When a consumer resolves the `$ref`, the following come from the base schema:
 
 - All **JSON Schema validation rules**: `required` fields, `type` constraints,
   property definitions, `enum` values.
-
-This means a validator that resolves the `$ref` will check both the base
-constraints and the extending schema's constraints simultaneously.
-
-### What does NOT carry over automatically
-
-**`@context` is not merged.** JSON-LD context resolution happens at document
-parse time, not at schema validation time. The `$ref` link is invisible to
-the JSON-LD parser.
-
-**Consequence:** every extending schema must re-declare all `@context` entries
-it relies on from the base, in full. In this repository these are clearly
-marked with a comment:
-
-```yaml
-# ── Base context (mirrored from simulation/generic/PMDCo/specs/schema.oold.yaml) ──
-# Keep in sync with that file.
-obi:
-  "@id": "http://purl.obolibrary.org/obo/OBI_"
-  "@prefix": true
-...
-```
-
-This is the main maintenance cost of inheritance: if the base schema's
-`@context` changes, all extending schemas must be updated.
+- All **`@context` entries**, merged transitively by the build toolchain.
+  `scripts/convert_to_json.py` traverses all `allOf $ref` targets and
+  deep-merges their `@context` into the child's before writing
+  `schema.oold.generated.json`. Child entries win on conflict. Child YAML
+  files therefore declare only their own schema-specific entries; entries
+  already provided by a base must not be repeated. The only exception is an
+  intentional override, where a child maps the same key to a different
+  predicate or type (e.g. overriding `date` from `dcterms:date` to
+  `dcterms:created`). `x-schema-uri` points to the generated JSON so
+  consumers always receive the fully merged context.
 
 ### What can be overridden
 
@@ -201,7 +186,9 @@ envelope (label, mass) and the composition shape covers the element fractions.
 | The composition's transform logic | Must be invoked explicitly in your code |
 
 The specimen schema's `@context` block must re-declare every term from the
-chemical-composition schema's context that the combined RDF graph needs.
+chemical-composition schema's context that the combined RDF graph needs. Note:
+the automatic `@context` merging described in section 1 applies only to
+`allOf`-level inheritance, not to property-level `$ref` composition.
 
 ### Contrast with inheritance
 
@@ -310,7 +297,7 @@ record (embedding)?
 Is my new schema a specialisation of an existing schema?
   YES, and it shares most of the base's structure
       → Inheritance ($ref + allOf)
-         Remember: mirror the @context; add a second shape file
+         Remember: add a second SHACL shape file
   NO, or it is structurally different
       → Independent schema
 
@@ -329,7 +316,7 @@ Does my schema contain sub-objects?
 
 | Topic | Status |
 |---|---|
-| `@context` merging via `$ref` | Not supported by the current toolchain. Manual mirroring required. Watch the [OO-LD spec](https://github.com/OO-LD/oold-python) for future support. |
+| `@context` merging via `$ref` (inheritance) | Handled by `scripts/convert_to_json.py` at build time. Not supported for property-level `$ref` (composition); those contexts must still be declared manually. |
 | Widening constraints in inheritance | Not possible in `allOf` semantics. Extensions can only restrict, not relax, base constraints. |
 | SHACL validation of referenced IRIs | Out of scope for the referencing schema. Load the target schema's shape file separately. |
 | Multiple inheritance | Supported syntactically (`allOf` can list multiple `$ref`s) but not tested in this repository. Context mirroring becomes more complex. |

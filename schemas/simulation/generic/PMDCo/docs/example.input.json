@@ -1,6 +1,7 @@
 {
   "step_name":   "FEM stress analysis run 1",
   "description": "Implicit static FEM analysis of tensile specimen geometry using calibrated Hockett-Sherby material card.",
+  "operator":    "https://orcid.org/0000-0001-2345-6789",
   "inputs":      ["https://example.org/material-cards/316L-hockett-sherby-v1"],
   "outputs":     ["https://example.org/simulation-results/fem-stress-316L-run-1"],
   "preceded_by": ["https://example.org/simulations/model-calibration-316L-batch-1"],

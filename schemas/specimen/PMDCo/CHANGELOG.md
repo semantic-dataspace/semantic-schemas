@@ -11,6 +11,15 @@ The schema IRI encodes the minor version: `.../specimen/PMDCo/#v<MAJOR>.<MINOR>.
 
 ---
 
+## [0.4.1] - 2026-07-21
+
+### Changed
+
+- `x-schema-uri` corrected to reference `schema.oold.generated.json` instead
+  of `schema.oold.yaml`; the generated JSON is the canonical versioned artifact.
+
+---
+
 ## [0.4.0] - 2026-07-17
 
 ### Changed

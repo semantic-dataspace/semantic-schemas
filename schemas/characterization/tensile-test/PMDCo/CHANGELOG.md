@@ -5,6 +5,20 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.3.1] - 2026-07-21
+
+### Changed
+
+- Redundant `@context` entries (`date`, `has_specified_input`, `preceded_by`)
+  removed from the YAML source. These keys are now inherited from
+  `process-step/PMDCo` via the build-time context merge in
+  `scripts/convert_to_json.py`. The generated JSON artifact is unchanged.
+- `@base` removed from the YAML source (had no effect on the generated JSON).
+- `x-schema-uri` corrected to reference `schema.oold.generated.json` instead
+  of `schema.oold.yaml`; the generated JSON is the canonical versioned artifact.
+
+---
+
 ## [0.3.0] - 2026-07-17
 
 ### Changed

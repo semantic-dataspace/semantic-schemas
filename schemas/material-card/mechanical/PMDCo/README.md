@@ -5,7 +5,7 @@ elastic constants, discrete mechanical property values, and a fitted constitutiv
 model into a single RDF-native object ready for use in FEM simulations.
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>0.3.0</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.3.1</code></td></tr>
 <tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>—</td></tr>
 <tr><td><strong>Extends</strong></td><td>—</td></tr>

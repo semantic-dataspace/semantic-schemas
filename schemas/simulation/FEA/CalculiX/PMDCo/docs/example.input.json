@@ -1,0 +1,22 @@
+{
+  "type": ["obi:0000471", "prov:Activity"],
+  "id": "https://example.org/sim/fea-ccx-2024-001",
+  "label": "Cantilever beam FEA under cyclic loading",
+  "purpose": "Determine stress distribution and fatigue life of a steel cantilever beam under 10 Hz cyclic bending.",
+  "project": "https://example.org/project/fatiguelife-2024",
+  "date": "2024-03-15",
+  "operator": "https://orcid.org/0000-0001-2345-6789",
+  "material_system": "S355 structural steel",
+  "element_type": "C3D20R",
+  "solver_version": "2.20",
+  "solver_invocation": "ccx -i beam_cyclic",
+  "keywords": ["FEM", "fatigue", "cantilever", "steel", "cyclic-loading"],
+  "has_specified_input": [
+    "https://example.org/dataset/beam-mesh-001",
+    "https://example.org/dataset/s355-material-card"
+  ],
+  "has_specified_output": [
+    "https://example.org/dataset/beam-stress-results-001"
+  ],
+  "preceded_by": []
+}

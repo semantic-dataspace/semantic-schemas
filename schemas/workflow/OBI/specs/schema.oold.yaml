@@ -46,7 +46,6 @@
     "@id": "http://purl.obolibrary.org/obo/BFO_0000051"
     "@type": "@id"
     "@container": "@list"
-  "@base": "https://example.org/"
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: >-
@@ -54,8 +53,8 @@ $comment: >-
   References independently recorded process step IRIs rather than embedding step data.
   Steps are recorded with x-process-step schemas; this schema provides the ordered
   envelope. Replaces workflow/PMDCo/ v1.1.0 and characterization/campaign/PMDCo/.
-x-schema-version: '0.2.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/workflow-OBI-v0.2.0/schemas/workflow/OBI/specs/schema.oold.yaml'
+x-schema-version: '0.2.1'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/workflow-OBI-v0.2.1/schemas/workflow/OBI/specs/schema.oold.generated.json'
 x-maturity: 'draft'
 title: Workflow (OBI)
 description: Ordered sequence of process steps forming an experiment or campaign

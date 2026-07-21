@@ -60,7 +60,7 @@ x-schema-version: '1.0.0'
 # Pinned raw URL for this schema at its release tag. Used in the JSONata
 # transform as $schemaUri and stamped on every output via dcterms:conformsTo.
 # Replace <tag> with the per-schema release tag (e.g. my-schema-PMDCo-v1.0.0).
-x-schema-uri: 'https://raw.githubusercontent.com/<org>/semantic-schemas/<tag>/schemas/<domain>/<Ontology>/specs/schema.oold.yaml'
+x-schema-uri: 'https://raw.githubusercontent.com/<org>/semantic-schemas/<tag>/schemas/<domain>/<Ontology>/specs/schema.oold.generated.json'
 
 # Human-readable name (used as the form title):
 title: MySchema
@@ -82,10 +82,12 @@ properties:
   type:
     title: Type
     description: RDF type of this instance
-    type: string
-    readOnly: true            # hides this field in the webform
-    const: 'myonto:MyClass'  # replace with your root class CURIE
-    default: 'myonto:MyClass'
+    type: array
+    items:
+      type: string
+    readOnly: true                      # hides this field in the webform
+    const: ['myonto:MyClass']           # replace with your root class CURIE(s)
+    default: ['myonto:MyClass']
 
   # ── Text field ────────────────────────────────────────────────────────────
   # my_text:
@@ -150,27 +152,22 @@ properties:
   #         - Option A
   #         - Option B
 
-  # ── K-Item (single) ───────────────────────────────────────────────────────
+  # ── K-Item (single IRI) ───────────────────────────────────────────────────
   # References a single typed entity in the DSMS knowledge graph.
   # my_kitem:
   #   title: My K-Item
   #   description: Pick an instance of <SomeClass> from the knowledge graph
+  #   x-ktype: [some_ktype_id]   # ktype_id(s) from the target DSMS deployment
   #   type: string
-  #   format: kitem
-  #   x-kitem:
-  #     ktypeIds:
-  #       - some_ktype_id   # ktype_id from the target DSMS deployment
+  #   format: uri
 
-  # ── K-Item (multiple) ─────────────────────────────────────────────────────
+  # ── K-Item (multiple IRIs) ────────────────────────────────────────────────
   # References a list of typed entities in the DSMS knowledge graph.
   # my_kitem_list:
   #   title: My K-Item List
   #   description: Pick one or more instances of <SomeClass>
+  #   x-ktype: [some_ktype_id]
   #   type: array
-  #   format: kitem
-  #   x-kitem:
-  #     ktypeIds:
-  #       - some_ktype_id
   #   items:
   #     type: string
   #     format: uri

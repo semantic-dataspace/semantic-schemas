@@ -59,8 +59,8 @@ $comment: >-
   field types (materials, methods, devices, …) is carried by the rdf:type
   of the referenced entity, not by distinct property IRIs. Sub-properties
   of schema:knowsAbout are planned in a future semantic-schemas vocabulary.
-x-schema-version: '0.2.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/expertise-schema.org-v0.2.0/schemas/expertise/schema.org/specs/schema.oold.yaml'
+x-schema-version: '0.2.1'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/expertise-schema.org-v0.2.1/schemas/expertise/schema.org/specs/schema.oold.generated.json'
 x-maturity: 'deprecated'
 title: Expertise
 description: Expertise profile of a domain expert in materials science

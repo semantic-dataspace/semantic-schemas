@@ -5,7 +5,7 @@ Records **metadata for a single dataset** following the
 `dcat:Dataset` class.
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>0.1.0</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.1.1</code></td></tr>
 <tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>DCAT Dataset (<code>dcat:Dataset</code>)</td></tr>
 <tr><td><strong>Extends</strong></td><td>—</td></tr>

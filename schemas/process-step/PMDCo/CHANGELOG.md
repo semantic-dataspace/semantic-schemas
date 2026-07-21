@@ -11,6 +11,17 @@ The schema IRI encodes the minor version: `.../process-step/PMDCo/#v<MAJOR>.<MIN
 
 ---
 
+## [0.3.1] - 2026-07-21
+
+### Changed
+
+- `@base` removed from the YAML source. It was set to a placeholder IRI and
+  had no effect on the generated JSON artifact.
+- `x-schema-uri` corrected to reference `schema.oold.generated.json` instead
+  of `schema.oold.yaml`; the generated JSON is the canonical versioned artifact.
+
+---
+
 ## [0.3.0] - 2026-07-17
 
 ### Changed

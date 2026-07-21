@@ -1,0 +1,21 @@
+{
+  "type": ["obi:0000471", "prov:Activity"],
+  "id": "https://example.org/sim/calphad-tc-2024-001",
+  "label": "Al-Si phase diagram CALPHAD calculation",
+  "purpose": "Calculate equilibrium phase fractions and liquidus/solidus temperatures for Al-Si alloy system to guide casting process design.",
+  "project": "https://example.org/project/aluminium-casting-2024",
+  "date": "2024-01-22",
+  "operator": "https://orcid.org/0000-0003-4567-8901",
+  "alloy_system": "Al-Si binary (0-20 wt% Si)",
+  "thermocalc_version": "2022b",
+  "thermodynamic_database": "TCAL7",
+  "calculated_property": "Phase fraction vs temperature (liquidus/solidus), binary phase diagram",
+  "keywords": ["CALPHAD", "phase-diagram", "aluminium", "silicon", "casting"],
+  "has_specified_input": [
+    "https://example.org/dataset/alsi-composition-spec"
+  ],
+  "has_specified_output": [
+    "https://example.org/dataset/alsi-phase-diagram-001"
+  ],
+  "preceded_by": []
+}

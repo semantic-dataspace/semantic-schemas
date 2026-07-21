@@ -39,6 +39,12 @@
       "uniqueItems": true,
       "default": []
     },
+    "operator": {
+      "title": "Operator",
+      "description": "Optional. IRI of the person who performed this simulation step (e.g. an ORCID URL).",
+      "type": "string",
+      "format": "uri"
+    },
     "preceded_by": {
       "title": "Preceded By (Step IRIs)",
       "description": "IRIs of steps that directly precede this one in the workflow.",

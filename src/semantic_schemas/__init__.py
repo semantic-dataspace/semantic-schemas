@@ -48,10 +48,14 @@ class Schema:
 
     def _get_context(self) -> dict:
         if self._context is None:
-            raw = yaml.safe_load(
-                (self.dir / "specs" / "schema.oold.yaml").read_text(encoding="utf-8")
-            )
-            self._context = raw["@context"]
+            generated = self.dir / "specs" / "schema.oold.generated.json"
+            if generated.exists():
+                raw = json.loads(generated.read_text(encoding="utf-8"))
+            else:
+                raw = yaml.safe_load(
+                    (self.dir / "specs" / "schema.oold.yaml").read_text(encoding="utf-8")
+                )
+            self._context = raw.get("@context", {})
         return self._context
 
     def _get_transform_src(self) -> str:

@@ -66,15 +66,14 @@
   instrument:
     "@id": "https://schema.org/instrument"
     "@type": "@id"
-  "@base": "https://example.org/"
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: >-
   Base pattern schema for a PMDCo/OBI process step.
   Compose with this schema using allOf + $ref in step-specific schemas.
   Do not use this schema directly unless recording a generic uncategorised step.
-x-schema-version: '0.3.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/process-step-PMDCo-v0.3.0/schemas/process-step/PMDCo/specs/schema.oold.yaml'
+x-schema-version: '0.3.1'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/process-step-PMDCo-v0.3.1/schemas/process-step/PMDCo/specs/schema.oold.generated.json'
 x-maturity: 'draft'
 x-hidden: true
 # Marks this schema as a valid process step.

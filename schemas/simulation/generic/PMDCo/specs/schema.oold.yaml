@@ -28,41 +28,18 @@
 #     only the root class differs.
 
 "@context":
-  rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-  rdfs: "http://www.w3.org/2000/01/rdf-schema#"
-  xsd: "http://www.w3.org/2001/XMLSchema#"
-  dcterms: "http://purl.org/dc/terms/"
   conforms_to:
     "@id": "http://purl.org/dc/terms/conformsTo"
     "@type": "@id"
-  obo: "http://purl.obolibrary.org/obo/"
   obi:
     "@id": "http://purl.obolibrary.org/obo/OBI_"
     "@prefix": true
   bfo:
     "@id": "http://purl.obolibrary.org/obo/BFO_"
     "@prefix": true
-  pmdco: "https://w3id.org/pmd/co/"
   qudt: "http://qudt.org/schema/qudt/"
-  "@base": "https://w3id.org/pmd/co/test/shape_simulation_step#"
-  type: "@type"
-  id: "@id"
-  label:
-    "@id": "rdfs:label"
   description:
     "@id": "rdfs:comment"
-  has_specified_input:
-    "@id": "obi:0000293"   # OBI_0000293  has_specified_input
-    "@type": "@id"
-    "@container": "@set"
-  has_specified_output:
-    "@id": "obi:0000299"   # OBI_0000299  has_specified_output
-    "@type": "@id"
-    "@container": "@set"
-  preceded_by:
-    "@id": "bfo:0000062"   # BFO_0000062  preceded_by
-    "@type": "@id"
-    "@container": "@set"
   has_process_condition:
     "@id": "pmdco:PMD_0000016"   # PMD_0000016  has_process_condition
     "@type": "@id"
@@ -77,13 +54,23 @@
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for an obi:ComputerSimulation (generic simulation step)
-x-schema-version: '0.2.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/simulation-generic-PMDCo-v0.2.0/schemas/simulation/generic/PMDCo/specs/schema.oold.yaml'
+x-schema-version: '0.3.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/simulation-generic-PMDCo-v0.3.0/schemas/simulation/generic/PMDCo/specs/schema.oold.generated.json'
 x-maturity: 'draft'
 x-process-step:
   category: simulation
+x-schema-dependencies:
+  - schema-id: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/process-step-PMDCo-v0.3.0/schemas/process-step/PMDCo/specs/schema.oold.generated.json'
+    compatible-versions:
+      - '0.3.0'
+      - '0.3.1'
+    property: (base schema via allOf)
 title: Simulation Generic
 type: object
+
+allOf:
+  - $ref: "../../../../process-step/PMDCo/specs/schema.oold.yaml"
+
 required:
   - type
   - id
@@ -158,6 +145,13 @@ properties:
       format: uri
     uniqueItems: true
     default: []
+
+  operator:
+    title: Operator
+    description: IRI of the person who performed this simulation step.
+    x-ktype: [expert]
+    type: string
+    format: uri
 
   has_process_condition:
     title: Simulation Parameters

@@ -6,7 +6,7 @@ derived results) following the
 `DataTransformation` class (`OBI_0200000`).
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>0.1.0</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.1.1</code></td></tr>
 <tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>OBI DataTransformation (<code>obo:OBI_0200000</code>)</td></tr>
 <tr><td><strong>Extends</strong></td><td><a href="../../process-step/PMDCo/README.md">process-step/PMDCo</a></td></tr>

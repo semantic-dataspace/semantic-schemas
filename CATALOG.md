@@ -16,6 +16,9 @@ All schemas currently available in this repository.
 | Tensile Test | PMDCo | Uniaxial tensile test using the PMDCo measurement pattern; result properties identified by free-text label rather than a fixed vocabulary | [schemas/characterization/tensile-test/PMDCo/](schemas/characterization/tensile-test/PMDCo/) |
 | Simulation Generic | PMDCo | Generic base for computational simulation steps (FEM, data-fitting, ML inference); extend this to add domain-specific result fields | [schemas/simulation/generic/PMDCo/](schemas/simulation/generic/PMDCo/) |
 | Constitutive Model Calibration | PMDCo | Fitting a flow-curve model (Hockett-Sherby, Swift, Voce, Hollomon, Johnson-Cook) to experimental stress-strain data; extends Simulation Generic | [schemas/simulation/model-calibration/PMDCo/](schemas/simulation/model-calibration/PMDCo/) |
+| FEA Simulation (CalculiX) | PMDCo | Finite element analysis simulation activity using CalculiX: purpose, project, operator, material system, element type, solver version, CLI invocation, and I/O dataset links | [schemas/simulation/FEA/CalculiX/PMDCo/](schemas/simulation/FEA/CalculiX/PMDCo/) |
+| MD Simulation (LAMMPS) | PMDCo | Molecular dynamics simulation using LAMMPS: force field, atom count, temperature, timesteps, and I/O dataset links | [schemas/simulation/MD/LAMMPS/PMDCo/](schemas/simulation/MD/LAMMPS/PMDCo/) |
+| CALPHAD Simulation (ThermoCalc) | PMDCo | Thermodynamic CALPHAD simulation using Thermo-Calc: alloy system, database, calculated property, and I/O dataset links | [schemas/simulation/CALPHAD/ThermoCalc/PMDCo/](schemas/simulation/CALPHAD/ThermoCalc/PMDCo/) |
 | Data Analysis Generic | PMDCo/OBI | A data analysis step (OBI DataTransformation): input datasets, output datasets, and the analyst responsible | [schemas/data-analysis/generic/PMDCo/](schemas/data-analysis/generic/PMDCo/) |
 | Mechanical Material Card | PMDCo | Structured dataset collecting elastic constants, discrete mechanical properties, and a fitted constitutive model for FEM use | [schemas/material-card/mechanical/PMDCo/](schemas/material-card/mechanical/PMDCo/) |
 | Dataset | DCAT | Metadata for a single dataset: name, description, keywords, format, dates, license, and optional links to sub-datasets or documents | [schemas/dataset/generic/DCAT/](schemas/dataset/generic/DCAT/) |
@@ -34,7 +37,7 @@ All schemas currently available in this repository.
 | `measurement-device` | 1 | Physical measurement instruments and their calibration status |
 | `manufacturing` | 1 | Generic manufacturing step base (`generic/`) |
 | `characterization` | 3 | Generic base (`generic/`) and specialised variants (e.g. `tensile-test/`) |
-| `simulation` | 2 | Generic simulation base (`generic/`) and constitutive model calibration (`model-calibration/`) |
+| `simulation` | 5 | Generic base (`generic/`), model calibration (`model-calibration/`), FEA/CalculiX, MD/LAMMPS, CALPHAD/ThermoCalc |
 | `data-analysis` | 1 | Generic data analysis step base (`generic/`) for OBI DataTransformation workflows |
 | `dataset` | 2 | Dataset metadata (`generic/`) and catalog grouping (`catalog/`) following DCAT 3 |
 | `material-card` | 1 | Structured datasets for FEM material input |

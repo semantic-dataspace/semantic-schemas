@@ -6,10 +6,10 @@ model run, or any computer-executed calculation) following the
 the [OBI ComputerSimulation](http://purl.obolibrary.org/obo/OBI_0000471) class.
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>0.2.0</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.3.0</code></td></tr>
 <tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
-<tr><td><strong>Ontology pattern</strong></td><td>—</td></tr>
-<tr><td><strong>Extends</strong></td><td>—</td></tr>
+<tr><td><strong>Ontology pattern</strong></td><td>PMDCo + OBI</td></tr>
+<tr><td><strong>Extends</strong></td><td><a href="../../../process-step/PMDCo/README.md">process-step/PMDCo</a></td></tr>
 <tr><td><strong>Includes</strong></td><td>—</td></tr>
 <tr><td><strong>Transformers</strong></td><td>—</td></tr>
 </table>
@@ -43,6 +43,7 @@ Copy [`docs/example.input.json`](docs/example.input.json) and fill in your value
 | `inputs` | no | IRIs of datasets or materials consumed |
 | `outputs` | no | IRIs of datasets or results produced |
 | `preceded_by` | no | IRIs of immediately preceding steps |
+| `operator` | no | IRI of the person who performed this simulation step (e.g. an ORCID URL) |
 | `conditions` | no | Quantitative simulation parameters (name, value, unit) |
 | `step_id` | no | Custom IRI slug; auto-derived from `step_name` if omitted |
 
@@ -72,6 +73,7 @@ ComputerSimulation  (obi:OBI_0000471)
   has_specified_input  (OBI_0000293) ──► Dataset/Material IRI  [× 0..N]
   has_specified_output (OBI_0000299) ──► Dataset/Result IRI    [× 0..N]
   preceded_by          (BFO_0000062) ──► Process IRI  [× 0..N]
+  prov:wasAssociatedWith ──────────────► Person IRI  (optional, e.g. ORCID URL)
   has_process_condition (PMD_0000016) ─► ProcessCondition (PMD_0000013)  [× 0..N]
     rdfs:label   parameter name
     qudt:value   xsd:double

@@ -79,7 +79,6 @@
   source:
     "@id": "http://www.w3.org/ns/prov#wasDerivedFrom"
     "@type": "@id"
-  "@base": "https://example.org/"
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: >-
@@ -88,8 +87,8 @@ $comment: >-
   and optionally to the specific semi-finished product it was prepared from via
   prov:wasDerivedFrom. When source is set, schema:material can be derived from
   source.made_of; the UI should offer to populate it automatically.
-x-schema-version: '0.4.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/specimen-PMDCo-v0.4.0/schemas/specimen/PMDCo/specs/schema.oold.yaml'
+x-schema-version: '0.4.1'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/specimen-PMDCo-v0.4.1/schemas/specimen/PMDCo/specs/schema.oold.generated.json'
 x-maturity: 'draft'
 title: Specimen
 type: object
