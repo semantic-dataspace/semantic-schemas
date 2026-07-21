@@ -92,18 +92,11 @@
       "shapePath": "schemas/measurement-device/PMDCo/specs/shape.ttl"
     },
     {
-      "path": "schemas/simulation/generic/PMDCo/specs/schema.oold.yaml",
+      "path": "schemas/simulation/CALPHAD/ThermoCalc/PMDCo/specs/schema.oold.yaml",
       "group": "simulation",
       "maturity": "draft",
-      "version": "0.3.0",
-      "shapePath": "schemas/simulation/generic/PMDCo/specs/shape.ttl"
-    },
-    {
-      "path": "schemas/simulation/model-calibration/PMDCo/specs/schema.oold.yaml",
-      "group": "simulation",
-      "maturity": "draft",
-      "version": "0.2.1",
-      "shapePath": "schemas/simulation/model-calibration/PMDCo/specs/shape.ttl"
+      "version": "0.1.0",
+      "shapePath": "schemas/simulation/CALPHAD/ThermoCalc/PMDCo/specs/shape.ttl"
     },
     {
       "path": "schemas/simulation/FEA/CalculiX/PMDCo/specs/schema.oold.yaml",
@@ -120,11 +113,18 @@
       "shapePath": "schemas/simulation/MD/LAMMPS/PMDCo/specs/shape.ttl"
     },
     {
-      "path": "schemas/simulation/CALPHAD/ThermoCalc/PMDCo/specs/schema.oold.yaml",
+      "path": "schemas/simulation/generic/PMDCo/specs/schema.oold.yaml",
       "group": "simulation",
       "maturity": "draft",
-      "version": "0.1.0",
-      "shapePath": "schemas/simulation/CALPHAD/ThermoCalc/PMDCo/specs/shape.ttl"
+      "version": "0.3.0",
+      "shapePath": "schemas/simulation/generic/PMDCo/specs/shape.ttl"
+    },
+    {
+      "path": "schemas/simulation/model-calibration/PMDCo/specs/schema.oold.yaml",
+      "group": "simulation",
+      "maturity": "draft",
+      "version": "0.2.1",
+      "shapePath": "schemas/simulation/model-calibration/PMDCo/specs/shape.ttl"
     },
     {
       "path": "schemas/specimen/PMDCo/specs/schema.oold.yaml",
