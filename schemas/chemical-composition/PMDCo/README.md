@@ -5,7 +5,7 @@ contains and in what proportions) following the
 [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/).
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>0.2.1</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>1.0.0</code></td></tr>
 <tr><td><strong>Maturity</strong></td><td><code>stable</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>—</td></tr>
 <tr><td><strong>Extends</strong></td><td>—</td></tr>
@@ -33,6 +33,7 @@ Copy [`docs/example.input.json`](docs/example.input.json) and fill in your value
 ```json
 {
   "material_name": "316L Stainless Steel",
+  "material_uri": "https://dsms.example.com/knowledge/abc123/mat-316l-stainless-steel",
   "elements": [
     { "symbol": "Fe", "value": 65.345, "unit": "mass%" },
     { "symbol": "Cr", "value": 17.0,   "unit": "mass%" },
@@ -44,13 +45,13 @@ Copy [`docs/example.input.json`](docs/example.input.json) and fill in your value
 
 | Field | Required | Description |
 |---|---|---|
-| `material_name` | yes | Name or identifier for the material |
+| `material_name` | yes | Human-readable name for the material |
+| `material_uri` | no | Full kitem IRI of the material in the knowledge graph. Provide this when the material already exists as a kitem so the `quality_of` triple links to the real node. If omitted, a slug-based local IRI is derived from `material_name` for standalone RDF use. |
 | `elements` | yes | List of element fractions, one entry per element |
 | `elements[].symbol` | yes | IUPAC element symbol (e.g. `"Fe"`, `"Cr"`) |
 | `elements[].value` | yes | Fraction value, 0–100 |
 | `elements[].unit` | yes | `"mass%"`, `"vol%"`, or `"mol%"` (same for all elements) |
-| `material_id` | no | Custom ID for the material node (auto-derived from `material_name` if omitted) |
-| `comp_id` | no | Custom ID for the composition node (auto-derived if omitted) |
+| `comp_id` | no | Custom ID for the composition node (auto-derived from `material_name` if omitted) |
 
 72 PMDCo-mapped elements are supported.
 See [`specs/schema.simplified.json`](specs/schema.simplified.json) for the full list.
@@ -117,17 +118,19 @@ Original PMDCo pattern:
 
 ```text
 ChemicalComposition (PMD_0000551)
-  quality_of ──────────────────► Material  [rdfs:label = material name]
+  quality_of ──────────────────► <material kitem IRI>  (ro:0000080)
   is_subject_of ───────────────► ChemicalCompositionSpecification (PMD_0025002)
     has_member ──────────────────► FractionValueSpecification (PMD_0025997)  [× N]
       value                         xsd:double, range 0–100
       unit                          UO IRI  (mass% · vol% · mol%)
-      element ─────────────────────► PortionOfChemicalElement
-        part_of ──────────────────► Material
+      element ─────────────────────► PortionOfChemicalElement  (rdf:type = element IRI)
+        part_of ──────────────────► <material kitem IRI>  (same as quality_of above)
         has_relational_quality ───► MassProportion (PMD_0020102)
-          relational_quality_of ──► PortionOfChemicalElement
-          specified_by_value ─────► FractionValueSpecification (back-ref)
+          relational_quality_of ──► PortionOfChemicalElement  (back-ref)
+          specified_by_value ─────► FractionValueSpecification  (back-ref)
 ```
+
+v1.0.0: `quality_of` now points to a material kitem IRI rather than an inline blank node with a label. Provide `material_uri` in your input to link to the real material kitem.
 
 Key decisions:
 
