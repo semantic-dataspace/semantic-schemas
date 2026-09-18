@@ -90,12 +90,13 @@
     "@type": "@id"
   # 'element' is a JSON-LD nesting helper. It groups the PortionOfChemicalElement
   # under its fraction row for webform UX (element selector + value + unit on one row).
-  # PMDCo has no direct fraction→element predicate; the reference graph connects them
-  # only through the proportion node. Here we use IAO:0000136 (is_about) as a
-  # semantically defensible surrogate: a FractionValueSpecification (PMD_0025997)
-  # IS an information content entity that is about the element it quantifies.
+  # pmdco:PMD_hasFractionElement is a DSMS-internal structural predicate — it does NOT
+  # exist in the PMDCo ontology and must not be used as an ontology assertion.
+  # Without this mapping the entire element subtree (type, part_of, has_relational_quality)
+  # is silently dropped by the JSON-LD processor. Known deviation from the PMDCo reference
+  # graph pattern; required by the current JSON-LD nesting architecture.
   element:
-    "@id": "iao:0000136"  # IAO is_about — fraction value spec is about this element
+    "@id": "pmdco:PMD_hasFractionElement"  # DSMS structural helper only
     "@type": "@id"
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
