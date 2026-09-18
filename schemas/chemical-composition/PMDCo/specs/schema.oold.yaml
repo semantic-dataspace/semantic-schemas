@@ -5,16 +5,28 @@
 # Full graph pattern modelled by this schema:
 #
 #   ChemicalComposition (PMD_0000551)
-#     quality_of ──────────────────────────────────────► Material
+#     quality_of ──────────────────────────────────────► Material kitem (IRI reference)
 #     is_subject_of ───────────────────────────────────► ChemicalCompositionSpecification (PMD_0025002)
 #       has_member ──────────────────────────────────────► FractionValueSpecification (PMD_0025997)
-#         value                                            (numeric fraction value)
+#         value                                            (numeric fraction value, xsd:double)
 #         unit                                             (UO unit IRI)
-#   PortionOfChemicalElement (PMD_0020026 etc.)  [grouped under 'element' key for form UX; not an RDF predicate]
-#     part_of ────────────────────────────────────────► Material (same as quality_of target)
-#     has_relational_quality ────────────────────────► MassProportion (PMD_0020102 etc.)
-#       relational_quality_of ──────────────────────► PortionOfChemicalElement (back-ref)
-#       specified_by_value ─────────────────────────► FractionValueSpecification (back-ref)
+#         element                                          (nesting helper — see note below)
+#           type                                           (PortionOf* class IRI, sets rdf:type)
+#           part_of ───────────────────────────────────► Material (same IRI as root quality_of)
+#           has_relational_quality ────────────────────► MassProportion (PMD_0020102)
+#             relational_quality_of ──────────────────► element (back-ref to this element node)
+#             specified_by_value ─────────────────────► FractionValueSpecification (back-ref)
+#
+# NOTE on the 'element' nesting helper:
+#   PMDCo connects a PortionOfChemicalElement to its FractionValueSpecification via
+#   a MassProportion node — a graph pattern that cannot be expressed as a pure tree
+#   in OO-LD.  The 'element' wrapper groups both nodes under each has_member row for
+#   webform UX.  The @context IRI for 'element' (pmdco:PMD_hasFractionElement) is a
+#   DSMS structural helper; it does not exist in the PMDCo ontology and should not
+#   be treated as a semantic assertion.  The cross-reference triples
+#   (MassProportion.relational_quality_of, MassProportion.specified_by_value,
+#   PortionOfElement.part_of) are resolved automatically by the backend from the
+#   sibling/ancestor node IDs and the root quality_of kitem IRI.
 
 "@context":
   owl: "http://www.w3.org/2002/07/owl#"
@@ -27,33 +39,31 @@
     "@id": "http://purl.org/dc/terms/conformsTo"
     "@type": "@id"
   obo: "http://purl.obolibrary.org/obo/"
-  bfo:
-    "@id": "http://purl.obolibrary.org/obo/BFO_"
-    "@prefix": true
-  ro:
-    "@id": "http://purl.obolibrary.org/obo/RO_"
-    "@prefix": true
-  obi:
-    "@id": "http://purl.obolibrary.org/obo/OBI_"
-    "@prefix": true
-  iao:
-    "@id": "http://purl.obolibrary.org/obo/IAO_"
-    "@prefix": true
-  uo:
-    "@id": "http://purl.obolibrary.org/obo/UO_"
-    "@prefix": true
+  # Simple-string prefix definitions (JSON-LD 1.0 style) so rdflib and other
+  # processors expand compact IRIs in data values (not just in @context entries).
+  # "@prefix": true (JSON-LD 1.1) is NOT used here — rdflib does not expand
+  # compact IRI values from object-form prefix definitions.
+  bfo: "http://purl.obolibrary.org/obo/BFO_"
+  ro: "http://purl.obolibrary.org/obo/RO_"
+  obi: "http://purl.obolibrary.org/obo/OBI_"
+  iao: "http://purl.obolibrary.org/obo/IAO_"
+  uo: "http://purl.obolibrary.org/obo/UO_"
   pmdco: "https://w3id.org/pmd/co/"
   uqudt: "https://qudt.org/vocab/unit/"
   # Instance IRI base (deployment-specific; override when serialising to RDF).
   # See docs/schema-format.md § "Instance IRI base"
   type: "@type"
   id: "@id"
-  label:
-    "@id": "rdfs:label"
 
+  # quality_of links the ChemicalComposition to its Material.
+  # "@type": "@id" means the value is an IRI reference (kitem URL), not a literal.
+  # The webform stores this as a kitem selector; the backend converts the selected
+  # kitem descriptor {ktype_id, slug} to its canonical knowledge service IRI before
+  # JSON-LD expansion so the triple becomes: <chem_comp> ro:0000080 <material_iri>.
   quality_of:
-    "@id": "ro:0000080"  # RO_0000080  quality_of
-    # No "@type": "@id": the value is an embedded object (blank node with rdfs:label)
+    "@id": "ro:0000080"    # RO_0000080  quality_of
+    "@type": "@id"
+
   is_subject_of:
     "@id": "pmdco:PMD_0000004"  # PMD_0000004  is_subject_of
     "@type": "@id"
@@ -78,19 +88,21 @@
   unit:
     "@id": "iao:0000039"  # IAO_0000039  has_measurement_unit_label
     "@type": "@id"
-  # 'element' is a JSON-LD nesting helper that groups the PortionOfChemicalElement
-  # under its fraction row for form UX. It has no canonical counterpart in the
-  # PMDCo pattern; the IRI below is provisional and must not be used as an
-  # ontology assertion. Without this mapping the element subtree is silently
-  # dropped by the JSON-LD processor before SHACL validation.
+  # 'element' is a JSON-LD nesting helper. It groups the PortionOfChemicalElement
+  # under its fraction row for webform UX (element selector + value + unit on one row).
+  # pmdco:PMD_hasFractionElement is a DSMS-internal structural predicate — it does NOT
+  # exist in the PMDCo ontology and must not be used as an ontology assertion.
+  # Without this mapping the entire element subtree (type, part_of, has_relational_quality)
+  # is silently dropped by the JSON-LD processor. Known deviation from the PMDCo reference
+  # graph pattern; required by the current JSON-LD nesting architecture.
   element:
-    "@id": "pmdco:PMD_hasFractionElement"  # provisional nesting helper
+    "@id": "pmdco:PMD_hasFractionElement"  # DSMS structural helper only
     "@type": "@id"
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for a pmdco:ChemicalComposition
-x-schema-version: '0.2.1'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/chemical-composition-PMDCo-v0.2.1/schemas/chemical-composition/PMDCo/specs/schema.oold.generated.json'
+x-schema-version: '1.0.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/chemical-composition-PMDCo-v1.0.0/schemas/chemical-composition/PMDCo/specs/schema.oold.generated.json'
 x-maturity: 'stable'
 title: Chemical Composition
 type: object
@@ -101,13 +113,16 @@ required:
   - is_subject_of
 
 properties:
+  # rdf:type of the root ChemicalComposition node.
+  # readOnly: user never edits this; backend restores it from const at RDF generation time.
+  # const with array value matches type: array so JSON Schema validation passes.
   type:
     title: Type
     type: array
     items:
       type: string
     readOnly: true
-    enum:
+    const:
       - pmdco:PMD_0000551
     options:
       enum_titles:
@@ -120,17 +135,19 @@ properties:
     readOnly: true
     default: chem-comp
 
+  # quality_of is a kitem reference (IRI) to the Material this composition describes.
+  # Using format: kitem renders a kitem selector widget in the webform.
+  # The @context entry above ensures the selected kitem's IRI appears in the RDF triple.
+  # Leave ktypeIds empty to allow any ktype; restrict it to your material ktype ID if needed.
   quality_of:
     title: Material
-    description: The material this composition is a quality of.
-    type: object
-    required:
-      - label
-    properties:
-      label:
-        title: Material Name
-        description: Human-readable name or identifier for the material (e.g. "316L stainless steel").
-        type: string
+    description: >-
+      The material this composition is a quality of.
+      Select the material kitem this composition belongs to.
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds: [material]
 
   is_subject_of:
     title: Composition Specification
@@ -147,7 +164,7 @@ properties:
         items:
           type: string
         readOnly: true
-        enum:
+        const:
           - pmdco:PMD_0025002
         options:
           enum_titles:
@@ -175,13 +192,14 @@ properties:
             - unit
             - element
           properties:
+            # rdf:type of this FractionValueSpecification node. Always PMD_0025997.
             type:
               title: Type
               type: array
               items:
                 type: string
               readOnly: true
-              enum:
+              const:
                 - pmdco:PMD_0025997
               options:
                 enum_titles:
@@ -196,20 +214,22 @@ properties:
 
             element:
               title: Element Reference
-              description: The portion of the chemical element this fraction describes
+              description: >-
+                The portion of the chemical element this fraction describes.
               type: object
               required:
                 - type
                 - id
-                - part_of
                 - has_relational_quality
               properties:
+                # type selects WHICH chemical element this fraction refers to.
+                # Each enum value is the IRI of a PMDCo PortionOf* class.
+                # type: string (not array) because this is a single-value selection.
+                # The enum values become rdf:type of the PortionOfElement node via @context.
                 type:
                   title: Chemical Element
                   description: The chemical element this fraction refers to
-                  type: array
-                  items:
-                    type: string
+                  type: string
                   # Only elements with confirmed PMDCo PortionOf* IRIs are listed.
                   # Source: https://materialdigital.github.io/core-ontology/
                   enum:
@@ -367,20 +387,25 @@ properties:
                   readOnly: true
                   default: element_ref_1
 
+                # part_of links this PortionOfElement to the same Material as quality_of.
+                # readOnly: set automatically by the backend from the root quality_of IRI.
+                # $comment triggers the "root.quality_of" resolution in _rebuild_from_flat:
+                # the backend looks up root_values["quality_of"] (the resolved kitem IRI)
+                # and writes it here so the triple <element_ref> bfo:part_of <material> is emitted.
                 part_of:
                   title: Part Of
                   description: >-
                     The material this element portion is part of.
-                    Must match the root quality_of value; set by the consumer.
+                    Resolved automatically from the root quality_of kitem IRI.
                   type: string
                   readOnly: true
-                  $comment: Must match the root quality_of value; set by the consumer.
+                  $comment: "Resolved from root.quality_of; must match the root quality_of IRI."
 
                 has_relational_quality:
                   title: Proportion
                   description: >-
-                    The proportion quality associated with this element portion.
-                    Type and back-reference are managed by the consumer.
+                    The MassProportion quality linking this element portion to its
+                    fraction value specification.
                   type: object
                   required:
                     - type
@@ -388,19 +413,19 @@ properties:
                     - relational_quality_of
                     - specified_by_value
                   properties:
+                    # Always MassProportion for chemical composition by mass.
+                    # const with array value: correct for type: array; backend
+                    # restores this from const at RDF generation time.
                     type:
                       title: Proportion Type
                       type: array
                       items:
                         type: string
                       readOnly: true
-                      enum:
-                        - pmdco:PMD_0020101
+                      const:
                         - pmdco:PMD_0020102
-                      default: pmdco:PMD_0020102
                       options:
                         enum_titles:
-                          - pmdco:Proportion
                           - pmdco:MassProportion
 
                     id:
@@ -410,23 +435,25 @@ properties:
                       readOnly: true
                       default: proportion_1
 
+                    # Back-reference to the PortionOfElement node (the enclosing element).
+                    # "parent" in $comment → backend uses ancestor_ids[-1] (the element.id).
+                    # Generates: <proportion> pmd:PMD_0025999 <element_ref>.
                     relational_quality_of:
                       title: Relational Quality Of
-                      description: >-
-                        Back-reference to the element reference instance.
-                        Must match element.id; set by the consumer.
+                      description: Back-reference to the element reference instance.
                       type: string
                       readOnly: true
-                      $comment: Must match the parent element.id; set by the consumer.
+                      $comment: "Must match the parent element.id; resolved from ancestor_ids."
 
+                    # Back-reference to the FractionValueSpecification (the enclosing has_member item).
+                    # "grandparent" in $comment → backend uses ancestor_ids[-2] (the fraction.id).
+                    # Generates: <proportion> pmd:PMD_0000077 <fraction_1>.
                     specified_by_value:
                       title: Specified By Value
-                      description: >-
-                        Back-reference to the fraction value specification this proportion quantifies.
-                        Must match the parent FractionValueSpecification id; set by the consumer.
+                      description: Back-reference to the fraction value specification.
                       type: string
                       readOnly: true
-                      $comment: Must match the grandparent has_member item id; set by the consumer.
+                      $comment: "Must match the grandparent has_member item id; resolved from ancestor_ids."
 
             unit:
               title: Unit

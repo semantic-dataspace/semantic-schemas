@@ -66,13 +66,78 @@ class Schema:
         return self._transform_src
 
     @staticmethod
+    def _expand_compact_iris(doc: dict, context: dict) -> dict:
+        """Pre-expand compact IRI values in an OO-LD document before JSON-LD parsing.
+
+        rdflib's JSON-LD parser correctly expands compact IRIs that appear as
+        ``@id`` values inside ``@context`` entries (so predicate IRIs are correct).
+        However, it does **not** expand compact IRIs that appear as data values,
+        even when the prefix is defined in the context as a plain string.
+
+        Example without this function::
+
+            # schema @context defines:  "uo": "http://purl.obolibrary.org/obo/UO_"
+            # schema data contains:     "unit": "uo:0000163"
+            # rdflib produces:          (frac, IAO:0000039, URIRef("uo:0000163"))  ← wrong
+            # expected:                 (frac, IAO:0000039, URIRef("http://…/UO_0000163"))
+
+        This is a known rdflib limitation — using ``"@prefix": true`` (JSON-LD 1.1)
+        or plain-string prefix entries both leave data-value compact IRIs unexpanded.
+
+        This method walks the data document (not the ``@context``) and replaces
+        any string value that starts with a plain-string context prefix with the
+        fully-expanded IRI.  Full IRIs, numbers, booleans and ``None`` pass through
+        unchanged.
+
+        Args:
+            doc:     OO-LD data document (the dict without the ``@context`` key).
+            context: The ``@context`` dict loaded from the schema YAML/JSON.
+
+        Returns:
+            New document dict with compact IRI values replaced by full IRIs.
+        """
+        # Only plain-string entries contribute prefixes; object-form entries
+        # (e.g. {"@id": "...", "@type": "@id"}) define named terms, not prefixes.
+        # JSON-LD keywords (keys starting with "@") are skipped.
+        prefix_map = {
+            k + ":": v
+            for k, v in context.items()
+            if isinstance(v, str) and not k.startswith("@")
+        }
+
+        def _expand(val: str) -> str:
+            """Expand val to a full IRI if it starts with a known prefix."""
+            for prefix, base in prefix_map.items():
+                if val.startswith(prefix):
+                    return base + val[len(prefix):]
+            return val
+
+        def _walk(node):
+            """Recursively expand all string leaves in a JSON-like structure."""
+            if isinstance(node, dict):
+                return {k: _walk(v) for k, v in node.items()}
+            if isinstance(node, list):
+                return [_walk(item) for item in node]
+            if isinstance(node, str):
+                return _expand(node)
+            return node  # int, float, bool, None — pass through unchanged
+
+        return _walk(doc)
+
+    @staticmethod
     def _parse_oold(
         context: dict, oold_doc: dict, base: str | None = None
     ) -> rdflib.Graph:
         ctx = {**context, **({} if base is None else {"@base": base})}
+        # Pre-expand compact IRI values (e.g. "uo:0000163") before handing the
+        # document to rdflib.  rdflib expands compact IRIs inside @context entries
+        # but leaves them unexpanded when they appear as data values, producing
+        # URIRef("uo:0000163") instead of the correct full IRI.
+        # See _expand_compact_iris for a full explanation and worked example.
+        expanded_doc = Schema._expand_compact_iris(oold_doc, context)
         ds = rdflib.Dataset()
         ds.parse(
-            data=json.dumps({"@context": ctx, **oold_doc}),
+            data=json.dumps({"@context": ctx, **expanded_doc}),
             format="json-ld",
         )
         g = rdflib.Graph()

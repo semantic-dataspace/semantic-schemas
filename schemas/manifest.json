@@ -33,7 +33,7 @@
       "path": "schemas/chemical-composition/PMDCo/specs/schema.oold.yaml",
       "group": "chemical-composition",
       "maturity": "stable",
-      "version": "0.2.1",
+      "version": "1.0.0",
       "shapePath": "schemas/chemical-composition/PMDCo/specs/shape.ttl"
     },
     {

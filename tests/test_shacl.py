@@ -116,9 +116,11 @@ def _base_shapes(shape_file: Path) -> list[Path]:
 # ---------------------------------------------------------------------------
 
 def _parse_jsonld(doc: dict, context: dict) -> rdflib.Graph:
+    from semantic_schemas import Schema
+    expanded = Schema._expand_compact_iris(doc, context)
     dataset = rdflib.Dataset()
     dataset.parse(
-        data=json.dumps({"@context": context, **doc}),
+        data=json.dumps({"@context": context, **expanded}),
         format="json-ld",
     )
     flat = rdflib.Graph()
