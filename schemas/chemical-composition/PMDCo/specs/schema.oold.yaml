@@ -88,12 +88,15 @@
   unit:
     "@id": "iao:0000039"  # IAO_0000039  has_measurement_unit_label
     "@type": "@id"
-  # 'element' nesting helper — intentionally unmapped.
-  # Setting to null suppresses the PMD_hasFractionElement structural predicate
-  # (which does not exist in PMDCo) from the RDF output.
-  # Side effect: the entire element subtree (type, part_of, has_relational_quality)
-  # is also dropped by the JSON-LD processor. Testing this in DSMS to observe impact.
-  element: null
+  # 'element' is a JSON-LD nesting helper. It groups the PortionOfChemicalElement
+  # under its fraction row for webform UX (element selector + value + unit on one row).
+  # PMDCo has no direct fraction→element predicate; the reference graph connects them
+  # only through the proportion node. Here we use IAO:0000136 (is_about) as a
+  # semantically defensible surrogate: a FractionValueSpecification (PMD_0025997)
+  # IS an information content entity that is about the element it quantifies.
+  element:
+    "@id": "iao:0000136"  # IAO is_about — fraction value spec is about this element
+    "@type": "@id"
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for a pmdco:ChemicalComposition
