@@ -130,7 +130,8 @@ ChemicalComposition (PMD_0000551)
           specified_by_value ─────► FractionValueSpecification  (back-ref)
 ```
 
-v1.0.0: `quality_of` now points to a material kitem IRI rather than an inline blank node with a label. Provide `material_uri` in your input to link to the real material kitem.
+v1.0.0: `quality_of` now points to a material kitem IRI rather than an inline blank node with a label.
+Provide `material_uri` in your input to link to the real material kitem.
 
 Key decisions:
 
