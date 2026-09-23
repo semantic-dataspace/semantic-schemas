@@ -1,0 +1,117 @@
+(
+  /*
+   * Nanoindentation Experiment (PMDCo): simplified JSON → OO-LD JSON
+   *
+   * Input fields (see schema.simplified.json):
+   *   experiment_name    string   required
+   *   specimen_iri       string   required: IRI of the NanoindentationSpecimen KItem
+   *   experiment_id      string   optional, derived from experiment_name if omitted
+   *   test_date          string   optional, ISO 8601 date-time
+   *   instrument_serial  string   optional
+   *   control_mode       string   optional: enum
+   *   indenter_geometry  string   optional: enum
+   *   indenter_material  string   optional
+   *   analysis_method    string   optional: enum
+   *   test_standard      string   optional
+   *   max_depth          number   optional (µm)
+   *   max_load           number   optional (mN)
+   *   loading_rate       number   optional (1/s)
+   *   hold_time          number   optional (s)
+   *   acquisition_rate   number   optional (Hz)
+   *   poisson_ratio      number   optional (dimensionless)
+   *   summary_results    array    optional
+   *     name             string   e.g. "Mean Hardness HIT"
+   *     value            number
+   *     unit             string   "GPa" | "um" | "-"
+   */
+
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/nanoindentation-PMDCo-v0.1.0/schemas/characterization/nanoindentation/PMDCo/specs/schema.oold.yaml";
+
+  /* ── Unit label → QUDT unit IRI ──────────────────────────────────────── */
+  $unitMap := {
+    "GPa": "uqudt:GigaPA",
+    "mN":  "uqudt:MilliN",
+    "um":  "uqudt:MicroM",
+    "%":   "uqudt:PERCENT",
+    "-":   "uqudt:UNITLESS",
+    "uJ":  "uqudt:MicroJ",
+    "1/s": "uqudt:PER-SEC",
+    "s":   "uqudt:SEC",
+    "Hz":  "uqudt:HZ"
+  };
+
+  /* ── Capture document fields as $ vars for use in closures ───────────── */
+  $specimenIri := specimen_iri;
+  $slug        := $replace($lowercase($trim(experiment_name)), /[^a-z0-9]+/, "-");
+  $expId       := $exists(experiment_id) ? experiment_id : "nanoindentation-experiment-" & $slug;
+
+  /* ── Test conditions (ParameterSpecification nodes) ──────────────────── */
+  $conds := [];
+  $conds := $exists(max_depth)
+    ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-max-depth",
+        "parameter_label": "Max Depth", "parameter_value": max_depth, "parameter_unit": "uqudt:MicroM"}])
+    : $conds;
+  $conds := $exists(max_load)
+    ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-max-load",
+        "parameter_label": "Max Load", "parameter_value": max_load, "parameter_unit": "uqudt:MilliN"}])
+    : $conds;
+  $conds := $exists(loading_rate)
+    ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-loading-rate",
+        "parameter_label": "Loading Rate", "parameter_value": loading_rate, "parameter_unit": "uqudt:PER-SEC"}])
+    : $conds;
+  $conds := $exists(hold_time)
+    ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-hold-time",
+        "parameter_label": "Hold Time", "parameter_value": hold_time, "parameter_unit": "uqudt:SEC"}])
+    : $conds;
+  $conds := $exists(acquisition_rate)
+    ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-acq-rate",
+        "parameter_label": "Acquisition Rate", "parameter_value": acquisition_rate, "parameter_unit": "uqudt:HZ"}])
+    : $conds;
+  $conds := $exists(poisson_ratio)
+    ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-poisson",
+        "parameter_label": "Assumed Poisson's Ratio", "parameter_value": poisson_ratio, "parameter_unit": "uqudt:UNITLESS"}])
+    : $conds;
+
+  /* ── Summary results (MeasurementDatum + ScalarValueSpecification) ───── */
+  $measured := $exists(summary_results) and $count(summary_results) > 0
+    ? $map(summary_results, function($r, $i) {
+        $rSlug := $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-");
+        {
+          "type":     "obo:IAO_0000109",
+          "id":       $expId & "-result-" & $rSlug & "-smd",
+          "label":    $r.name,
+          "is_about": $specimenIri,
+          "has_value_spec": {
+            "type":               "obo:OBI_0001931",
+            "id":                 $expId & "-result-" & $rSlug & "-svs",
+            "result_value":       $r.value,
+            "result_unit":        $lookup($unitMap, $r.unit),
+            "specifies_value_of": "",
+            "is_about":           $specimenIri
+          }
+        }
+      })
+    : undefined;
+
+  /* ── Assemble OO-LD output ────────────────────────────────────────────── */
+  $base := {
+    "conforms_to":        $schemaUri,
+    "type":               ["chameo:Nanoindentation"],
+    "id":                 $expId,
+    "label":              experiment_name,
+    "has_specified_input": [$specimenIri]
+  };
+
+  $withDate     := $exists(test_date)          ? $merge([$base,         {"date":             test_date}])          : $base;
+  $withSerial   := $exists(instrument_serial)  ? $merge([$withDate,     {"instrument_serial": instrument_serial}]) : $withDate;
+  $withMode     := $exists(control_mode)       ? $merge([$withSerial,   {"control_mode":      control_mode}])      : $withSerial;
+  $withGeom     := $exists(indenter_geometry)  ? $merge([$withMode,     {"indenter_geometry":  indenter_geometry}]) : $withMode;
+  $withMaterial := $exists(indenter_material)  ? $merge([$withGeom,     {"indenter_material":  indenter_material}]) : $withGeom;
+  $withMethod   := $exists(analysis_method)    ? $merge([$withMaterial, {"analysis_method":    analysis_method}])  : $withMaterial;
+  $withStd      := $exists(test_standard)      ? $merge([$withMethod,   {"test_standard":      test_standard}])    : $withMethod;
+  $withConds    := $count($conds) > 0          ? $merge([$withStd,      {"has_process_attribute": $conds}])        : $withStd;
+
+  $exists($measured)
+    ? $merge([$withConds, {"measured_properties": $measured}])
+    : $withConds
+)
