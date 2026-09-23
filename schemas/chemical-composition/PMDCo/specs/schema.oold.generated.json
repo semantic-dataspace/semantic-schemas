@@ -12,35 +12,18 @@
       "@type": "@id"
     },
     "obo": "http://purl.obolibrary.org/obo/",
-    "bfo": {
-      "@id": "http://purl.obolibrary.org/obo/BFO_",
-      "@prefix": true
-    },
-    "ro": {
-      "@id": "http://purl.obolibrary.org/obo/RO_",
-      "@prefix": true
-    },
-    "obi": {
-      "@id": "http://purl.obolibrary.org/obo/OBI_",
-      "@prefix": true
-    },
-    "iao": {
-      "@id": "http://purl.obolibrary.org/obo/IAO_",
-      "@prefix": true
-    },
-    "uo": {
-      "@id": "http://purl.obolibrary.org/obo/UO_",
-      "@prefix": true
-    },
+    "bfo": "http://purl.obolibrary.org/obo/BFO_",
+    "ro": "http://purl.obolibrary.org/obo/RO_",
+    "obi": "http://purl.obolibrary.org/obo/OBI_",
+    "iao": "http://purl.obolibrary.org/obo/IAO_",
+    "uo": "http://purl.obolibrary.org/obo/UO_",
     "pmdco": "https://w3id.org/pmd/co/",
     "uqudt": "https://qudt.org/vocab/unit/",
     "type": "@type",
     "id": "@id",
-    "label": {
-      "@id": "rdfs:label"
-    },
     "quality_of": {
-      "@id": "ro:0000080"
+      "@id": "ro:0000080",
+      "@type": "@id"
     },
     "is_subject_of": {
       "@id": "pmdco:PMD_0000004",
@@ -81,8 +64,8 @@
   },
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$comment": "Schema for a pmdco:ChemicalComposition",
-  "x-schema-version": "0.2.1",
-  "x-schema-uri": "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/chemical-composition-PMDCo-v0.2.1/schemas/chemical-composition/PMDCo/specs/schema.oold.generated.json",
+  "x-schema-version": "1.0.0",
+  "x-schema-uri": "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/chemical-composition-PMDCo-v1.0.0/schemas/chemical-composition/PMDCo/specs/schema.oold.generated.json",
   "x-maturity": "stable",
   "title": "Chemical Composition",
   "type": "object",
@@ -100,7 +83,7 @@
         "type": "string"
       },
       "readOnly": true,
-      "enum": [
+      "const": [
         "pmdco:PMD_0000551"
       ],
       "options": {
@@ -118,17 +101,13 @@
     },
     "quality_of": {
       "title": "Material",
-      "description": "The material this composition is a quality of.",
-      "type": "object",
-      "required": [
-        "label"
-      ],
-      "properties": {
-        "label": {
-          "title": "Material Name",
-          "description": "Human-readable name or identifier for the material (e.g. \"316L stainless steel\").",
-          "type": "string"
-        }
+      "description": "The material this composition is a quality of. Select the material kitem this composition belongs to.",
+      "type": "array",
+      "format": "kitem",
+      "x-kitem": {
+        "ktypeIds": [
+          "material"
+        ]
       }
     },
     "is_subject_of": {
@@ -148,7 +127,7 @@
             "type": "string"
           },
           "readOnly": true,
-          "enum": [
+          "const": [
             "pmdco:PMD_0025002"
           ],
           "options": {
@@ -187,7 +166,7 @@
                   "type": "string"
                 },
                 "readOnly": true,
-                "enum": [
+                "const": [
                   "pmdco:PMD_0025997"
                 ],
                 "options": {
@@ -205,22 +184,18 @@
               },
               "element": {
                 "title": "Element Reference",
-                "description": "The portion of the chemical element this fraction describes",
+                "description": "The portion of the chemical element this fraction describes.",
                 "type": "object",
                 "required": [
                   "type",
                   "id",
-                  "part_of",
                   "has_relational_quality"
                 ],
                 "properties": {
                   "type": {
                     "title": "Chemical Element",
                     "description": "The chemical element this fraction refers to",
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
+                    "type": "string",
                     "enum": [
                       "pmdco:PMD_0020083",
                       "pmdco:PMD_0020049",
@@ -381,14 +356,14 @@
                   },
                   "part_of": {
                     "title": "Part Of",
-                    "description": "The material this element portion is part of. Must match the root quality_of value; set by the consumer.",
+                    "description": "The material this element portion is part of. Resolved automatically from the root quality_of kitem IRI.",
                     "type": "string",
                     "readOnly": true,
-                    "$comment": "Must match the root quality_of value; set by the consumer."
+                    "$comment": "Resolved from root.quality_of; must match the root quality_of IRI."
                   },
                   "has_relational_quality": {
                     "title": "Proportion",
-                    "description": "The proportion quality associated with this element portion. Type and back-reference are managed by the consumer.",
+                    "description": "The MassProportion quality linking this element portion to its fraction value specification.",
                     "type": "object",
                     "required": [
                       "type",
@@ -404,14 +379,11 @@
                           "type": "string"
                         },
                         "readOnly": true,
-                        "enum": [
-                          "pmdco:PMD_0020101",
+                        "const": [
                           "pmdco:PMD_0020102"
                         ],
-                        "default": "pmdco:PMD_0020102",
                         "options": {
                           "enum_titles": [
-                            "pmdco:Proportion",
                             "pmdco:MassProportion"
                           ]
                         }
@@ -425,17 +397,17 @@
                       },
                       "relational_quality_of": {
                         "title": "Relational Quality Of",
-                        "description": "Back-reference to the element reference instance. Must match element.id; set by the consumer.",
+                        "description": "Back-reference to the element reference instance.",
                         "type": "string",
                         "readOnly": true,
-                        "$comment": "Must match the parent element.id; set by the consumer."
+                        "$comment": "Must match the parent element.id; resolved from ancestor_ids."
                       },
                       "specified_by_value": {
                         "title": "Specified By Value",
-                        "description": "Back-reference to the fraction value specification this proportion quantifies. Must match the parent FractionValueSpecification id; set by the consumer.",
+                        "description": "Back-reference to the fraction value specification.",
                         "type": "string",
                         "readOnly": true,
-                        "$comment": "Must match the grandparent has_member item id; set by the consumer."
+                        "$comment": "Must match the grandparent has_member item id; resolved from ancestor_ids."
                       }
                     }
                   }

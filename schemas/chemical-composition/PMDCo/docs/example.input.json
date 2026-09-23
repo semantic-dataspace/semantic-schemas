@@ -1,5 +1,6 @@
 {
   "material_name": "316L Stainless Steel",
+  "material_uri": "https://dsms.example.com/knowledge/abc123/mat-316l-stainless-steel",
   "elements": [
     { "symbol": "Fe", "value": 65.345, "unit": "mass%" },
     { "symbol": "Cr", "value": 17.0,   "unit": "mass%" },

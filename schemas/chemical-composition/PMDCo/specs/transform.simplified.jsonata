@@ -23,9 +23,9 @@
   /*
    * Schema provenance: injected automatically into every output.
    * Update $schemaUri whenever x-schema-version in specs/schema.oold.yaml changes.
-   * Format: <x-schema-uri> (pinned raw URL, no version suffix needed)
+   * Must match the x-schema-uri in schema.oold.yaml exactly.
    */
-  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/chemical-composition-PMDCo-v0.1.0/schemas/chemical-composition/PMDCo/specs/schema.oold.yaml";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/chemical-composition-PMDCo-v1.0.0/schemas/chemical-composition/PMDCo/specs/schema.oold.generated.json";
 
   /* ── Unit label → Unit Ontology IRI ──────────────────────────────────── */
   $unitMap := {
@@ -112,34 +112,40 @@
 
   /* ── Node IDs ────────────────────────────────────────────────────────── */
   /* Derive a URL-safe slug from the material name so IDs are unique by
-     default. Override with material_id / comp_id for specific requirements. */
+     default. Override with comp_id for a specific composition IRI. */
   $slug  := $replace($lowercase($trim(material_name)), /[^a-z0-9]+/, "-");
-  $matId := $exists(material_id) ? material_id : "mat-" & $slug;
-  $cmpId := $exists(comp_id)     ? comp_id     : "chem-comp-" & $slug;
+  $matId := "mat-" & $slug;
+  $cmpId := $exists(comp_id) ? comp_id : "chem-comp-" & $slug;
+
+  /* ── quality_of IRI ──────────────────────────────────────────────────── */
+  /* v1.0.0: quality_of is now an IRI reference (not an inline blank node).
+     If material_uri is provided it is the canonical kitem IRI; otherwise a
+     slug-based local ID is used as a relative IRI placeholder for standalone
+     RDF generation.  In a live DSMS instance, always supply material_uri so
+     the triple links to the real material kitem. */
+  $qualityOfIri := $exists(material_uri) ? material_uri : $matId;
 
   /* ── OO-LD output ────────────────────────────────────────────────────── */
   {
     "conforms_to": $schemaUri,
-    "type": "pmdco:PMD_0000551",
+    "type": ["pmdco:PMD_0000551"],
     "id":   $cmpId,
-    "quality_of": {
-      "label": material_name
-    },
+    "quality_of": [$qualityOfIri],
     "is_subject_of": {
-      "type": "pmdco:PMD_0025002",
+      "type": ["pmdco:PMD_0025002"],
       "id":   $cmpId & "-spec",
       "has_member": $map(elements, function($e) {
         {
-          "type":  "pmdco:PMD_0025997",
+          "type":  ["pmdco:PMD_0025997"],
           "id":    "frac-" & $e.symbol,
           "value": $e.value,
           "unit":  $lookup($unitMap, $e.unit),
           "element": {
             "type":    $lookup($elementMap, $e.symbol),
             "id":      "elem-" & $e.symbol,
-            "part_of": $matId,
+            "part_of": $qualityOfIri,
             "has_relational_quality": {
-              "type":                  "pmdco:PMD_0020102",
+              "type":                  ["pmdco:PMD_0020102"],
               "id":                    "prop-" & $e.symbol,
               "relational_quality_of": "elem-" & $e.symbol,
               "specified_by_value":    "frac-" & $e.symbol
