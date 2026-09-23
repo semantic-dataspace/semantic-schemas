@@ -44,15 +44,14 @@
   /* ── Per-indent results (MeasurementDatum + ScalarValueSpecification) ── */
   $measured := $exists(results) and $count(results) > 0
     ? $map(results, function($r, $i) {
-        $rSlug := $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-");
         {
           "type":     "obo:IAO_0000109",
-          "id":       $dsId & "-result-" & $rSlug & "-smd",
+          "id":       $dsId & "-result-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-") & "-smd",
           "label":    $r.name,
           "is_about": $specIri,
           "has_value_spec": {
             "type":               "obo:OBI_0001931",
-            "id":                 $dsId & "-result-" & $rSlug & "-svs",
+            "id":                 $dsId & "-result-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-") & "-svs",
             "result_value":       $r.value,
             "result_unit":        $lookup($unitMap, $r.unit),
             "specifies_value_of": "",
