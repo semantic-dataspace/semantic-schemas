@@ -8,9 +8,7 @@
    *
    * Input fields (see schema.simplified.json):
    *   dataset_name           string   required
-   *   parent_experiment_iri  string   required: IRI of NanoindentationExperiment KItem
    *   dataset_id             string   optional, derived from dataset_name if omitted
-   *   specimen_iri           string   optional: IRI of NanoindentationSpecimen KItem
    *   indent_index           integer  optional (1-based)
    *   timestamp              string   optional, ISO 8601 date-time
    *   x_position             number   optional (mm)
@@ -36,8 +34,6 @@
   };
 
   /* ── Capture document fields as $ vars for use in closures ───────────── */
-  $expIri      := parent_experiment_iri;
-  $specIri     := $exists(specimen_iri) ? specimen_iri : "";
   $slug        := $replace($lowercase($trim(dataset_name)), /[^a-z0-9]+/, "-");
   $dsId        := $exists(dataset_id) ? dataset_id : "nanoindentation-dataset-" & $slug;
 
@@ -48,14 +44,12 @@
           "type":     "obo:IAO_0000109",
           "id":       $dsId & "-result-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-") & "-smd",
           "label":    $r.name,
-          "is_about": $specIri,
           "has_value_spec": {
             "type":               "obo:OBI_0001931",
             "id":                 $dsId & "-result-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-") & "-svs",
             "result_value":       $r.value,
             "result_unit":        $lookup($unitMap, $r.unit),
-            "specifies_value_of": "",
-            "is_about":           $specIri
+            "specifies_value_of": ""
           }
         }
       })
@@ -66,13 +60,11 @@
     "conforms_to":        $schemaUri,
     "type":               ["dcat:Dataset"],
     "id":                 $dsId,
-    "label":              dataset_name,
-    "parent_experiment":  $expIri
+    "label":              dataset_name
   };
 
   $withFormat    := $exists(format)             ? $merge([$base,          {"format":             format}])             : $merge([$base, {"format": "Anton Paar NHT TXT"}]);
-  $withSpec      := $specIri != ""              ? $merge([$withFormat,    {"is_about":           $specIri}])            : $withFormat;
-  $withTimestamp := $exists(timestamp)          ? $merge([$withSpec,      {"created":            timestamp}])           : $withSpec;
+  $withTimestamp := $exists(timestamp)          ? $merge([$withFormat,    {"created":            timestamp}])           : $withFormat;
   $withIdx       := $exists(indent_index)       ? $merge([$withTimestamp, {"indent_index":       indent_index}])        : $withTimestamp;
   $withX         := $exists(x_position)         ? $merge([$withIdx,       {"x_position":         x_position}])          : $withIdx;
   $withY         := $exists(y_position)         ? $merge([$withX,         {"y_position":         y_position}])          : $withX;

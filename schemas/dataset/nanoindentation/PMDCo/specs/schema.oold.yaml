@@ -2,19 +2,17 @@
 #
 # Digital twin of a single nanoindentation measurement file.
 # Extends the generic dataset/DCAT schema with:
-#   - Link to parent NanoindentationExperiment KItem (BFO_0000050 is_part_of)
-#   - Link to Specimen KItem (IAO_0000136 is_about)
 #   - Indent position metadata (index, XY stage coordinates, timestamp)
 #   - Per-indent scalar results as MeasurementDatum + ScalarValueSpecification nodes
 #   - Raw load-displacement time-series (attached CSV / XLSX file, processed by data2rdf)
 #
+# Relationships to parent experiment and specimen are expressed via DSMS linked_kitems,
+# not as fields in the semantic schema.
+#
 # Graph pattern (additions to DCAT base):
 #
 #   dcat:Dataset
-#     bfo:BFO_0000050 (is_part_of) ──────────────────────► NanoindentationExperiment IRI
-#     iao:IAO_0000136 (is_about) ─────────────────────────► Specimen IRI
 #     obi:OBI_0000299 (measured_properties) ─────────────► MeasurementDatum [× 0..N]
-#       iao:IAO_0000136 (is_about) ───────────────────────► Specimen IRI
 #       obi:OBI_0001938 (has_value_spec) ───────────────► ScalarValueSpecification
 #         obi:OBI_0001937 (result_value) ────────── xsd:double
 #         iao:IAO_0000039 (result_unit) ──────────── unit IRI (QUDT)
@@ -60,12 +58,6 @@
     "@id": "http://purl.org/dc/terms/hasPart"
     "@type": "@id"
     "@container": "@set"
-  parent_experiment:
-    "@id": "http://purl.obolibrary.org/obo/BFO_0000050"
-    "@type": "@id"
-  is_about:
-    "@id": "http://purl.obolibrary.org/obo/IAO_0000136"
-    "@type": "@id"
   measured_properties:
     "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
     "@container": "@set"
@@ -137,20 +129,6 @@ properties:
     description: Date and time of this individual indentation.
     type: string
     format: date-time
-
-  parent_experiment:
-    title: Parent Experiment
-    description: NanoindentationExperiment KItem this indent belongs to (BFO_0000050 is_part_of).
-    x-ktype: [nanoindentation-experiment]
-    type: string
-    format: uri
-
-  is_about:
-    title: Specimen
-    description: Specimen KItem on which this indentation was performed (IAO_0000136 is_about).
-    x-ktype: [nanoindentation-specimen, specimen]
-    type: string
-    format: uri
 
   indent_index:
     title: Indent Index
@@ -230,11 +208,6 @@ properties:
             - Loading Exponent m
             - Geometry Factor Epsilon
             - Fit Quality R2
-        is_about:
-          title: Is About (Specimen)
-          type: string
-          readOnly: true
-          default: ""
         has_value_spec:
           title: Value Specification
           type: object
@@ -306,11 +279,6 @@ properties:
                   Fit Quality R2:            [uqudt:UNITLESS]
             specifies_value_of:
               title: Specifies Value Of
-              type: string
-              readOnly: true
-              default: ""
-            is_about:
-              title: Is About (Specimen)
               type: string
               readOnly: true
               default: ""

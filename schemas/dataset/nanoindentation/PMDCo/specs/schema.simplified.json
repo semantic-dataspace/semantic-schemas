@@ -4,7 +4,7 @@
   "title": "Nanoindentation Dataset: PMDCo (Simplified Input)",
   "description": "User-friendly form for a single nanoindentation indent — the digital twin of one measurement file. Enter the indent metadata and scalar results as a results array. The transform converts this to full OO-LD (MeasurementDatum + ScalarValueSpecification nodes).",
   "type": "object",
-  "required": ["dataset_name", "parent_experiment_iri"],
+  "required": ["dataset_name"],
   "additionalProperties": false,
   "properties": {
     "dataset_name": {
@@ -18,19 +18,6 @@
       "title": "Dataset ID",
       "description": "Optional IRI slug for the RDF node. Auto-derived from dataset_name if omitted.",
       "type": "string"
-    },
-    "parent_experiment_iri": {
-      "title": "Parent Experiment IRI",
-      "description": "IRI of the NanoindentationExperiment KItem this indent belongs to.",
-      "type": "string",
-      "format": "uri",
-      "examples": ["https://kiran.materials-data.space/knowledge/nanoindentation-experiment-aa2618-2hr-set2"]
-    },
-    "specimen_iri": {
-      "title": "Specimen IRI",
-      "description": "IRI of the NanoindentationSpecimen KItem (optional if derivable from parent experiment).",
-      "type": "string",
-      "format": "uri"
     },
     "indent_index": {
       "title": "Indent Index",
@@ -128,8 +115,6 @@
   "examples": [
     {
       "dataset_name": "AA2618 2hr aged Set 2 -- Indent #001",
-      "parent_experiment_iri": "https://kiran.materials-data.space/knowledge/nanoindentation-experiment-aa2618-2hr-set2",
-      "specimen_iri": "https://kiran.materials-data.space/knowledge/aa2618-2hr-set2-specimen",
       "indent_index": 1,
       "timestamp": "2026-07-16T14:42:54",
       "x_position": 3.21,
