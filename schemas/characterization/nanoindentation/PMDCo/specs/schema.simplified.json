@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.simplified.json",
+  "title": "Nanoindentation Experiment: PMDCo (Simplified Input)",
+  "description": "User-friendly form for a nanoindentation experiment session. Enter test conditions as individual fields and summary statistics as a results array. The transform converts this to full OO-LD (MeasurementDatum + ScalarValueSpecification nodes).",
+  "type": "object",
+  "required": ["experiment_name", "specimen_iri"],
+  "additionalProperties": false,
+  "properties": {
+    "experiment_name": {
+      "title": "Experiment Name",
+      "description": "Human-readable name for this measurement session.",
+      "type": "string",
+      "minLength": 1,
+      "examples": ["AA2618 2hr aged Set 2", "316L nanoindentation RT"]
+    },
+    "experiment_id": {
+      "title": "Experiment ID",
+      "description": "Optional IRI slug for the RDF node. Auto-derived from experiment_name if omitted.",
+      "type": "string"
+    },
+    "specimen_iri": {
+      "title": "Specimen IRI",
+      "description": "IRI of the NanoindentationSpecimen KItem.",
+      "type": "string",
+      "format": "uri",
+      "examples": ["https://kiran.materials-data.space/knowledge/aa2618-2hr-set2-specimen"]
+    },
+    "test_date": {
+      "title": "Test Date",
+      "description": "Date the measurement session was conducted (ISO 8601).",
+      "type": "string",
+      "format": "date-time",
+      "examples": ["2026-07-16T00:00:00"]
+    },
+    "instrument_serial": {
+      "title": "Instrument Serial Number",
+      "description": "Serial number of the nanoindenter used.",
+      "type": "string",
+      "examples": ["1000136225"]
+    },
+    "control_mode": {
+      "title": "Control Mode",
+      "description": "Feedback control mode used during loading.",
+      "type": "string",
+      "enum": ["Depth-controlled", "Load-controlled", "Constant Strain Rate", "Oscillating (CSM)"],
+      "default": "Constant Strain Rate"
+    },
+    "indenter_geometry": {
+      "title": "Indenter Geometry",
+      "description": "Geometry of the indenter tip.",
+      "type": "string",
+      "enum": ["Berkovich", "Cube Corner", "Spherical", "Conical", "Vickers", "Flat Punch", "Other"],
+      "default": "Berkovich"
+    },
+    "indenter_material": {
+      "title": "Indenter Material",
+      "type": "string",
+      "examples": ["Diamond", "Sapphire"]
+    },
+    "analysis_method": {
+      "title": "Analysis Method",
+      "description": "Method used to extract hardness and modulus from the load-displacement curve.",
+      "type": "string",
+      "enum": ["Oliver & Pharr", "Doerner & Nix", "ISO 14577", "Continuous Stiffness (CSM)"],
+      "default": "Oliver & Pharr"
+    },
+    "test_standard": {
+      "title": "Test Standard",
+      "description": "Standard or norm followed.",
+      "type": "string",
+      "examples": ["ISO 14577-1:2015", "ASTM E2546"]
+    },
+    "max_depth": {
+      "title": "Max Depth (µm)",
+      "description": "Target maximum indentation depth in micrometres.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "examples": [1.0, 0.5, 2.0]
+    },
+    "max_load": {
+      "title": "Max Load (mN)",
+      "description": "Target maximum applied force in millinewtons (load-controlled only).",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "examples": [50.0, 100.0]
+    },
+    "loading_rate": {
+      "title": "Loading Rate (1/s)",
+      "description": "Strain rate or loading rate in per second.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "examples": [0.2, 0.05]
+    },
+    "hold_time": {
+      "title": "Hold Time (s)",
+      "description": "Dwell time at maximum load/depth in seconds.",
+      "type": "number",
+      "minimum": 0,
+      "examples": [10.0, 5.0, 30.0]
+    },
+    "acquisition_rate": {
+      "title": "Acquisition Rate (Hz)",
+      "description": "Data acquisition rate in hertz.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "examples": [10.0, 50.0]
+    },
+    "poisson_ratio": {
+      "title": "Assumed Poisson's Ratio",
+      "description": "Poisson's ratio assumed for elastic modulus calculation (dimensionless).",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 0.5,
+      "examples": [0.3, 0.33, 0.25]
+    },
+    "summary_results": {
+      "title": "Summary Statistics",
+      "description": "Aggregate results across all valid indentations. Add one entry per statistic.",
+      "type": "array",
+      "items": {
+        "title": "Summary Result",
+        "type": "object",
+        "required": ["name", "value", "unit"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "title": "Property Name",
+            "description": "Name of the summary statistic.",
+            "type": "string",
+            "examples": [
+              "Mean Hardness HIT",
+              "Std Dev Hardness HIT",
+              "Mean Elastic Modulus EIT",
+              "Std Dev Elastic Modulus EIT",
+              "Mean Maximum Depth hmax",
+              "Number of Valid Indentations"
+            ]
+          },
+          "value": {
+            "title": "Value",
+            "type": "number",
+            "examples": [1.45, 0.21, 83.7]
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string",
+            "enum": ["GPa", "um", "-"],
+            "description": "GPa for hardness/modulus, um for depth, - for counts"
+          }
+        }
+      },
+      "default": []
+    }
+  },
+  "examples": [
+    {
+      "experiment_name": "AA2618 2hr aged Set 2",
+      "specimen_iri": "https://kiran.materials-data.space/knowledge/aa2618-2hr-set2-specimen",
+      "test_date": "2026-07-16T00:00:00",
+      "instrument_serial": "1000136225",
+      "control_mode": "Constant Strain Rate",
+      "indenter_geometry": "Berkovich",
+      "indenter_material": "Diamond",
+      "analysis_method": "Oliver & Pharr",
+      "test_standard": "ISO 14577-1:2015",
+      "max_depth": 1.0,
+      "loading_rate": 0.2,
+      "hold_time": 10.0,
+      "acquisition_rate": 10.0,
+      "poisson_ratio": 0.33,
+      "summary_results": [
+        { "name": "Mean Hardness HIT",           "value": 1.450, "unit": "GPa" },
+        { "name": "Std Dev Hardness HIT",         "value": 0.211, "unit": "GPa" },
+        { "name": "Mean Elastic Modulus EIT",     "value": 83.710, "unit": "GPa" },
+        { "name": "Std Dev Elastic Modulus EIT",  "value": 3.907,  "unit": "GPa" },
+        { "name": "Mean Maximum Depth hmax",      "value": 1.004,  "unit": "um" },
+        { "name": "Number of Valid Indentations", "value": 27,     "unit": "-" }
+      ]
+    }
+  ]
+}

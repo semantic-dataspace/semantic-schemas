@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.simplified.json",
+  "title": "Nanoindentation Dataset: PMDCo (Simplified Input)",
+  "description": "User-friendly form for a single nanoindentation indent — the digital twin of one measurement file. Enter the indent metadata and scalar results as a results array. The transform converts this to full OO-LD (MeasurementDatum + ScalarValueSpecification nodes).",
+  "type": "object",
+  "required": ["dataset_name", "parent_experiment_iri"],
+  "additionalProperties": false,
+  "properties": {
+    "dataset_name": {
+      "title": "Dataset Name",
+      "description": "Human-readable name for this indent dataset.",
+      "type": "string",
+      "minLength": 1,
+      "examples": ["AA2618 2hr aged Set 2 -- Indent #001"]
+    },
+    "dataset_id": {
+      "title": "Dataset ID",
+      "description": "Optional IRI slug for the RDF node. Auto-derived from dataset_name if omitted.",
+      "type": "string"
+    },
+    "parent_experiment_iri": {
+      "title": "Parent Experiment IRI",
+      "description": "IRI of the NanoindentationExperiment KItem this indent belongs to.",
+      "type": "string",
+      "format": "uri",
+      "examples": ["https://kiran.materials-data.space/knowledge/nanoindentation-experiment-aa2618-2hr-set2"]
+    },
+    "specimen_iri": {
+      "title": "Specimen IRI",
+      "description": "IRI of the NanoindentationSpecimen KItem (optional if derivable from parent experiment).",
+      "type": "string",
+      "format": "uri"
+    },
+    "indent_index": {
+      "title": "Indent Index",
+      "description": "Sequential number of this indentation within the session (1-based).",
+      "type": "integer",
+      "minimum": 1,
+      "examples": [1, 2, 27]
+    },
+    "timestamp": {
+      "title": "Timestamp",
+      "description": "Date and time of this individual indentation (ISO 8601).",
+      "type": "string",
+      "format": "date-time",
+      "examples": ["2026-07-16T14:42:54"]
+    },
+    "x_position": {
+      "title": "X Position (mm)",
+      "description": "Stage X coordinate at time of indent.",
+      "type": "number",
+      "examples": [3.21, 0.0]
+    },
+    "y_position": {
+      "title": "Y Position (mm)",
+      "description": "Stage Y coordinate at time of indent.",
+      "type": "number",
+      "examples": [1.05, 0.0]
+    },
+    "format": {
+      "title": "File Format",
+      "description": "Instrument file format of the raw data.",
+      "type": "string",
+      "default": "Anton Paar NHT TXT",
+      "examples": ["Anton Paar NHT TXT", "Bruker Hysitron CSV", "Keysight NanoSuite XLS"]
+    },
+    "analysis_warnings": {
+      "title": "Analysis Warnings",
+      "description": "Warnings reported by instrument software for this indent.",
+      "type": "string",
+      "examples": ["hc out of calibrated range [42 nm, 593 nm]"]
+    },
+    "results": {
+      "title": "Indentation Results",
+      "description": "Scalar results from the load-displacement curve analysis. Add one entry per quantity.",
+      "type": "array",
+      "items": {
+        "title": "Result Entry",
+        "type": "object",
+        "required": ["name", "value", "unit"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "title": "Property Name",
+            "description": "Name of the measured or derived quantity.",
+            "type": "string",
+            "examples": [
+              "Hardness HIT",
+              "Elastic Modulus EIT",
+              "Reduced Modulus E*",
+              "Indentation Modulus Er",
+              "Vickers Equivalent HVIT",
+              "Maximum Force Fmax",
+              "Maximum Depth hmax",
+              "Contact Depth hc",
+              "Residual Depth hr",
+              "Plastic Depth hp",
+              "Contact Stiffness S",
+              "Projected Contact Area Ap",
+              "Elastic Work Welast",
+              "Plastic Work Wplast",
+              "Total Work Wtotal",
+              "Elastic Work Ratio nIT",
+              "Reverse Indentation Ratio RIT",
+              "Loading Exponent m",
+              "Geometry Factor Epsilon",
+              "Fit Quality R2"
+            ]
+          },
+          "value": {
+            "title": "Value",
+            "type": "number",
+            "examples": [1.9556, 91.983, 1.00, 46.35]
+          },
+          "unit": {
+            "title": "Unit",
+            "description": "Unit of the value.",
+            "type": "string",
+            "enum": ["GPa", "mN", "um", "%", "-", "uJ"],
+            "default": "GPa"
+          }
+        }
+      },
+      "default": []
+    }
+  },
+  "examples": [
+    {
+      "dataset_name": "AA2618 2hr aged Set 2 -- Indent #001",
+      "parent_experiment_iri": "https://kiran.materials-data.space/knowledge/nanoindentation-experiment-aa2618-2hr-set2",
+      "specimen_iri": "https://kiran.materials-data.space/knowledge/aa2618-2hr-set2-specimen",
+      "indent_index": 1,
+      "timestamp": "2026-07-16T14:42:54",
+      "x_position": 3.21,
+      "y_position": 1.05,
+      "format": "Anton Paar NHT TXT",
+      "analysis_warnings": "hc out of calibrated range [42 nm, 593 nm]",
+      "results": [
+        { "name": "Hardness HIT",          "value": 1.9556,  "unit": "GPa" },
+        { "name": "Elastic Modulus EIT",   "value": 91.983,  "unit": "GPa" },
+        { "name": "Maximum Depth hmax",    "value": 1.00,    "unit": "um"  },
+        { "name": "Maximum Force Fmax",    "value": 46.35,   "unit": "mN"  },
+        { "name": "Contact Depth hc",      "value": 0.94,    "unit": "um"  },
+        { "name": "Elastic Work Ratio nIT","value": 12.23,   "unit": "%"   },
+        { "name": "Fit Quality R2",        "value": 0.9998,  "unit": "-"   }
+      ]
+    }
+  ]
+}
