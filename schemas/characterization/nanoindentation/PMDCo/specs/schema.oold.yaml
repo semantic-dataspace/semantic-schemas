@@ -168,6 +168,7 @@ properties:
   operator:
     title: Operator
     x-ktype: [expert]
+    x-kitem: true
     type: string
     format: uri
 
@@ -176,6 +177,7 @@ properties:
   instrument:
     title: Instrument
     x-ktype: [measurement-device]
+    x-kitem: true
     type: string
     format: uri
 

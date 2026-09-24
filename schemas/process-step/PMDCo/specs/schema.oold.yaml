@@ -170,6 +170,7 @@ properties:
     title: Operator
     description: Person who performed this process step.
     x-ktype: [expert]
+    x-kitem: true
     type: string
     format: uri
 
@@ -179,5 +180,6 @@ properties:
       Physical instrument or device used to carry out this step.
       Select the registered device from the knowledge graph.
     x-ktype: [measurement-device]
+    x-kitem: true
     type: string
     format: uri
