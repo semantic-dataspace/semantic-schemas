@@ -1,27 +1,31 @@
-# OO-LD Schema for Nanoindentation Experiment (PMDCo / CHAMEO pattern)
+# OO-LD Schema for Nanoindentation Characterization Process (PMDCo / CHAMEO pattern)
 # Ontology: CHAMEO (Characterisation MEthodology Ontology)
 #   https://w3id.org/emmo/domain/characterisation-methodology/chameo#
-# PMDCo measurement pattern (inherited via process-step):
-#   https://github.com/materialdigital/core-ontology/tree/main/patterns/measurement
+#
+# Inheritance chain:
+#   nanoindentation/PMDCo
+#     → characterization/generic/PMDCo  (allOf $ref)
+#       → process-step/PMDCo            (allOf $ref)
 #
 # Full graph pattern:
 #
 #   chameo:Nanoindentation
 #     rdfs:label ─────────────────────────────────── name string
+#     rdfs:comment ───────────────────────────────── notes string
 #     dcterms:date ───────────────────────────────── execution date
 #     prov:wasAssociatedWith ──────────────────────> Operator IRI
 #     schema:instrument ───────────────────────────> Instrument IRI
 #     obi:OBI_0000293 (has_specified_input) ───────> Specimen IRI
 #     obi:OBI_0000299 (has_specified_output) ──────> Dataset IRI
+#     bfo:BFO_0000062 (preceded_by) ──────────────> Process IRI
 #     pmdco:PMD_0000009 (has_process_attribute) ───> ParameterSpecification [x 0..N]
 #     obi:OBI_0000299 (measured_properties) ──────> MeasurementDatum [x 0..N]
-#       iao:IAO_0000136 (is_about) ──────────────> Specimen IRI
 #       obi:OBI_0001938 (has_value_spec) ───────> ScalarValueSpecification
 #         obi:OBI_0001937 (result_value) ───── xsd:double
 #         iao:IAO_0000039 (result_unit) ─────── unit IRI (QUDT)
 
 "@context":
-  # Prefixes not declared in characterization/generic (inherited via allOf)
+  # Namespace prefixes (those also in generic kept here for safe prefix resolution)
   rdfs:    "http://www.w3.org/2000/01/rdf-schema#"
   xsd:     "http://www.w3.org/2001/XMLSchema#"
   dcterms: "http://purl.org/dc/terms/"
@@ -32,11 +36,9 @@
   uqudt:   "http://qudt.org/vocab/unit/"
   chameo:  "https://w3id.org/emmo/domain/characterisation-methodology/chameo#"
   nanoind: "https://w3id.org/emmo/domain/nanoindentation#"
-  # Term mappings — only those not already provided by characterization/generic:
-  #   type, id, label, has_specified_input, has_specified_output, preceded_by,
-  #   parameter_label, parameter_value, has_process_condition → inherited from generic
-  notes:
-    "@id": "rdfs:comment"
+  # Term mappings not provided by characterization/generic:
+  #   type, id, label, description, has_specified_input, has_specified_output,
+  #   preceded_by, has_process_condition, parameter_label, parameter_value → inherited
   date:
     "@id": "dcterms:date"
     "@type": "xsd:dateTime"
@@ -87,13 +89,13 @@ allOf:
   - $ref: "../../../generic/PMDCo/specs/schema.oold.yaml"
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
-$comment: PMDCo / CHAMEO pattern schema for a nanoindentation experiment session
+$comment: PMDCo / CHAMEO pattern schema for a nanoindentation characterization process
 x-schema-version: '0.1.0'
 x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/nanoindentation-PMDCo-v0.1.0/schemas/characterization/nanoindentation/PMDCo/specs/schema.oold.generated.json'
 x-maturity: 'draft'
 x-process-step:
   category: characterization
-title: Nanoindentation Experiment (PMDCo)
+title: Nanoindentation Characterization Process (PMDCo)
 type: object
 
 required:
@@ -102,6 +104,8 @@ required:
   - label
 
 properties:
+
+  # ── Identity ───────────────────────────────────────────────────────────────
 
   type:
     title: Type
@@ -125,8 +129,9 @@ properties:
     title: Experiment Name
     type: string
 
-  notes:
+  description:
     title: Notes
+    description: Free-text notes about this measurement session.
     type: string
     format: textarea
 
@@ -134,6 +139,8 @@ properties:
     title: Test Date
     type: string
     format: date-time
+
+  # ── Provenance ─────────────────────────────────────────────────────────────
 
   has_specified_input:
     title: Specimen
@@ -147,7 +154,18 @@ properties:
 
   has_specified_output:
     title: Summary Dataset
-    x-ktype: [dataset]
+    x-ktype: [nanoindentation-dataset]
+    type: array
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  preceded_by:
+    title: Preceded By
+    description: Processes that directly precede this measurement (e.g. surface preparation, heat treatment).
+    x-ktype: [process]
     type: array
     items:
       type: string
@@ -160,6 +178,8 @@ properties:
     x-ktype: [expert]
     type: string
     format: uri
+
+  # ── Instrument Setup ───────────────────────────────────────────────────────
 
   instrument:
     title: Instrument
@@ -196,6 +216,8 @@ properties:
     title: Indenter Material
     type: string
 
+  # ── Analysis Settings ──────────────────────────────────────────────────────
+
   analysis_method:
     title: Analysis Method
     type: string
@@ -219,6 +241,8 @@ properties:
     title: Tip Area Function Reference
     type: string
 
+  # ── Test Environment (ISO 14577) ───────────────────────────────────────────
+
   test_temperature:
     title: Test Temperature (°C)
     description: "Ambient temperature during measurement. ISO 14577: 23 ± 5 °C."
@@ -230,6 +254,15 @@ properties:
     type: number
     minimum: 0
     maximum: 100
+
+  # ── Suppress generic has_process_condition (replaced by has_process_attribute) ──
+
+  has_process_condition:
+    type: array
+    readOnly: true
+    default: []
+
+  # ── Test Protocol ──────────────────────────────────────────────────────────
 
   has_process_attribute:
     title: Test Protocol (Numeric Conditions)
@@ -328,6 +361,8 @@ properties:
               Acquisition Rate:        [uqudt:HZ]
               Assumed Poisson's Ratio: [uqudt:UNITLESS]
     default: []
+
+  # ── Summary Statistics ─────────────────────────────────────────────────────
 
   measured_properties:
     title: Summary Statistics
