@@ -50,6 +50,9 @@
     "@id": "pmdco:PMD_0000009"
     "@type": "@id"
     "@container": "@set"
+  parameter_class:
+    "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+    "@type": "@id"
   parameter_unit:
     "@id": "qudt:hasUnit"
     "@type": "@id"
@@ -267,6 +270,31 @@ properties:
             - Hold Time
             - Acquisition Rate
             - Assumed Poisson's Ratio
+        parameter_class:
+          title: EMMO Class IRI
+          type: string
+          enum:
+            - "nanoind:TargetDisplacement"
+            - "nanoind:TargetLoad"
+            - "nanoind:TipLoadRate"
+            - "nanoind:HoldingTime"
+            - "nanoind:DataAcquisitionRate"
+          options:
+            enum_titles:
+              - TargetDisplacement
+              - TargetLoad
+              - TipLoadRate
+              - HoldingTime
+              - DataAcquisitionRate
+          x-depends-on:
+            field: parameter_label
+            values:
+              Max Depth:               ["nanoind:TargetDisplacement"]
+              Max Load:                ["nanoind:TargetLoad"]
+              Loading Rate:            ["nanoind:TipLoadRate"]
+              Hold Time:               ["nanoind:HoldingTime"]
+              Acquisition Rate:        ["nanoind:DataAcquisitionRate"]
+              Assumed Poisson's Ratio: []
         parameter_value:
           title: Value
           type: number
