@@ -118,7 +118,7 @@ properties:
     type: array
     format: kitem
     x-kitem:
-      ktypeIds: [nanoindentation-specimen, specimen, material]
+      ktypeIds: [specimen, material]
     items:
       type: string
       format: uri
@@ -126,15 +126,16 @@ properties:
     default: []
 
   has_specified_output:
-    title: Summary Dataset
+    title: Outputs (Tested Specimen & Summary Dataset)
     description: >-
-      The primary planned output of this nanoindentation session: an aggregated
-      dataset containing mean/StdDev hardness (HIT), elastic modulus (EIT), etc.,
-      derived from all valid indentations.
+      The planned outputs of this nanoindentation session. Link both:
+      (1) the post-test specimen (same material, changed state — supports PMDCo
+      state-change queries); (2) the aggregated summary dataset (mean/StdDev
+      hardness HIT, elastic modulus EIT, etc.). Type distinguishes them in SPARQL.
     type: array
     format: kitem
     x-kitem:
-      ktypeIds: [nanoindentation-dataset, dataset]
+      ktypeIds: [specimen, nanoindentation-dataset, dataset]
     items:
       type: string
       format: uri

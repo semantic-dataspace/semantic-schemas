@@ -1,33 +1,43 @@
-# OO-LD Schema for Specimen (PMDCo duality object/material pattern)
+# OO-LD Schema for Specimen (PMDCo TemporallyQualifiedContinuant pattern)
 # Ontology: Platform MaterialDigital Core Ontology (PMDCo)
 #   https://w3id.org/pmd/co/
 #
 # PMDCo patterns:
 #
-#   1. Duality Object / Material
-#      https://github.com/materialdigital/core-ontology/tree/main/patterns/duality%20object%20material
-#      → Specimen is a bfo:Object linked to an existing Material entity (kitem IRI).
-#        Chemical composition is a quality of the Material and is recorded in the
-#        Material's own knowledge-graph node; it is not embedded here.
+#   1. TemporallyQualifiedContinuant / Duality Object–Material
+#      https://github.com/materialdigital/core-ontology/tree/main/patterns/
+#      → Specimen is a bfo:Object AND pmdco:TemporallyQualifiedContinuant.
+#        It is_state_of (PMD_0000070) a Material entity.
+#        It exists_at (BFO_0000108) a TemporalInterval (BFO_0000202).
+#        Pre-test and post-test specimens of the same material each have their own
+#        exists_at interval but share the same is_state_of Material link.
 #
 #   2. Material Property (Quality)
-#      https://github.com/materialdigital/core-ontology/tree/main/patterns/material%20property%20(quality)
 #      → Mass quality with ScalarValueSpecification (OBI_0001931).
 #
-# Graph pattern:
+# Graph pattern (state-change):
 #
-#   Specimen  (bfo:BFO_0000030, Object)
-#     rdfs:label ──────────────────────────────────────── name string
-#     has_quality ────────────────────────────────────► Mass (PMD_0020133)  [optional]
-#       quality_of ──────────────────────────────────── Specimen ← back-ref
-#       specified_by_value ─────────────────────────► ScalarValueSpecification (OBI_0001931)
-#         has_specified_numeric_value ─────────────── xsd:double
-#         has_measurement_unit_label ──────────────── unit IRI  (g · kg · mg)
-#     schema:material ────────────────────────────────► Material IRI  [optional, kitem]
-#     prov:wasDerivedFrom ────────────────────────────► Semi-finished product IRI  [optional, kitem]
-#       The abstract material identity is also accessible transitively via
-#       semi-finished-product's own schema:material link. When source is set,
-#       the UI should offer to auto-populate schema:material from source.made_of.
+#   ex:the_material  a  pmdco:PMD_0000000 .                          # material anchor
+#
+#   ex:specimen_pre  a  bfo:BFO_0000030, pmdco:PMD_0000068 ;        # pre-test state
+#     pmdco:PMD_0000070  ex:the_material ;                          # is_state_of
+#     bfo:BFO_0000108    ex:intvl_pre .                             # exists_at
+#
+#   ex:specimen_post  a  bfo:BFO_0000030, pmdco:PMD_0000068 ;       # post-test state
+#     pmdco:PMD_0000070  ex:the_material ;                          # is_state_of
+#     bfo:BFO_0000108    ex:intvl_post .                            # exists_at
+#
+#   ex:process
+#     obi:OBI_0000293  ex:specimen_pre ;                            # has_specified_input
+#     obi:OBI_0000299  ex:specimen_post .                           # has_specified_output
+#
+# SPARQL state-change query:
+#   SELECT ?process ?pre ?post ?material WHERE {
+#     ?process obi:OBI_0000293 ?pre ;
+#              obi:OBI_0000299 ?post .
+#     ?pre  pmdco:PMD_0000070 ?material .
+#     ?post pmdco:PMD_0000070 ?material .
+#   }
 
 "@context":
   obo: "http://purl.obolibrary.org/obo/"
@@ -58,8 +68,18 @@
   id: "@id"
   label:
     "@id": "rdfs:label"
+  # PMDCo is_state_of (PMD_0000070): links specimen to the abstract material identity.
+  # Pre-test and post-test specimens of the SAME material both point here.
+  material:
+    "@id": "pmdco:PMD_0000070"
+    "@type": "@id"
+  # BFO exists_at (BFO_0000108): links specimen to the temporal interval of its existence.
+  exists_at:
+    "@id": "bfo:0000108"
+    "@type": "@id"
+  # Mass quality
   mass:
-    "@id": "ro:0000086"   # RO_0000086  has_quality  (mass quality)
+    "@id": "ro:0000086"   # RO_0000086  has_quality
     "@type": "@id"
   quality_of:
     "@id": "ro:0000080"   # RO_0000080  quality_of
@@ -73,22 +93,40 @@
   unit:
     "@id": "iao:0000039"  # IAO_0000039  has_measurement_unit_label
     "@type": "@id"
-  material:
-    "@id": "schema:material"
-    "@type": "@id"
   source:
     "@id": "http://www.w3.org/ns/prov#wasDerivedFrom"
     "@type": "@id"
+  # Specimen metadata (DSMS specimen vocabulary)
+  temporal_state:
+    "@id": "https://w3id.org/dsms/specimen#temporalState"
+  material_designation:
+    "@id": "http://purl.org/dc/terms/title"
+  material_class:
+    "@id": "https://w3id.org/dsms/specimen#hasMaterialClass"
+  batch_lot:
+    "@id": "https://w3id.org/dsms/specimen#hasBatchID"
+  heat_treatment:
+    "@id": "https://w3id.org/dsms/specimen#hasHeatTreatmentDescription"
+  surface_preparation:
+    "@id": "https://w3id.org/dsms/specimen#hasSurfacePreparation"
+  surface_roughness_ra:
+    "@id": "https://w3id.org/dsms/specimen#hasSurfaceRoughnessRa"
+    "@type": "xsd:double"
+  surface_roughness_rq:
+    "@id": "https://w3id.org/dsms/specimen#hasSurfaceRoughnessRq"
+    "@type": "xsd:double"
+  specimen_form:
+    "@id": "https://w3id.org/dsms/specimen#hasSpecimenForm"
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: >-
-  Schema for a bfo:Object (Specimen) bearing an optional PMDCo Mass quality,
-  linked to an optional Material entity via schema:material (PMDCo duality pattern),
-  and optionally to the specific semi-finished product it was prepared from via
-  prov:wasDerivedFrom. When source is set, schema:material can be derived from
-  source.made_of; the UI should offer to populate it automatically.
-x-schema-version: '0.4.1'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/specimen-PMDCo-v0.4.1/schemas/specimen/PMDCo/specs/schema.oold.generated.json'
+  PMDCo TemporallyQualifiedContinuant pattern for a specimen.
+  Typed as both bfo:Object and pmdco:TemporallyQualifiedContinuant.
+  Links to Material via is_state_of (PMD_0000070) and to a TemporalInterval
+  via exists_at (BFO_0000108). State-change demonstrated by connecting pre-test
+  and post-test specimens — sharing the same material link — through a process.
+x-schema-version: '0.5.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/specimen/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'draft'
 title: Specimen
 type: object
@@ -99,17 +137,20 @@ required:
 
 properties:
 
+  # ── Root types: Object + TemporallyQualifiedContinuant ─────────────────────
+
   type:
     title: Type
     type: array
     items:
       type: string
     readOnly: true
-    const: ["bfo:0000030"]
-    default: ["bfo:0000030"]
+    const: ["bfo:0000030", "pmdco:PMD_0000068"]
+    default: ["bfo:0000030", "pmdco:PMD_0000068"]
     options:
       enum_titles:
         - bfo:Object
+        - pmdco:TemporallyQualifiedContinuant
 
   id:
     title: ID
@@ -122,8 +163,142 @@ properties:
     title: Specimen Name
     description: >-
       Human-readable name or identifier for this specimen
-      (e.g. "316L tensile bar #1").
+      (e.g. "316L tensile bar #1 — pre-test").
     type: string
+
+  # ── PMDCo state-change pattern ─────────────────────────────────────────────
+
+  material:
+    title: Material (is_state_of)
+    description: >-
+      The abstract material identity this specimen is a state of
+      (pmdco:PMD_0000070 is_state_of). Pre-test and post-test specimens of the
+      same material both link here — the process connecting them proves state change.
+    type: string
+    format: kitem
+    x-kitem:
+      ktypeIds: [material]
+
+  exists_at:
+    title: Exists At (Temporal Interval)
+    description: >-
+      The temporal interval during which this specimen exists in this state
+      (bfo:BFO_0000108). Pre-test and post-test specimens have distinct intervals.
+    type: object
+    required:
+      - type
+      - id
+    properties:
+      type:
+        title: Type
+        type: array
+        items:
+          type: string
+        readOnly: true
+        const: ["bfo:0000202"]
+        default: ["bfo:0000202"]
+        options:
+          enum_titles:
+            - bfo:TemporalInterval
+      id:
+        title: Temporal Interval ID
+        description: Identifier for this temporal interval node; managed by the consumer.
+        type: string
+        readOnly: true
+        default: temporal-interval
+      label:
+        title: Description
+        description: "Human label for this interval, e.g. 'before nanoindentation', 'after sawing'"
+        type: string
+
+  temporal_state:
+    title: Temporal State
+    description: >-
+      Human-readable lifecycle label: as-received, pre-test, or post-test.
+      Complements exists_at with a controlled vocabulary term for filtering.
+    type: string
+    enum:
+      - as-received
+      - pre-test
+      - post-test
+
+  # ── Provenance ─────────────────────────────────────────────────────────────
+
+  source:
+    title: Source
+    description: >-
+      The semi-finished product (e.g. metal sheet, rod) this specimen was
+      cut or prepared from (prov:wasDerivedFrom).
+    type: string
+    format: kitem
+    x-kitem:
+      ktypeIds: [semi-finished-product]
+
+  # ── Material metadata ──────────────────────────────────────────────────────
+
+  material_designation:
+    title: Material Designation
+    description: "Standard designation or name, e.g. AA2618-T6, 316L, Fused Silica, PMMA"
+    type: string
+
+  material_class:
+    title: Material Class
+    type: string
+    enum:
+      - Metal
+      - Ceramic
+      - Polymer
+      - Composite
+      - Coating
+      - Other
+
+  batch_lot:
+    title: Batch / Lot ID
+    description: Batch or lot identifier for traceability.
+    type: string
+
+  # ── Thermal history ────────────────────────────────────────────────────────
+
+  heat_treatment:
+    title: Heat Treatment
+    description: "e.g. Solution treated 530°C/1h + aged 190°C/2h (AA2618 T6)"
+    type: string
+    format: textarea
+
+  # ── Surface quality ────────────────────────────────────────────────────────
+
+  surface_preparation:
+    title: Surface Preparation
+    description: "Polishing/preparation sequence, e.g. SiC 800→1200 grit, 3µm + 1µm diamond, OPS"
+    type: string
+    format: textarea
+
+  surface_roughness_ra:
+    title: Surface Roughness Ra (nm)
+    description: Arithmetic mean roughness in nanometres.
+    type: number
+    minimum: 0
+
+  surface_roughness_rq:
+    title: Surface Roughness Rq (nm)
+    description: Root mean square roughness in nanometres.
+    type: number
+    minimum: 0
+
+  # ── Geometry ───────────────────────────────────────────────────────────────
+
+  specimen_form:
+    title: Specimen Form
+    description: "e.g. Bulk, Thin Film, Coating on Substrate, Cross-section"
+    type: string
+    enum:
+      - Bulk
+      - Thin Film
+      - Coating on Substrate
+      - Cross-section
+      - Other
+
+  # ── Mass quality ───────────────────────────────────────────────────────────
 
   mass:
     title: Mass
@@ -150,7 +325,6 @@ properties:
             - pmdco:Mass
       id:
         title: ID
-        description: Identifier for this mass quality instance; managed by the consumer.
         type: string
         readOnly: true
         default: mass
@@ -162,7 +336,6 @@ properties:
         $comment: Must match the root specimen id; set by the consumer.
       specified_by_value:
         title: Scalar Value
-        description: A ScalarValueSpecification carrying the numeric mass value and its unit.
         type: object
         required:
           - type
@@ -183,18 +356,15 @@ properties:
                 - obi:ScalarValueSpecification
           id:
             title: ID
-            description: Identifier for this value specification; managed by the consumer.
             type: string
             readOnly: true
             default: mass-svs
           value:
             title: Mass Value
-            description: Numeric mass of the specimen.
             type: number
             minimum: 0
           unit:
             title: Unit
-            description: Unit of the mass value.
             type: string
             enum:
               - "uo:0000021"
@@ -206,24 +376,3 @@ properties:
                 - gram (g)
                 - kilogram (kg)
                 - milligram (mg)
-
-  material:
-    title: Material
-    description: >-
-      Abstract alloy or substance identity of this specimen, following the PMDCo
-      duality object/material pattern. Links to a material k-item carrying
-      composition and designation data. Can be auto-populated from source.made_of
-      when source is set.
-    x-ktype: [material]
-    type: string
-    format: uri
-
-  source:
-    title: Source
-    description: >-
-      The specific semi-finished product (e.g. metal sheet) this specimen was
-      cut or prepared from. Links to a semi-finished-product k-item carrying
-      physical provenance such as lot number, supplier, and dimensions.
-    x-ktype: [semi-finished-product]
-    type: string
-    format: uri
