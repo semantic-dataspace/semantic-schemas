@@ -51,8 +51,8 @@
   id: "@id"
   label:
     "@id": "rdfs:label"
-  description:
-    "@id": "rdfs:comment"
+  # description → rdfs:comment removed: process-step already maps notes → rdfs:comment
+  # Redefining it here causes a duplicate "Notes/Description" field in the form.
   has_specified_input:
     "@id": "obi:0000293"   # OBI_0000293  has_specified_input
     "@type": "@id"
@@ -121,12 +121,6 @@ properties:
       Human-readable name for this characterization record
       (e.g. "Tensile test specimen 1", "Hardness measurement batch A").
     type: string
-
-  description:
-    title: Description
-    description: Optional free-text description of what this step does.
-    type: string
-    format: textarea
 
   has_specified_input:
     title: Inputs

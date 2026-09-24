@@ -1,48 +1,44 @@
 # OO-LD Schema for Nanoindentation Characterization Process (PMDCo / CHAMEO pattern)
-# Ontology: CHAMEO (Characterisation MEthodology Ontology)
-#   https://w3id.org/emmo/domain/characterisation-methodology/chameo#
 #
 # Inheritance chain:
 #   nanoindentation/PMDCo
 #     → characterization/generic/PMDCo  (allOf $ref)
 #       → process-step/PMDCo            (allOf $ref)
 #
-# Full graph pattern:
+# Fields inherited (do NOT redefine here):
+#   process-step:    type, id, label, notes, date, operator, instrument,
+#                    has_specified_input, has_specified_output, preceded_by
+#   generic:         has_process_condition
 #
-#   chameo:Nanoindentation
-#     rdfs:label ─────────────────────────────────── name string
-#     rdfs:comment ───────────────────────────────── notes string
-#     dcterms:date ───────────────────────────────── execution date
-#     prov:wasAssociatedWith ──────────────────────> Operator IRI
-#     schema:instrument ───────────────────────────> Instrument IRI
-#     obi:OBI_0000293 (has_specified_input) ───────> Specimen IRI
-#     obi:OBI_0000299 (has_specified_output) ──────> Dataset IRI
-#     bfo:BFO_0000062 (preceded_by) ──────────────> Process IRI
-#     pmdco:PMD_0000009 (has_process_attribute) ───> ParameterSpecification [x 0..N]
-#     obi:OBI_0000299 (measured_properties) ──────> MeasurementDatum [x 0..N]
-#       obi:OBI_0001938 (has_value_spec) ───────> ScalarValueSpecification
-#         obi:OBI_0001937 (result_value) ───── xsd:double
-#         iao:IAO_0000039 (result_unit) ─────── unit IRI (QUDT)
+# This schema adds only:
+#   - type override        (chameo:Nanoindentation)
+#   - has_specified_input  (x-ktype refinement)
+#   - has_specified_output (x-ktype refinement)
+#   - has_process_condition suppression (readOnly — replaced by has_process_attribute)
+#   - Instrument setup fields
+#   - Analysis settings
+#   - Test environment conditions
+#   - has_process_attribute  (test protocol parameters)
+#   - measured_properties    (summary statistics)
 
 "@context":
-  # Namespace prefixes (those also in generic kept here for safe prefix resolution)
   rdfs:    "http://www.w3.org/2000/01/rdf-schema#"
   xsd:     "http://www.w3.org/2001/XMLSchema#"
-  dcterms: "http://purl.org/dc/terms/"
   pmdco:   "https://w3id.org/pmd/co/"
   qudt:    "http://qudt.org/schema/qudt/"
   uqudt:   "http://qudt.org/vocab/unit/"
+  obo:     "http://purl.obolibrary.org/obo/"
   chameo:  "https://w3id.org/emmo/domain/characterisation-methodology/chameo#"
   nanoind: "https://w3id.org/emmo/domain/nanoindentation#"
-  # Term mappings not provided by characterization/generic:
-  #   type, id, label, description, has_specified_input, has_specified_output,
-  #   preceded_by, has_process_condition, parameter_label, parameter_value → inherited
-  date:
-    "@id": "dcterms:date"
-    "@type": "xsd:dateTime"
+  # Explicit (also inherited via allOf) — ensures correct resolution for array items
+  parameter_label:
+    "@id": "http://www.w3.org/2000/01/rdf-schema#label"
+  parameter_value:
+    "@id": "http://qudt.org/schema/qudt/value"
+    "@type": "xsd:double"
+  # No "@type": "@id" — values are nested objects, not IRI strings
   has_process_attribute:
     "@id": "pmdco:PMD_0000009"
-    "@type": "@id"
     "@container": "@set"
   parameter_class:
     "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
@@ -55,9 +51,6 @@
     "@container": "@set"
   is_about:
     "@id": "http://purl.obolibrary.org/obo/IAO_0000136"
-    "@type": "@id"
-  is_quality_measurement_of:
-    "@id": "http://purl.obolibrary.org/obo/IAO_0000221"
     "@type": "@id"
   has_value_spec:
     "@id": "http://purl.obolibrary.org/obo/OBI_0001938"
@@ -97,7 +90,7 @@ required:
 
 properties:
 
-  # ── Identity ───────────────────────────────────────────────────────────────
+  # ── Override: root type → chameo:Nanoindentation ───────────────────────────
 
   type:
     title: Type
@@ -111,32 +104,11 @@ properties:
       enum_titles:
         - chameo:Nanoindentation
 
-  id:
-    title: ID
-    type: string
-    readOnly: true
-    default: nanoindentation-experiment
-
-  label:
-    title: Experiment Name
-    type: string
-
-  description:
-    title: Notes
-    description: Free-text notes about this measurement session.
-    type: string
-    format: textarea
-
-  date:
-    title: Test Date
-    type: string
-    format: date-time
-
-  # ── Provenance ─────────────────────────────────────────────────────────────
+  # ── Override: narrow x-ktype for specimen / dataset linking ────────────────
 
   has_specified_input:
     title: Specimen
-    x-ktype: [nanoindentation-specimen, specimen]
+    x-ktype: [nanoindentation-specimen, specimen, material]
     type: array
     items:
       type: string
@@ -146,7 +118,7 @@ properties:
 
   has_specified_output:
     title: Summary Dataset
-    x-ktype: [nanoindentation-dataset]
+    x-ktype: [nanoindentation-dataset, dataset]
     type: array
     items:
       type: string
@@ -154,32 +126,14 @@ properties:
     uniqueItems: true
     default: []
 
-  preceded_by:
-    title: Preceded By
-    description: Processes that directly precede this measurement (e.g. surface preparation, heat treatment).
-    x-ktype: [process]
-    type: array
-    items:
-      type: string
-      format: uri
-    uniqueItems: true
-    default: []
+  # ── Suppress inherited has_process_condition (use has_process_attribute instead) ──
 
-  operator:
-    title: Operator
-    x-ktype: [expert]
-    x-kitem: true
-    type: string
-    format: uri
+  has_process_condition:
+    type: array
+    readOnly: true
+    default: []
 
   # ── Instrument Setup ───────────────────────────────────────────────────────
-
-  instrument:
-    title: Instrument
-    x-ktype: [measurement-device]
-    x-kitem: true
-    type: string
-    format: uri
 
   instrument_serial:
     title: Instrument Serial Number
@@ -249,14 +203,7 @@ properties:
     minimum: 0
     maximum: 100
 
-  # ── Suppress generic has_process_condition (replaced by has_process_attribute) ──
-
-  has_process_condition:
-    type: array
-    readOnly: true
-    default: []
-
-  # ── Test Protocol ──────────────────────────────────────────────────────────
+  # ── Test Protocol (quantitative parameters) ────────────────────────────────
 
   has_process_attribute:
     title: Test Protocol (Numeric Conditions)
@@ -298,7 +245,7 @@ properties:
             - Acquisition Rate
             - Assumed Poisson's Ratio
         parameter_class:
-          title: Ontology Class IRI
+          title: Ontology Class
           type: string
           enum:
             - "nanoind:TargetDisplacement"
@@ -309,12 +256,12 @@ properties:
             - "https://w3id.org/dsms/nanoindentation#AssumedPoissonsRatio"
           options:
             enum_titles:
-              - "nanoind:TargetDisplacement"
-              - "nanoind:TargetLoad"
-              - "nanoind:TipLoadRate"
-              - "nanoind:HoldingTime"
-              - "nanoind:DataAcquisitionRate"
-              - "dsms:AssumedPoissonsRatio"
+              - "TargetDisplacement (Max Depth)"
+              - "TargetLoad (Max Load)"
+              - "TipLoadRate (Loading Rate)"
+              - "HoldingTime (Hold Time)"
+              - "DataAcquisitionRate (Acquisition Rate)"
+              - "AssumedPoissonsRatio"
           x-depends-on:
             field: parameter_label
             values:
