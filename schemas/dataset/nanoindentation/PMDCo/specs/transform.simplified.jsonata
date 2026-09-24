@@ -78,10 +78,11 @@
   $colSpecs := $exists(columns) and $count(columns) > 0
     ? $map(columns, function($c) {
         {
-          "id":                $dsId & "-col-" & $replace($lowercase($trim($c.name)), /[^a-z0-9]+/, "-"),
-          "label":             $c.name,
-          "observed_property": $c.property_iri,
-          "has_unit":          $c.unit_iri
+          "id":           $dsId & "-col-" & $replace($lowercase($trim($c.name)), /[^a-z0-9]+/, "-"),
+          "type":         ["csvw:Column"],
+          "col_name":     $c.name,
+          "property_url": $c.property_iri,
+          "has_unit":     $c.unit_iri
         }
       })
     : undefined;

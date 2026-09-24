@@ -33,8 +33,7 @@
   qudt:    "http://qudt.org/schema/qudt/"
   uqudt:   "http://qudt.org/vocab/unit/"
   chameo:  "https://w3id.org/emmo/domain/characterisation-methodology/chameo#"
-  sosa:    "http://www.w3.org/ns/sosa/"
-  nanoind: "https://w3id.org/emmo/domain/nanoindentation#"
+  csvw:    "http://www.w3.org/ns/csvw#"
   type:    "@type"
   id:      "@id"
   label:
@@ -75,10 +74,12 @@
     "@id": "http://purl.obolibrary.org/obo/OBI_0001927"
     "@type": "@id"
   timeseries_column:
-    "@id": "https://w3id.org/emmo/domain/nanoindentation#hasColumnSpec"
+    "@id": "http://www.w3.org/ns/csvw#column"
     "@container": "@set"
-  observed_property:
-    "@id": "http://www.w3.org/ns/sosa/observedProperty"
+  col_name:
+    "@id": "http://www.w3.org/ns/csvw#name"
+  property_url:
+    "@id": "http://www.w3.org/ns/csvw#propertyUrl"
     "@type": "@id"
   has_unit:
     "@id": "http://qudt.org/schema/qudt/hasUnit"
@@ -305,18 +306,26 @@ properties:
     items:
       type: object
       required:
-        - label
-        - observed_property
+        - col_name
+        - property_url
         - has_unit
       properties:
         id:
           title: Column Spec ID
           type: string
           readOnly: true
-        label:
+        type:
+          title: Type
+          type: array
+          items:
+            type: string
+          readOnly: true
+          const: ["csvw:Column"]
+          default: ["csvw:Column"]
+        col_name:
           title: Column Name
           type: string
-        observed_property:
+        property_url:
           title: Physical Property IRI
           description: EMMO nanoindentation property IRI for this column.
           type: string
