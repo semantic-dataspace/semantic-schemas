@@ -316,15 +316,12 @@ properties:
         label:
           title: Column Name
           type: string
-          readOnly: true
         observed_property:
           title: Physical Property IRI
           description: EMMO nanoindentation property IRI for this column.
           type: string
-          readOnly: true
         has_unit:
           title: Unit IRI
           description: QUDT unit IRI for this column.
           type: string
-          readOnly: true
     default: []
