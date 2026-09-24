@@ -21,42 +21,25 @@
 #         iao:IAO_0000039 (result_unit) ─────── unit IRI (QUDT)
 
 "@context":
-  rdf:     "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  # Prefixes not declared in characterization/generic (inherited via allOf)
   rdfs:    "http://www.w3.org/2000/01/rdf-schema#"
   xsd:     "http://www.w3.org/2001/XMLSchema#"
   dcterms: "http://purl.org/dc/terms/"
   prov:    "http://www.w3.org/ns/prov#"
   schema:  "https://schema.org/"
-  obo:     "http://purl.obolibrary.org/obo/"
-  obi:
-    "@id": "http://purl.obolibrary.org/obo/OBI_"
-    "@prefix": true
   pmdco:   "https://w3id.org/pmd/co/"
   qudt:    "http://qudt.org/schema/qudt/"
   uqudt:   "http://qudt.org/vocab/unit/"
   chameo:  "https://w3id.org/emmo/domain/characterisation-methodology/chameo#"
   nanoind: "https://w3id.org/emmo/domain/nanoindentation#"
-  type:    "@type"
-  id:      "@id"
-  label:
-    "@id": "rdfs:label"
+  # Term mappings — only those not already provided by characterization/generic:
+  #   type, id, label, has_specified_input, has_specified_output, preceded_by,
+  #   parameter_label, parameter_value, has_process_condition → inherited from generic
   notes:
     "@id": "rdfs:comment"
   date:
     "@id": "dcterms:date"
     "@type": "xsd:dateTime"
-  has_specified_input:
-    "@id": "http://purl.obolibrary.org/obo/OBI_0000293"
-    "@type": "@id"
-    "@container": "@set"
-  has_specified_output:
-    "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
-    "@type": "@id"
-    "@container": "@set"
-  preceded_by:
-    "@id": "http://purl.obolibrary.org/obo/BFO_0000062"
-    "@type": "@id"
-    "@container": "@set"
   operator:
     "@id": "http://www.w3.org/ns/prov#wasAssociatedWith"
     "@type": "@id"
@@ -67,11 +50,6 @@
     "@id": "pmdco:PMD_0000009"
     "@type": "@id"
     "@container": "@set"
-  parameter_label:
-    "@id": "rdfs:label"
-  parameter_value:
-    "@id": "qudt:value"
-    "@type": "xsd:double"
   parameter_unit:
     "@id": "qudt:hasUnit"
     "@type": "@id"
@@ -95,6 +73,12 @@
   specifies_value_of:
     "@id": "http://purl.obolibrary.org/obo/OBI_0001927"
     "@type": "@id"
+  test_temperature:
+    "@id": "nanoind:testTemperature"
+    "@type": "xsd:double"
+  test_humidity:
+    "@id": "nanoind:testRelativeHumidity"
+    "@type": "xsd:double"
 
 allOf:
   - $ref: "../../../generic/PMDCo/specs/schema.oold.yaml"
@@ -231,6 +215,18 @@ properties:
   tip_area_function:
     title: Tip Area Function Reference
     type: string
+
+  test_temperature:
+    title: Test Temperature (°C)
+    description: "Ambient temperature during measurement. ISO 14577: 23 ± 5 °C."
+    type: number
+
+  test_humidity:
+    title: Relative Humidity (%)
+    description: "Ambient relative humidity during measurement. ISO 14577: 45 ± 10 %."
+    type: number
+    minimum: 0
+    maximum: 100
 
   has_process_attribute:
     title: Test Protocol (Numeric Conditions)
