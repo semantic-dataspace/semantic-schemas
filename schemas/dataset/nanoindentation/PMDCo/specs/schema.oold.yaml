@@ -302,7 +302,6 @@ properties:
       Each entry maps one column name to its physical property IRI (from the
       nanoindentation EMMO ontology) and QUDT unit IRI.
     type: array
-    readOnly: true
     items:
       type: object
       required:
