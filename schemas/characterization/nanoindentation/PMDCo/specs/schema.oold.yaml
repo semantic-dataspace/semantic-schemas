@@ -21,14 +21,13 @@
 #   - measured_properties    (summary statistics)
 
 "@context":
-  rdfs:    "http://www.w3.org/2000/01/rdf-schema#"
-  xsd:     "http://www.w3.org/2001/XMLSchema#"
-  pmdco:   "https://w3id.org/pmd/co/"
-  qudt:    "http://qudt.org/schema/qudt/"
-  uqudt:   "http://qudt.org/vocab/unit/"
-  obo:     "http://purl.obolibrary.org/obo/"
+  # Nanoindentation-specific prefixes and term mappings only.
+  # All process-step and characterization/generic terms are inherited
+  # via allOf $ref and merged by the backend at RDF generation time.
   chameo:  "https://w3id.org/emmo/domain/characterisation-methodology/chameo#"
   nanoind: "https://w3id.org/emmo/domain/nanoindentation#"
+  uqudt:   "http://qudt.org/vocab/unit/"
+  obo:     "http://purl.obolibrary.org/obo/"
   measured_properties:
     "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
     "@container": "@set"
@@ -223,11 +222,6 @@ properties:
             - Std Dev Elastic Modulus EIT
             - Mean Maximum Depth hmax
             - Number of Valid Indentations
-        is_about:
-          title: Is About (Specimen)
-          type: string
-          readOnly: true
-          default: ""
         has_value_spec:
           title: Value Specification
           type: object
@@ -278,14 +272,4 @@ properties:
                   Std Dev Elastic Modulus EIT:   [uqudt:GigaPA]
                   Mean Maximum Depth hmax:       [uqudt:MicroM]
                   Number of Valid Indentations:  [uqudt:UNITLESS]
-            specifies_value_of:
-              title: Specifies Value Of
-              type: string
-              readOnly: true
-              default: ""
-            is_about:
-              title: Is About (Specimen)
-              type: string
-              readOnly: true
-              default: ""
     default: []
