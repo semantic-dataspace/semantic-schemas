@@ -58,6 +58,23 @@
       "type": "string",
       "examples": ["hc out of calibrated range [42 nm, 593 nm]"]
     },
+    "columns": {
+      "title": "Timeseries Column Specifications",
+      "description": "Semantic column specs from the parser — column name mapped to EMMO property IRI and QUDT unit IRI.",
+      "type": "array",
+      "items": {
+        "title": "Column Spec",
+        "type": "object",
+        "required": ["name", "property_iri", "unit_iri"],
+        "additionalProperties": false,
+        "properties": {
+          "name":         { "title": "Column Name",    "type": "string" },
+          "property_iri": { "title": "Property IRI",   "type": "string" },
+          "unit_iri":     { "title": "Unit IRI",       "type": "string" }
+        }
+      },
+      "default": []
+    },
     "results": {
       "title": "Indentation Results",
       "description": "Scalar results from the load-displacement curve analysis. Add one entry per quantity.",

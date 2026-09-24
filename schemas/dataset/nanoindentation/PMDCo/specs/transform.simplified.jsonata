@@ -19,6 +19,10 @@
    *     name                 string   e.g. "Hardness HIT"
    *     value                number
    *     unit                 string   "GPa" | "mN" | "um" | "%" | "-" | "uJ"
+   *   columns                array    optional: timeseries column semantic specs
+   *     name                 string   column header as it appears in CSV
+   *     property_iri         string   EMMO nanoindentation property IRI
+   *     unit_iri             string   QUDT unit IRI
    */
 
   $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/dataset-nanoindentation-PMDCo-v0.1.0/schemas/dataset/nanoindentation/PMDCo/specs/schema.oold.yaml";
@@ -70,7 +74,22 @@
   $withY         := $exists(y_position)         ? $merge([$withX,         {"y_position":         y_position}])          : $withX;
   $withWarnings  := $exists(analysis_warnings)  ? $merge([$withY,         {"analysis_warnings":  analysis_warnings}])  : $withY;
 
+  /* ── Timeseries column semantic specifications ───────────────────────── */
+  $colSpecs := $exists(columns) and $count(columns) > 0
+    ? $map(columns, function($c) {
+        {
+          "label":             $c.name,
+          "observed_property": $c.property_iri,
+          "has_unit":          $c.unit_iri
+        }
+      })
+    : undefined;
+
+  $withColumns := $exists($colSpecs)
+    ? $merge([$withWarnings, {"timeseries_column": $colSpecs}])
+    : $withWarnings;
+
   $exists($measured)
-    ? $merge([$withWarnings, {"measured_properties": $measured}])
-    : $withWarnings
+    ? $merge([$withColumns, {"measured_properties": $measured}])
+    : $withColumns
 )
