@@ -28,6 +28,24 @@
   nanoind: "https://w3id.org/emmo/domain/nanoindentation#"
   uqudt:   "http://qudt.org/vocab/unit/"
   obo:     "http://purl.obolibrary.org/obo/"
+  # Instrument setup — DSMS nanoindentation vocabulary
+  instrument_serial:
+    "@id": "https://w3id.org/dsms/nanoindentation#instrumentSerialNumber"
+  control_mode:
+    "@id": "https://w3id.org/dsms/nanoindentation#controlMode"
+  indenter_geometry:
+    "@id": "https://w3id.org/dsms/nanoindentation#indenterGeometry"
+  indenter_material:
+    "@id": "https://w3id.org/dsms/nanoindentation#indenterMaterial"
+  # Analysis settings
+  analysis_method:
+    "@id": "https://w3id.org/dsms/nanoindentation#analysisMethod"
+  unload_fit_range:
+    "@id": "https://w3id.org/dsms/nanoindentation#unloadFitRange"
+  test_standard:
+    "@id": "https://w3id.org/dsms/nanoindentation#testStandard"
+  tip_area_function:
+    "@id": "https://w3id.org/dsms/nanoindentation#tipAreaFunction"
   measured_properties:
     "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
     "@container": "@set"
