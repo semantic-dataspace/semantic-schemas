@@ -14,7 +14,6 @@
 #   - type override        (chameo:Nanoindentation)
 #   - has_specified_input  (x-ktype refinement)
 #   - has_specified_output (x-ktype refinement)
-#   - has_process_condition suppression (readOnly — replaced by has_process_attribute)
 #   - Instrument setup fields
 #   - Analysis settings
 #   - Test environment conditions
@@ -30,22 +29,6 @@
   obo:     "http://purl.obolibrary.org/obo/"
   chameo:  "https://w3id.org/emmo/domain/characterisation-methodology/chameo#"
   nanoind: "https://w3id.org/emmo/domain/nanoindentation#"
-  # Explicit (also inherited via allOf) — ensures correct resolution for array items
-  parameter_label:
-    "@id": "http://www.w3.org/2000/01/rdf-schema#label"
-  parameter_value:
-    "@id": "http://qudt.org/schema/qudt/value"
-    "@type": "xsd:double"
-  # No "@type": "@id" — values are nested objects, not IRI strings
-  has_process_attribute:
-    "@id": "pmdco:PMD_0000009"
-    "@container": "@set"
-  parameter_class:
-    "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-    "@type": "@id"
-  parameter_unit:
-    "@id": "qudt:hasUnit"
-    "@type": "@id"
   measured_properties:
     "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
     "@container": "@set"
@@ -126,13 +109,6 @@ properties:
     uniqueItems: true
     default: []
 
-  # ── Suppress inherited has_process_condition (use has_process_attribute instead) ──
-
-  has_process_condition:
-    type: array
-    readOnly: true
-    default: []
-
   # ── Instrument Setup ───────────────────────────────────────────────────────
 
   instrument_serial:
@@ -202,106 +178,6 @@ properties:
     type: number
     minimum: 0
     maximum: 100
-
-  # ── Test Protocol (quantitative parameters) ────────────────────────────────
-
-  has_process_attribute:
-    title: Test Protocol (Numeric Conditions)
-    description: >-
-      Quantitative test parameters as ParameterSpecification nodes (pmdco:PMD_0000013).
-    type: array
-    items:
-      type: object
-      title: Test Parameter
-      required:
-        - type
-        - id
-        - parameter_label
-      properties:
-        type:
-          title: Type
-          type: array
-          items:
-            type: string
-          readOnly: true
-          const: ["pmdco:PMD_0000013"]
-          default: ["pmdco:PMD_0000013"]
-          options:
-            enum_titles:
-              - pmdco:ParameterSpecification
-        id:
-          title: ID
-          type: string
-          readOnly: true
-          default: condition-1
-        parameter_label:
-          title: Parameter Name
-          type: string
-          enum:
-            - Max Depth
-            - Max Load
-            - Loading Rate
-            - Hold Time
-            - Acquisition Rate
-            - Assumed Poisson's Ratio
-        parameter_class:
-          title: Ontology Class
-          type: string
-          enum:
-            - "nanoind:TargetDisplacement"
-            - "nanoind:TargetLoad"
-            - "nanoind:TipLoadRate"
-            - "nanoind:HoldingTime"
-            - "nanoind:DataAcquisitionRate"
-            - "https://w3id.org/dsms/nanoindentation#AssumedPoissonsRatio"
-          options:
-            enum_titles:
-              - "TargetDisplacement (Max Depth)"
-              - "TargetLoad (Max Load)"
-              - "TipLoadRate (Loading Rate)"
-              - "HoldingTime (Hold Time)"
-              - "DataAcquisitionRate (Acquisition Rate)"
-              - "AssumedPoissonsRatio"
-          x-depends-on:
-            field: parameter_label
-            values:
-              Max Depth:               ["nanoind:TargetDisplacement"]
-              Max Load:                ["nanoind:TargetLoad"]
-              Loading Rate:            ["nanoind:TipLoadRate"]
-              Hold Time:               ["nanoind:HoldingTime"]
-              Acquisition Rate:        ["nanoind:DataAcquisitionRate"]
-              Assumed Poisson's Ratio: ["https://w3id.org/dsms/nanoindentation#AssumedPoissonsRatio"]
-        parameter_value:
-          title: Value
-          type: number
-        parameter_unit:
-          title: Unit
-          type: string
-          enum:
-            - uqudt:MicroM
-            - uqudt:MilliN
-            - uqudt:PER-SEC
-            - uqudt:SEC
-            - uqudt:HZ
-            - uqudt:UNITLESS
-          options:
-            enum_titles:
-              - "um (micrometre)"
-              - "mN (millinewton)"
-              - "1/s (per second)"
-              - "s (second)"
-              - "Hz (hertz)"
-              - "- (dimensionless)"
-          x-depends-on:
-            field: parameter_label
-            values:
-              Max Depth:               [uqudt:MicroM]
-              Max Load:                [uqudt:MilliN]
-              Loading Rate:            [uqudt:PER-SEC]
-              Hold Time:               [uqudt:SEC]
-              Acquisition Rate:        [uqudt:HZ]
-              Assumed Poisson's Ratio: [uqudt:UNITLESS]
-    default: []
 
   # ── Summary Statistics ─────────────────────────────────────────────────────
 
