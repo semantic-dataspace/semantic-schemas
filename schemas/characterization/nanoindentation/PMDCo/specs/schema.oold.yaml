@@ -29,8 +29,6 @@
   rdfs:    "http://www.w3.org/2000/01/rdf-schema#"
   xsd:     "http://www.w3.org/2001/XMLSchema#"
   dcterms: "http://purl.org/dc/terms/"
-  prov:    "http://www.w3.org/ns/prov#"
-  schema:  "https://schema.org/"
   pmdco:   "https://w3id.org/pmd/co/"
   qudt:    "http://qudt.org/schema/qudt/"
   uqudt:   "http://qudt.org/vocab/unit/"
@@ -42,12 +40,6 @@
   date:
     "@id": "dcterms:date"
     "@type": "xsd:dateTime"
-  operator:
-    "@id": "http://www.w3.org/ns/prov#wasAssociatedWith"
-    "@type": "@id"
-  instrument:
-    "@id": "https://schema.org/instrument"
-    "@type": "@id"
   has_process_attribute:
     "@id": "pmdco:PMD_0000009"
     "@type": "@id"
@@ -183,7 +175,7 @@ properties:
 
   instrument:
     title: Instrument
-    x-ktype: [characterisation-measurement-instrument]
+    x-ktype: [measurement-device]
     type: string
     format: uri
 

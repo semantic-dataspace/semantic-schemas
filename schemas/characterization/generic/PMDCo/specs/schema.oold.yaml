@@ -46,6 +46,8 @@
     "@id": "http://purl.obolibrary.org/obo/BFO_"
     "@prefix": true
   pmdco: "https://w3id.org/pmd/co/"
+  prov: "http://www.w3.org/ns/prov#"
+  schema: "https://schema.org/"
   qudt: "http://qudt.org/schema/qudt/"
   type: "@type"
   id: "@id"
@@ -65,6 +67,12 @@
     "@id": "bfo:0000062"   # BFO_0000062  preceded_by
     "@type": "@id"
     "@container": "@set"
+  operator:
+    "@id": "prov:wasAssociatedWith"
+    "@type": "@id"
+  instrument:
+    "@id": "schema:instrument"
+    "@type": "@id"
   has_process_condition:
     "@id": "pmdco:PMD_0000016"   # PMD_0000016  has_process_condition
     "@type": "@id"
@@ -166,6 +174,20 @@ properties:
       format: uri
     uniqueItems: true
     default: []
+
+  operator:
+    title: Operator
+    description: Person who carried out this characterization.
+    x-ktype: [expert]
+    type: string
+    format: uri
+
+  instrument:
+    title: Instrument
+    description: Measurement device used to carry out this characterization.
+    x-ktype: [measurement-device]
+    type: string
+    format: uri
 
   has_process_condition:
     title: Test Conditions / Parameters
