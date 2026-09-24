@@ -310,6 +310,10 @@ properties:
         - observed_property
         - has_unit
       properties:
+        id:
+          title: Column Spec ID
+          type: string
+          readOnly: true
         label:
           title: Column Name
           type: string
