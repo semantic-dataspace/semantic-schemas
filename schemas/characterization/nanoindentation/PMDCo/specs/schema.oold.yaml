@@ -77,10 +77,10 @@
     "@id": "http://purl.obolibrary.org/obo/OBI_0001927"
     "@type": "@id"
   test_temperature:
-    "@id": "nanoind:testTemperature"
+    "@id": "https://w3id.org/dsms/characterization#testTemperature"
     "@type": "xsd:double"
   test_humidity:
-    "@id": "nanoind:testRelativeHumidity"
+    "@id": "https://w3id.org/dsms/characterization#testRelativeHumidity"
     "@type": "xsd:double"
 
 allOf:
@@ -271,7 +271,7 @@ properties:
             - Acquisition Rate
             - Assumed Poisson's Ratio
         parameter_class:
-          title: EMMO Class IRI
+          title: Ontology Class IRI
           type: string
           enum:
             - "nanoind:TargetDisplacement"
@@ -279,13 +279,15 @@ properties:
             - "nanoind:TipLoadRate"
             - "nanoind:HoldingTime"
             - "nanoind:DataAcquisitionRate"
+            - "https://w3id.org/dsms/nanoindentation#AssumedPoissonsRatio"
           options:
             enum_titles:
-              - TargetDisplacement
-              - TargetLoad
-              - TipLoadRate
-              - HoldingTime
-              - DataAcquisitionRate
+              - "nanoind:TargetDisplacement"
+              - "nanoind:TargetLoad"
+              - "nanoind:TipLoadRate"
+              - "nanoind:HoldingTime"
+              - "nanoind:DataAcquisitionRate"
+              - "dsms:AssumedPoissonsRatio"
           x-depends-on:
             field: parameter_label
             values:
@@ -294,7 +296,7 @@ properties:
               Loading Rate:            ["nanoind:TipLoadRate"]
               Hold Time:               ["nanoind:HoldingTime"]
               Acquisition Rate:        ["nanoind:DataAcquisitionRate"]
-              Assumed Poisson's Ratio: []
+              Assumed Poisson's Ratio: ["https://w3id.org/dsms/nanoindentation#AssumedPoissonsRatio"]
         parameter_value:
           title: Value
           type: number
