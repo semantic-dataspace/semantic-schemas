@@ -97,7 +97,7 @@
     "@type": "@id"
 
 allOf:
-  - $ref: "../../../../process-step/PMDCo/specs/schema.oold.yaml"
+  - $ref: "../../../generic/PMDCo/specs/schema.oold.yaml"
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: PMDCo / CHAMEO pattern schema for a nanoindentation experiment session
