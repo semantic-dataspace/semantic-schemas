@@ -108,8 +108,10 @@ properties:
 
   has_specified_input:
     title: Specimen
-    x-ktype: [nanoindentation-specimen, specimen, material]
     type: array
+    format: kitem
+    x-kitem:
+      ktypeIds: [nanoindentation-specimen, specimen, material]
     items:
       type: string
       format: uri
@@ -118,8 +120,10 @@ properties:
 
   has_specified_output:
     title: Summary Dataset
-    x-ktype: [nanoindentation-dataset, dataset]
     type: array
+    format: kitem
+    x-kitem:
+      ktypeIds: [nanoindentation-dataset, dataset]
     items:
       type: string
       format: uri

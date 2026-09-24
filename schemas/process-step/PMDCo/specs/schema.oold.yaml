@@ -132,8 +132,10 @@ properties:
     description: >-
       Material entities (specimens, samples) consumed or observed by this step.
       Select the corresponding entries from the knowledge graph.
-    x-ktype: [specimen, material]
     type: array
+    format: kitem
+    x-kitem:
+      ktypeIds: [specimen, material]
     items:
       type: string
       format: uri
@@ -145,8 +147,10 @@ properties:
     description: >-
       Specimens, materials, or datasets produced as outputs of this step.
       Select the corresponding entries from the knowledge graph.
-    x-ktype: [specimen, material, dataset]
     type: array
+    format: kitem
+    x-kitem:
+      ktypeIds: [specimen, material, dataset]
     items:
       type: string
       format: uri
@@ -158,8 +162,10 @@ properties:
     description: >-
       Processes that directly precede this step in the workflow.
       Select the corresponding process entries from the knowledge graph.
-    x-ktype: [process]
     type: array
+    format: kitem
+    x-kitem:
+      ktypeIds: [process]
     items:
       type: string
       format: uri
@@ -169,17 +175,17 @@ properties:
   operator:
     title: Operator
     description: Person who performed this process step.
-    x-ktype: [expert]
-    x-kitem: true
     type: string
-    format: uri
+    format: kitem
+    x-kitem:
+      ktypeIds: [expert]
 
   instrument:
     title: Instrument / Device
     description: >-
       Physical instrument or device used to carry out this step.
       Select the registered device from the knowledge graph.
-    x-ktype: [measurement-device]
-    x-kitem: true
     type: string
-    format: uri
+    format: kitem
+    x-kitem:
+      ktypeIds: [measurement-device]
