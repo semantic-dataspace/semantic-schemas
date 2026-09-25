@@ -10,49 +10,109 @@
 #                    has_specified_input, has_specified_output, preceded_by
 #   generic:         has_process_condition
 #
-# This schema adds only:
-#   - type override          (chameo:Nanoindentation)
-#   - has_specified_input    (KItem filter: nanoindentation-specimen/specimen/material)
-#   - has_specified_output   (KItem filter: nanoindentation-dataset — summary/mean dataset)
-#   - raw_data_files         (new: per-indent raw TXT files, prov:generated)
-#   - Instrument setup fields
-#   - Analysis settings
-#   - Test environment conditions
-#   - has_process_attribute  (test protocol parameters)
-#   - measured_properties    (summary statistics)
+# Form sections (via top-level type:object, same mechanism as chemical-composition):
+#   Main section:    label, notes, date, operator, instrument, preceded_by,
+#                    has_specified_input, has_specified_output, raw_data_files,
+#                    instrument_serial, control_mode, indenter_geometry,
+#                    indenter_material, analysis_method, unload_fit_range,
+#                    test_standard, tip_area_function, test_temperature, test_humidity
+#   Section "Test Protocol Parameters"  (test_conditions, type:object)
+#   Section "Summary Statistics"        (summary_results,  type:object)
+#
+# Named sections use EXISTING PMDCo/OBI IRIs — no new vocabulary terms needed:
+#   test_conditions  → pmdco:PMD_0000016  (has_process_condition)
+#                       inner array uses pmdco:PMD_0000009  (has_process_attribute)
+#   summary_results  → obi:0000299        (has_specified_output)
+#                       inner array uses  obo:RO_0002351    (has_member)
+#
+# Graph pattern:
+#
+#   Nanoindentation (chameo:Nanoindentation)
+#     obi:OBI_0000293  → specimen/material KItems          (has_specified_input)
+#     obi:OBI_0000299  → post-test specimen + dataset KItems (has_specified_output)
+#     prov:generated   → per-indent raw file KItems
+#     dsms:instrumentSerialNumber  "..."
+#     dsms:controlMode             "..."
+#     dsms:indenterGeometry        "..."
+#     dsms:indenterMaterial        "..."
+#     dsms:analysisMethod          "..."
+#     dsms:unloadFitRange          "..."
+#     dsms:testStandard            "..."
+#     dsms:tipAreaFunction         "..."
+#     dsms:testTemperature         xsd:double
+#     dsms:testRelativeHumidity    xsd:double
+#     pmdco:PMD_0000016 → <test_conditions_node>
+#       pmdco:PMD_0000009 → ParameterSpecification nodes  (max depth, max load, …)
+#     obi:OBI_0000299  → <summary_results_node>
+#       ro:RO_0002351  → MeasurementDatum nodes           (mean HIT, mean EIT, …)
 
 "@context":
-  # Nanoindentation-specific prefixes and term mappings only.
-  # All process-step and characterization/generic terms are inherited
-  # via allOf $ref and merged by the backend at RDF generation time.
   chameo:  "https://w3id.org/emmo/domain/characterisation-methodology/chameo#"
   nanoind: "https://w3id.org/emmo/domain/nanoindentation#"
   uqudt:   "http://qudt.org/vocab/unit/"
   obo:     "http://purl.obolibrary.org/obo/"
-  # Instrument setup — DSMS nanoindentation vocabulary
-  instrument_serial:
-    "@id": "https://w3id.org/dsms/nanoindentation#instrumentSerialNumber"
-  control_mode:
-    "@id": "https://w3id.org/dsms/nanoindentation#controlMode"
-  indenter_geometry:
-    "@id": "https://w3id.org/dsms/nanoindentation#indenterGeometry"
-  indenter_material:
-    "@id": "https://w3id.org/dsms/nanoindentation#indenterMaterial"
-  # Analysis settings
-  analysis_method:
-    "@id": "https://w3id.org/dsms/nanoindentation#analysisMethod"
-  unload_fit_range:
-    "@id": "https://w3id.org/dsms/nanoindentation#unloadFitRange"
-  test_standard:
-    "@id": "https://w3id.org/dsms/nanoindentation#testStandard"
-  tip_area_function:
-    "@id": "https://w3id.org/dsms/nanoindentation#tipAreaFunction"
-  measured_properties:
-    "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
-    "@container": "@set"
-  is_about:
-    "@id": "http://purl.obolibrary.org/obo/IAO_0000136"
+  pmdco:   "https://w3id.org/pmd/co/"
+  dnano:   "https://w3id.org/dsms/nanoindentation#"
+
+  raw_data_files:
+    "@id": "http://www.w3.org/ns/prov#generated"
     "@type": "@id"
+    "@container": "@set"
+
+  # ── Flat scalar properties (main section) ───────────────────────────────────
+  instrument_serial:
+    "@id": "dnano:instrumentSerialNumber"
+  control_mode:
+    "@id": "dnano:controlMode"
+  indenter_geometry:
+    "@id": "dnano:indenterGeometry"
+  indenter_material:
+    "@id": "dnano:indenterMaterial"
+  analysis_method:
+    "@id": "dnano:analysisMethod"
+  unload_fit_range:
+    "@id": "dnano:unloadFitRange"
+  test_standard:
+    "@id": "dnano:testStandard"
+  tip_area_function:
+    "@id": "dnano:tipAreaFunction"
+  test_temperature:
+    "@id": "dnano:testTemperature"
+    "@type": "xsd:double"
+  test_humidity:
+    "@id": "dnano:testRelativeHumidity"
+    "@type": "xsd:double"
+
+  # ── Section wrappers using existing IRIs (no new vocab terms) ───────────────
+  # test_conditions → pmdco:PMD_0000016 (has_process_condition)
+  # summary_results → obi:0000299       (has_specified_output, same IRI as the kitem array;
+  #                   both are valid outputs — one external KItems, one inline data node)
+  test_conditions:
+    "@id": "pmdco:PMD_0000016"
+    "@type": "@id"
+  summary_results:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
+    "@type": "@id"
+
+  # ── test_conditions interior: has_process_attribute array ────────────────────
+  has_process_attribute:
+    "@id": "pmdco:PMD_0000009"
+    "@type": "@id"
+    "@container": "@set"
+  parameter_label:
+    "@id": "http://www.w3.org/2000/01/rdf-schema#label"
+  parameter_value:
+    "@id": "http://qudt.org/schema/qudt/value"
+    "@type": "xsd:double"
+  parameter_unit:
+    "@id": "http://qudt.org/schema/qudt/hasUnit"
+
+  # ── summary_results interior: measured_properties array ──────────────────────
+  # has_member (RO_0002351): the summary results node has MeasurementDatum members
+  measured_properties:
+    "@id": "obo:RO_0002351"
+    "@type": "@id"
+    "@container": "@set"
   has_value_spec:
     "@id": "http://purl.obolibrary.org/obo/OBI_0001938"
   result_value:
@@ -61,27 +121,14 @@
   result_unit:
     "@id": "http://purl.obolibrary.org/obo/IAO_0000039"
     "@type": "@id"
-  specifies_value_of:
-    "@id": "http://purl.obolibrary.org/obo/OBI_0001927"
-    "@type": "@id"
-  test_temperature:
-    "@id": "https://w3id.org/dsms/characterization#testTemperature"
-    "@type": "xsd:double"
-  test_humidity:
-    "@id": "https://w3id.org/dsms/characterization#testRelativeHumidity"
-    "@type": "xsd:double"
-  raw_data_files:
-    "@id": "http://www.w3.org/ns/prov#generated"
-    "@type": "@id"
-    "@container": "@set"
 
 allOf:
   - $ref: "../../../generic/PMDCo/specs/schema.oold.yaml"
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: PMDCo / CHAMEO pattern schema for a nanoindentation characterization process
-x-schema-version: '0.1.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/nanoindentation-PMDCo-v0.1.0/schemas/characterization/nanoindentation/PMDCo/specs/schema.oold.generated.json'
+x-schema-version: '0.2.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/nanoindentation-PMDCo-v0.2.0/schemas/characterization/nanoindentation/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'draft'
 x-process-step:
   category: characterization
@@ -95,7 +142,7 @@ required:
 
 properties:
 
-  # ── Override: root type → chameo:Nanoindentation ───────────────────────────
+  # ── Root type override ──────────────────────────────────────────────────────
 
   type:
     title: Type
@@ -109,12 +156,11 @@ properties:
       enum_titles:
         - chameo:Nanoindentation
 
-  # ── Override: narrow KItem filters for specimen / raw data linking ─────────
+  # ── KItem overrides (narrowed filters, fixed title) ───────────────────────
 
   has_specified_input:
-    title: Specimen
-    description: >-
-      The specimen(s) or material(s) tested in this nanoindentation session.
+    title: Inputs
+    description: Specimen(s) or material(s) tested in this nanoindentation session.
     type: array
     format: kitem
     x-kitem:
@@ -126,12 +172,10 @@ properties:
     default: []
 
   has_specified_output:
-    title: Outputs (Tested Specimen & Summary Dataset)
+    title: Outputs
     description: >-
-      The planned outputs of this nanoindentation session. Link both:
-      (1) the post-test specimen (same material, changed state — supports PMDCo
-      state-change queries); (2) the aggregated summary dataset (mean/StdDev
-      hardness HIT, elastic modulus EIT, etc.). Type distinguishes them in SPARQL.
+      Link both: (1) post-test specimen (supports PMDCo state-change queries);
+      (2) aggregated summary dataset.
     type: array
     format: kitem
     x-kitem:
@@ -145,9 +189,8 @@ properties:
   raw_data_files:
     title: Raw Measurement Files
     description: >-
-      Individual per-indent raw data files generated by the instrument
-      (one TXT / CSV per indentation). Generated data, not the primary planned
-      result — link these via prov:generated.
+      Per-indent raw files generated by the instrument. Link via prov:generated
+      (generated artefacts, not planned outputs).
     type: array
     format: kitem
     x-kitem:
@@ -158,7 +201,7 @@ properties:
     uniqueItems: true
     default: []
 
-  # ── Instrument Setup ───────────────────────────────────────────────────────
+  # ── Flat scalars (main section) ─────────────────────────────────────────────
 
   instrument_serial:
     title: Instrument Serial Number
@@ -187,9 +230,8 @@ properties:
 
   indenter_material:
     title: Indenter Material
+    description: "e.g. Diamond, Sapphire, Steel"
     type: string
-
-  # ── Analysis Settings ──────────────────────────────────────────────────────
 
   analysis_method:
     title: Analysis Method
@@ -202,7 +244,7 @@ properties:
 
   unload_fit_range:
     title: Unload Fit Range
-    description: "e.g. [40%, 98%]"
+    description: "Power-law fit range on unloading curve, e.g. 40%–98%"
     type: string
 
   test_standard:
@@ -212,114 +254,216 @@ properties:
 
   tip_area_function:
     title: Tip Area Function Reference
+    description: "Identifier or description of the calibration used"
     type: string
-
-  # ── Test Environment (ISO 14577) ───────────────────────────────────────────
 
   test_temperature:
     title: Test Temperature (°C)
-    description: "Ambient temperature during measurement. ISO 14577: 23 ± 5 °C."
+    description: "Ambient temperature. ISO 14577: 23 ± 5 °C."
     type: number
 
   test_humidity:
     title: Relative Humidity (%)
-    description: "Ambient relative humidity during measurement. ISO 14577: 45 ± 10 %."
+    description: "Ambient relative humidity. ISO 14577: 45 ± 10 %."
     type: number
     minimum: 0
     maximum: 100
 
-  # ── Summary Statistics ─────────────────────────────────────────────────────
+  # ── Section: Test Protocol Parameters ────────────────────────────────────────
+  # type:object → named WebformSection "Test Protocol Parameters"
+  # Wrapper predicate: pmdco:PMD_0000016 (has_process_condition) — existing PMDCo IRI
+  # Array inside uses:  pmdco:PMD_0000009 (has_process_attribute) — different predicate
 
-  measured_properties:
-    title: Summary Statistics
-    description: >-
-      Aggregate results across all valid indentations.
-      Each entry is a MeasurementDatum (IAO_0000109) with an embedded
-      ScalarValueSpecification (OBI_0001931).
-    type: array
-    items:
-      type: object
-      title: Summary Result
-      required:
-        - type
-        - id
-        - label
-        - has_value_spec
-      properties:
-        type:
-          title: Type
-          type: array
-          items:
-            type: string
-          readOnly: true
-          const: ["obo:IAO_0000109"]
-          default: ["obo:IAO_0000109"]
-          options:
-            enum_titles:
-              - iao:MeasurementDatum
-        id:
-          title: Datum ID
-          type: string
-          readOnly: true
-          default: result-1-smd
-        label:
-          title: Result Name
-          type: string
-          enum:
-            - Mean Hardness HIT
-            - Std Dev Hardness HIT
-            - Mean Elastic Modulus EIT
-            - Std Dev Elastic Modulus EIT
-            - Mean Maximum Depth hmax
-            - Number of Valid Indentations
-        has_value_spec:
-          title: Value Specification
+  test_conditions:
+    title: Test Protocol Parameters
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        title: ID
+        type: string
+        readOnly: true
+        default: test-protocol
+      has_process_attribute:
+        title: Parameters
+        description: >-
+          Numeric test protocol parameters. Each row is a PMDCo
+          ParameterSpecification (PMD_0000013). Select the parameter name,
+          enter the value, and select the unit.
+        type: array
+        items:
           type: object
+          title: Parameter
           required:
             - type
             - id
-            - result_value
-            - result_unit
+            - parameter_label
+            - parameter_value
+            - parameter_unit
           properties:
             type:
               title: Type
               type: array
-              items:
-                type: string
+              items: {type: string}
               readOnly: true
-              const: ["obo:OBI_0001931"]
-              default: ["obo:OBI_0001931"]
+              const: ["pmdco:PMD_0000013"]
+              default: ["pmdco:PMD_0000013"]
               options:
                 enum_titles:
-                  - obi:ScalarValueSpecification
+                  - pmdco:ParameterSpecification
             id:
-              title: Value Spec ID
+              title: ID
               type: string
               readOnly: true
-              default: result-1-svs
-            result_value:
+              default: param-1
+            parameter_label:
+              title: Parameter
+              type: string
+              enum:
+                - Max Depth
+                - Max Load
+                - Loading Rate
+                - Hold Time at Max Load
+                - Acquisition Rate
+                - Assumed Poisson's Ratio
+            parameter_value:
               title: Value
               type: number
               minimum: 0
-            result_unit:
+            parameter_unit:
               title: Unit
               type: string
               enum:
-                - uqudt:GigaPA
                 - uqudt:MicroM
+                - uqudt:MilliN
+                - uqudt:PER-SEC
+                - uqudt:SEC
+                - uqudt:HZ
                 - uqudt:UNITLESS
               options:
                 enum_titles:
-                  - GPa (gigapascal)
-                  - "um (micrometre)"
-                  - "- (count / dimensionless)"
+                  - µm (micrometre)
+                  - mN (millinewton)
+                  - 1/s (per second)
+                  - s (second)
+                  - Hz (hertz)
+                  - "– (dimensionless)"
               x-depends-on:
-                field: label
+                field: parameter_label
                 values:
-                  Mean Hardness HIT:             [uqudt:GigaPA]
-                  Std Dev Hardness HIT:          [uqudt:GigaPA]
-                  Mean Elastic Modulus EIT:      [uqudt:GigaPA]
-                  Std Dev Elastic Modulus EIT:   [uqudt:GigaPA]
-                  Mean Maximum Depth hmax:       [uqudt:MicroM]
-                  Number of Valid Indentations:  [uqudt:UNITLESS]
-    default: []
+                  Max Depth:                [uqudt:MicroM]
+                  Max Load:                 [uqudt:MilliN]
+                  Loading Rate:             [uqudt:PER-SEC]
+                  Hold Time at Max Load:    [uqudt:SEC]
+                  Acquisition Rate:         [uqudt:HZ]
+                  Assumed Poisson's Ratio:  [uqudt:UNITLESS]
+        default: []
+
+  # ── Section: Summary Statistics ───────────────────────────────────────────────
+  # type:object → named WebformSection "Summary Statistics"
+  # Wrapper predicate: obi:OBI_0000299 (has_specified_output) — existing OBI IRI
+  # Array inside uses:  obo:RO_0002351  (has_member) — existing RO IRI
+
+  summary_results:
+    title: Summary Statistics
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        title: ID
+        type: string
+        readOnly: true
+        default: summary-results
+      measured_properties:
+        title: Summary Results
+        description: >-
+          Aggregate results across all valid indentations. Each row is a
+          MeasurementDatum (IAO_0000109) with an embedded ScalarValueSpec
+          (OBI_0001931). Select the result name; unit is set automatically.
+        type: array
+        items:
+          type: object
+          title: Summary Result
+          required:
+            - type
+            - id
+            - label
+            - has_value_spec
+          properties:
+            type:
+              title: Type
+              type: array
+              items: {type: string}
+              readOnly: true
+              const: ["obo:IAO_0000109"]
+              default: ["obo:IAO_0000109"]
+              options:
+                enum_titles:
+                  - iao:MeasurementDatum
+            id:
+              title: Datum ID
+              type: string
+              readOnly: true
+              default: result-1-smd
+            label:
+              title: Result Name
+              type: string
+              enum:
+                - Mean Hardness HIT
+                - Std Dev Hardness HIT
+                - Mean Elastic Modulus EIT
+                - Std Dev Elastic Modulus EIT
+                - Mean Maximum Depth hmax
+                - Number of Valid Indentations
+            has_value_spec:
+              title: Value Specification
+              type: object
+              required:
+                - type
+                - id
+                - result_value
+                - result_unit
+              properties:
+                type:
+                  title: Type
+                  type: array
+                  items: {type: string}
+                  readOnly: true
+                  const: ["obo:OBI_0001931"]
+                  default: ["obo:OBI_0001931"]
+                  options:
+                    enum_titles:
+                      - obi:ScalarValueSpecification
+                id:
+                  title: Value Spec ID
+                  type: string
+                  readOnly: true
+                  default: result-1-svs
+                result_value:
+                  title: Value
+                  type: number
+                  minimum: 0
+                result_unit:
+                  title: Unit
+                  type: string
+                  enum:
+                    - uqudt:GigaPA
+                    - uqudt:MicroM
+                    - uqudt:UNITLESS
+                  options:
+                    enum_titles:
+                      - GPa (gigapascal)
+                      - µm (micrometre)
+                      - "– (count / dimensionless)"
+                  x-depends-on:
+                    field: label
+                    values:
+                      Mean Hardness HIT:             [uqudt:GigaPA]
+                      Std Dev Hardness HIT:          [uqudt:GigaPA]
+                      Mean Elastic Modulus EIT:      [uqudt:GigaPA]
+                      Std Dev Elastic Modulus EIT:   [uqudt:GigaPA]
+                      Mean Maximum Depth hmax:       [uqudt:MicroM]
+                      Number of Valid Indentations:  [uqudt:UNITLESS]
+        default: []
