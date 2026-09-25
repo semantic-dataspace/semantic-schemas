@@ -3,50 +3,91 @@
    * Specimen (PMDCo): simplified JSON → OO-LD JSON
    *
    * Input fields (see schema.simplified.json):
-   *   specimen_name  string   required
-   *   mass_value     number   optional
-   *   mass_unit      string   optional: "g" | "kg" | "mg"  (default "g")
-   *   material       string   optional: IRI of an existing material kitem
-   *   source         string   optional: IRI of an existing semi-finished-product kitem
-   *
-   * Run with the jsonata-python CLI:
-   *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
+   *   specimen_name        string   required
+   *   material             string   optional: IRI of an existing material kitem
+   *   source               string   optional: IRI of an existing semi-finished-product kitem
+   *   temporal_state       string   optional: "as-received" | "pre-test" | "post-test"
+   *   specimen_form        string   optional: "Bulk" | "Thin Film" | ...
+   *   surface_preparation  string   optional: free text
+   *   physical_properties  array    optional: [{type, value, unit}]
+   *   mass_value           number   optional: deprecated, kept for backwards compat
+   *   mass_unit            string   optional: deprecated
    */
 
-  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/specimen-PMDCo-v0.3.0/schemas/specimen/PMDCo/specs/schema.oold.yaml";
-
-  /* ── Mass unit label → Unit Ontology IRI ────────────────────────────── */
-  $massUnitMap := {
-    "g":  "uo:0000021",
-    "kg": "uo:0000022",
-    "mg": "uo:0000023"
-  };
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/main/schemas/specimen/PMDCo/specs/schema.oold.yaml";
 
   /* ── Node ID ─────────────────────────────────────────────────────────── */
   $slug   := $replace($lowercase($trim(specimen_name)), /[^a-z0-9]+/, "-");
   $specId := "specimen-" & $slug;
 
-  /* ── Mass quality (optional) ─────────────────────────────────────────── */
-  $massBlock := $exists(mass_value) ? {
+  /* ── Property type → PMDCo quality class IRI ─────────────────────────── */
+  $typeMap := {
+    "Diameter":              "pmdco:PMD_0050051",
+    "Thickness":             "pmdco:PMD_0050153",
+    "Width":                 "pmdco:PMD_0050154",
+    "Length":                "pmdco:PMD_0040001",
+    "Mass":                  "pmdco:PMD_0020133",
+    "Surface Roughness Ra":  "dspec:SurfaceRoughnessRa",
+    "Surface Roughness Rq":  "dspec:SurfaceRoughnessRq"
+  };
+
+  /* ── Unit label → Unit Ontology IRI ─────────────────────────────────── */
+  $unitMap := {
+    "mm": "obo:UO_0000015",
+    "um": "obo:UO_0000017",
+    "nm": "obo:UO_0000018",
+    "g":  "obo:UO_0000021",
+    "kg": "obo:UO_0000022",
+    "mg": "obo:UO_0000023"
+  };
+
+  /* ── Build physical property quality nodes ───────────────────────────── */
+  $physProps := $map(physical_properties, function($p, $i) {
+    {
+      "type":       $lookup($typeMap, $p.type),
+      "id":         "phys-prop-" & $string($i + 1) & "-" & $specId,
+      "inheres_in": $specId,
+      "specified_by_value": {
+        "type":  ["obi:0001931"],
+        "id":    "phys-prop-svs-" & $string($i + 1) & "-" & $specId,
+        "value": $p.value,
+        "unit":  $lookup($unitMap, $p.unit)
+      }
+    }
+  });
+
+  /* ── Legacy mass block (deprecated mass_value / mass_unit) ───────────── */
+  $legacyMass := $exists(mass_value) and $not($exists(
+    physical_properties[type = "Mass"]
+  )) ? {
     "type":       "pmdco:PMD_0020133",
     "id":         "mass-" & $specId,
-    "quality_of": $specId,
+    "inheres_in": $specId,
     "specified_by_value": {
-      "type":  "obi:0001931",
+      "type":  ["obi:0001931"],
       "id":    "mass-svs-" & $specId,
       "value": mass_value,
-      "unit":  $lookup($massUnitMap, $exists(mass_unit) ? mass_unit : "g")
+      "unit":  $lookup($unitMap, $exists(mass_unit) ? mass_unit : "g")
     }
   } : undefined;
 
+  /* ── Merge physical_properties + legacy mass into one array ─────────── */
+  $allPhys := $append(
+    $exists($physProps) ? $physProps : [],
+    $exists($legacyMass) ? [$legacyMass] : []
+  );
+
   /* ── OO-LD output ────────────────────────────────────────────────────── */
   {
-    "conforms_to": $schemaUri,
-    "type":     "bfo:0000030",
-    "id":       $specId,
-    "label":    specimen_name,
-    "mass":     $massBlock,
-    "material": material,
-    "source":   source
+    "conforms_to":        $schemaUri,
+    "type":               ["bfo:0000030", "pmdco:PMD_0000068"],
+    "id":                 $specId,
+    "label":              specimen_name,
+    "material":           material,
+    "source":             source,
+    "temporal_state":     temporal_state,
+    "specimen_form":      specimen_form,
+    "surface_preparation": surface_preparation,
+    "physical_properties": $count($allPhys) > 0 ? $allPhys : undefined
   }
 )

@@ -52,14 +52,7 @@
     "qudt": "http://qudt.org/schema/qudt/",
     "uqudt": "http://qudt.org/vocab/unit/",
     "chameo": "https://w3id.org/emmo/domain/characterisation-methodology/chameo#",
-    "parent_experiment": {
-      "@id": "http://purl.obolibrary.org/obo/BFO_0000050",
-      "@type": "@id"
-    },
-    "is_about": {
-      "@id": "http://purl.obolibrary.org/obo/IAO_0000136",
-      "@type": "@id"
-    },
+    "csvw": "http://www.w3.org/ns/csvw#",
     "measured_properties": {
       "@id": "http://purl.obolibrary.org/obo/OBI_0000299",
       "@container": "@set"
@@ -77,6 +70,21 @@
     },
     "specifies_value_of": {
       "@id": "http://purl.obolibrary.org/obo/OBI_0001927",
+      "@type": "@id"
+    },
+    "timeseries_column": {
+      "@id": "http://www.w3.org/ns/csvw#column",
+      "@container": "@set"
+    },
+    "col_name": {
+      "@id": "http://www.w3.org/ns/csvw#name"
+    },
+    "property_url": {
+      "@id": "http://www.w3.org/ns/csvw#propertyUrl",
+      "@type": "@id"
+    },
+    "has_unit": {
+      "@id": "http://qudt.org/schema/qudt/hasUnit",
       "@type": "@id"
     }
   },
@@ -143,25 +151,6 @@
       "description": "Date and time of this individual indentation.",
       "type": "string",
       "format": "date-time"
-    },
-    "parent_experiment": {
-      "title": "Parent Experiment",
-      "description": "NanoindentationExperiment KItem this indent belongs to (BFO_0000050 is_part_of).",
-      "x-ktype": [
-        "nanoindentation-experiment"
-      ],
-      "type": "string",
-      "format": "uri"
-    },
-    "is_about": {
-      "title": "Specimen",
-      "description": "Specimen KItem on which this indentation was performed (IAO_0000136 is_about).",
-      "x-ktype": [
-        "nanoindentation-specimen",
-        "specimen"
-      ],
-      "type": "string",
-      "format": "uri"
     },
     "indent_index": {
       "title": "Indent Index",
@@ -250,12 +239,6 @@
               "Fit Quality R2"
             ]
           },
-          "is_about": {
-            "title": "Is About (Specimen)",
-            "type": "string",
-            "readOnly": true,
-            "default": ""
-          },
           "has_value_spec": {
             "title": "Value Specification",
             "type": "object",
@@ -301,7 +284,9 @@
                 "enum": [
                   "uqudt:GigaPA",
                   "uqudt:MicroM",
+                  "uqudt:MicroM2",
                   "uqudt:MilliN",
+                  "uqudt:MilliN-PER-MicroM",
                   "uqudt:PERCENT",
                   "uqudt:UNITLESS",
                   "uqudt:MicroJ"
@@ -310,7 +295,9 @@
                   "enum_titles": [
                     "GPa (gigapascal)",
                     "um (micrometre)",
+                    "um2 (square micrometre)",
                     "mN (millinewton)",
+                    "mN/um (millinewton per micrometre)",
                     "% (percent)",
                     "- (dimensionless)",
                     "uJ (microjoule)"
@@ -350,10 +337,10 @@
                       "uqudt:MicroM"
                     ],
                     "Contact Stiffness S": [
-                      "uqudt:UNITLESS"
+                      "uqudt:MilliN-PER-MicroM"
                     ],
                     "Projected Contact Area Ap": [
-                      "uqudt:UNITLESS"
+                      "uqudt:MicroM2"
                     ],
                     "Elastic Work Welast": [
                       "uqudt:MicroJ"
@@ -387,14 +374,57 @@
                 "type": "string",
                 "readOnly": true,
                 "default": ""
-              },
-              "is_about": {
-                "title": "Is About (Specimen)",
-                "type": "string",
-                "readOnly": true,
-                "default": ""
               }
             }
+          }
+        }
+      },
+      "default": []
+    },
+    "timeseries_column": {
+      "title": "Timeseries Column Specifications",
+      "description": "Semantic column specifications for the load-displacement CSV attachment. Each entry maps one column name to its physical property IRI (from the nanoindentation EMMO ontology) and QUDT unit IRI.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "col_name",
+          "property_url",
+          "has_unit"
+        ],
+        "properties": {
+          "id": {
+            "title": "Column Spec ID",
+            "type": "string",
+            "readOnly": true
+          },
+          "type": {
+            "title": "Type",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "readOnly": true,
+            "const": [
+              "csvw:Column"
+            ],
+            "default": [
+              "csvw:Column"
+            ]
+          },
+          "col_name": {
+            "title": "Column Name",
+            "type": "string"
+          },
+          "property_url": {
+            "title": "Physical Property IRI",
+            "description": "EMMO nanoindentation property IRI for this column.",
+            "type": "string"
+          },
+          "has_unit": {
+            "title": "Unit IRI",
+            "description": "QUDT unit IRI for this column.",
+            "type": "string"
           }
         }
       },

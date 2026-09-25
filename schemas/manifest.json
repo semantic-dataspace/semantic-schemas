@@ -99,6 +99,13 @@
       "shapePath": "schemas/material-card/mechanical/PMDCo/specs/shape.ttl"
     },
     {
+      "path": "schemas/material/PMDCo/specs/schema.oold.yaml",
+      "group": "material",
+      "maturity": "draft",
+      "version": "0.1.0",
+      "shapePath": "schemas/material/PMDCo/specs/shape.ttl"
+    },
+    {
       "path": "schemas/measurement-device/PMDCo/specs/schema.oold.yaml",
       "group": "measurement-device",
       "maturity": "draft",

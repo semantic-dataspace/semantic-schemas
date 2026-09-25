@@ -109,11 +109,14 @@
     "has_specified_input": {
       "title": "Inputs",
       "description": "Material entities (specimens, samples) consumed or observed by this step. Select the corresponding entries from the knowledge graph.",
-      "x-ktype": [
-        "specimen",
-        "material"
-      ],
       "type": "array",
+      "format": "kitem",
+      "x-kitem": {
+        "ktypeIds": [
+          "specimen",
+          "material"
+        ]
+      },
       "items": {
         "type": "string",
         "format": "uri"
@@ -124,12 +127,15 @@
     "has_specified_output": {
       "title": "Outputs",
       "description": "Specimens, materials, or datasets produced as outputs of this step. Select the corresponding entries from the knowledge graph.",
-      "x-ktype": [
-        "specimen",
-        "material",
-        "dataset"
-      ],
       "type": "array",
+      "format": "kitem",
+      "x-kitem": {
+        "ktypeIds": [
+          "specimen",
+          "material",
+          "dataset"
+        ]
+      },
       "items": {
         "type": "string",
         "format": "uri"
@@ -140,10 +146,13 @@
     "preceded_by": {
       "title": "Preceded By",
       "description": "Processes that directly precede this step in the workflow. Select the corresponding process entries from the knowledge graph.",
-      "x-ktype": [
-        "process"
-      ],
       "type": "array",
+      "format": "kitem",
+      "x-kitem": {
+        "ktypeIds": [
+          "process"
+        ]
+      },
       "items": {
         "type": "string",
         "format": "uri"
@@ -154,20 +163,24 @@
     "operator": {
       "title": "Operator",
       "description": "Person who performed this process step.",
-      "x-ktype": [
-        "expert"
-      ],
       "type": "string",
-      "format": "uri"
+      "format": "kitem",
+      "x-kitem": {
+        "ktypeIds": [
+          "expert"
+        ]
+      }
     },
     "instrument": {
       "title": "Instrument / Device",
       "description": "Physical instrument or device used to carry out this step. Select the registered device from the knowledge graph.",
-      "x-ktype": [
-        "measurement-device"
-      ],
       "type": "string",
-      "format": "uri"
+      "format": "kitem",
+      "x-kitem": {
+        "ktypeIds": [
+          "measurement-device"
+        ]
+      }
     }
   }
 }

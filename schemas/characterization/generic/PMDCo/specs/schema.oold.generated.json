@@ -5,28 +5,21 @@
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "dcterms": "http://purl.org/dc/terms/",
-    "conforms_to": {
-      "@id": "http://purl.org/dc/terms/conformsTo",
-      "@type": "@id"
-    },
+    "prov": "http://www.w3.org/ns/prov#",
+    "schema": "https://schema.org/",
     "obo": "http://purl.obolibrary.org/obo/",
-    "obi": {
-      "@id": "http://purl.obolibrary.org/obo/OBI_",
-      "@prefix": true
-    },
-    "bfo": {
-      "@id": "http://purl.obolibrary.org/obo/BFO_",
-      "@prefix": true
-    },
     "pmdco": "https://w3id.org/pmd/co/",
-    "qudt": "http://qudt.org/schema/qudt/",
     "type": "@type",
     "id": "@id",
     "label": {
       "@id": "rdfs:label"
     },
-    "description": {
+    "notes": {
       "@id": "rdfs:comment"
+    },
+    "date": {
+      "@id": "dcterms:date",
+      "@type": "xsd:dateTime"
     },
     "has_specified_input": {
       "@id": "obi:0000293",
@@ -43,6 +36,27 @@
       "@type": "@id",
       "@container": "@set"
     },
+    "operator": {
+      "@id": "http://www.w3.org/ns/prov#wasAssociatedWith",
+      "@type": "@id"
+    },
+    "instrument": {
+      "@id": "https://schema.org/instrument",
+      "@type": "@id"
+    },
+    "conforms_to": {
+      "@id": "http://purl.org/dc/terms/conformsTo",
+      "@type": "@id"
+    },
+    "obi": {
+      "@id": "http://purl.obolibrary.org/obo/OBI_",
+      "@prefix": true
+    },
+    "bfo": {
+      "@id": "http://purl.obolibrary.org/obo/BFO_",
+      "@prefix": true
+    },
+    "qudt": "http://qudt.org/schema/qudt/",
     "has_process_condition": {
       "@id": "pmdco:PMD_0000016",
       "@type": "@id",
@@ -59,6 +73,11 @@
       "@id": "qudt:hasUnit"
     }
   },
+  "allOf": [
+    {
+      "$ref": "../../../../process-step/PMDCo/specs/schema.oold.yaml"
+    }
+  ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$comment": "Schema for an obi:Assay (generic characterization record)",
   "x-schema-version": "0.2.1",
@@ -106,20 +125,17 @@
       "description": "Human-readable name for this characterization record (e.g. \"Tensile test specimen 1\", \"Hardness measurement batch A\").",
       "type": "string"
     },
-    "description": {
-      "title": "Description",
-      "description": "Optional free-text description of what this step does.",
-      "type": "string",
-      "format": "textarea"
-    },
     "has_specified_input": {
       "title": "Inputs",
       "description": "Specimens or materials characterised by this step. Select the corresponding entries from the knowledge graph.",
-      "x-ktype": [
-        "specimen",
-        "material"
-      ],
       "type": "array",
+      "format": "kitem",
+      "x-kitem": {
+        "ktypeIds": [
+          "specimen",
+          "material"
+        ]
+      },
       "items": {
         "type": "string",
         "format": "uri"
@@ -130,11 +146,14 @@
     "has_specified_output": {
       "title": "Outputs",
       "description": "The post-test specimen or dataset produced by this characterization step, e.g. a deformed specimen returned after testing or a raw measurement file.",
-      "x-ktype": [
-        "specimen",
-        "dataset"
-      ],
       "type": "array",
+      "format": "kitem",
+      "x-kitem": {
+        "ktypeIds": [
+          "specimen",
+          "dataset"
+        ]
+      },
       "items": {
         "type": "string",
         "format": "uri"
@@ -145,10 +164,13 @@
     "preceded_by": {
       "title": "Preceded By",
       "description": "Processes that directly precede this step in the workflow. Select the corresponding process entries from the knowledge graph.",
-      "x-ktype": [
-        "process"
-      ],
       "type": "array",
+      "format": "kitem",
+      "x-kitem": {
+        "ktypeIds": [
+          "process"
+        ]
+      },
       "items": {
         "type": "string",
         "format": "uri"
