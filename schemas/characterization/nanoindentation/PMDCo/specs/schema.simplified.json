@@ -20,11 +20,26 @@
       "type": "string"
     },
     "specimen_iri": {
-      "title": "Specimen IRI",
-      "description": "IRI of the NanoindentationSpecimen KItem.",
+      "title": "Specimen IRI (pre-test)",
+      "description": "IRI of the pre-test specimen KItem — input to this experiment (obi:has_specified_input).",
       "type": "string",
       "format": "uri",
+      "x-kitem": {"ktypeIds": ["specimen"]},
       "examples": ["https://kiran.materials-data.space/knowledge/aa2618-2hr-set2-specimen"]
+    },
+    "specimen_post_iri": {
+      "title": "Post-test Specimen IRI",
+      "description": "IRI of the post-test specimen KItem — output of this experiment (obi:has_specified_output).",
+      "type": "string",
+      "format": "uri",
+      "x-kitem": {"ktypeIds": ["specimen"]}
+    },
+    "dataset_iris": {
+      "title": "Dataset IRIs",
+      "description": "IRIs of dataset KItems produced by this experiment (obi:has_specified_output).",
+      "type": "array",
+      "items": {"type": "string", "format": "uri", "x-kitem": {"ktypeIds": ["nanoindentation-dataset", "dataset"]}},
+      "default": []
     },
     "test_date": {
       "title": "Test Date",
@@ -113,6 +128,32 @@
       "minimum": 0,
       "maximum": 0.5,
       "examples": [0.3, 0.33, 0.25]
+    },
+    "unload_fit_range": {
+      "title": "Unload Fit Range",
+      "description": "Percentage range of the unloading curve used for Oliver-Pharr fit, e.g. '40%-98%'.",
+      "type": "string",
+      "examples": ["40%-98%", "20%-80%"]
+    },
+    "tip_area_function": {
+      "title": "Tip Area Function Reference",
+      "description": "Description of the tip area function used, e.g. 'Factory calibration — Berkovich'.",
+      "type": "string",
+      "examples": ["Factory calibration — Berkovich area function"]
+    },
+    "test_temperature": {
+      "title": "Test Temperature (°C)",
+      "description": "Ambient temperature during testing in degrees Celsius.",
+      "type": "number",
+      "examples": [23.0, 25.0]
+    },
+    "test_humidity": {
+      "title": "Relative Humidity (%)",
+      "description": "Ambient relative humidity during testing in percent.",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "examples": [45.0, 50.0]
     },
     "summary_results": {
       "title": "Summary Statistics",
