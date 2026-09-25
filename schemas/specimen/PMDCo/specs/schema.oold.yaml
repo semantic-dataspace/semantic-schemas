@@ -2,36 +2,32 @@
 # Ontology: Platform MaterialDigital Core Ontology (PMDCo)
 #   https://w3id.org/pmd/co/
 #
-# PMDCo patterns:
+# PMDCo pattern: TemporallyQualifiedContinuant / Duality Object–Material
+#   The Specimen KItem IS a TemporallyQualifiedContinuant (TQC) — a temporal
+#   state of the abstract Material entity.
 #
-#   1. TemporallyQualifiedContinuant / Duality Object–Material
-#      https://github.com/materialdigital/core-ontology/tree/main/patterns/
-#      → Specimen is a bfo:Object AND pmdco:TemporallyQualifiedContinuant.
-#        It is_state_of (PMD_0000070) a Material entity.
-#        It exists_at (BFO_0000108) a TemporalInterval (BFO_0000202).
-#        Pre-test and post-test specimens of the same material each have their own
-#        exists_at interval but share the same is_state_of Material link.
+# Graph pattern (matches rolling-process example):
 #
-#   2. Material Property (Quality)
-#      → Mass quality with ScalarValueSpecification (OBI_0001931).
+#   Specimen (TQC)  a  bfo:BFO_0000030, pmdco:PMD_0000068
+#     is_state_of (PMD_0000070) ─────► Material KItem
+#     exists_at   (BFO_0000108) ─────► TemporalRegion (BFO_0000008)
+#     has_quality (RO_0000086)  ─────► Thickness quality (PMD_0050153)
+#       inheres_in (RO_0000052) ────── Specimen ← back-ref
+#       specified_by_value (PMD_0000077) ─► ScalarValueSpec (OBI_0001931)
+#         has_numeric_value (OBI_0001937)   xsd:double
+#         has_unit_label    (IAO_0000039)   unit IRI
+#     has_quality (RO_0000086)  ─────► Width quality (PMD_0050154)
+#     has_quality (RO_0000086)  ─────► Length quality (PMD_0040001)
+#     has_quality (RO_0000086)  ─────► Diameter quality (PMD_0050051)
+#     has_quality (RO_0000086)  ─────► Mass quality (PMD_0020133)
+#     has_quality (RO_0000086)  ─────► SurfaceRoughnessRa (dsms:SurfaceRoughnessRa)
+#     has_quality (RO_0000086)  ─────► SurfaceRoughnessRq (dsms:SurfaceRoughnessRq)
+#     prov:wasDerivedFrom ───────────► semi-finished-product KItem
+#     dsms:temporalState ────────────  "pre-test" | "post-test" | "as-received"
+#     dsms:hasSurfacePreparation ────  text
+#     dsms:hasSpecimenForm ──────────  text enum
 #
-# Graph pattern (state-change):
-#
-#   ex:the_material  a  pmdco:PMD_0000000 .                          # material anchor
-#
-#   ex:specimen_pre  a  bfo:BFO_0000030, pmdco:PMD_0000068 ;        # pre-test state
-#     pmdco:PMD_0000070  ex:the_material ;                          # is_state_of
-#     bfo:BFO_0000108    ex:intvl_pre .                             # exists_at
-#
-#   ex:specimen_post  a  bfo:BFO_0000030, pmdco:PMD_0000068 ;       # post-test state
-#     pmdco:PMD_0000070  ex:the_material ;                          # is_state_of
-#     bfo:BFO_0000108    ex:intvl_post .                            # exists_at
-#
-#   ex:process
-#     obi:OBI_0000293  ex:specimen_pre ;                            # has_specified_input
-#     obi:OBI_0000299  ex:specimen_post .                           # has_specified_output
-#
-# SPARQL state-change query:
+# State-change SPARQL:
 #   SELECT ?process ?pre ?post ?material WHERE {
 #     ?process obi:OBI_0000293 ?pre ;
 #              obi:OBI_0000299 ?post .
@@ -40,7 +36,7 @@
 #   }
 
 "@context":
-  obo: "http://purl.obolibrary.org/obo/"
+  obo:     "http://purl.obolibrary.org/obo/"
   bfo:
     "@id": "http://purl.obolibrary.org/obo/BFO_"
     "@prefix": true
@@ -56,11 +52,12 @@
   uo:
     "@id": "http://purl.obolibrary.org/obo/UO_"
     "@prefix": true
-  rdfs: "http://www.w3.org/2000/01/rdf-schema#"
-  xsd: "http://www.w3.org/2001/XMLSchema#"
+  rdfs:    "http://www.w3.org/2000/01/rdf-schema#"
+  xsd:     "http://www.w3.org/2001/XMLSchema#"
   dcterms: "http://purl.org/dc/terms/"
-  pmdco: "https://w3id.org/pmd/co/"
-  schema: "https://schema.org/"
+  pmdco:   "https://w3id.org/pmd/co/"
+  dspec:   "https://w3id.org/dsms/specimen#"
+
   conforms_to:
     "@id": "http://purl.org/dc/terms/conformsTo"
     "@type": "@id"
@@ -68,64 +65,74 @@
   id: "@id"
   label:
     "@id": "rdfs:label"
-  # PMDCo is_state_of (PMD_0000070): links specimen to the abstract material identity.
-  # Pre-test and post-test specimens of the SAME material both point here.
+
+  # PMDCo state relations
   material:
-    "@id": "pmdco:PMD_0000070"
+    "@id": "pmdco:PMD_0000070"   # is_state_of
     "@type": "@id"
-  # BFO exists_at (BFO_0000108): links specimen to the temporal interval of its existence.
   exists_at:
-    "@id": "bfo:0000108"
+    "@id": "bfo:0000108"          # BFO_0000108  exists_at
     "@type": "@id"
-  # Mass quality
-  mass:
-    "@id": "ro:0000086"   # RO_0000086  has_quality
+
+  # Quality relations (all qualities link via has_quality)
+  # Multiple JSON keys map to same IRI — produces multiple triples, one per quality type
+  thickness_quality:
+    "@id": "ro:0000086"           # RO_0000086  has_quality
     "@type": "@id"
-  quality_of:
-    "@id": "ro:0000080"   # RO_0000080  quality_of
+  width_quality:
+    "@id": "ro:0000086"
+    "@type": "@id"
+  length_quality:
+    "@id": "ro:0000086"
+    "@type": "@id"
+  diameter_quality:
+    "@id": "ro:0000086"
+    "@type": "@id"
+  mass_quality:
+    "@id": "ro:0000086"
+    "@type": "@id"
+  roughness_ra:
+    "@id": "ro:0000086"
+    "@type": "@id"
+  roughness_rq:
+    "@id": "ro:0000086"
+    "@type": "@id"
+
+  # Quality node internals (shared across all quality objects via context inheritance)
+  inheres_in:
+    "@id": "ro:0000052"           # RO_0000052  inheres_in  (quality → bearer back-ref)
     "@type": "@id"
   specified_by_value:
-    "@id": "pmdco:PMD_0000077"
+    "@id": "pmdco:PMD_0000077"    # PMD_0000077  specified_by_value
     "@type": "@id"
   value:
-    "@id": "obi:0001937"  # OBI_0001937  has_specified_numeric_value
+    "@id": "obi:0001937"          # OBI_0001937  has_specified_numeric_value
     "@type": "xsd:double"
   unit:
-    "@id": "iao:0000039"  # IAO_0000039  has_measurement_unit_label
+    "@id": "iao:0000039"          # IAO_0000039  has_measurement_unit_label
     "@type": "@id"
+
+  # Provenance
   source:
     "@id": "http://www.w3.org/ns/prov#wasDerivedFrom"
     "@type": "@id"
-  # Specimen metadata (DSMS specimen vocabulary)
+
+  # DSMS specimen metadata
   temporal_state:
-    "@id": "https://w3id.org/dsms/specimen#temporalState"
-  material_designation:
-    "@id": "http://purl.org/dc/terms/title"
-  material_class:
-    "@id": "https://w3id.org/dsms/specimen#hasMaterialClass"
-  batch_lot:
-    "@id": "https://w3id.org/dsms/specimen#hasBatchID"
-  heat_treatment:
-    "@id": "https://w3id.org/dsms/specimen#hasHeatTreatmentDescription"
+    "@id": "dspec:temporalState"
   surface_preparation:
-    "@id": "https://w3id.org/dsms/specimen#hasSurfacePreparation"
-  surface_roughness_ra:
-    "@id": "https://w3id.org/dsms/specimen#hasSurfaceRoughnessRa"
-    "@type": "xsd:double"
-  surface_roughness_rq:
-    "@id": "https://w3id.org/dsms/specimen#hasSurfaceRoughnessRq"
-    "@type": "xsd:double"
+    "@id": "dspec:hasSurfacePreparation"
   specimen_form:
-    "@id": "https://w3id.org/dsms/specimen#hasSpecimenForm"
+    "@id": "dspec:hasSpecimenForm"
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: >-
-  PMDCo TemporallyQualifiedContinuant pattern for a specimen.
-  Typed as both bfo:Object and pmdco:TemporallyQualifiedContinuant.
-  Links to Material via is_state_of (PMD_0000070) and to a TemporalInterval
-  via exists_at (BFO_0000108). State-change demonstrated by connecting pre-test
-  and post-test specimens — sharing the same material link — through a process.
-x-schema-version: '0.5.0'
+  PMDCo TemporallyQualifiedContinuant schema for a specimen state.
+  Geometry (thickness, width, length, diameter), mass, and surface roughness
+  are modelled as PMDCo quality nodes (has_quality → quality class → specified_by_value).
+  State change is demonstrated by linking pre-test and post-test specimens
+  sharing the same material (is_state_of) through a process.
+x-schema-version: '0.6.0'
 x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/specimen/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'draft'
 title: Specimen
@@ -137,7 +144,7 @@ required:
 
 properties:
 
-  # ── Root types: Object + TemporallyQualifiedContinuant ─────────────────────
+  # ── Root types ────────────────────────────────────────────────────────────
 
   type:
     title: Type
@@ -161,29 +168,27 @@ properties:
 
   label:
     title: Specimen Name
-    description: >-
-      Human-readable name or identifier for this specimen
-      (e.g. "316L tensile bar #1 — pre-test").
+    description: "Human-readable name, e.g. '316L bar #1 — pre-test'"
     type: string
 
-  # ── PMDCo state-change pattern ─────────────────────────────────────────────
+  # ── PMDCo state pattern ────────────────────────────────────────────────────
 
   material:
     title: Material (is_state_of)
     description: >-
-      The abstract material identity this specimen is a state of
-      (pmdco:PMD_0000070 is_state_of). Pre-test and post-test specimens of the
-      same material both link here — the process connecting them proves state change.
+      Abstract material identity this specimen is a state of (PMD_0000070).
+      Pre-test and post-test specimens of the same material both link here,
+      enabling state-change SPARQL.
     type: string
     format: kitem
     x-kitem:
       ktypeIds: [material]
 
   exists_at:
-    title: Exists At (Temporal Interval)
+    title: Exists At (Temporal Region)
     description: >-
-      The temporal interval during which this specimen exists in this state
-      (bfo:BFO_0000108). Pre-test and post-test specimens have distinct intervals.
+      Temporal region during which this specimen exists in this state (BFO_0000108).
+      Pre-test and post-test specimens have distinct temporal regions.
     type: object
     required:
       - type
@@ -192,30 +197,26 @@ properties:
       type:
         title: Type
         type: array
-        items:
-          type: string
+        items: {type: string}
         readOnly: true
-        const: ["bfo:0000202"]
-        default: ["bfo:0000202"]
+        const: ["bfo:0000008"]
+        default: ["bfo:0000008"]
         options:
           enum_titles:
-            - bfo:TemporalInterval
+            - bfo:TemporalRegion
       id:
-        title: Temporal Interval ID
-        description: Identifier for this temporal interval node; managed by the consumer.
+        title: Temporal Region ID
         type: string
         readOnly: true
-        default: temporal-interval
+        default: temporal-region
       label:
         title: Description
-        description: "Human label for this interval, e.g. 'before nanoindentation', 'after sawing'"
+        description: "e.g. 'before nanoindentation', 'after sawing'"
         type: string
 
   temporal_state:
     title: Temporal State
-    description: >-
-      Human-readable lifecycle label: as-received, pre-test, or post-test.
-      Complements exists_at with a controlled vocabulary term for filtering.
+    description: "Controlled lifecycle label: as-received, pre-test, or post-test."
     type: string
     enum:
       - as-received
@@ -226,97 +227,430 @@ properties:
 
   source:
     title: Source
-    description: >-
-      The semi-finished product (e.g. metal sheet, rod) this specimen was
-      cut or prepared from (prov:wasDerivedFrom).
+    description: Semi-finished product this specimen was cut from (prov:wasDerivedFrom).
     type: string
     format: kitem
     x-kitem:
       ktypeIds: [semi-finished-product]
 
-  # ── Material metadata ──────────────────────────────────────────────────────
+  # ── Geometry quality nodes ─────────────────────────────────────────────────
+  # Pattern: specimen -has_quality (RO_0000086)-> quality_node
+  #          quality_node -inheres_in (RO_0000052)-> specimen  [back-ref, readOnly]
+  #          quality_node -specified_by_value (PMD_0000077)-> ScalarValueSpec
+  # Use whichever dimensions apply to the specimen form.
 
-  material_designation:
-    title: Material Designation
-    description: "Standard designation or name, e.g. AA2618-T6, 316L, Fused Silica, PMMA"
-    type: string
-
-  material_class:
-    title: Material Class
-    type: string
-    enum:
-      - Metal
-      - Ceramic
-      - Polymer
-      - Composite
-      - Coating
-      - Other
-
-  batch_lot:
-    title: Batch / Lot ID
-    description: Batch or lot identifier for traceability.
-    type: string
-
-  # ── Thermal history ────────────────────────────────────────────────────────
-
-  heat_treatment:
-    title: Heat Treatment
-    description: "e.g. Solution treated 530°C/1h + aged 190°C/2h (AA2618 T6)"
-    type: string
-    format: textarea
-
-  # ── Surface quality ────────────────────────────────────────────────────────
-
-  surface_preparation:
-    title: Surface Preparation
-    description: "Polishing/preparation sequence, e.g. SiC 800→1200 grit, 3µm + 1µm diamond, OPS"
-    type: string
-    format: textarea
-
-  surface_roughness_ra:
-    title: Surface Roughness Ra (nm)
-    description: Arithmetic mean roughness in nanometres.
-    type: number
-    minimum: 0
-
-  surface_roughness_rq:
-    title: Surface Roughness Rq (nm)
-    description: Root mean square roughness in nanometres.
-    type: number
-    minimum: 0
-
-  # ── Geometry ───────────────────────────────────────────────────────────────
-
-  specimen_form:
-    title: Specimen Form
-    description: "e.g. Bulk, Thin Film, Coating on Substrate, Cross-section"
-    type: string
-    enum:
-      - Bulk
-      - Thin Film
-      - Coating on Substrate
-      - Cross-section
-      - Other
-
-  # ── Mass quality ───────────────────────────────────────────────────────────
-
-  mass:
-    title: Mass
-    description: >-
-      The mass of this specimen, modelled as a PMDCo Mass quality
-      (PMD_0020133) with a ScalarValueSpecification.
+  thickness_quality:
+    title: Thickness
+    description: Thickness of the specimen (PMDCo PMD_0050153).
     type: object
     required:
       - type
       - id
-      - quality_of
       - specified_by_value
     properties:
       type:
         title: Type
         type: array
-        items:
-          type: string
+        items: {type: string}
+        readOnly: true
+        const: ["pmdco:PMD_0050153"]
+        default: ["pmdco:PMD_0050153"]
+        options:
+          enum_titles:
+            - pmdco:Thickness
+      id:
+        title: ID
+        type: string
+        readOnly: true
+        default: thickness-quality
+      inheres_in:
+        title: Inheres In
+        description: Back-reference to this specimen instance.
+        type: string
+        readOnly: true
+        $comment: "Resolved from root.id"
+      specified_by_value:
+        title: Value Specification
+        type: object
+        required: [type, id, value, unit]
+        properties:
+          type:
+            title: Type
+            type: array
+            items: {type: string}
+            readOnly: true
+            const: ["obi:0001931"]
+            default: ["obi:0001931"]
+            options:
+              enum_titles:
+                - obi:ScalarValueSpecification
+          id:
+            title: ID
+            type: string
+            readOnly: true
+            default: thickness-svs
+          value:
+            title: Value
+            type: number
+            minimum: 0
+          unit:
+            title: Unit
+            type: string
+            enum:
+              - "obo:UO_0000015"   # mm
+              - "obo:UO_0000017"   # µm
+            default: "obo:UO_0000015"
+            options:
+              enum_titles:
+                - mm (millimetre)
+                - µm (micrometre)
+
+  width_quality:
+    title: Width
+    description: Width of the specimen (PMDCo PMD_0050154).
+    type: object
+    required:
+      - type
+      - id
+      - specified_by_value
+    properties:
+      type:
+        title: Type
+        type: array
+        items: {type: string}
+        readOnly: true
+        const: ["pmdco:PMD_0050154"]
+        default: ["pmdco:PMD_0050154"]
+        options:
+          enum_titles:
+            - pmdco:Width
+      id:
+        title: ID
+        type: string
+        readOnly: true
+        default: width-quality
+      inheres_in:
+        title: Inheres In
+        type: string
+        readOnly: true
+        $comment: "Resolved from root.id"
+      specified_by_value:
+        title: Value Specification
+        type: object
+        required: [type, id, value, unit]
+        properties:
+          type:
+            title: Type
+            type: array
+            items: {type: string}
+            readOnly: true
+            const: ["obi:0001931"]
+            default: ["obi:0001931"]
+            options:
+              enum_titles:
+                - obi:ScalarValueSpecification
+          id:
+            title: ID
+            type: string
+            readOnly: true
+            default: width-svs
+          value:
+            title: Value
+            type: number
+            minimum: 0
+          unit:
+            title: Unit
+            type: string
+            enum:
+              - "obo:UO_0000015"   # mm
+              - "obo:UO_0000017"   # µm
+            default: "obo:UO_0000015"
+            options:
+              enum_titles:
+                - mm (millimetre)
+                - µm (micrometre)
+
+  length_quality:
+    title: Length
+    description: Length of the specimen (PMDCo PMD_0040001).
+    type: object
+    required:
+      - type
+      - id
+      - specified_by_value
+    properties:
+      type:
+        title: Type
+        type: array
+        items: {type: string}
+        readOnly: true
+        const: ["pmdco:PMD_0040001"]
+        default: ["pmdco:PMD_0040001"]
+        options:
+          enum_titles:
+            - pmdco:Length
+      id:
+        title: ID
+        type: string
+        readOnly: true
+        default: length-quality
+      inheres_in:
+        title: Inheres In
+        type: string
+        readOnly: true
+        $comment: "Resolved from root.id"
+      specified_by_value:
+        title: Value Specification
+        type: object
+        required: [type, id, value, unit]
+        properties:
+          type:
+            title: Type
+            type: array
+            items: {type: string}
+            readOnly: true
+            const: ["obi:0001931"]
+            default: ["obi:0001931"]
+            options:
+              enum_titles:
+                - obi:ScalarValueSpecification
+          id:
+            title: ID
+            type: string
+            readOnly: true
+            default: length-svs
+          value:
+            title: Value
+            type: number
+            minimum: 0
+          unit:
+            title: Unit
+            type: string
+            enum:
+              - "obo:UO_0000015"   # mm
+              - "obo:UO_0000017"   # µm
+            default: "obo:UO_0000015"
+            options:
+              enum_titles:
+                - mm (millimetre)
+                - µm (micrometre)
+
+  diameter_quality:
+    title: Diameter
+    description: Diameter of the specimen (PMDCo PMD_0050051). Use for cylindrical or disc specimens.
+    type: object
+    required:
+      - type
+      - id
+      - specified_by_value
+    properties:
+      type:
+        title: Type
+        type: array
+        items: {type: string}
+        readOnly: true
+        const: ["pmdco:PMD_0050051"]
+        default: ["pmdco:PMD_0050051"]
+        options:
+          enum_titles:
+            - pmdco:Diameter
+      id:
+        title: ID
+        type: string
+        readOnly: true
+        default: diameter-quality
+      inheres_in:
+        title: Inheres In
+        type: string
+        readOnly: true
+        $comment: "Resolved from root.id"
+      specified_by_value:
+        title: Value Specification
+        type: object
+        required: [type, id, value, unit]
+        properties:
+          type:
+            title: Type
+            type: array
+            items: {type: string}
+            readOnly: true
+            const: ["obi:0001931"]
+            default: ["obi:0001931"]
+            options:
+              enum_titles:
+                - obi:ScalarValueSpecification
+          id:
+            title: ID
+            type: string
+            readOnly: true
+            default: diameter-svs
+          value:
+            title: Value
+            type: number
+            minimum: 0
+          unit:
+            title: Unit
+            type: string
+            enum:
+              - "obo:UO_0000015"   # mm
+              - "obo:UO_0000017"   # µm
+            default: "obo:UO_0000015"
+            options:
+              enum_titles:
+                - mm (millimetre)
+                - µm (micrometre)
+
+  # ── Surface quality nodes ─────────────────────────────────────────────────
+
+  roughness_ra:
+    title: Surface Roughness Ra
+    description: >-
+      Arithmetic mean roughness (Ra) of the specimen surface
+      (dsms:SurfaceRoughnessRa, subclass of pmdco:PMD_0040001 Length).
+    type: object
+    required:
+      - type
+      - id
+      - specified_by_value
+    properties:
+      type:
+        title: Type
+        type: array
+        items: {type: string}
+        readOnly: true
+        const: ["dspec:SurfaceRoughnessRa"]
+        default: ["dspec:SurfaceRoughnessRa"]
+        options:
+          enum_titles:
+            - dsms:SurfaceRoughnessRa
+      id:
+        title: ID
+        type: string
+        readOnly: true
+        default: roughness-ra-quality
+      inheres_in:
+        title: Inheres In
+        type: string
+        readOnly: true
+        $comment: "Resolved from root.id"
+      specified_by_value:
+        title: Value Specification
+        type: object
+        required: [type, id, value, unit]
+        properties:
+          type:
+            title: Type
+            type: array
+            items: {type: string}
+            readOnly: true
+            const: ["obi:0001931"]
+            default: ["obi:0001931"]
+            options:
+              enum_titles:
+                - obi:ScalarValueSpecification
+          id:
+            title: ID
+            type: string
+            readOnly: true
+            default: roughness-ra-svs
+          value:
+            title: Value
+            type: number
+            minimum: 0
+          unit:
+            title: Unit
+            type: string
+            enum:
+              - "obo:UO_0000018"   # nm
+              - "obo:UO_0000017"   # µm
+            default: "obo:UO_0000018"
+            options:
+              enum_titles:
+                - nm (nanometre)
+                - µm (micrometre)
+
+  roughness_rq:
+    title: Surface Roughness Rq
+    description: >-
+      Root mean square roughness (Rq) of the specimen surface
+      (dsms:SurfaceRoughnessRq, subclass of pmdco:PMD_0040001 Length).
+    type: object
+    required:
+      - type
+      - id
+      - specified_by_value
+    properties:
+      type:
+        title: Type
+        type: array
+        items: {type: string}
+        readOnly: true
+        const: ["dspec:SurfaceRoughnessRq"]
+        default: ["dspec:SurfaceRoughnessRq"]
+        options:
+          enum_titles:
+            - dsms:SurfaceRoughnessRq
+      id:
+        title: ID
+        type: string
+        readOnly: true
+        default: roughness-rq-quality
+      inheres_in:
+        title: Inheres In
+        type: string
+        readOnly: true
+        $comment: "Resolved from root.id"
+      specified_by_value:
+        title: Value Specification
+        type: object
+        required: [type, id, value, unit]
+        properties:
+          type:
+            title: Type
+            type: array
+            items: {type: string}
+            readOnly: true
+            const: ["obi:0001931"]
+            default: ["obi:0001931"]
+            options:
+              enum_titles:
+                - obi:ScalarValueSpecification
+          id:
+            title: ID
+            type: string
+            readOnly: true
+            default: roughness-rq-svs
+          value:
+            title: Value
+            type: number
+            minimum: 0
+          unit:
+            title: Unit
+            type: string
+            enum:
+              - "obo:UO_0000018"   # nm
+              - "obo:UO_0000017"   # µm
+            default: "obo:UO_0000018"
+            options:
+              enum_titles:
+                - nm (nanometre)
+                - µm (micrometre)
+
+  # ── Mass quality node ─────────────────────────────────────────────────────
+
+  mass_quality:
+    title: Mass
+    description: Mass of the specimen (PMDCo PMD_0020133).
+    type: object
+    required:
+      - type
+      - id
+      - specified_by_value
+    properties:
+      type:
+        title: Type
+        type: array
+        items: {type: string}
         readOnly: true
         const: ["pmdco:PMD_0020133"]
         default: ["pmdco:PMD_0020133"]
@@ -327,27 +661,21 @@ properties:
         title: ID
         type: string
         readOnly: true
-        default: mass
-      quality_of:
-        title: Quality Of
-        description: Back-reference to the specimen this mass is a quality of.
+        default: mass-quality
+      inheres_in:
+        title: Inheres In
         type: string
         readOnly: true
-        $comment: Must match the root specimen id; set by the consumer.
+        $comment: "Resolved from root.id"
       specified_by_value:
-        title: Scalar Value
+        title: Value Specification
         type: object
-        required:
-          - type
-          - id
-          - value
-          - unit
+        required: [type, id, value, unit]
         properties:
           type:
             title: Type
             type: array
-            items:
-              type: string
+            items: {type: string}
             readOnly: true
             const: ["obi:0001931"]
             default: ["obi:0001931"]
@@ -360,19 +688,39 @@ properties:
             readOnly: true
             default: mass-svs
           value:
-            title: Mass Value
+            title: Value
             type: number
             minimum: 0
           unit:
             title: Unit
             type: string
             enum:
-              - "uo:0000021"
-              - "uo:0000022"
-              - "uo:0000023"
-            default: ["uo:0000021"]
+              - "obo:UO_0000021"   # g
+              - "obo:UO_0000022"   # kg
+              - "obo:UO_0000023"   # mg
+            default: "obo:UO_0000021"
             options:
               enum_titles:
-                - gram (g)
-                - kilogram (kg)
-                - milligram (mg)
+                - g (gram)
+                - kg (kilogram)
+                - mg (milligram)
+
+  # ── Surface preparation (text — no quality class) ─────────────────────────
+
+  surface_preparation:
+    title: Surface Preparation
+    description: "Polishing sequence, e.g. SiC 800→1200 grit, 3µm + 1µm diamond, OPS"
+    type: string
+    format: textarea
+
+  # ── Geometry descriptor ────────────────────────────────────────────────────
+
+  specimen_form:
+    title: Specimen Form
+    type: string
+    enum:
+      - Bulk
+      - Thin Film
+      - Coating on Substrate
+      - Cross-section
+      - Other
