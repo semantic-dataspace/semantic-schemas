@@ -1,0 +1,158 @@
+# OO-LD Schema for Material (PMDCo pattern)
+# Ontology: Platform MaterialDigital Core Ontology (PMDCo)
+#   https://w3id.org/pmd/co/
+#
+# PMDCo pattern: Duality Object / Material
+#   https://github.com/materialdigital/core-ontology/tree/main/patterns/duality%20object%20material
+#
+# Graph pattern:
+#
+#   Material  (pmdco:PMD_0000000)
+#     rdfs:label ──────────────────────────────────────── name string
+#     dcterms:title ───────────────────────────────────── standard designation (e.g. AA2618-T6)
+#     dsms:hasMaterialClass ───────────────────────────── category (Metal, Ceramic, etc.)
+#     dcterms:conformsTo ──────────────────────────────── normative standard (e.g. EN 573-3)
+#     dcterms:identifier ──────────────────────────────── batch / lot identifier
+#     dsms:hasHeatTreatmentDescription ────────────────── thermal processing history text
+#     schema:provider ─────────────────────────────────── supplier (text or kitem)
+#     rdfs:comment ────────────────────────────────────── notes
+#
+# Related schemas:
+#   chemical-composition/PMDCo — stores element fractions; links here via quality_of
+#   specimen/PMDCo             — specimens are states of this material via is_state_of (PMD_0000070)
+#
+# SPARQL: find all specimens of this material
+#   SELECT ?specimen WHERE { ?specimen pmdco:PMD_0000070 <material-iri> . }
+
+"@context":
+  rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  rdfs: "http://www.w3.org/2000/01/rdf-schema#"
+  xsd: "http://www.w3.org/2001/XMLSchema#"
+  dcterms: "http://purl.org/dc/terms/"
+  schema: "https://schema.org/"
+  pmdco: "https://w3id.org/pmd/co/"
+  conforms_to:
+    "@id": "http://purl.org/dc/terms/conformsTo"
+    "@type": "@id"
+  type: "@type"
+  id: "@id"
+  label:
+    "@id": "rdfs:label"
+  notes:
+    "@id": "rdfs:comment"
+  # Material identity
+  material_designation:
+    "@id": "http://purl.org/dc/terms/title"
+  material_class:
+    "@id": "https://w3id.org/dsms/material#hasMaterialClass"
+  # dcterms:conformsTo — normative standard this material conforms to
+  material_standard:
+    "@id": "http://purl.org/dc/terms/conformsTo"
+  # dcterms:identifier — batch/lot number assigned by the supplier
+  batch_lot:
+    "@id": "http://purl.org/dc/terms/identifier"
+  supplier:
+    "@id": "https://schema.org/provider"
+  # Processing history
+  heat_treatment:
+    "@id": "https://w3id.org/dsms/material#hasHeatTreatmentDescription"
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: >-
+  Schema for a pmdco:PMD_0000000 (Material) entity — the abstract substance identity
+  that specimens are states of (is_state_of, PMD_0000070) and that chemical
+  compositions describe (quality_of, RO_0000080).
+x-schema-version: '0.1.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/material/PMDCo/specs/schema.oold.yaml'
+x-maturity: 'draft'
+title: Material
+type: object
+required:
+  - type
+  - id
+  - label
+
+properties:
+
+  type:
+    title: Type
+    type: array
+    items:
+      type: string
+    readOnly: true
+    const: ["pmdco:PMD_0000000"]
+    default: ["pmdco:PMD_0000000"]
+    options:
+      enum_titles:
+        - pmdco:Material
+
+  id:
+    title: ID
+    description: Identifier for this material instance; managed by the consumer.
+    type: string
+    readOnly: true
+    default: material
+
+  label:
+    title: Name
+    description: >-
+      Human-readable name for this material record
+      (e.g. "AA2618-T6 batch A", "316L stainless steel").
+    type: string
+
+  # ── Material identity ──────────────────────────────────────────────────────
+
+  material_designation:
+    title: Material Designation
+    description: >-
+      Normative designation from a material standard, e.g. AA2618-T6, 316L,
+      Fused Silica, PMMA. This is the formal identifier of the substance.
+    type: string
+
+  material_class:
+    title: Material Class
+    description: Broad category of this material.
+    type: string
+    enum:
+      - Metal
+      - Ceramic
+      - Polymer
+      - Composite
+      - Coating
+      - Other
+
+  material_standard:
+    title: Material Standard
+    description: >-
+      Normative standard specifying this material, e.g. EN 573-3, ASTM B209,
+      DIN 17223, ISO 6892-1. Multiple standards can be noted in free text.
+    type: string
+
+  batch_lot:
+    title: Batch / Lot ID
+    description: Batch or lot identifier assigned by the supplier for traceability.
+    type: string
+
+  supplier:
+    title: Supplier
+    description: Name of the material supplier or producer.
+    type: string
+
+  # ── Processing history ─────────────────────────────────────────────────────
+
+  heat_treatment:
+    title: Heat Treatment
+    description: >-
+      Description of the thermal processing history applied to this material,
+      e.g. "Solution treated 530°C/1h + aged 190°C/2h (T6 temper)".
+      For a full process chain, model as linked manufacturing process KItems.
+    type: string
+    format: textarea
+
+  # ── Notes ──────────────────────────────────────────────────────────────────
+
+  notes:
+    title: Notes
+    description: Free-text observations or additional provenance information.
+    type: string
+    format: textarea
