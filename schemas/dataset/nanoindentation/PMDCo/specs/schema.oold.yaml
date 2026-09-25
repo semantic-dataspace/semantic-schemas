@@ -254,7 +254,9 @@ properties:
               enum:
                 - uqudt:GigaPA
                 - uqudt:MicroM
+                - uqudt:MicroM2
                 - uqudt:MilliN
+                - uqudt:MilliN-PER-MicroM
                 - uqudt:PERCENT
                 - uqudt:UNITLESS
                 - uqudt:MicroJ
@@ -262,7 +264,9 @@ properties:
                 enum_titles:
                   - GPa (gigapascal)
                   - "um (micrometre)"
+                  - "um2 (square micrometre)"
                   - mN (millinewton)
+                  - "mN/um (millinewton per micrometre)"
                   - "% (percent)"
                   - "- (dimensionless)"
                   - "uJ (microjoule)"
@@ -279,8 +283,8 @@ properties:
                   Contact Depth hc:          [uqudt:MicroM]
                   Residual Depth hr:         [uqudt:MicroM]
                   Plastic Depth hp:          [uqudt:MicroM]
-                  Contact Stiffness S:       [uqudt:UNITLESS]
-                  Projected Contact Area Ap: [uqudt:UNITLESS]
+                  Contact Stiffness S:       [uqudt:MilliN-PER-MicroM]
+                  Projected Contact Area Ap: [uqudt:MicroM2]
                   Elastic Work Welast:       [uqudt:MicroJ]
                   Plastic Work Wplast:       [uqudt:MicroJ]
                   Total Work Wtotal:         [uqudt:MicroJ]

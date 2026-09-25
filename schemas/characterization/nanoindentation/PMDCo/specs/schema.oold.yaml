@@ -322,6 +322,7 @@ properties:
               type: string
               enum:
                 - Max Depth
+                - Min Depth
                 - Max Load
                 - Loading Rate
                 - Hold Time at Max Load
@@ -353,6 +354,7 @@ properties:
                 field: parameter_label
                 values:
                   Max Depth:                [uqudt:MicroM]
+                  Min Depth:                [uqudt:MicroM]
                   Max Load:                 [uqudt:MilliN]
                   Loading Rate:             [uqudt:PER-SEC]
                   Hold Time at Max Load:    [uqudt:SEC]
@@ -415,7 +417,14 @@ properties:
                 - Std Dev Hardness HIT
                 - Mean Elastic Modulus EIT
                 - Std Dev Elastic Modulus EIT
+                - Mean Indentation Modulus Er
+                - Std Dev Indentation Modulus Er
+                - Mean Reduced Modulus E*
+                - Std Dev Reduced Modulus E*
+                - Mean Vickers Equivalent HVIT
+                - Std Dev Vickers Equivalent HVIT
                 - Mean Maximum Depth hmax
+                - Std Dev Maximum Depth hmax
                 - Number of Valid Indentations
             has_value_spec:
               title: Value Specification
@@ -464,6 +473,13 @@ properties:
                       Std Dev Hardness HIT:          [uqudt:GigaPA]
                       Mean Elastic Modulus EIT:      [uqudt:GigaPA]
                       Std Dev Elastic Modulus EIT:   [uqudt:GigaPA]
+                      Mean Indentation Modulus Er:   [uqudt:GigaPA]
+                      Std Dev Indentation Modulus Er: [uqudt:GigaPA]
+                      Mean Reduced Modulus E*:       [uqudt:GigaPA]
+                      Std Dev Reduced Modulus E*:    [uqudt:GigaPA]
+                      Mean Vickers Equivalent HVIT:  [uqudt:UNITLESS]
+                      Std Dev Vickers Equivalent HVIT: [uqudt:UNITLESS]
                       Mean Maximum Depth hmax:       [uqudt:MicroM]
+                      Std Dev Maximum Depth hmax:    [uqudt:MicroM]
                       Number of Valid Indentations:  [uqudt:UNITLESS]
         default: []
