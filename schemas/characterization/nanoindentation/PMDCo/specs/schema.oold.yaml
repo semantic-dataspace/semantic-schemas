@@ -108,18 +108,21 @@
     "@id": "http://qudt.org/schema/qudt/hasUnit"
 
   # ── summary_results interior: measured_properties array ──────────────────────
-  # has_member (RO_0002351): the summary results node has MeasurementDatum members
+  # has_member (RO_0002351): the summary results node has ScalarValueSpecification members
   measured_properties:
     "@id": "obo:RO_0002351"
     "@type": "@id"
     "@container": "@set"
-  has_value_spec:
-    "@id": "http://purl.obolibrary.org/obo/OBI_0001938"
   result_value:
     "@id": "http://purl.obolibrary.org/obo/OBI_0001937"
     "@type": "xsd:double"
   result_unit:
     "@id": "http://purl.obolibrary.org/obo/IAO_0000039"
+    "@type": "@id"
+  specifies_value_of:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0001927"
+  quality_of:
+    "@id": "http://purl.obolibrary.org/obo/RO_0000080"
     "@type": "@id"
 
 allOf:
@@ -392,23 +395,24 @@ properties:
             - type
             - id
             - label
-            - has_value_spec
+            - result_value
+            - result_unit
           properties:
             type:
               title: Type
               type: array
               items: {type: string}
               readOnly: true
-              const: ["obo:IAO_0000109"]
-              default: ["obo:IAO_0000109"]
+              const: ["obo:OBI_0001931"]
+              default: ["obo:OBI_0001931"]
               options:
                 enum_titles:
-                  - iao:MeasurementDatum
+                  - obi:ScalarValueSpecification
             id:
-              title: Datum ID
+              title: Value Spec ID
               type: string
               readOnly: true
-              default: result-1-smd
+              default: svs-1
             label:
               title: Result Name
               type: string
@@ -426,60 +430,86 @@ properties:
                 - Mean Maximum Depth hmax
                 - Std Dev Maximum Depth hmax
                 - Number of Valid Indentations
-            has_value_spec:
-              title: Value Specification
+            result_value:
+              title: Value
+              type: number
+              minimum: 0
+            result_unit:
+              title: Unit
+              type: string
+              enum:
+                - uqudt:GigaPA
+                - uqudt:MicroM
+                - uqudt:UNITLESS
+              options:
+                enum_titles:
+                  - GPa (gigapascal)
+                  - µm (micrometre)
+                  - "– (count / dimensionless)"
+              x-depends-on:
+                field: label
+                values:
+                  Mean Hardness HIT:             [uqudt:GigaPA]
+                  Std Dev Hardness HIT:          [uqudt:GigaPA]
+                  Mean Elastic Modulus EIT:      [uqudt:GigaPA]
+                  Std Dev Elastic Modulus EIT:   [uqudt:GigaPA]
+                  Mean Indentation Modulus Er:   [uqudt:GigaPA]
+                  Std Dev Indentation Modulus Er: [uqudt:GigaPA]
+                  Mean Reduced Modulus E*:       [uqudt:GigaPA]
+                  Std Dev Reduced Modulus E*:    [uqudt:GigaPA]
+                  Mean Vickers Equivalent HVIT:  [uqudt:UNITLESS]
+                  Std Dev Vickers Equivalent HVIT: [uqudt:UNITLESS]
+                  Mean Maximum Depth hmax:       [uqudt:MicroM]
+                  Std Dev Maximum Depth hmax:    [uqudt:MicroM]
+                  Number of Valid Indentations:  [uqudt:UNITLESS]
+            specifies_value_of:
+              title: Quality
+              description: >-
+                Quality of the specimen this summary statistic specifies (OBI_0001927).
+                Type is auto-mapped from Result Name via the dsms-nanoindentation vocabulary.
+                Supply the specimen IRI in quality_of.
               type: object
               required:
                 - type
                 - id
-                - result_value
-                - result_unit
               properties:
                 type:
-                  title: Type
+                  title: Quality Type
+                  description: Quality class IRI aligned to PMDCo (auto-selected by result name).
                   type: array
-                  items: {type: string}
-                  readOnly: true
-                  const: ["obo:OBI_0001931"]
-                  default: ["obo:OBI_0001931"]
-                  options:
-                    enum_titles:
-                      - obi:ScalarValueSpecification
-                id:
-                  title: Value Spec ID
-                  type: string
-                  readOnly: true
-                  default: result-1-svs
-                result_value:
-                  title: Value
-                  type: number
-                  minimum: 0
-                result_unit:
-                  title: Unit
-                  type: string
-                  enum:
-                    - uqudt:GigaPA
-                    - uqudt:MicroM
-                    - uqudt:UNITLESS
-                  options:
-                    enum_titles:
-                      - GPa (gigapascal)
-                      - µm (micrometre)
-                      - "– (count / dimensionless)"
+                  items:
+                    type: string
+                    enum:
+                      - pmdco:PMD_0000789
+                      - dnano:VickersEquivalentHardnessIT
+                      - dnano:ElasticModulusIT
+                      - dnano:ReducedModulus
+                      - dnano:IndentationModulus
+                      - dnano:MaximumIndentationDepth
                   x-depends-on:
                     field: label
                     values:
-                      Mean Hardness HIT:             [uqudt:GigaPA]
-                      Std Dev Hardness HIT:          [uqudt:GigaPA]
-                      Mean Elastic Modulus EIT:      [uqudt:GigaPA]
-                      Std Dev Elastic Modulus EIT:   [uqudt:GigaPA]
-                      Mean Indentation Modulus Er:   [uqudt:GigaPA]
-                      Std Dev Indentation Modulus Er: [uqudt:GigaPA]
-                      Mean Reduced Modulus E*:       [uqudt:GigaPA]
-                      Std Dev Reduced Modulus E*:    [uqudt:GigaPA]
-                      Mean Vickers Equivalent HVIT:  [uqudt:UNITLESS]
-                      Std Dev Vickers Equivalent HVIT: [uqudt:UNITLESS]
-                      Mean Maximum Depth hmax:       [uqudt:MicroM]
-                      Std Dev Maximum Depth hmax:    [uqudt:MicroM]
-                      Number of Valid Indentations:  [uqudt:UNITLESS]
+                      Mean Hardness HIT:             [pmdco:PMD_0000789]
+                      Std Dev Hardness HIT:          [pmdco:PMD_0000789]
+                      Mean Elastic Modulus EIT:      [dnano:ElasticModulusIT]
+                      Std Dev Elastic Modulus EIT:   [dnano:ElasticModulusIT]
+                      Mean Indentation Modulus Er:   [dnano:IndentationModulus]
+                      Std Dev Indentation Modulus Er: [dnano:IndentationModulus]
+                      Mean Reduced Modulus E*:       [dnano:ReducedModulus]
+                      Std Dev Reduced Modulus E*:    [dnano:ReducedModulus]
+                      Mean Vickers Equivalent HVIT:  [dnano:VickersEquivalentHardnessIT]
+                      Std Dev Vickers Equivalent HVIT: [dnano:VickersEquivalentHardnessIT]
+                      Mean Maximum Depth hmax:       [dnano:MaximumIndentationDepth]
+                      Std Dev Maximum Depth hmax:    [dnano:MaximumIndentationDepth]
+                      Number of Valid Indentations:  []
+                id:
+                  title: Quality ID
+                  type: string
+                  readOnly: true
+                  default: quality-1
+                quality_of:
+                  title: Specimen IRI
+                  description: IRI of the specimen this quality inheres in.
+                  type: string
+                  format: uri
         default: []
