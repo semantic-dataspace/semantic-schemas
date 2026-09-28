@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.simplified.json",
+  "title": "Microstructure Characterization: PMDCo (Simplified Input)",
+  "description": "User-friendly form for a microstructure characterization session using optical microscopy, SEM, TEM, EBSD, or AFM. Records instrument metadata, imaging conditions, and quantitative microstructure metrics as a flexible results array. The transform converts this to full OO-LD (MeasurementDatum + ScalarValueSpecification nodes per PMDCo pattern).",
+  "type": "object",
+  "required": ["experiment_name", "specimen_iri"],
+  "additionalProperties": false,
+  "properties": {
+    "experiment_name": {
+      "title": "Experiment Name",
+      "description": "Human-readable name for this microstructure characterization session.",
+      "type": "string",
+      "minLength": 1,
+      "examples": ["AA2618 2hr aged SEM grain size", "316L EBSD texture map"]
+    },
+    "experiment_id": {
+      "title": "Experiment ID",
+      "description": "Optional IRI slug for the RDF node. Auto-derived from experiment_name if omitted.",
+      "type": "string"
+    },
+    "specimen_iri": {
+      "title": "Specimen IRI",
+      "description": "IRI of the specimen KItem being characterized (obi:has_specified_input).",
+      "type": "string",
+      "format": "uri",
+      "examples": ["https://kiran.materials-data.space/knowledge/aa2618-2hr-set2-specimen"]
+    },
+    "test_date": {
+      "title": "Measurement Date",
+      "description": "Date and time of the characterization session (ISO 8601).",
+      "type": "string",
+      "format": "date-time",
+      "examples": ["2026-09-28T10:00:00"]
+    },
+    "technique": {
+      "title": "Technique",
+      "description": "Primary imaging/characterization technique used.",
+      "type": "string",
+      "enum": [
+        "Optical Microscopy",
+        "SEM",
+        "TEM",
+        "EBSD",
+        "AFM",
+        "FIB-SEM",
+        "EDX / EDS",
+        "XRD",
+        "Other"
+      ]
+    },
+    "magnification": {
+      "title": "Magnification",
+      "description": "Nominal magnification used for image acquisition (e.g. 1000 for 1000×).",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "examples": [500, 1000, 5000]
+    },
+    "accelerating_voltage_kv": {
+      "title": "Accelerating Voltage (kV)",
+      "description": "Electron beam accelerating voltage for SEM/TEM/EBSD. Omit for optical or AFM.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "examples": [5, 15, 20]
+    },
+    "area_analysed_um2": {
+      "title": "Area Analysed (µm²)",
+      "description": "Total imaged or mapped area used for the statistical analysis.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "examples": [2500, 10000]
+    },
+    "etching_method": {
+      "title": "Etching / Preparation Method",
+      "description": "Surface preparation or etching technique applied before imaging.",
+      "type": "string",
+      "examples": ["Keller's reagent 20 s", "Electrolytic in 0.1M H2SO4", "As-polished (EBSD)"]
+    },
+    "software": {
+      "title": "Analysis Software",
+      "description": "Software used for image analysis or diffraction pattern indexing.",
+      "type": "string",
+      "examples": ["ImageJ 1.54f", "MTEX 5.9", "Aztec 5.1", "AnalySIS Pro"]
+    },
+    "results": {
+      "title": "Microstructure Results",
+      "description": "Quantitative microstructure metrics. Add one entry per quantity. Each entry becomes a MeasurementDatum (IAO_0000109) with a ScalarValueSpecification (OBI_0001931) in the RDF graph.",
+      "type": "array",
+      "items": {
+        "title": "Result Entry",
+        "type": "object",
+        "required": ["name", "value", "unit"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "title": "Property Name",
+            "description": "Microstructure quantity. Free text — any measurable property can be recorded.",
+            "type": "string",
+            "examples": [
+              "Mean Grain Diameter",
+              "Median Grain Diameter",
+              "D10 Grain Diameter",
+              "D90 Grain Diameter",
+              "Grain Aspect Ratio",
+              "Phase Fraction Al2Cu",
+              "Phase Fraction S-phase",
+              "Phase Fraction Al-matrix",
+              "Porosity",
+              "Mean Precipitate Diameter",
+              "Precipitate Number Density",
+              "Texture Index",
+              "Volume Fraction Recrystallised",
+              "Mean Subgrain Diameter",
+              "Mean Misorientation Angle"
+            ]
+          },
+          "value": {
+            "title": "Value",
+            "description": "Numeric value of the microstructure quantity.",
+            "type": "number",
+            "examples": [12.5, 0.03, 4.8]
+          },
+          "unit": {
+            "title": "Unit",
+            "description": "Unit of the value.",
+            "type": "string",
+            "enum": ["um", "nm", "vol%", "1/um2", "-", "deg"],
+            "default": "um"
+          }
+        }
+      },
+      "default": [],
+      "examples": [
+        [
+          {"name": "Mean Grain Diameter",      "value": 12.5, "unit": "um"},
+          {"name": "Phase Fraction S-phase",   "value":  3.1, "unit": "vol%"},
+          {"name": "Mean Precipitate Diameter","value": 85.0, "unit": "nm"},
+          {"name": "Grain Aspect Ratio",       "value":  1.6, "unit": "-"}
+        ]
+      ]
+    }
+  },
+  "examples": [
+    {
+      "experiment_name": "AA2618 Aged 200°C/2h — SEM grain size",
+      "specimen_iri": "https://kiran.materials-data.space/knowledge/s2-aa2618-2hrs-disc-028",
+      "technique": "SEM",
+      "accelerating_voltage_kv": 15,
+      "magnification": 1000,
+      "area_analysed_um2": 10000,
+      "etching_method": "Keller's reagent 20 s",
+      "software": "ImageJ 1.54f",
+      "results": [
+        {"name": "Mean Grain Diameter",         "value": 12.5,  "unit": "um"},
+        {"name": "D10 Grain Diameter",          "value":  5.1,  "unit": "um"},
+        {"name": "D90 Grain Diameter",          "value": 24.8,  "unit": "um"},
+        {"name": "Grain Aspect Ratio",          "value":  1.6,  "unit": "-"},
+        {"name": "Phase Fraction S-phase",      "value":  3.1,  "unit": "vol%"},
+        {"name": "Phase Fraction Al2Cu",        "value":  1.8,  "unit": "vol%"},
+        {"name": "Mean Precipitate Diameter",   "value": 85.0,  "unit": "nm"},
+        {"name": "Precipitate Number Density",  "value":  0.12, "unit": "1/um2"},
+        {"name": "Porosity",                    "value":  0.05, "unit": "vol%"}
+      ]
+    }
+  ]
+}

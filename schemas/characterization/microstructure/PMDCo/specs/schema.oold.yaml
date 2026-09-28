@@ -1,0 +1,301 @@
+# OO-LD Schema for Microstructure Characterization (PMDCo measurement pattern)
+# Ontology: Platform MaterialDigital Core Ontology (PMDCo)
+#   https://w3id.org/pmd/co/
+#
+# Graph pattern (PMDCo / OBI measurement pattern):
+#
+#   Assay  (obi:OBI_0000070)
+#     rdfs:label ────────────────────────────────────── experiment name
+#     has_specified_input ──────────────────────────► Specimen IRI  (OBI_0000293)
+#     has_process_attribute ────────────────────────► ParameterSpecification  [× 0..N]
+#       type ─────────── pmdco:PMD_0000013
+#       rdfs:label ────── condition name (technique, magnification, …)
+#       qudt:value ─────── numeric value (xsd:double)
+#       qudt:hasUnit ────── unit IRI (QUDT)
+#     has_specified_output ─────────────────────────► MeasurementDatum  [× 0..N]  (OBI_0000299)
+#       type ──────────── obo:IAO_0000109
+#       rdfs:label ─────── property name (e.g. "Mean Grain Diameter")
+#       is_about ────────► Specimen IRI                               (IAO_0000136)
+#       is_quality_measurement_of ► Quality IRI                       (IAO_0000221)
+#       has_value_spec ──► ScalarValueSpec (OBI_0001931)              (OBI_0001938)
+#         result_value ─── xsd:double                                 (OBI_0001937)
+#         result_unit ──── unit IRI (QUDT)                            (IAO_0000039)
+#         specifies_value_of ► Quality IRI                            (OBI_0001927)
+
+"@context":
+  obo:     "http://purl.obolibrary.org/obo/"
+  obi:
+    "@id": "http://purl.obolibrary.org/obo/OBI_"
+    "@prefix": true
+  qudt:    "http://qudt.org/schema/qudt/"
+  uqudt:   "http://qudt.org/vocab/unit/"
+  pmdco:   "https://w3id.org/pmd/co/"
+  conforms_to:
+    "@id": "http://purl.org/dc/terms/conformsTo"
+    "@type": "@id"
+  date:
+    "@id": "http://purl.org/dc/terms/date"
+    "@type": "xsd:dateTime"
+  # pmdco:PMD_0000009 "has process attribute" — quantitative conditions
+  has_process_attribute:
+    "@id": "pmdco:PMD_0000009"
+    "@type": "@id"
+    "@container": "@set"
+  parameter_label:
+    "@id": "rdfs:label"
+  parameter_value:
+    "@id": "qudt:value"
+    "@type": "xsd:double"
+  parameter_unit:
+    "@id": "qudt:hasUnit"
+    "@type": "@id"
+  # dsms:etching_method and software — annotation-only properties
+  etching_method:
+    "@id": "http://www.w3.org/2004/02/skos/core#scopeNote"
+  software:
+    "@id": "http://schema.org/softwareVersion"
+  # obi:OBI_0000299 — measured result nodes
+  measured_properties:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
+    "@container": "@set"
+  # iao:IAO_0000136 — datum / SVS is_about the specimen
+  is_about:
+    "@id": "http://purl.obolibrary.org/obo/IAO_0000136"
+    "@type": "@id"
+  # iao:IAO_0000221 — datum is a quality measurement of the quality node
+  is_quality_measurement_of:
+    "@id": "http://purl.obolibrary.org/obo/IAO_0000221"
+    "@type": "@id"
+  # obi:OBI_0001938 — datum has a value specification
+  has_value_spec:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0001938"
+  # obi:OBI_0001937 — numeric value
+  result_value:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0001937"
+    "@type": "xsd:double"
+  # iao:IAO_0000039 — unit label IRI
+  result_unit:
+    "@id": "http://purl.obolibrary.org/obo/IAO_0000039"
+    "@type": "@id"
+  # obi:OBI_0001927 — SVS specifies value of a quality
+  specifies_value_of:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0001927"
+    "@type": "@id"
+
+allOf:
+  - $ref: "../../../generic/PMDCo/specs/schema.oold.yaml"
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: PMDCo / OBI pattern schema for a microstructure characterization session — grain size, phase fraction, precipitate metrics.
+x-schema-version: '0.1.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/microstructure-PMDCo-v0.1.0/schemas/characterization/microstructure/PMDCo/specs/schema.oold.yaml'
+x-maturity: 'draft'
+x-process-step:
+  category: characterization
+title: Microstructure Characterization (PMDCo)
+type: object
+
+required:
+  - type
+  - id
+  - label
+
+properties:
+
+  type:
+    title: Type
+    type: array
+    items:
+      type: string
+    readOnly: true
+    const: ["obi:OBI_0000070"]
+    default: ["obi:OBI_0000070"]
+    options:
+      enum_titles:
+        - obi:Assay (Microstructure)
+
+  has_specified_input:
+    title: Specimen
+    description: Specimen(s) or material(s) characterized in this session.
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds: [specimen, material]
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  has_specified_output:
+    title: Outputs
+    description: Post-characterization specimen or dataset KItems produced by this session.
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds: [specimen, dataset]
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  # ── Instrument / imaging conditions ────────────────────────────────────────
+
+  technique:
+    title: Technique
+    description: Primary imaging or diffraction technique.
+    type: string
+    enum:
+      - Optical Microscopy
+      - SEM
+      - TEM
+      - EBSD
+      - AFM
+      - FIB-SEM
+      - EDX / EDS
+      - XRD
+      - Other
+
+  magnification:
+    title: Magnification
+    description: Nominal magnification (e.g. 1000 for 1000×).
+    type: number
+    exclusiveMinimum: 0
+
+  accelerating_voltage_kv:
+    title: Accelerating Voltage (kV)
+    description: Electron beam voltage for SEM / TEM / EBSD.
+    type: number
+    exclusiveMinimum: 0
+
+  area_analysed_um2:
+    title: Area Analysed (µm²)
+    description: Total imaged or mapped area used for statistical analysis.
+    type: number
+    exclusiveMinimum: 0
+
+  etching_method:
+    title: Etching / Preparation Method
+    description: Surface preparation applied before imaging (e.g. Keller's reagent 20 s).
+    type: string
+    format: textarea
+
+  software:
+    title: Analysis Software
+    description: Software used for image analysis or pattern indexing.
+    type: string
+
+  # ── Process conditions (ParameterSpecification nodes) ─────────────────────
+  # Encoded in the transform; reflected here for documentation only.
+
+  # ── Measured results ───────────────────────────────────────────────────────
+
+  measured_properties:
+    title: Microstructure Results
+    description: >-
+      Quantitative microstructure metrics. Each entry is a MeasurementDatum (IAO_0000109)
+      with an embedded ScalarValueSpecification (OBI_0001931).
+    type: array
+    items:
+      type: object
+      title: Microstructure Result
+      required:
+        - type
+        - id
+        - label
+        - has_value_spec
+      properties:
+        type:
+          title: Type
+          type: array
+          items:
+            type: string
+          readOnly: true
+          const: ["obo:IAO_0000109"]
+          default: ["obo:IAO_0000109"]
+          options:
+            enum_titles:
+              - iao:MeasurementDatum
+        id:
+          title: Datum ID
+          type: string
+          readOnly: true
+          default: result-1-smd
+        label:
+          title: Property Name
+          type: string
+          examples:
+            - Mean Grain Diameter
+            - Phase Fraction S-phase
+            - Mean Precipitate Diameter
+            - Grain Aspect Ratio
+            - Porosity
+            - Texture Index
+        is_about:
+          title: Is About (Specimen)
+          type: string
+          format: uri
+          readOnly: true
+        is_quality_measurement_of:
+          title: Quality Node IRI
+          type: string
+          format: uri
+          readOnly: true
+        has_value_spec:
+          title: Value Specification
+          type: object
+          required:
+            - type
+            - id
+            - result_value
+            - result_unit
+          properties:
+            type:
+              title: Type
+              type: array
+              items:
+                type: string
+              readOnly: true
+              const: ["obo:OBI_0001931"]
+              default: ["obo:OBI_0001931"]
+              options:
+                enum_titles:
+                  - obi:ScalarValueSpecification
+            id:
+              title: Value Spec ID
+              type: string
+              readOnly: true
+              default: result-1-svs
+            result_value:
+              title: Value
+              type: number
+            result_unit:
+              title: Unit
+              type: string
+              enum:
+                - uqudt:MicroM
+                - uqudt:NanoM
+                - uqudt:PERCENT
+                - uqudt:PER-M2
+                - uqudt:UNITLESS
+                - uqudt:DEG
+              options:
+                enum_titles:
+                  - "µm (micrometre)"
+                  - "nm (nanometre)"
+                  - "% (percent / vol%)"
+                  - "1/µm² (per square micrometre)"
+                  - "– (dimensionless)"
+                  - "° (degree)"
+            specifies_value_of:
+              title: Specifies Value Of (Quality)
+              type: string
+              format: uri
+              readOnly: true
+            is_about:
+              title: Is About (Specimen)
+              type: string
+              format: uri
+              readOnly: true
+    default: []

@@ -1,0 +1,102 @@
+(
+  /*
+   * Microstructure Characterization (PMDCo measurement pattern): simplified JSON → OO-LD JSON
+   *
+   * Input fields (see schema.simplified.json):
+   *   experiment_name       string   required
+   *   specimen_iri          string   required: IRI of the specimen KItem
+   *   experiment_id         string   optional, derived from experiment_name if omitted
+   *   test_date             string   optional, ISO 8601 date-time
+   *   technique             string   optional: enum (SEM, TEM, EBSD, …)
+   *   magnification         number   optional
+   *   accelerating_voltage_kv number optional (kV)
+   *   area_analysed_um2     number   optional (µm²)
+   *   etching_method        string   optional
+   *   software              string   optional
+   *   results               array    optional
+   *     name                string   free-text property name
+   *     value               number
+   *     unit                string   "um" | "nm" | "vol%" | "1/um2" | "-" | "deg"
+   */
+
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/microstructure-PMDCo-v0.1.0/schemas/characterization/microstructure/PMDCo/specs/schema.oold.yaml";
+
+  /* ── Unit label → QUDT unit IRI ──────────────────────────────────────── */
+  $unitMap := {
+    "um":     "uqudt:MicroM",
+    "nm":     "uqudt:NanoM",
+    "vol%":   "uqudt:PERCENT",
+    "1/um2":  "uqudt:PER-M2",
+    "-":      "uqudt:UNITLESS",
+    "deg":    "uqudt:DEG"
+  };
+
+  /* ── Capture document fields as $ vars for closures ─────────────────── */
+  $specimenIri := specimen_iri;
+  $slug        := $replace($lowercase($trim(experiment_name)), /[^a-z0-9]+/, "-");
+  $expId       := $exists(experiment_id) ? experiment_id : "microstructure-" & $slug;
+
+  /* ── Process conditions (ParameterSpecification nodes) ───────────────── */
+  $conds := [];
+  $conds := $exists(technique)
+    ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-technique",
+        "parameter_label": "Technique", "parameter_value": 0, "parameter_unit": "uqudt:UNITLESS",
+        "label": technique}])
+    : $conds;
+  $conds := $exists(magnification)
+    ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-magnification",
+        "parameter_label": "Magnification", "parameter_value": magnification, "parameter_unit": "uqudt:UNITLESS"}])
+    : $conds;
+  $conds := $exists(accelerating_voltage_kv)
+    ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-voltage",
+        "parameter_label": "Accelerating Voltage", "parameter_value": accelerating_voltage_kv, "parameter_unit": "uqudt:KiloV"}])
+    : $conds;
+  $conds := $exists(area_analysed_um2)
+    ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-area",
+        "parameter_label": "Area Analysed", "parameter_value": area_analysed_um2, "parameter_unit": "uqudt:MicroM2"}])
+    : $conds;
+
+  /* ── Measured results (OBI measurement pattern) ──────────────────────── */
+  $measured := $exists(results) and $count(results) > 0
+    ? $map(results, function($r, $i) {
+        $nameSlug := $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-");
+        {
+          "type":  "obo:IAO_0000109",
+          "id":    $expId & "-result-" & $nameSlug & "-smd",
+          "label": $r.name,
+          "is_about": $specimenIri,
+          "is_quality_measurement_of": $specimenIri & "-quality-" & $nameSlug,
+          "has_value_spec": {
+            "type":               "obo:OBI_0001931",
+            "id":                 $expId & "-result-" & $nameSlug & "-svs",
+            "result_value":       $r.value,
+            "result_unit":        $lookup($unitMap, $r.unit),
+            "specifies_value_of": $specimenIri & "-quality-" & $nameSlug,
+            "is_about":           $specimenIri
+          }
+        }
+      })
+    : undefined;
+
+  /* ── OO-LD output ─────────────────────────────────────────────────────── */
+  $base := {
+    "conforms_to":         $schemaUri,
+    "type":                "obi:OBI_0000070",
+    "id":                  $expId,
+    "label":               experiment_name,
+    "has_specified_input": [$specimenIri]
+  };
+
+  $withDate    := $exists(test_date)     ? $merge([$base,      {"date": test_date}])                      : $base;
+  $withConds   := $count($conds) > 0    ? $merge([$withDate,  {"has_process_attribute": $conds}])         : $withDate;
+  $withEtch    := $exists(etching_method)
+                    ? $merge([$withConds, {"etching_method": etching_method}])
+                    : $withConds;
+  $withSw      := $exists(software)
+                    ? $merge([$withEtch, {"software": software}])
+                    : $withEtch;
+
+  $exists($measured)
+    ? $merge([$withSw, {"measured_properties": $measured}])
+    : $withSw
+)
