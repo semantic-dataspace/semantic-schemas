@@ -108,8 +108,8 @@ properties:
     items:
       type: string
     readOnly: true
-    const: ["obi:OBI_0000070"]
-    default: ["obi:OBI_0000070"]
+    const: ["obo:OBI_0000070"]
+    default: ["obo:OBI_0000070"]
     options:
       enum_titles:
         - obi:Assay (Microstructure)
@@ -187,7 +187,15 @@ properties:
     type: string
 
   # ── Process conditions (ParameterSpecification nodes) ─────────────────────
-  # Encoded in the transform; reflected here for documentation only.
+  # Must be declared so platform does not strip the key during JSON Schema validation.
+
+  has_process_attribute:
+    title: Process Conditions
+    description: Quantitative imaging conditions (technique, magnification, voltage, area).
+    type: array
+    items:
+      type: object
+    default: []
 
   # ── Measured results ───────────────────────────────────────────────────────
 
@@ -232,16 +240,6 @@ properties:
             - Grain Aspect Ratio
             - Porosity
             - Texture Index
-        is_about:
-          title: Is About (Specimen)
-          type: string
-          format: uri
-          readOnly: true
-        is_quality_measurement_of:
-          title: Quality Node IRI
-          type: string
-          format: uri
-          readOnly: true
         has_value_spec:
           title: Value Specification
           type: object
@@ -288,14 +286,4 @@ properties:
                   - "1/µm² (per square micrometre)"
                   - "– (dimensionless)"
                   - "° (degree)"
-            specifies_value_of:
-              title: Specifies Value Of (Quality)
-              type: string
-              format: uri
-              readOnly: true
-            is_about:
-              title: Is About (Specimen)
-              type: string
-              format: uri
-              readOnly: true
     default: []

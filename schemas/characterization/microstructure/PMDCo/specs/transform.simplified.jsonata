@@ -59,21 +59,21 @@
   /* ── Measured results (OBI measurement pattern) ──────────────────────── */
   /* $nameSlug binding inside $map body caused JSONata parse failure with    */
   /* the Python jsonata implementation — inline the slug expression instead. */
+  /* Platform cannot pass-through absolute IRI strings as @id refs in nested array items —
+     it creates path-based sub-node IRIs instead. Drop is_about / is_quality_measurement_of
+     from SMD nodes and specifies_value_of / is_about from SVS nodes.
+     Specimen linkage is already established at assay level via has_specified_input. */
   $measured := $exists(results) and $count(results) > 0
     ? $map(results, function($r, $i) {
         {
           "type":  "obo:IAO_0000109",
           "id":    $expId & "-result-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-") & "-smd",
           "label": $r.name,
-          "is_about": $specimenIri,
-          "is_quality_measurement_of": $specimenIri & "-quality-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-"),
           "has_value_spec": {
-            "type":               "obo:OBI_0001931",
-            "id":                 $expId & "-result-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-") & "-svs",
-            "result_value":       $r.value,
-            "result_unit":        $lookup($unitMap, $r.unit),
-            "specifies_value_of": $specimenIri & "-quality-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-"),
-            "is_about":           $specimenIri
+            "type":         "obo:OBI_0001931",
+            "id":           $expId & "-result-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-") & "-svs",
+            "result_value": $r.value,
+            "result_unit":  $lookup($unitMap, $r.unit)
           }
         }
       })
