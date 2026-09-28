@@ -33,8 +33,6 @@
   qudt:    "http://qudt.org/schema/qudt/"
   uqudt:   "http://qudt.org/vocab/unit/"
   chameo:  "https://w3id.org/emmo/domain/characterisation-methodology/chameo#"
-  dnano:   "https://w3id.org/dsms/nanoindentation#"
-  pmdco:   "https://w3id.org/pmd/co/"
   csvw:    "http://www.w3.org/ns/csvw#"
   type:    "@type"
   id:      "@id"
@@ -74,8 +72,6 @@
     "@type": "@id"
   specifies_value_of:
     "@id": "http://purl.obolibrary.org/obo/OBI_0001927"
-  quality_of:
-    "@id": "http://purl.obolibrary.org/obo/RO_0000080"
     "@type": "@id"
   timeseries_column:
     "@id": "http://www.w3.org/ns/csvw#column"
@@ -182,8 +178,7 @@ properties:
         - type
         - id
         - label
-        - result_value
-        - result_unit
+        - has_value_spec
       properties:
         type:
           title: Type
@@ -191,16 +186,16 @@ properties:
           items:
             type: string
           readOnly: true
-          const: ["obo:OBI_0001931"]
-          default: ["obo:OBI_0001931"]
+          const: ["obo:IAO_0000109"]
+          default: ["obo:IAO_0000109"]
           options:
             enum_titles:
-              - obi:ScalarValueSpecification
+              - iao:MeasurementDatum
         id:
-          title: Value Spec ID
+          title: Datum ID
           type: string
           readOnly: true
-          default: svs-1
+          default: result-1-smd
         label:
           title: Result Name
           type: string
@@ -225,131 +220,84 @@ properties:
             - Loading Exponent m
             - Geometry Factor Epsilon
             - Fit Quality R2
-            - Load Stiffness Ratio F/S2
-        result_value:
-          title: Value
-          type: number
-        result_unit:
-          title: Unit
-          type: string
-          enum:
-            - uqudt:GigaPA
-            - uqudt:MicroM
-            - uqudt:MicroM2
-            - uqudt:MilliN
-            - uqudt:MilliN-PER-MicroM
-            - uqudt:PERCENT
-            - uqudt:UNITLESS
-            - uqudt:MicroJ
-            - uqudt:MicroM2-PER-MilliN
-          options:
-            enum_titles:
-              - GPa (gigapascal)
-              - "µm (micrometre)"
-              - "µm² (square micrometre)"
-              - mN (millinewton)
-              - "mN/µm (millinewton per micrometre)"
-              - "% (percent)"
-              - "– (dimensionless)"
-              - "µJ (microjoule)"
-              - "µm²/mN (square micrometre per millinewton)"
-          x-depends-on:
-            field: label
-            values:
-              Hardness HIT:              [uqudt:GigaPA]
-              Elastic Modulus EIT:       [uqudt:GigaPA]
-              Reduced Modulus E*:        [uqudt:GigaPA]
-              Indentation Modulus Er:    [uqudt:GigaPA]
-              Vickers Equivalent HVIT:   [uqudt:UNITLESS]
-              Maximum Force Fmax:        [uqudt:MilliN]
-              Maximum Depth hmax:        [uqudt:MicroM]
-              Contact Depth hc:          [uqudt:MicroM]
-              Residual Depth hr:         [uqudt:MicroM]
-              Plastic Depth hp:          [uqudt:MicroM]
-              Contact Stiffness S:       [uqudt:MilliN-PER-MicroM]
-              Projected Contact Area Ap: [uqudt:MicroM2]
-              Elastic Work Welast:       [uqudt:MicroJ]
-              Plastic Work Wplast:       [uqudt:MicroJ]
-              Total Work Wtotal:         [uqudt:MicroJ]
-              Elastic Work Ratio nIT:    [uqudt:PERCENT]
-              Reverse Indentation Ratio RIT: [uqudt:PERCENT]
-              Loading Exponent m:        [uqudt:UNITLESS]
-              Geometry Factor Epsilon:   [uqudt:UNITLESS]
-              Fit Quality R2:            [uqudt:UNITLESS]
-              Load Stiffness Ratio F/S2: [uqudt:MicroM2-PER-MilliN]
-        specifies_value_of:
-          title: Quality
-          description: >-
-            Quality of the specimen this measurement specifies (OBI_0001927).
-            Type is auto-mapped from Result Name via the dsms-nanoindentation vocabulary
-            (https://w3id.org/dsms/nanoindentation). Supply the specimen IRI in quality_of.
+        has_value_spec:
+          title: Value Specification
           type: object
           required:
             - type
             - id
+            - result_value
+            - result_unit
           properties:
             type:
-              title: Quality Type
-              description: Quality class IRI aligned to PMDCo (auto-selected by result name).
+              title: Type
               type: array
               items:
                 type: string
-                enum:
-                  - pmdco:PMD_0000789
-                  - dnano:VickersEquivalentHardnessIT
-                  - dnano:ElasticModulusIT
-                  - dnano:ReducedModulus
-                  - dnano:IndentationModulus
-                  - dnano:ContactStiffness
-                  - dnano:MaximumIndentationForce
-                  - dnano:MaximumIndentationDepth
-                  - dnano:ContactDepth
-                  - dnano:ResidualDepth
-                  - dnano:PlasticDepth
-                  - dnano:ProjectedContactArea
-                  - dnano:ElasticWork
-                  - dnano:PlasticWork
-                  - dnano:TotalWork
-                  - dnano:ElasticWorkRatio
-                  - dnano:ReverseIndentationRatio
-                  - dnano:LoadingExponent
-                  - dnano:GeometryFactor
-                  - dnano:FitQuality
-                  - dnano:LoadStiffnessRatio
+              readOnly: true
+              const: ["obo:OBI_0001931"]
+              default: ["obo:OBI_0001931"]
+              options:
+                enum_titles:
+                  - obi:ScalarValueSpecification
+            id:
+              title: Value Spec ID
+              type: string
+              readOnly: true
+              default: result-1-svs
+            result_value:
+              title: Value
+              type: number
+            result_unit:
+              title: Unit
+              type: string
+              enum:
+                - uqudt:GigaPA
+                - uqudt:MicroM
+                - uqudt:MicroM2
+                - uqudt:MilliN
+                - uqudt:MilliN-PER-MicroM
+                - uqudt:PERCENT
+                - uqudt:UNITLESS
+                - uqudt:MicroJ
+              options:
+                enum_titles:
+                  - GPa (gigapascal)
+                  - "um (micrometre)"
+                  - "um2 (square micrometre)"
+                  - mN (millinewton)
+                  - "mN/um (millinewton per micrometre)"
+                  - "% (percent)"
+                  - "- (dimensionless)"
+                  - "uJ (microjoule)"
               x-depends-on:
                 field: label
                 values:
-                  Hardness HIT:              [pmdco:PMD_0000789]
-                  Vickers Equivalent HVIT:   [dnano:VickersEquivalentHardnessIT]
-                  Elastic Modulus EIT:       [dnano:ElasticModulusIT]
-                  Reduced Modulus E*:        [dnano:ReducedModulus]
-                  Indentation Modulus Er:    [dnano:IndentationModulus]
-                  Contact Stiffness S:       [dnano:ContactStiffness]
-                  Maximum Force Fmax:        [dnano:MaximumIndentationForce]
-                  Maximum Depth hmax:        [dnano:MaximumIndentationDepth]
-                  Contact Depth hc:          [dnano:ContactDepth]
-                  Residual Depth hr:         [dnano:ResidualDepth]
-                  Plastic Depth hp:          [dnano:PlasticDepth]
-                  Projected Contact Area Ap: [dnano:ProjectedContactArea]
-                  Elastic Work Welast:       [dnano:ElasticWork]
-                  Plastic Work Wplast:       [dnano:PlasticWork]
-                  Total Work Wtotal:         [dnano:TotalWork]
-                  Elastic Work Ratio nIT:    [dnano:ElasticWorkRatio]
-                  Reverse Indentation Ratio RIT: [dnano:ReverseIndentationRatio]
-                  Loading Exponent m:        [dnano:LoadingExponent]
-                  Geometry Factor Epsilon:   [dnano:GeometryFactor]
-                  Fit Quality R2:            [dnano:FitQuality]
-                  Load Stiffness Ratio F/S2: [dnano:LoadStiffnessRatio]
-            id:
-              title: Quality ID
+                  Hardness HIT:              [uqudt:GigaPA]
+                  Elastic Modulus EIT:       [uqudt:GigaPA]
+                  Reduced Modulus E*:        [uqudt:GigaPA]
+                  Indentation Modulus Er:    [uqudt:GigaPA]
+                  Vickers Equivalent HVIT:   [uqudt:UNITLESS]
+                  Maximum Force Fmax:        [uqudt:MilliN]
+                  Maximum Depth hmax:        [uqudt:MicroM]
+                  Contact Depth hc:          [uqudt:MicroM]
+                  Residual Depth hr:         [uqudt:MicroM]
+                  Plastic Depth hp:          [uqudt:MicroM]
+                  Contact Stiffness S:       [uqudt:MilliN-PER-MicroM]
+                  Projected Contact Area Ap: [uqudt:MicroM2]
+                  Elastic Work Welast:       [uqudt:MicroJ]
+                  Plastic Work Wplast:       [uqudt:MicroJ]
+                  Total Work Wtotal:         [uqudt:MicroJ]
+                  Elastic Work Ratio nIT:    [uqudt:PERCENT]
+                  Reverse Indentation Ratio RIT: [uqudt:PERCENT]
+                  Loading Exponent m:        [uqudt:UNITLESS]
+                  Geometry Factor Epsilon:   [uqudt:UNITLESS]
+                  Fit Quality R2:            [uqudt:UNITLESS]
+            specifies_value_of:
+              title: Specifies Value Of
               type: string
               readOnly: true
-              default: quality-1
-            quality_of:
-              title: Specimen IRI
-              description: IRI of the specimen this quality inheres in.
-              type: string
-              format: uri
+              default: ""
     default: []
 
   timeseries_column:

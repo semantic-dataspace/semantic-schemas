@@ -80,7 +80,7 @@
 
   /* ── Summary results (MeasurementDatum + ScalarValueSpecification) ───── */
   $measured := $exists(summary_results) and $count(summary_results) > 0
-    ? $map(summary_results, function($r, $i) {
+    ? $append([], $map(summary_results, function($r, $i) {
         {
           "type":     "obo:IAO_0000109",
           "id":       $expId & "-result-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-") & "-smd",
@@ -95,7 +95,7 @@
             "is_about":           $specimenIri
           }
         }
-      })
+      }))
     : undefined;
 
   /* ── has_specified_output: post-test specimen + datasets ─────────────── */

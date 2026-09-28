@@ -42,7 +42,7 @@
   };
 
   /* ── Build physical property quality nodes ───────────────────────────── */
-  $physProps := $map(physical_properties, function($p, $i) {
+  $physProps := $append([], $map(physical_properties, function($p, $i) {
     {
       "type":       $lookup($typeMap, $p.type),
       "id":         "phys-prop-" & $string($i + 1) & "-" & $specId,
@@ -54,7 +54,7 @@
         "unit":  $lookup($unitMap, $p.unit)
       }
     }
-  });
+  }));
 
   /* ── Legacy mass block (deprecated mass_value / mass_unit) ───────────── */
   $legacyMass := $exists(mass_value) and $not($exists(
