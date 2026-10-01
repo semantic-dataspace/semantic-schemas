@@ -29,12 +29,18 @@
 
   /* ── Unit label → QUDT unit IRI ──────────────────────────────────────── */
   $unitMap := {
-    "GPa": "uqudt:GigaPA",
-    "mN":  "uqudt:MilliN",
-    "um":  "uqudt:MicroM",
-    "%":   "uqudt:PERCENT",
-    "-":   "uqudt:UNITLESS",
-    "uJ":  "uqudt:MicroJ"
+    "GPa":   "uqudt:GigaPA",
+    "mN":    "uqudt:MilliN",
+    "um":    "uqudt:MicroM",
+    "nm":    "uqudt:NanoM",
+    "um2":   "uqudt:MicroM2",
+    "mN/um": "uqudt:MilliN-PER-MicroM",
+    "%":     "uqudt:PERCENT",
+    "-":     "uqudt:UNITLESS",
+    "uJ":    "uqudt:MicroJ",
+    "1/s":   "uqudt:PER-SEC",
+    "s":     "uqudt:SEC",
+    "Hz":    "uqudt:HZ"
   };
 
   /* ── Capture document fields as $ vars for use in closures ───────────── */
