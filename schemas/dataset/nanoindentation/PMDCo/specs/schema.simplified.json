@@ -58,6 +58,13 @@
       "type": "string",
       "examples": ["hc out of calibrated range [42 nm, 593 nm]"]
     },
+    "specimen_iri": {
+      "title": "Specimen IRI",
+      "description": "Optional IRI of the specimen this indent was performed on. When provided, each quality individual in the RDF graph gains a RO_0000080 (quality_of) link to the specimen, enabling SPARQL queries that retrieve results by property class across specimens.",
+      "type": "string",
+      "format": "uri",
+      "examples": ["https://example.org/knowledge/specimen/my-specimen-abc123"]
+    },
     "columns": {
       "title": "Timeseries Column Specifications",
       "description": "Semantic column specs from the parser — column name mapped to EMMO property IRI and QUDT unit IRI.",

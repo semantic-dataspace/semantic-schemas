@@ -109,6 +109,13 @@
   measured_properties:
     "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
     "@container": "@set"
+  # Full OBI pattern: datum -[IAO_0000136]-> quality_individual -[RO_0000080]-> specimen
+  # Enables SPARQL queries: find all hardness values for a given specimen by class.
+  is_about:
+    "@id": "http://purl.obolibrary.org/obo/IAO_0000136"
+  quality_of:
+    "@id": "http://purl.obolibrary.org/obo/RO_0000080"
+    "@type": "@id"
   has_value_spec:
     "@id": "http://purl.obolibrary.org/obo/OBI_0001938"
   result_value:

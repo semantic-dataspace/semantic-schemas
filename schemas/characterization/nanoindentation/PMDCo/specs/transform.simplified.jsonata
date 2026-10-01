@@ -78,24 +78,49 @@
         "parameter_label": "Assumed Poisson's Ratio", "parameter_value": poisson_ratio, "parameter_unit": "uqudt:UNITLESS"}])
     : $conds;
 
-  /* ── Summary results (MeasurementDatum + ScalarValueSpecification) ───── */
-  /* Drop is_about / specifies_value_of: platform creates wrong path-based sub-node
-     IRIs for absolute IRI strings in nested array items ("@type": "@id" not honoured).
-     Specimen link is established at assay level via has_specified_input. */
+  /* ── Quality class: result label → dnano: controlled vocabulary IRI ──── */
+  /* Classes not yet in EMMO/PMDCo are minted in the dnano: namespace.
+     Align to EMMO nanoindentation module IRIs once confirmed. */
+  $qualityMap := {
+    "Mean Hardness HIT":               "dnano:MeanHardnessHIT",
+    "Std Dev Hardness HIT":            "dnano:StdDevHardnessHIT",
+    "Mean Elastic Modulus EIT":        "dnano:MeanElasticModulusEIT",
+    "Std Dev Elastic Modulus EIT":     "dnano:StdDevElasticModulusEIT",
+    "Mean Indentation Modulus Er":     "dnano:MeanIndentationModulusEr",
+    "Std Dev Indentation Modulus Er":  "dnano:StdDevIndentationModulusEr",
+    "Mean Reduced Modulus E*":         "dnano:MeanReducedModulusE",
+    "Std Dev Reduced Modulus E*":      "dnano:StdDevReducedModulusE",
+    "Mean Vickers Equivalent HVIT":    "dnano:MeanVickersHVIT",
+    "Std Dev Vickers Equivalent HVIT": "dnano:StdDevVickersHVIT",
+    "Mean Maximum Depth hmax":         "dnano:MeanMaximumDepthhmax",
+    "Std Dev Maximum Depth hmax":      "dnano:StdDevMaximumDepthhmax",
+    "Number of Valid Indentations":    "dnano:NumberOfValidIndentations"
+  };
+
+  /* ── Summary results: MeasurementDatum + quality individual + ScalarValueSpec ─ */
+  /* Each datum: is_about → typed quality individual (quality_of → specimen).
+     Full OBI pattern: datum IAO_0000136 quality; quality RO_0000080 specimen. */
   $measured := $exists(summary_results) and $count(summary_results) > 0
-    ? $append([], $map(summary_results, function($r, $i) {
+    ? $append([], $map(summary_results, function($r, $i) {(
+        $rSlug     := $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-");
+        $datumBase := $expId & "-result-" & $rSlug;
         {
           "type":  "obo:IAO_0000109",
-          "id":    $expId & "-result-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-") & "-smd",
+          "id":    $datumBase & "-smd",
           "label": $r.name,
+          "is_about": {
+            "type":       $lookup($qualityMap, $r.name),
+            "id":         $datumBase & "-quality",
+            "quality_of": $specimenIri
+          },
           "has_value_spec": {
             "type":         "obo:OBI_0001931",
-            "id":           $expId & "-result-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-") & "-svs",
+            "id":           $datumBase & "-svs",
             "result_value": $r.value,
             "result_unit":  $lookup($unitMap, $r.unit)
           }
         }
-      }))
+      )}))
     : undefined;
 
   /* ── has_specified_output: post-test specimen + datasets ─────────────── */

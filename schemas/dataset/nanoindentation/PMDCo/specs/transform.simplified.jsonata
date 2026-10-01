@@ -46,22 +46,52 @@
   /* ── Capture document fields as $ vars for use in closures ───────────── */
   $slug        := $replace($lowercase($trim(dataset_name)), /[^a-z0-9]+/, "-");
   $dsId        := $exists(dataset_id) ? dataset_id : "nanoindentation-dataset-" & $slug;
+  $specimenIri := $exists(specimen_iri) ? specimen_iri : undefined;
 
-  /* ── Per-indent results (MeasurementDatum + ScalarValueSpecification) ── */
+  /* ── Quality class: result label → dnano: controlled vocabulary IRI ──── */
+  $qualityMap := {
+    "Hardness HIT":                  "dnano:HardnessHIT",
+    "Elastic Modulus EIT":           "dnano:ElasticModulusEIT",
+    "Reduced Modulus E*":            "dnano:ReducedModulusE",
+    "Indentation Modulus Er":        "dnano:IndentationModulusEr",
+    "Vickers Equivalent HVIT":       "dnano:VickersHVIT",
+    "Elastic Work Ratio nIT":        "dnano:ElasticWorkRatioNIT",
+    "Reverse Indentation Ratio RIT": "dnano:ReverseIndentationRatioRIT",
+    "Loading Exponent m":            "dnano:LoadingExponentM",
+    "Geometry Factor Epsilon":       "dnano:GeometryFactorEpsilon",
+    "Fit Quality R2":                "dnano:FitQualityR2",
+    "Maximum Force Fmax":            "dnano:MaximumForceFmax",
+    "Maximum Depth hmax":            "dnano:MaximumDepthhmax",
+    "Contact Depth hc":              "dnano:ContactDepthhc",
+    "Residual Depth hr":             "dnano:ResidualDepthhR",
+    "Plastic Depth hp":              "dnano:PlasticDepthhp",
+    "Contact Stiffness S":           "dnano:ContactStiffnessS",
+    "Projected Contact Area Ap":     "dnano:ProjectedContactAreaAp",
+    "Elastic Work Welast":           "dnano:ElasticWorkWelast",
+    "Plastic Work Wplast":           "dnano:PlasticWorkWplast",
+    "Total Work Wtotal":             "dnano:TotalWorkWtotal"
+  };
+
+  /* ── Per-indent results: MeasurementDatum + quality individual + ScalarValueSpec ─ */
   $measured := $exists(results) and $count(results) > 0
-    ? $map(results, function($r, $i) {
+    ? $map(results, function($r, $i) {(
+        $rSlug     := $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-");
+        $datumBase := $dsId & "-result-" & $rSlug;
         {
-          "type":     "obo:IAO_0000109",
-          "id":       $dsId & "-result-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-") & "-smd",
-          "label":    $r.name,
+          "type":  "obo:IAO_0000109",
+          "id":    $datumBase & "-smd",
+          "label": $r.name,
+          "is_about": $exists($specimenIri)
+            ? { "type": $lookup($qualityMap, $r.name), "id": $datumBase & "-quality", "quality_of": $specimenIri }
+            : { "type": $lookup($qualityMap, $r.name), "id": $datumBase & "-quality" },
           "has_value_spec": {
             "type":         "obo:OBI_0001931",
-            "id":           $dsId & "-result-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-") & "-svs",
+            "id":           $datumBase & "-svs",
             "result_value": $r.value,
             "result_unit":  $lookup($unitMap, $r.unit)
           }
         }
-      })
+      )})
     : undefined;
 
   /* ── Assemble OO-LD output ────────────────────────────────────────────── */

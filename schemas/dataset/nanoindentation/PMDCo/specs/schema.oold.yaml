@@ -33,6 +33,7 @@
   qudt:    "http://qudt.org/schema/qudt/"
   uqudt:   "http://qudt.org/vocab/unit/"
   chameo:  "https://w3id.org/emmo/domain/characterisation-methodology/chameo#"
+  dnano:   "https://w3id.org/dsms/nanoindentation#"
   csvw:    "http://www.w3.org/ns/csvw#"
   type:    "@type"
   id:      "@id"
@@ -62,6 +63,12 @@
   measured_properties:
     "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
     "@container": "@set"
+  # Full OBI pattern: datum -[IAO_0000136]-> quality_individual -[RO_0000080]-> specimen
+  is_about:
+    "@id": "http://purl.obolibrary.org/obo/IAO_0000136"
+  quality_of:
+    "@id": "http://purl.obolibrary.org/obo/RO_0000080"
+    "@type": "@id"
   has_value_spec:
     "@id": "http://purl.obolibrary.org/obo/OBI_0001938"
   result_value:
@@ -69,9 +76,6 @@
     "@type": "xsd:double"
   result_unit:
     "@id": "http://purl.obolibrary.org/obo/IAO_0000039"
-    "@type": "@id"
-  specifies_value_of:
-    "@id": "http://purl.obolibrary.org/obo/OBI_0001927"
     "@type": "@id"
   timeseries_column:
     "@id": "http://www.w3.org/ns/csvw#column"
