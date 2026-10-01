@@ -55,11 +55,10 @@
           "id":       $dsId & "-result-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-") & "-smd",
           "label":    $r.name,
           "has_value_spec": {
-            "type":               "obo:OBI_0001931",
-            "id":                 $dsId & "-result-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-") & "-svs",
-            "result_value":       $r.value,
-            "result_unit":        $lookup($unitMap, $r.unit),
-            "specifies_value_of": ""
+            "type":         "obo:OBI_0001931",
+            "id":           $dsId & "-result-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-") & "-svs",
+            "result_value": $r.value,
+            "result_unit":  $lookup($unitMap, $r.unit)
           }
         }
       })
