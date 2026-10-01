@@ -128,23 +128,13 @@
   $withTemp       := $exists(test_temperature)  ? $merge([$withTipArea,    {"test_temperature":   test_temperature}])  : $withTipArea;
   $withHumidity   := $exists(test_humidity)     ? $merge([$withTemp,       {"test_humidity":      test_humidity}])     : $withTemp;
 
-  /* ── Nest test conditions under test_conditions wrapper ──────────────── */
+  /* ── Process attributes directly on root (schema context: has_process_attribute → pmdco:PMD_0000009) */
   $withConds := $count($conds) > 0
-    ? $merge([$withHumidity, {
-        "test_conditions": {
-          "id":                   $expId & "-test-conditions",
-          "has_process_attribute": $conds
-        }
-      }])
+    ? $merge([$withHumidity, {"has_process_attribute": $conds}])
     : $withHumidity;
 
-  /* ── Nest summary results under summary_results wrapper ──────────────── */
+  /* ── Summary results directly on root (schema context: measured_properties → obi:OBI_0000299) */
   $exists($measured)
-    ? $merge([$withConds, {
-        "summary_results": {
-          "id":                  $expId & "-summary-results",
-          "measured_properties": $measured
-        }
-      }])
+    ? $merge([$withConds, {"measured_properties": $measured}])
     : $withConds
 )
