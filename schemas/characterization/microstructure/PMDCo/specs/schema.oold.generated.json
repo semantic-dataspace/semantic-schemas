@@ -57,6 +57,7 @@
       "@prefix": true
     },
     "qudt": "http://qudt.org/schema/qudt/",
+    "uqudt": "http://qudt.org/vocab/unit/",
     "has_process_attribute": {
       "@id": "pmdco:PMD_0000009",
       "@container": "@set"
@@ -72,7 +73,6 @@
       "@id": "qudt:hasUnit",
       "@type": "@id"
     },
-    "uqudt": "http://qudt.org/vocab/unit/",
     "etching_method": {
       "@id": "http://www.w3.org/2004/02/skos/core#scopeNote"
     },

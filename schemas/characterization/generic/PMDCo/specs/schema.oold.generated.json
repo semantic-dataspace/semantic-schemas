@@ -57,6 +57,7 @@
       "@prefix": true
     },
     "qudt": "http://qudt.org/schema/qudt/",
+    "uqudt": "http://qudt.org/vocab/unit/",
     "has_process_attribute": {
       "@id": "pmdco:PMD_0000009",
       "@container": "@set"

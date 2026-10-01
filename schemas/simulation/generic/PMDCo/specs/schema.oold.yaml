@@ -38,6 +38,7 @@
     "@id": "http://purl.obolibrary.org/obo/BFO_"
     "@prefix": true
   qudt: "http://qudt.org/schema/qudt/"
+  uqudt: "http://qudt.org/vocab/unit/"
   description:
     "@id": "rdfs:comment"
   # pmdco:PMD_0000009 "has process attribute" — directly links process to ParameterSpecification nodes

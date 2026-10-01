@@ -20,6 +20,7 @@
     },
     "pmdco": "https://w3id.org/pmd/co/",
     "qudt": "http://qudt.org/schema/qudt/",
+    "uqudt": "http://qudt.org/vocab/unit/",
     "type": "@type",
     "id": "@id",
     "label": {

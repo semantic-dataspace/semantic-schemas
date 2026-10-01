@@ -57,6 +57,7 @@
       "@prefix": true
     },
     "qudt": "http://qudt.org/schema/qudt/",
+    "uqudt": "http://qudt.org/vocab/unit/",
     "has_process_attribute": {
       "@id": "pmdco:PMD_0000009",
       "@container": "@set"
@@ -74,7 +75,6 @@
     },
     "chameo": "https://w3id.org/emmo/domain/characterisation-methodology/chameo#",
     "nanoind": "https://w3id.org/emmo/domain/nanoindentation#",
-    "uqudt": "http://qudt.org/vocab/unit/",
     "dnano": "https://w3id.org/dsms/nanoindentation#",
     "raw_data_files": {
       "@id": "http://www.w3.org/ns/prov#generated",

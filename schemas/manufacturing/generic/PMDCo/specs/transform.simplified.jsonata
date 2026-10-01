@@ -3,55 +3,85 @@
    * Manufacturing Generic (PMDCo): simplified JSON → OO-LD JSON
    *
    * Input fields (see schema.simplified.json):
-   *   process_name  string   required
-   *   process_id    string   optional, derived from process_name if omitted
-   *   description   string   optional
-   *   inputs        array    optional: each item is a material IRI string
-   *   outputs       array    optional: each item is a material IRI string
-   *   preceded_by   array    optional: each item is a process IRI string
-   *   conditions    array    optional
-   *     name        string   required
-   *     value       number   optional
-   *     unit        string   optional
+   *   process_name        string   required
+   *   process_id          string   optional, derived from process_name if omitted
+   *   description         string   optional
+   *   inputs              array    optional: each item is a material/KItem IRI string
+   *   outputs             array    optional: each item is a material/KItem IRI string
+   *   preceded_by         array    optional: each item is a process IRI string
+   *   process_attributes  array    optional
+   *     name              string   required
+   *     value             number   optional
+   *     unit              string   optional — SI symbol ("°C", "h", "MPa") or uqudt: CURIE
    *
    * Run with the jsonata-python CLI:
    *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
-   *
-   * Run from Python:
-   *   import jsonata, json
-   *   expr   = open("transform.jsonata").read()
-   *   result = jsonata.Jsonata(expr).evaluate(json.load(open("../docs/example.input.json")))
    */
 
   /*
    * Schema provenance: injected automatically into every output.
    * Update $schemaUri whenever x-schema-version in specs/schema.oold.yaml changes.
-   * Format: <x-schema-uri> (pinned raw URL, no version suffix needed)
    */
-  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/manufacturing-generic-PMDCo-v0.1.0/schemas/manufacturing/generic/PMDCo/specs/schema.oold.yaml";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/manufacturing-generic-PMDCo-v0.2.1/schemas/manufacturing/generic/PMDCo/specs/schema.oold.generated.json";
 
-  /* ── Node IDs ────────────────────────────────────────────────────────── */
-  $slug      := $replace($lowercase($trim(process_name)), /[^a-z0-9]+/, "-");
-  $procId    := $exists(process_id) ? process_id : "process-" & $slug;
+  /* ── Unit label → QUDT unit CURIE ───────────────────────────────────────── */
+  $unitMap := {
+    "°C":     "uqudt:DEG_C",
+    "K":      "uqudt:K",
+    "h":      "uqudt:HR",
+    "min":    "uqudt:MIN",
+    "s":      "uqudt:SEC",
+    "°C/min": "uqudt:K-PER-MIN",
+    "K/min":  "uqudt:K-PER-MIN",
+    "K/s":    "uqudt:K-PER-SEC",
+    "MPa":    "uqudt:MegaPascal",
+    "GPa":    "uqudt:GigaPA",
+    "kPa":    "uqudt:KiloPA",
+    "Pa":     "uqudt:PA",
+    "bar":    "uqudt:BAR",
+    "µm":     "uqudt:MicroM",
+    "um":     "uqudt:MicroM",
+    "nm":     "uqudt:NanoM",
+    "mm":     "uqudt:MilliM",
+    "cm":     "uqudt:CentiM",
+    "m":      "uqudt:M",
+    "mN":     "uqudt:MilliN",
+    "N":      "uqudt:N",
+    "kN":     "uqudt:KiloN",
+    "1/s":    "uqudt:PER-SEC",
+    "Hz":     "uqudt:HZ",
+    "%":      "uqudt:PERCENT",
+    "kWh":    "uqudt:KiloW-HR",
+    "J":      "uqudt:J",
+    "kJ":     "uqudt:KiloJ",
+    "–":      "uqudt:UNITLESS",
+    "-":      "uqudt:UNITLESS"
+  };
 
-  /* ── Process conditions ──────────────────────────────────────────────── */
-  $conditions := $exists(conditions) and $count(conditions) > 0
-    ? $map(conditions, function($c, $i) {(
+  /* ── Node IDs ────────────────────────────────────────────────────────────── */
+  $slug   := $replace($lowercase($trim(process_name)), /[^a-z0-9]+/, "-");
+  $procId := $exists(process_id) ? process_id : "process-" & $slug;
+
+  /* ── Process attributes (pmdco:PMD_0000009 → ParameterSpecification nodes) */
+  $attrs := $exists(process_attributes) and $count(process_attributes) > 0
+    ? $map(process_attributes, function($p, $i) {(
         $node := {
-          "type": "pmdco:PMD_0000013",
-          "id":   $procId & "-condition-" & $string($i + 1),
-          "parameter_label": $c.name
+          "type": ["pmdco:PMD_0000013"],
+          "id":   $procId & "-param-" & $string($i + 1),
+          "parameter_label": $p.name
         };
-        /* Merge value and unit only when provided */
-        $withValue := $exists($c.value) ? $merge([$node, {"parameter_value": $c.value}]) : $node;
-        $exists($c.unit) ? $merge([$withValue, {"parameter_unit": $c.unit}]) : $withValue
+        $withValue := $exists($p.value) ? $merge([$node, {"parameter_value": $p.value}]) : $node;
+        $resolvedUnit := $exists($p.unit)
+          ? ($lookup($unitMap, $p.unit) != null ? $lookup($unitMap, $p.unit) : $p.unit)
+          : undefined;
+        $exists($resolvedUnit) ? $merge([$withValue, {"parameter_unit": $resolvedUnit}]) : $withValue
       )})
     : undefined;
 
-  /* ── OO-LD output ────────────────────────────────────────────────────── */
+  /* ── OO-LD output ────────────────────────────────────────────────────────── */
   $base := {
     "conforms_to": $schemaUri,
-    "type":        "pmdco:PMD_0000029",
+    "type":        ["pmdco:PMD_0000833"],
     "id":          $procId,
     "label":       process_name
   };
@@ -72,7 +102,7 @@
     ? $merge([$withOutputs, {"preceded_by": preceded_by}])
     : $withOutputs;
 
-  $exists($conditions)
-    ? $merge([$withPreceded, {"has_process_condition": $conditions}])
+  $exists($attrs)
+    ? $merge([$withPreceded, {"has_process_attribute": $attrs}])
     : $withPreceded
 )

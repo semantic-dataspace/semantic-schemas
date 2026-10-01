@@ -57,6 +57,7 @@
       "@prefix": true
     },
     "qudt": "http://qudt.org/schema/qudt/",
+    "uqudt": "http://qudt.org/vocab/unit/",
     "description": {
       "@id": "rdfs:comment"
     },

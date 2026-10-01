@@ -45,6 +45,7 @@
     "@prefix": true
   pmdco: "https://w3id.org/pmd/co/"
   qudt: "http://qudt.org/schema/qudt/"
+  uqudt: "http://qudt.org/vocab/unit/"
   # Instance IRI base (deployment-specific); override when serialising to RDF.
   # See docs/schema-format.md § "Instance IRI base"
   type: "@type"
