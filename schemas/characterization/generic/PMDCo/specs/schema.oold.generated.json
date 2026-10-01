@@ -59,7 +59,6 @@
     "qudt": "http://qudt.org/schema/qudt/",
     "has_process_attribute": {
       "@id": "pmdco:PMD_0000009",
-      "@type": "@id",
       "@container": "@set"
     },
     "parameter_label": {

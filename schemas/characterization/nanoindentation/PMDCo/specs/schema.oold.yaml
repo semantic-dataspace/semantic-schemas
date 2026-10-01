@@ -93,7 +93,6 @@
   # pmdco:PMD_0000009 "has process attribute" — directly on process root, no wrapper node
   has_process_attribute:
     "@id": "pmdco:PMD_0000009"
-    "@type": "@id"
     "@container": "@set"
   parameter_label:
     "@id": "http://www.w3.org/2000/01/rdf-schema#label"
@@ -109,7 +108,6 @@
   # by type: KItem IRIs are external, MeasurementDatum (IAO_0000109) nodes are inline.
   measured_properties:
     "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
-    "@type": "@id"
     "@container": "@set"
   has_value_spec:
     "@id": "http://purl.obolibrary.org/obo/OBI_0001938"

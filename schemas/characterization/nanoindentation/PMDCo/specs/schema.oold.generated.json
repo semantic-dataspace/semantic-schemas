@@ -59,7 +59,6 @@
     "qudt": "http://qudt.org/schema/qudt/",
     "has_process_attribute": {
       "@id": "pmdco:PMD_0000009",
-      "@type": "@id",
       "@container": "@set"
     },
     "parameter_label": {
@@ -116,7 +115,6 @@
     },
     "measured_properties": {
       "@id": "http://purl.obolibrary.org/obo/OBI_0000299",
-      "@type": "@id",
       "@container": "@set"
     },
     "has_value_spec": {

@@ -39,7 +39,6 @@
   # pmdco:PMD_0000009 "has process attribute" — quantitative conditions
   has_process_attribute:
     "@id": "pmdco:PMD_0000009"
-    "@type": "@id"
     "@container": "@set"
   parameter_label:
     "@id": "rdfs:label"
