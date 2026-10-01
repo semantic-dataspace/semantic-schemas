@@ -215,7 +215,10 @@
           "type": {
             "title": "Property Type",
             "description": "Select the property \u2014 sets the PMDCo quality class on this node.",
-            "type": "string",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "enum": [
               "pmdco:PMD_0050153",
               "pmdco:PMD_0050154",

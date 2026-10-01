@@ -15,10 +15,10 @@
 #     rdfs:comment ────────────────────────────────────── description string  (optional)
 #     has_specified_input ────────────────────────────► Material/Specimen IRI  [× 0..N]
 #     preceded_by ────────────────────────────────────► Assay IRI  [× 0..N]  (optional)
-#     has_process_condition ──────────────────────────► ProcessCondition (pmdco:PMD_0000013)  [× 0..N]  (optional)
-#       rdfs:label ──────── condition name
+#     has_process_attribute ─────────────────────────► ParameterSpecification (pmdco:PMD_0000013)  [× 0..N]  (optional)
+#       rdfs:label ──────── parameter name
 #       qudt:value ──────── numeric value (xsd:double)
-#       qudt:hasUnit ─────── unit string
+#       qudt:hasUnit ─────── QUDT unit IRI
 #
 # Design notes:
 #   - OBI Assay (OBI_0000070) is the canonical class for planned characterization
@@ -65,8 +65,9 @@
     "@id": "bfo:0000062"   # BFO_0000062  preceded_by
     "@type": "@id"
     "@container": "@set"
-  has_process_condition:
-    "@id": "pmdco:PMD_0000016"   # PMD_0000016  has_process_condition
+  # pmdco:PMD_0000009 "has process attribute" — directly links process to ParameterSpecification nodes
+  has_process_attribute:
+    "@id": "pmdco:PMD_0000009"
     "@type": "@id"
     "@container": "@set"
   parameter_label:
@@ -76,6 +77,7 @@
     "@type": "xsd:double"
   parameter_unit:
     "@id": "qudt:hasUnit"
+    "@type": "@id"
 
 allOf:
   - $ref: "../../../../process-step/PMDCo/specs/schema.oold.yaml"
@@ -167,15 +169,16 @@ properties:
     uniqueItems: true
     default: []
 
-  has_process_condition:
-    title: Test Conditions / Parameters
+  has_process_attribute:
+    title: Process Attributes / Parameters
     description: >-
-      Quantitative conditions under which this characterization record is carried out
-      (e.g. strain rate, temperature, applied force).
+      Quantitative conditions and protocol parameters for this characterization step,
+      modelled as PMDCo ParameterSpecification nodes (PMD_0000013) linked directly
+      via has_process_attribute (PMD_0000009).
     type: array
     items:
       type: object
-      title: Process Condition
+      title: Parameter
       required:
         - type
         - id
@@ -191,25 +194,27 @@ properties:
           default: ["pmdco:PMD_0000013"]
           options:
             enum_titles:
-              - pmdco:ProcessCondition
+              - pmdco:ParameterSpecification
         id:
           title: ID
-          description: Identifier for this condition instance; managed by the consumer.
+          description: Identifier for this parameter instance; managed by the consumer.
           type: string
           readOnly: true
-          default: condition-1
+          default: param-1
         parameter_label:
-          title: Condition Name
+          title: Parameter Name
           description: >-
-            Human-readable name for this condition
+            Human-readable name for this parameter
             (e.g. "Strain Rate", "Test Temperature", "Gauge Length").
           type: string
         parameter_value:
           title: Value
-          description: Numeric magnitude of the condition.
+          description: Numeric magnitude of the parameter.
           type: number
         parameter_unit:
           title: Unit
-          description: Unit of the value (e.g. "1/s", "°C", "mm").
+          description: >-
+            QUDT unit IRI for this parameter value (e.g. uqudt:PER-SEC, uqudt:DEG_C).
+            Use a QUDT unit IRI for interoperability.
           type: string
     default: []

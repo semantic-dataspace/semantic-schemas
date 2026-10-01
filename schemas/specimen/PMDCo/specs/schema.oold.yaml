@@ -245,7 +245,9 @@ properties:
         type:
           title: Property Type
           description: Select the property — sets the PMDCo quality class on this node.
-          type: string
+          type: array
+          items:
+            type: string
           enum:
             - pmdco:PMD_0050153       # Thickness
             - pmdco:PMD_0050154       # Width

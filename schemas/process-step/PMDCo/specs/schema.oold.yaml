@@ -101,7 +101,7 @@ properties:
     default: ["obo:OBI_0000070"]
     options:
       enum_titles:
-        - obi:PlannedProcess
+        - obi:Assay
 
   id:
     title: ID

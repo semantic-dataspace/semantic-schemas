@@ -60,8 +60,8 @@
     "description": {
       "@id": "rdfs:comment"
     },
-    "has_process_condition": {
-      "@id": "pmdco:PMD_0000016",
+    "has_process_attribute": {
+      "@id": "pmdco:PMD_0000009",
       "@type": "@id",
       "@container": "@set"
     },
@@ -73,7 +73,8 @@
       "@type": "xsd:double"
     },
     "parameter_unit": {
-      "@id": "qudt:hasUnit"
+      "@id": "qudt:hasUnit",
+      "@type": "@id"
     },
     "model_type": {
       "@id": "http://purl.org/dc/terms/type"
@@ -245,7 +246,7 @@
             ],
             "options": {
               "enum_titles": [
-                "pmdco:ProcessCondition"
+                "pmdco:ParameterSpecification"
               ]
             }
           },

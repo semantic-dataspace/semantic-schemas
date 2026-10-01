@@ -57,8 +57,8 @@
       "@prefix": true
     },
     "qudt": "http://qudt.org/schema/qudt/",
-    "has_process_condition": {
-      "@id": "pmdco:PMD_0000016",
+    "has_process_attribute": {
+      "@id": "pmdco:PMD_0000009",
       "@type": "@id",
       "@container": "@set"
     },
@@ -70,7 +70,8 @@
       "@type": "xsd:double"
     },
     "parameter_unit": {
-      "@id": "http://qudt.org/schema/qudt/hasUnit"
+      "@id": "http://qudt.org/schema/qudt/hasUnit",
+      "@type": "@id"
     },
     "chameo": "https://w3id.org/emmo/domain/characterisation-methodology/chameo#",
     "nanoind": "https://w3id.org/emmo/domain/nanoindentation#",
@@ -113,21 +114,8 @@
       "@id": "dnano:testRelativeHumidity",
       "@type": "xsd:double"
     },
-    "test_conditions": {
-      "@id": "pmdco:PMD_0000016",
-      "@type": "@id"
-    },
-    "summary_results": {
-      "@id": "http://purl.obolibrary.org/obo/OBI_0000299",
-      "@type": "@id"
-    },
-    "has_process_attribute": {
-      "@id": "pmdco:PMD_0000009",
-      "@type": "@id",
-      "@container": "@set"
-    },
     "measured_properties": {
-      "@id": "obo:RO_0002351",
+      "@id": "http://purl.obolibrary.org/obo/OBI_0000299",
       "@type": "@id",
       "@container": "@set"
     },
@@ -307,32 +295,182 @@
       "minimum": 0,
       "maximum": 100
     },
-    "test_conditions": {
+    "has_process_attribute": {
       "title": "Test Protocol Parameters",
-      "type": "object",
-      "required": [
-        "id"
-      ],
-      "properties": {
-        "id": {
-          "title": "ID",
-          "type": "string",
-          "readOnly": true,
-          "default": "test-protocol"
-        },
-        "has_process_attribute": {
-          "title": "Parameters",
-          "description": "Numeric test protocol parameters. Each row is a PMDCo ParameterSpecification (PMD_0000013). Select the parameter name, enter the value, and select the unit.",
-          "type": "array",
-          "items": {
-            "type": "object",
+      "description": "Numeric test protocol parameters. Each row is a PMDCo ParameterSpecification (PMD_0000013). Select the parameter name, enter the value, and select the unit.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "title": "Parameter",
+        "required": [
+          "type",
+          "id",
+          "parameter_label",
+          "parameter_value",
+          "parameter_unit"
+        ],
+        "properties": {
+          "type": {
+            "title": "Type",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "readOnly": true,
+            "const": [
+              "pmdco:PMD_0000013"
+            ],
+            "default": [
+              "pmdco:PMD_0000013"
+            ],
+            "options": {
+              "enum_titles": [
+                "pmdco:ParameterSpecification"
+              ]
+            }
+          },
+          "id": {
+            "title": "ID",
+            "type": "string",
+            "readOnly": true,
+            "default": "param-1"
+          },
+          "parameter_label": {
             "title": "Parameter",
+            "type": "string",
+            "enum": [
+              "Max Depth",
+              "Min Depth",
+              "Max Load",
+              "Loading Rate",
+              "Hold Time at Max Load",
+              "Acquisition Rate",
+              "Assumed Poisson's Ratio"
+            ]
+          },
+          "parameter_value": {
+            "title": "Value",
+            "type": "number",
+            "minimum": 0
+          },
+          "parameter_unit": {
+            "title": "Unit",
+            "type": "string",
+            "enum": [
+              "uqudt:MicroM",
+              "uqudt:MilliN",
+              "uqudt:PER-SEC",
+              "uqudt:SEC",
+              "uqudt:HZ",
+              "uqudt:UNITLESS"
+            ],
+            "options": {
+              "enum_titles": [
+                "\u00b5m (micrometre)",
+                "mN (millinewton)",
+                "1/s (per second)",
+                "s (second)",
+                "Hz (hertz)",
+                "\u2013 (dimensionless)"
+              ]
+            },
+            "x-depends-on": {
+              "field": "parameter_label",
+              "values": {
+                "Max Depth": [
+                  "uqudt:MicroM"
+                ],
+                "Min Depth": [
+                  "uqudt:MicroM"
+                ],
+                "Max Load": [
+                  "uqudt:MilliN"
+                ],
+                "Loading Rate": [
+                  "uqudt:PER-SEC"
+                ],
+                "Hold Time at Max Load": [
+                  "uqudt:SEC"
+                ],
+                "Acquisition Rate": [
+                  "uqudt:HZ"
+                ],
+                "Assumed Poisson's Ratio": [
+                  "uqudt:UNITLESS"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "default": []
+    },
+    "measured_properties": {
+      "title": "Summary Statistics",
+      "description": "Aggregate results across all valid indentations. Each row is a MeasurementDatum (IAO_0000109) with an embedded ScalarValueSpec (OBI_0001931). Select the result name; unit is set automatically.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "title": "Summary Result",
+        "required": [
+          "type",
+          "id",
+          "label",
+          "has_value_spec"
+        ],
+        "properties": {
+          "type": {
+            "title": "Type",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "readOnly": true,
+            "const": [
+              "obo:IAO_0000109"
+            ],
+            "default": [
+              "obo:IAO_0000109"
+            ],
+            "options": {
+              "enum_titles": [
+                "iao:MeasurementDatum"
+              ]
+            }
+          },
+          "id": {
+            "title": "Datum ID",
+            "type": "string",
+            "readOnly": true,
+            "default": "result-1-smd"
+          },
+          "label": {
+            "title": "Result Name",
+            "type": "string",
+            "enum": [
+              "Mean Hardness HIT",
+              "Std Dev Hardness HIT",
+              "Mean Elastic Modulus EIT",
+              "Std Dev Elastic Modulus EIT",
+              "Mean Indentation Modulus Er",
+              "Std Dev Indentation Modulus Er",
+              "Mean Reduced Modulus E*",
+              "Std Dev Reduced Modulus E*",
+              "Mean Vickers Equivalent HVIT",
+              "Std Dev Vickers Equivalent HVIT",
+              "Mean Maximum Depth hmax",
+              "Std Dev Maximum Depth hmax",
+              "Number of Valid Indentations"
+            ]
+          },
+          "has_value_spec": {
+            "title": "Value Specification",
+            "type": "object",
             "required": [
               "type",
               "id",
-              "parameter_label",
-              "parameter_value",
-              "parameter_unit"
+              "result_value",
+              "result_unit"
             ],
             "properties": {
               "type": {
@@ -343,273 +481,93 @@
                 },
                 "readOnly": true,
                 "const": [
-                  "pmdco:PMD_0000013"
+                  "obo:OBI_0001931"
                 ],
                 "default": [
-                  "pmdco:PMD_0000013"
+                  "obo:OBI_0001931"
                 ],
                 "options": {
                   "enum_titles": [
-                    "pmdco:ParameterSpecification"
+                    "obi:ScalarValueSpecification"
                   ]
                 }
               },
               "id": {
-                "title": "ID",
+                "title": "Value Spec ID",
                 "type": "string",
                 "readOnly": true,
-                "default": "param-1"
+                "default": "result-1-svs"
               },
-              "parameter_label": {
-                "title": "Parameter",
-                "type": "string",
-                "enum": [
-                  "Max Depth",
-                  "Min Depth",
-                  "Max Load",
-                  "Loading Rate",
-                  "Hold Time at Max Load",
-                  "Acquisition Rate",
-                  "Assumed Poisson's Ratio"
-                ]
-              },
-              "parameter_value": {
+              "result_value": {
                 "title": "Value",
                 "type": "number",
                 "minimum": 0
               },
-              "parameter_unit": {
+              "result_unit": {
                 "title": "Unit",
                 "type": "string",
                 "enum": [
+                  "uqudt:GigaPA",
                   "uqudt:MicroM",
-                  "uqudt:MilliN",
-                  "uqudt:PER-SEC",
-                  "uqudt:SEC",
-                  "uqudt:HZ",
                   "uqudt:UNITLESS"
                 ],
                 "options": {
                   "enum_titles": [
+                    "GPa (gigapascal)",
                     "\u00b5m (micrometre)",
-                    "mN (millinewton)",
-                    "1/s (per second)",
-                    "s (second)",
-                    "Hz (hertz)",
-                    "\u2013 (dimensionless)"
+                    "\u2013 (count / dimensionless)"
                   ]
                 },
                 "x-depends-on": {
-                  "field": "parameter_label",
+                  "field": "label",
                   "values": {
-                    "Max Depth": [
+                    "Mean Hardness HIT": [
+                      "uqudt:GigaPA"
+                    ],
+                    "Std Dev Hardness HIT": [
+                      "uqudt:GigaPA"
+                    ],
+                    "Mean Elastic Modulus EIT": [
+                      "uqudt:GigaPA"
+                    ],
+                    "Std Dev Elastic Modulus EIT": [
+                      "uqudt:GigaPA"
+                    ],
+                    "Mean Indentation Modulus Er": [
+                      "uqudt:GigaPA"
+                    ],
+                    "Std Dev Indentation Modulus Er": [
+                      "uqudt:GigaPA"
+                    ],
+                    "Mean Reduced Modulus E*": [
+                      "uqudt:GigaPA"
+                    ],
+                    "Std Dev Reduced Modulus E*": [
+                      "uqudt:GigaPA"
+                    ],
+                    "Mean Vickers Equivalent HVIT": [
+                      "uqudt:UNITLESS"
+                    ],
+                    "Std Dev Vickers Equivalent HVIT": [
+                      "uqudt:UNITLESS"
+                    ],
+                    "Mean Maximum Depth hmax": [
                       "uqudt:MicroM"
                     ],
-                    "Min Depth": [
+                    "Std Dev Maximum Depth hmax": [
                       "uqudt:MicroM"
                     ],
-                    "Max Load": [
-                      "uqudt:MilliN"
-                    ],
-                    "Loading Rate": [
-                      "uqudt:PER-SEC"
-                    ],
-                    "Hold Time at Max Load": [
-                      "uqudt:SEC"
-                    ],
-                    "Acquisition Rate": [
-                      "uqudt:HZ"
-                    ],
-                    "Assumed Poisson's Ratio": [
+                    "Number of Valid Indentations": [
                       "uqudt:UNITLESS"
                     ]
                   }
                 }
               }
             }
-          },
-          "default": []
+          }
         }
-      }
-    },
-    "summary_results": {
-      "title": "Summary Statistics",
-      "type": "object",
-      "required": [
-        "id"
-      ],
-      "properties": {
-        "id": {
-          "title": "ID",
-          "type": "string",
-          "readOnly": true,
-          "default": "summary-results"
-        },
-        "measured_properties": {
-          "title": "Summary Results",
-          "description": "Aggregate results across all valid indentations. Each row is a MeasurementDatum (IAO_0000109) with an embedded ScalarValueSpec (OBI_0001931). Select the result name; unit is set automatically.",
-          "type": "array",
-          "items": {
-            "type": "object",
-            "title": "Summary Result",
-            "required": [
-              "type",
-              "id",
-              "label",
-              "has_value_spec"
-            ],
-            "properties": {
-              "type": {
-                "title": "Type",
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "readOnly": true,
-                "const": [
-                  "obo:IAO_0000109"
-                ],
-                "default": [
-                  "obo:IAO_0000109"
-                ],
-                "options": {
-                  "enum_titles": [
-                    "iao:MeasurementDatum"
-                  ]
-                }
-              },
-              "id": {
-                "title": "Datum ID",
-                "type": "string",
-                "readOnly": true,
-                "default": "result-1-smd"
-              },
-              "label": {
-                "title": "Result Name",
-                "type": "string",
-                "enum": [
-                  "Mean Hardness HIT",
-                  "Std Dev Hardness HIT",
-                  "Mean Elastic Modulus EIT",
-                  "Std Dev Elastic Modulus EIT",
-                  "Mean Indentation Modulus Er",
-                  "Std Dev Indentation Modulus Er",
-                  "Mean Reduced Modulus E*",
-                  "Std Dev Reduced Modulus E*",
-                  "Mean Vickers Equivalent HVIT",
-                  "Std Dev Vickers Equivalent HVIT",
-                  "Mean Maximum Depth hmax",
-                  "Std Dev Maximum Depth hmax",
-                  "Number of Valid Indentations"
-                ]
-              },
-              "has_value_spec": {
-                "title": "Value Specification",
-                "type": "object",
-                "required": [
-                  "type",
-                  "id",
-                  "result_value",
-                  "result_unit"
-                ],
-                "properties": {
-                  "type": {
-                    "title": "Type",
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "readOnly": true,
-                    "const": [
-                      "obo:OBI_0001931"
-                    ],
-                    "default": [
-                      "obo:OBI_0001931"
-                    ],
-                    "options": {
-                      "enum_titles": [
-                        "obi:ScalarValueSpecification"
-                      ]
-                    }
-                  },
-                  "id": {
-                    "title": "Value Spec ID",
-                    "type": "string",
-                    "readOnly": true,
-                    "default": "result-1-svs"
-                  },
-                  "result_value": {
-                    "title": "Value",
-                    "type": "number",
-                    "minimum": 0
-                  },
-                  "result_unit": {
-                    "title": "Unit",
-                    "type": "string",
-                    "enum": [
-                      "uqudt:GigaPA",
-                      "uqudt:MicroM",
-                      "uqudt:UNITLESS"
-                    ],
-                    "options": {
-                      "enum_titles": [
-                        "GPa (gigapascal)",
-                        "\u00b5m (micrometre)",
-                        "\u2013 (count / dimensionless)"
-                      ]
-                    },
-                    "x-depends-on": {
-                      "field": "label",
-                      "values": {
-                        "Mean Hardness HIT": [
-                          "uqudt:GigaPA"
-                        ],
-                        "Std Dev Hardness HIT": [
-                          "uqudt:GigaPA"
-                        ],
-                        "Mean Elastic Modulus EIT": [
-                          "uqudt:GigaPA"
-                        ],
-                        "Std Dev Elastic Modulus EIT": [
-                          "uqudt:GigaPA"
-                        ],
-                        "Mean Indentation Modulus Er": [
-                          "uqudt:GigaPA"
-                        ],
-                        "Std Dev Indentation Modulus Er": [
-                          "uqudt:GigaPA"
-                        ],
-                        "Mean Reduced Modulus E*": [
-                          "uqudt:GigaPA"
-                        ],
-                        "Std Dev Reduced Modulus E*": [
-                          "uqudt:GigaPA"
-                        ],
-                        "Mean Vickers Equivalent HVIT": [
-                          "uqudt:UNITLESS"
-                        ],
-                        "Std Dev Vickers Equivalent HVIT": [
-                          "uqudt:UNITLESS"
-                        ],
-                        "Mean Maximum Depth hmax": [
-                          "uqudt:MicroM"
-                        ],
-                        "Std Dev Maximum Depth hmax": [
-                          "uqudt:MicroM"
-                        ],
-                        "Number of Valid Indentations": [
-                          "uqudt:UNITLESS"
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "default": []
-        }
-      }
+      },
+      "default": []
     }
   }
 }

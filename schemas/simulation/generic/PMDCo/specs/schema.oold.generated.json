@@ -60,8 +60,8 @@
     "description": {
       "@id": "rdfs:comment"
     },
-    "has_process_condition": {
-      "@id": "pmdco:PMD_0000016",
+    "has_process_attribute": {
+      "@id": "pmdco:PMD_0000009",
       "@type": "@id",
       "@container": "@set"
     },
@@ -73,7 +73,8 @@
       "@type": "xsd:double"
     },
     "parameter_unit": {
-      "@id": "qudt:hasUnit"
+      "@id": "qudt:hasUnit",
+      "@type": "@id"
     }
   },
   "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -180,15 +181,17 @@
     "operator": {
       "title": "Operator",
       "description": "IRI of the person who performed this simulation step.",
-      "x-ktype": [
-        "expert"
-      ],
       "type": "string",
-      "format": "uri"
+      "format": "kitem",
+      "x-kitem": {
+        "ktypeIds": [
+          "expert"
+        ]
+      }
     },
-    "has_process_condition": {
+    "has_process_attribute": {
       "title": "Simulation Parameters",
-      "description": "Quantitative parameters governing this simulation step (e.g. mesh size, convergence tolerance, time step).",
+      "description": "Quantitative parameters governing this simulation step (e.g. mesh size, convergence tolerance, time step), modelled as PMDCo ParameterSpecification nodes (PMD_0000013).",
       "type": "array",
       "items": {
         "type": "object",
@@ -214,7 +217,7 @@
             ],
             "options": {
               "enum_titles": [
-                "pmdco:ProcessCondition"
+                "pmdco:ParameterSpecification"
               ]
             }
           },

@@ -79,20 +79,20 @@
     : $conds;
 
   /* ── Summary results (MeasurementDatum + ScalarValueSpecification) ───── */
+  /* Drop is_about / specifies_value_of: platform creates wrong path-based sub-node
+     IRIs for absolute IRI strings in nested array items ("@type": "@id" not honoured).
+     Specimen link is established at assay level via has_specified_input. */
   $measured := $exists(summary_results) and $count(summary_results) > 0
     ? $append([], $map(summary_results, function($r, $i) {
         {
-          "type":     "obo:IAO_0000109",
-          "id":       $expId & "-result-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-") & "-smd",
-          "label":    $r.name,
-          "is_about": $specimenIri,
+          "type":  "obo:IAO_0000109",
+          "id":    $expId & "-result-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-") & "-smd",
+          "label": $r.name,
           "has_value_spec": {
-            "type":               "obo:OBI_0001931",
-            "id":                 $expId & "-result-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-") & "-svs",
-            "result_value":       $r.value,
-            "result_unit":        $lookup($unitMap, $r.unit),
-            "specifies_value_of": "",
-            "is_about":           $specimenIri
+            "type":         "obo:OBI_0001931",
+            "id":           $expId & "-result-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-") & "-svs",
+            "result_value": $r.value,
+            "result_unit":  $lookup($unitMap, $r.unit)
           }
         }
       }))

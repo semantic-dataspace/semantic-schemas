@@ -183,7 +183,7 @@ properties:
           default: ["pmdco:PMD_0000013"]
           options:
             enum_titles:
-              - pmdco:ProcessCondition
+              - pmdco:ParameterSpecification
         id:
           title: ID
           type: string

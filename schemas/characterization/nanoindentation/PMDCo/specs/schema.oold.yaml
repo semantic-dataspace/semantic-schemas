@@ -28,7 +28,7 @@
 # Graph pattern:
 #
 #   Nanoindentation (chameo:Nanoindentation)
-#     obi:OBI_0000293  → specimen/material KItems          (has_specified_input)
+#     obi:OBI_0000293  → specimen/material KItems            (has_specified_input)
 #     obi:OBI_0000299  → post-test specimen + dataset KItems (has_specified_output)
 #     prov:generated   → per-indent raw file KItems
 #     dsms:instrumentSerialNumber  "..."
@@ -41,10 +41,16 @@
 #     dsms:tipAreaFunction         "..."
 #     dsms:testTemperature         xsd:double
 #     dsms:testRelativeHumidity    xsd:double
-#     pmdco:PMD_0000016 → <test_conditions_node>
-#       pmdco:PMD_0000009 → ParameterSpecification nodes  (max depth, max load, …)
-#     obi:OBI_0000299  → <summary_results_node>
-#       ro:RO_0002351  → MeasurementDatum nodes           (mean HIT, mean EIT, …)
+#     pmdco:PMD_0000009 → ParameterSpecification nodes       (has_process_attribute, directly on process)
+#       rdfs:label  "Max Depth" / "Max Load" / …
+#       qudt:value  xsd:double
+#       qudt:hasUnit  QUDT unit IRI
+#     obi:OBI_0000299 → MeasurementDatum nodes               (has_specified_output, inline — same predicate as KItem links)
+#       rdf:type  iao:IAO_0000109
+#       rdfs:label  "Mean Hardness HIT" / "Std Dev EIT" / …
+#       obi:OBI_0001938 → ScalarValueSpecification
+#         obi:OBI_0001937  xsd:double
+#         iao:IAO_0000039  QUDT unit IRI
 
 "@context":
   chameo:  "https://w3id.org/emmo/domain/characterisation-methodology/chameo#"
@@ -83,18 +89,8 @@
     "@id": "dnano:testRelativeHumidity"
     "@type": "xsd:double"
 
-  # ── Section wrappers using existing IRIs (no new vocab terms) ───────────────
-  # test_conditions → pmdco:PMD_0000016 (has_process_condition)
-  # summary_results → obi:0000299       (has_specified_output, same IRI as the kitem array;
-  #                   both are valid outputs — one external KItems, one inline data node)
-  test_conditions:
-    "@id": "pmdco:PMD_0000016"
-    "@type": "@id"
-  summary_results:
-    "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
-    "@type": "@id"
-
-  # ── test_conditions interior: has_process_attribute array ────────────────────
+  # ── Process parameters — flat array directly on process (PMDCo Pattern 4) ────
+  # pmdco:PMD_0000009 "has process attribute" — directly on process root, no wrapper node
   has_process_attribute:
     "@id": "pmdco:PMD_0000009"
     "@type": "@id"
@@ -106,11 +102,13 @@
     "@type": "xsd:double"
   parameter_unit:
     "@id": "http://qudt.org/schema/qudt/hasUnit"
+    "@type": "@id"
 
-  # ── summary_results interior: measured_properties array ──────────────────────
-  # has_member (RO_0002351): the summary results node has MeasurementDatum members
+  # ── Summary results — flat array directly on process (PMDCo Pattern 5) ──────
+  # obi:OBI_0000299 "has_specified_output" — same predicate as KItem links; RDF resolves
+  # by type: KItem IRIs are external, MeasurementDatum (IAO_0000109) nodes are inline.
   measured_properties:
-    "@id": "obo:RO_0002351"
+    "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
     "@type": "@id"
     "@container": "@set"
   has_value_spec:
@@ -269,217 +267,194 @@ properties:
     minimum: 0
     maximum: 100
 
-  # ── Section: Test Protocol Parameters ────────────────────────────────────────
-  # type:object → named WebformSection "Test Protocol Parameters"
-  # Wrapper predicate: pmdco:PMD_0000016 (has_process_condition) — existing PMDCo IRI
-  # Array inside uses:  pmdco:PMD_0000009 (has_process_attribute) — different predicate
+  # ── Test Protocol Parameters — flat array on process root (PMDCo Pattern 4) ──
+  # pmdco:PMD_0000009 (has_process_attribute) directly on process — no wrapper node.
+  # Each item is a PMDCo ParameterSpecification (PMD_0000013).
 
-  test_conditions:
+  has_process_attribute:
     title: Test Protocol Parameters
-    type: object
-    required:
-      - id
-    properties:
-      id:
-        title: ID
-        type: string
-        readOnly: true
-        default: test-protocol
-      has_process_attribute:
-        title: Parameters
-        description: >-
-          Numeric test protocol parameters. Each row is a PMDCo
-          ParameterSpecification (PMD_0000013). Select the parameter name,
-          enter the value, and select the unit.
-        type: array
-        items:
-          type: object
+    description: >-
+      Numeric test protocol parameters. Each row is a PMDCo
+      ParameterSpecification (PMD_0000013). Select the parameter name,
+      enter the value, and select the unit.
+    type: array
+    items:
+      type: object
+      title: Parameter
+      required:
+        - type
+        - id
+        - parameter_label
+        - parameter_value
+        - parameter_unit
+      properties:
+        type:
+          title: Type
+          type: array
+          items: {type: string}
+          readOnly: true
+          const: ["pmdco:PMD_0000013"]
+          default: ["pmdco:PMD_0000013"]
+          options:
+            enum_titles:
+              - pmdco:ParameterSpecification
+        id:
+          title: ID
+          type: string
+          readOnly: true
+          default: param-1
+        parameter_label:
           title: Parameter
+          type: string
+          enum:
+            - Max Depth
+            - Min Depth
+            - Max Load
+            - Loading Rate
+            - Hold Time at Max Load
+            - Acquisition Rate
+            - Assumed Poisson's Ratio
+        parameter_value:
+          title: Value
+          type: number
+          minimum: 0
+        parameter_unit:
+          title: Unit
+          type: string
+          enum:
+            - uqudt:MicroM
+            - uqudt:MilliN
+            - uqudt:PER-SEC
+            - uqudt:SEC
+            - uqudt:HZ
+            - uqudt:UNITLESS
+          options:
+            enum_titles:
+              - µm (micrometre)
+              - mN (millinewton)
+              - 1/s (per second)
+              - s (second)
+              - Hz (hertz)
+              - "– (dimensionless)"
+          x-depends-on:
+            field: parameter_label
+            values:
+              Max Depth:                [uqudt:MicroM]
+              Min Depth:                [uqudt:MicroM]
+              Max Load:                 [uqudt:MilliN]
+              Loading Rate:             [uqudt:PER-SEC]
+              Hold Time at Max Load:    [uqudt:SEC]
+              Acquisition Rate:         [uqudt:HZ]
+              Assumed Poisson's Ratio:  [uqudt:UNITLESS]
+    default: []
+
+  # ── Summary Statistics — flat array on process root (PMDCo Pattern 5) ────────
+  # obi:OBI_0000299 (has_specified_output) — same predicate as KItem output links.
+  # In the RDF graph, both KItem IRIs and inline MeasurementDatum nodes appear as
+  # values of OBI_0000299. SPARQL distinguishes them by rdf:type (IAO_0000109 vs. KItem type).
+
+  measured_properties:
+    title: Summary Statistics
+    description: >-
+      Aggregate results across all valid indentations. Each row is a
+      MeasurementDatum (IAO_0000109) with an embedded ScalarValueSpec
+      (OBI_0001931). Select the result name; unit is set automatically.
+    type: array
+    items:
+      type: object
+      title: Summary Result
+      required:
+        - type
+        - id
+        - label
+        - has_value_spec
+      properties:
+        type:
+          title: Type
+          type: array
+          items: {type: string}
+          readOnly: true
+          const: ["obo:IAO_0000109"]
+          default: ["obo:IAO_0000109"]
+          options:
+            enum_titles:
+              - iao:MeasurementDatum
+        id:
+          title: Datum ID
+          type: string
+          readOnly: true
+          default: result-1-smd
+        label:
+          title: Result Name
+          type: string
+          enum:
+            - Mean Hardness HIT
+            - Std Dev Hardness HIT
+            - Mean Elastic Modulus EIT
+            - Std Dev Elastic Modulus EIT
+            - Mean Indentation Modulus Er
+            - Std Dev Indentation Modulus Er
+            - Mean Reduced Modulus E*
+            - Std Dev Reduced Modulus E*
+            - Mean Vickers Equivalent HVIT
+            - Std Dev Vickers Equivalent HVIT
+            - Mean Maximum Depth hmax
+            - Std Dev Maximum Depth hmax
+            - Number of Valid Indentations
+        has_value_spec:
+          title: Value Specification
+          type: object
           required:
             - type
             - id
-            - parameter_label
-            - parameter_value
-            - parameter_unit
+            - result_value
+            - result_unit
           properties:
             type:
               title: Type
               type: array
               items: {type: string}
               readOnly: true
-              const: ["pmdco:PMD_0000013"]
-              default: ["pmdco:PMD_0000013"]
+              const: ["obo:OBI_0001931"]
+              default: ["obo:OBI_0001931"]
               options:
                 enum_titles:
-                  - pmdco:ParameterSpecification
+                  - obi:ScalarValueSpecification
             id:
-              title: ID
+              title: Value Spec ID
               type: string
               readOnly: true
-              default: param-1
-            parameter_label:
-              title: Parameter
-              type: string
-              enum:
-                - Max Depth
-                - Min Depth
-                - Max Load
-                - Loading Rate
-                - Hold Time at Max Load
-                - Acquisition Rate
-                - Assumed Poisson's Ratio
-            parameter_value:
+              default: result-1-svs
+            result_value:
               title: Value
               type: number
               minimum: 0
-            parameter_unit:
+            result_unit:
               title: Unit
               type: string
               enum:
+                - uqudt:GigaPA
                 - uqudt:MicroM
-                - uqudt:MilliN
-                - uqudt:PER-SEC
-                - uqudt:SEC
-                - uqudt:HZ
                 - uqudt:UNITLESS
               options:
                 enum_titles:
+                  - GPa (gigapascal)
                   - µm (micrometre)
-                  - mN (millinewton)
-                  - 1/s (per second)
-                  - s (second)
-                  - Hz (hertz)
-                  - "– (dimensionless)"
+                  - "– (count / dimensionless)"
               x-depends-on:
-                field: parameter_label
+                field: label
                 values:
-                  Max Depth:                [uqudt:MicroM]
-                  Min Depth:                [uqudt:MicroM]
-                  Max Load:                 [uqudt:MilliN]
-                  Loading Rate:             [uqudt:PER-SEC]
-                  Hold Time at Max Load:    [uqudt:SEC]
-                  Acquisition Rate:         [uqudt:HZ]
-                  Assumed Poisson's Ratio:  [uqudt:UNITLESS]
-        default: []
-
-  # ── Section: Summary Statistics ───────────────────────────────────────────────
-  # type:object → named WebformSection "Summary Statistics"
-  # Wrapper predicate: obi:OBI_0000299 (has_specified_output) — existing OBI IRI
-  # Array inside uses:  obo:RO_0002351  (has_member) — existing RO IRI
-
-  summary_results:
-    title: Summary Statistics
-    type: object
-    required:
-      - id
-    properties:
-      id:
-        title: ID
-        type: string
-        readOnly: true
-        default: summary-results
-      measured_properties:
-        title: Summary Results
-        description: >-
-          Aggregate results across all valid indentations. Each row is a
-          MeasurementDatum (IAO_0000109) with an embedded ScalarValueSpec
-          (OBI_0001931). Select the result name; unit is set automatically.
-        type: array
-        items:
-          type: object
-          title: Summary Result
-          required:
-            - type
-            - id
-            - label
-            - has_value_spec
-          properties:
-            type:
-              title: Type
-              type: array
-              items: {type: string}
-              readOnly: true
-              const: ["obo:IAO_0000109"]
-              default: ["obo:IAO_0000109"]
-              options:
-                enum_titles:
-                  - iao:MeasurementDatum
-            id:
-              title: Datum ID
-              type: string
-              readOnly: true
-              default: result-1-smd
-            label:
-              title: Result Name
-              type: string
-              enum:
-                - Mean Hardness HIT
-                - Std Dev Hardness HIT
-                - Mean Elastic Modulus EIT
-                - Std Dev Elastic Modulus EIT
-                - Mean Indentation Modulus Er
-                - Std Dev Indentation Modulus Er
-                - Mean Reduced Modulus E*
-                - Std Dev Reduced Modulus E*
-                - Mean Vickers Equivalent HVIT
-                - Std Dev Vickers Equivalent HVIT
-                - Mean Maximum Depth hmax
-                - Std Dev Maximum Depth hmax
-                - Number of Valid Indentations
-            has_value_spec:
-              title: Value Specification
-              type: object
-              required:
-                - type
-                - id
-                - result_value
-                - result_unit
-              properties:
-                type:
-                  title: Type
-                  type: array
-                  items: {type: string}
-                  readOnly: true
-                  const: ["obo:OBI_0001931"]
-                  default: ["obo:OBI_0001931"]
-                  options:
-                    enum_titles:
-                      - obi:ScalarValueSpecification
-                id:
-                  title: Value Spec ID
-                  type: string
-                  readOnly: true
-                  default: result-1-svs
-                result_value:
-                  title: Value
-                  type: number
-                  minimum: 0
-                result_unit:
-                  title: Unit
-                  type: string
-                  enum:
-                    - uqudt:GigaPA
-                    - uqudt:MicroM
-                    - uqudt:UNITLESS
-                  options:
-                    enum_titles:
-                      - GPa (gigapascal)
-                      - µm (micrometre)
-                      - "– (count / dimensionless)"
-                  x-depends-on:
-                    field: label
-                    values:
-                      Mean Hardness HIT:             [uqudt:GigaPA]
-                      Std Dev Hardness HIT:          [uqudt:GigaPA]
-                      Mean Elastic Modulus EIT:      [uqudt:GigaPA]
-                      Std Dev Elastic Modulus EIT:   [uqudt:GigaPA]
-                      Mean Indentation Modulus Er:   [uqudt:GigaPA]
-                      Std Dev Indentation Modulus Er: [uqudt:GigaPA]
-                      Mean Reduced Modulus E*:       [uqudt:GigaPA]
-                      Std Dev Reduced Modulus E*:    [uqudt:GigaPA]
-                      Mean Vickers Equivalent HVIT:  [uqudt:UNITLESS]
-                      Std Dev Vickers Equivalent HVIT: [uqudt:UNITLESS]
-                      Mean Maximum Depth hmax:       [uqudt:MicroM]
-                      Std Dev Maximum Depth hmax:    [uqudt:MicroM]
-                      Number of Valid Indentations:  [uqudt:UNITLESS]
-        default: []
+                  Mean Hardness HIT:             [uqudt:GigaPA]
+                  Std Dev Hardness HIT:          [uqudt:GigaPA]
+                  Mean Elastic Modulus EIT:      [uqudt:GigaPA]
+                  Std Dev Elastic Modulus EIT:   [uqudt:GigaPA]
+                  Mean Indentation Modulus Er:   [uqudt:GigaPA]
+                  Std Dev Indentation Modulus Er: [uqudt:GigaPA]
+                  Mean Reduced Modulus E*:       [uqudt:GigaPA]
+                  Std Dev Reduced Modulus E*:    [uqudt:GigaPA]
+                  Mean Vickers Equivalent HVIT:  [uqudt:UNITLESS]
+                  Std Dev Vickers Equivalent HVIT: [uqudt:UNITLESS]
+                  Mean Maximum Depth hmax:       [uqudt:MicroM]
+                  Std Dev Maximum Depth hmax:    [uqudt:MicroM]
+                  Number of Valid Indentations:  [uqudt:UNITLESS]
+    default: []

@@ -163,9 +163,10 @@ properties:
     description: >-
       The material that this card describes.
       Links to an existing material record in the knowledge graph.
-    x-ktype: [material]
     type: string
-    format: uri
+    format: kitem
+    x-kitem:
+      ktypeIds: [material]
 
   density:
     title: Density

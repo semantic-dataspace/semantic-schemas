@@ -136,7 +136,9 @@ properties:
   operator:
     title: Operator
     description: IRI of the person who ran or is responsible for this simulation.
-    x-ktype: [expert]
+    format: kitem
+    x-kitem:
+      ktypeIds: [expert]
     type: string
     format: uri
 

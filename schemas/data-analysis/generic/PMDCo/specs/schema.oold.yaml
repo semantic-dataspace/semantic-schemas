@@ -73,8 +73,10 @@ properties:
     description: >-
       Dataset k-items consumed as input by this analysis step.
       Select the corresponding dataset entries from the knowledge graph.
-    x-ktype: [dataset, dataset-catalog]
     type: array
+    format: kitem
+    x-kitem:
+      ktypeIds: [dataset, dataset-catalog]
     minItems: 1
     items:
       type: string
@@ -87,8 +89,10 @@ properties:
     description: >-
       Dataset k-items produced as output by this analysis step.
       Select the corresponding entries from the knowledge graph.
-    x-ktype: [dataset]
     type: array
+    format: kitem
+    x-kitem:
+      ktypeIds: [dataset]
     items:
       type: string
       format: uri
@@ -98,6 +102,7 @@ properties:
   operator:
     title: Analyst
     description: Person who performed or supervised this analysis step.
-    x-ktype: [expert]
     type: string
-    format: uri
+    format: kitem
+    x-kitem:
+      ktypeIds: [expert]

@@ -43,8 +43,8 @@
       "@type": "@id",
       "@container": "@set"
     },
-    "has_process_condition": {
-      "@id": "pmdco:PMD_0000016",
+    "has_process_attribute": {
+      "@id": "pmdco:PMD_0000009",
       "@type": "@id",
       "@container": "@set"
     },
@@ -56,7 +56,8 @@
       "@type": "xsd:double"
     },
     "parameter_unit": {
-      "@id": "qudt:hasUnit"
+      "@id": "qudt:hasUnit",
+      "@type": "@id"
     }
   },
   "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -83,10 +84,10 @@
       },
       "readOnly": true,
       "const": [
-        "pmdco:PMD_0000029"
+        "pmdco:PMD_0000833"
       ],
       "default": [
-        "pmdco:PMD_0000029"
+        "pmdco:PMD_0000833"
       ],
       "options": {
         "enum_titles": [
@@ -115,11 +116,14 @@
     "has_specified_input": {
       "title": "Inputs",
       "description": "Materials or semi-finished products consumed or transformed by this process. Select the corresponding entries from the knowledge graph.",
-      "x-ktype": [
-        "material",
-        "semi-finished-product"
-      ],
       "type": "array",
+      "format": "kitem",
+      "x-kitem": {
+        "ktypeIds": [
+          "material",
+          "semi-finished-product"
+        ]
+      },
       "items": {
         "type": "string",
         "format": "uri"
@@ -130,11 +134,14 @@
     "has_specified_output": {
       "title": "Outputs",
       "description": "Materials or specimens produced by this process. Select the corresponding entries from the knowledge graph.",
-      "x-ktype": [
-        "material",
-        "specimen"
-      ],
       "type": "array",
+      "format": "kitem",
+      "x-kitem": {
+        "ktypeIds": [
+          "material",
+          "specimen"
+        ]
+      },
       "items": {
         "type": "string",
         "format": "uri"
@@ -145,10 +152,13 @@
     "preceded_by": {
       "title": "Preceded By",
       "description": "Processes that directly precede this one in the process chain. Select the corresponding process entries from the knowledge graph.",
-      "x-ktype": [
-        "process"
-      ],
       "type": "array",
+      "format": "kitem",
+      "x-kitem": {
+        "ktypeIds": [
+          "process"
+        ]
+      },
       "items": {
         "type": "string",
         "format": "uri"
@@ -156,13 +166,13 @@
       "uniqueItems": true,
       "default": []
     },
-    "has_process_condition": {
-      "title": "Process Conditions / Parameters",
-      "description": "Quantitative conditions (temperatures, pressures, energies, \u2026) under which this process is carried out, modelled as PMDCo ProcessCondition nodes (pmdco:PMD_0000013).",
+    "has_process_attribute": {
+      "title": "Process Parameters",
+      "description": "Quantitative conditions and protocol parameters for this manufacturing step, modelled as PMDCo ParameterSpecification nodes (PMD_0000013) linked directly via has_process_attribute (PMD_0000009).",
       "type": "array",
       "items": {
         "type": "object",
-        "title": "Process Condition",
+        "title": "Parameter",
         "required": [
           "type",
           "id",
@@ -184,30 +194,30 @@
             ],
             "options": {
               "enum_titles": [
-                "pmdco:ProcessCondition"
+                "pmdco:ParameterSpecification"
               ]
             }
           },
           "id": {
             "title": "ID",
-            "description": "Identifier for this process condition instance; managed by the consumer.",
+            "description": "Identifier for this parameter instance; managed by the consumer.",
             "type": "string",
             "readOnly": true,
-            "default": "condition-1"
+            "default": "param-1"
           },
           "parameter_label": {
             "title": "Parameter Name",
-            "description": "Human-readable name for this condition (e.g. \"Sintering Temperature\", \"Applied Pressure\", \"Energy Consumption\").",
+            "description": "Human-readable name for this parameter (e.g. \"Sintering Temperature\", \"Applied Pressure\", \"Energy Consumption\").",
             "type": "string"
           },
           "parameter_value": {
             "title": "Value",
-            "description": "Numeric magnitude of the condition.",
+            "description": "Numeric magnitude of the parameter.",
             "type": "number"
           },
           "parameter_unit": {
             "title": "Unit",
-            "description": "Unit of the value as a string label (e.g. \"\u00b0C\", \"MPa\", \"kWh\", \"bar\"). Use QUDT unit IRIs when available for interoperability.",
+            "description": "QUDT unit IRI for this parameter value (e.g. uqudt:DEG_C, uqudt:MegaPA). Use a QUDT unit IRI for semantic interoperability.",
             "type": "string"
           }
         }
