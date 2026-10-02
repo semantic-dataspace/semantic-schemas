@@ -472,7 +472,6 @@ properties:
             type:
               title: Quality Class
               type: string
-              readOnly: true
               x-depends-on:
                 field: label
                 values:
@@ -497,5 +496,4 @@ properties:
             quality_of:
               title: Specimen IRI
               type: string
-              readOnly: true
     default: []
