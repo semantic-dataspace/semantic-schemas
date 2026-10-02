@@ -31,7 +31,7 @@
    *     unit             string   "GPa" | "um" | "-"
    */
 
-  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/nanoindentation-PMDCo-v0.1.0/schemas/characterization/nanoindentation/PMDCo/specs/schema.oold.yaml";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/characterization/nanoindentation/PMDCo/specs/schema.oold.yaml";
 
   /* ── Unit label → QUDT unit IRI ──────────────────────────────────────── */
   $unitMap := {
