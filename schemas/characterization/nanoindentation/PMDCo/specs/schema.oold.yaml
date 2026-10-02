@@ -113,6 +113,10 @@
   # Enables SPARQL queries: find all hardness values for a given specimen by class.
   is_about:
     "@id": "http://purl.obolibrary.org/obo/IAO_0000136"
+  # quality_type maps to rdf:type via full IRI to avoid @type keyword handling in nested objects
+  quality_type:
+    "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+    "@type": "@id"
   quality_of:
     "@id": "http://purl.obolibrary.org/obo/RO_0000080"
     "@type": "@id"
@@ -469,9 +473,23 @@ properties:
             Populated automatically by the transform; do not edit manually.
           type: object
           properties:
-            type:
+            quality_type:
               title: Quality Class
               type: string
+              enum:
+                - dnano:MeanHardnessHIT
+                - dnano:StdDevHardnessHIT
+                - dnano:MeanElasticModulusEIT
+                - dnano:StdDevElasticModulusEIT
+                - dnano:MeanIndentationModulusEr
+                - dnano:StdDevIndentationModulusEr
+                - dnano:MeanReducedModulusE
+                - dnano:StdDevReducedModulusE
+                - dnano:MeanVickersHVIT
+                - dnano:StdDevVickersHVIT
+                - dnano:MeanMaximumDepthhmax
+                - dnano:StdDevMaximumDepthhmax
+                - dnano:NumberOfValidIndentations
               x-depends-on:
                 field: label
                 values:

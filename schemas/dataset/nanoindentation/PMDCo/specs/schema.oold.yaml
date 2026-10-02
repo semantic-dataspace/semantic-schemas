@@ -66,6 +66,10 @@
   # Full OBI pattern: datum -[IAO_0000136]-> quality_individual -[RO_0000080]-> specimen
   is_about:
     "@id": "http://purl.obolibrary.org/obo/IAO_0000136"
+  # quality_type maps to rdf:type via full IRI to avoid @type keyword handling in nested objects
+  quality_type:
+    "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+    "@type": "@id"
   quality_of:
     "@id": "http://purl.obolibrary.org/obo/RO_0000080"
     "@type": "@id"
@@ -304,9 +308,30 @@ properties:
             Populated automatically by the transform; do not edit manually.
           type: object
           properties:
-            type:
+            quality_type:
               title: Quality Class
               type: string
+              enum:
+                - dnano:HardnessHIT
+                - dnano:ElasticModulusEIT
+                - dnano:ReducedModulusE
+                - dnano:IndentationModulusEr
+                - dnano:VickersHVIT
+                - dnano:MaximumForceFmax
+                - dnano:MaximumDepthhmax
+                - dnano:ContactDepthhc
+                - dnano:ResidualDepthhR
+                - dnano:PlasticDepthhp
+                - dnano:ContactStiffnessS
+                - dnano:ProjectedContactAreaAp
+                - dnano:ElasticWorkWelast
+                - dnano:PlasticWorkWplast
+                - dnano:TotalWorkWtotal
+                - dnano:ElasticWorkRatioNIT
+                - dnano:ReverseIndentationRatioRIT
+                - dnano:LoadingExponentM
+                - dnano:GeometryFactorEpsilon
+                - dnano:FitQualityR2
               x-depends-on:
                 field: label
                 values:

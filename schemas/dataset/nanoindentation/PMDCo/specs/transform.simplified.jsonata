@@ -82,8 +82,8 @@
           "id":    $datumBase & "-smd",
           "label": $r.name,
           "is_about": $exists($specimenIri)
-            ? { "type": $lookup($qualityMap, $r.name), "id": $datumBase & "-quality", "quality_of": $specimenIri }
-            : { "type": $lookup($qualityMap, $r.name), "id": $datumBase & "-quality" },
+            ? { "quality_type": $lookup($qualityMap, $r.name), "id": $datumBase & "-quality", "quality_of": $specimenIri }
+            : { "quality_type": $lookup($qualityMap, $r.name), "id": $datumBase & "-quality" },
           "has_value_spec": {
             "type":         "obo:OBI_0001931",
             "id":           $datumBase & "-svs",
