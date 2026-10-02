@@ -472,12 +472,12 @@ properties:
             BFO quality individual typed with the specific measured property class.
             Populated automatically by the transform; do not edit manually.
           type: object
-          options:
-            hidden: true
           properties:
             quality_type:
               title: Quality Class
               type: string
+              options:
+                hidden: true
               enum:
                 - dnano:MeanHardnessHIT
                 - dnano:StdDevHardnessHIT
@@ -513,7 +513,11 @@ properties:
               type: string
               readOnly: true
               default: result-1-quality
+              options:
+                hidden: true
             quality_of:
               title: Specimen IRI
               type: string
+              options:
+                hidden: true
     default: []
