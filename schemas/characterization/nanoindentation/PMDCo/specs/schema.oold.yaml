@@ -462,4 +462,40 @@ properties:
                   Mean Maximum Depth hmax:       [uqudt:MicroM]
                   Std Dev Maximum Depth hmax:    [uqudt:MicroM]
                   Number of Valid Indentations:  [uqudt:UNITLESS]
+        is_about:
+          title: Quality Individual
+          description: >-
+            BFO quality individual typed with the specific measured property class.
+            Populated automatically by the transform; do not edit manually.
+          type: object
+          properties:
+            type:
+              title: Quality Class
+              type: string
+              readOnly: true
+              x-depends-on:
+                field: label
+                values:
+                  Mean Hardness HIT:               [dnano:MeanHardnessHIT]
+                  Std Dev Hardness HIT:            [dnano:StdDevHardnessHIT]
+                  Mean Elastic Modulus EIT:        [dnano:MeanElasticModulusEIT]
+                  Std Dev Elastic Modulus EIT:     [dnano:StdDevElasticModulusEIT]
+                  Mean Indentation Modulus Er:     [dnano:MeanIndentationModulusEr]
+                  Std Dev Indentation Modulus Er:  [dnano:StdDevIndentationModulusEr]
+                  "Mean Reduced Modulus E*":       [dnano:MeanReducedModulusE]
+                  "Std Dev Reduced Modulus E*":    [dnano:StdDevReducedModulusE]
+                  Mean Vickers Equivalent HVIT:    [dnano:MeanVickersHVIT]
+                  Std Dev Vickers Equivalent HVIT: [dnano:StdDevVickersHVIT]
+                  Mean Maximum Depth hmax:         [dnano:MeanMaximumDepthhmax]
+                  Std Dev Maximum Depth hmax:      [dnano:StdDevMaximumDepthhmax]
+                  Number of Valid Indentations:    [dnano:NumberOfValidIndentations]
+            id:
+              title: Quality Individual ID
+              type: string
+              readOnly: true
+              default: result-1-quality
+            quality_of:
+              title: Specimen IRI
+              type: string
+              readOnly: true
     default: []
