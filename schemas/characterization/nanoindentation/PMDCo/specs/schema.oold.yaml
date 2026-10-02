@@ -472,6 +472,8 @@ properties:
             BFO quality individual typed with the specific measured property class.
             Populated automatically by the transform; do not edit manually.
           type: object
+          options:
+            hidden: true
           properties:
             quality_type:
               title: Quality Class
