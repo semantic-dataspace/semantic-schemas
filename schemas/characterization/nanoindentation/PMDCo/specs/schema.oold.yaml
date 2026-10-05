@@ -102,6 +102,10 @@
   parameter_unit:
     "@id": "http://qudt.org/schema/qudt/hasUnit"
     "@type": "@id"
+  # parameter_type maps to rdf:type via full IRI (avoids @type keyword clash in nested objects)
+  parameter_type:
+    "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+    "@type": "@id"
 
   # ── Summary results — flat array directly on process (PMDCo Pattern 5) ──────
   # obi:OBI_0000299 "has_specified_output" — same predicate as KItem links; RDF resolves
@@ -320,7 +324,7 @@ properties:
             - Min Depth
             - Max Load
             - Loading Rate
-            - Hold Time at Max Load
+            - Hold Time
             - Acquisition Rate
             - Assumed Poisson's Ratio
         parameter_value:
@@ -352,9 +356,32 @@ properties:
               Min Depth:                [uqudt:MicroM]
               Max Load:                 [uqudt:MilliN]
               Loading Rate:             [uqudt:PER-SEC]
-              Hold Time at Max Load:    [uqudt:SEC]
+              Hold Time:                [uqudt:SEC]
               Acquisition Rate:         [uqudt:HZ]
               Assumed Poisson's Ratio:  [uqudt:UNITLESS]
+        parameter_type:
+          title: Parameter Type
+          type: string
+          options:
+            hidden: true
+          enum:
+            - dnano:MaxDepth
+            - dnano:MinDepth
+            - dnano:MaxLoad
+            - dnano:LoadingRate
+            - dnano:HoldTime
+            - dnano:AcquisitionRate
+            - dnano:PoissonRatio
+          x-depends-on:
+            field: parameter_label
+            values:
+              Max Depth:                [dnano:MaxDepth]
+              Min Depth:                [dnano:MinDepth]
+              Max Load:                 [dnano:MaxLoad]
+              Loading Rate:             [dnano:LoadingRate]
+              Hold Time:                [dnano:HoldTime]
+              Acquisition Rate:         [dnano:AcquisitionRate]
+              Assumed Poisson's Ratio:  [dnano:PoissonRatio]
     default: []
 
   # ── Summary Statistics — flat array on process root (PMDCo Pattern 5) ────────

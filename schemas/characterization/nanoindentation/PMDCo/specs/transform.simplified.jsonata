@@ -55,27 +55,33 @@
   $conds := [];
   $conds := $exists(max_depth)
     ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-max-depth",
-        "parameter_label": "Max Depth", "parameter_value": max_depth, "parameter_unit": "uqudt:MicroM"}])
+        "parameter_label": "Max Depth", "parameter_type": "dnano:MaxDepth",
+        "parameter_value": max_depth, "parameter_unit": "uqudt:MicroM"}])
     : $conds;
   $conds := $exists(max_load)
     ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-max-load",
-        "parameter_label": "Max Load", "parameter_value": max_load, "parameter_unit": "uqudt:MilliN"}])
+        "parameter_label": "Max Load", "parameter_type": "dnano:MaxLoad",
+        "parameter_value": max_load, "parameter_unit": "uqudt:MilliN"}])
     : $conds;
   $conds := $exists(loading_rate)
     ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-loading-rate",
-        "parameter_label": "Loading Rate", "parameter_value": loading_rate, "parameter_unit": "uqudt:PER-SEC"}])
+        "parameter_label": "Loading Rate", "parameter_type": "dnano:LoadingRate",
+        "parameter_value": loading_rate, "parameter_unit": "uqudt:PER-SEC"}])
     : $conds;
   $conds := $exists(hold_time)
     ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-hold-time",
-        "parameter_label": "Hold Time", "parameter_value": hold_time, "parameter_unit": "uqudt:SEC"}])
+        "parameter_label": "Hold Time", "parameter_type": "dnano:HoldTime",
+        "parameter_value": hold_time, "parameter_unit": "uqudt:SEC"}])
     : $conds;
   $conds := $exists(acquisition_rate)
     ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-acq-rate",
-        "parameter_label": "Acquisition Rate", "parameter_value": acquisition_rate, "parameter_unit": "uqudt:HZ"}])
+        "parameter_label": "Acquisition Rate", "parameter_type": "dnano:AcquisitionRate",
+        "parameter_value": acquisition_rate, "parameter_unit": "uqudt:HZ"}])
     : $conds;
   $conds := $exists(poisson_ratio)
     ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-poisson",
-        "parameter_label": "Assumed Poisson's Ratio", "parameter_value": poisson_ratio, "parameter_unit": "uqudt:UNITLESS"}])
+        "parameter_label": "Assumed Poisson's Ratio", "parameter_type": "dnano:PoissonRatio",
+        "parameter_value": poisson_ratio, "parameter_unit": "uqudt:UNITLESS"}])
     : $conds;
 
   /* ── Quality class: result label → dnano: controlled vocabulary IRI ──── */
