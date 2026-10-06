@@ -16,6 +16,20 @@
       "shapePath": "schemas/characterization/nanoindentation/PMDCo/specs/shape.ttl"
     },
     {
+      "path": "schemas/characterization/microstructure/PMDCo/specs/schema.oold.yaml",
+      "group": "characterization",
+      "maturity": "draft",
+      "version": "0.1.0",
+      "shapePath": "schemas/characterization/microstructure/PMDCo/specs/shape.ttl"
+    },
+    {
+      "path": "schemas/manufacturing/heat-treatment/PMDCo/specs/schema.oold.yaml",
+      "group": "manufacturing",
+      "maturity": "draft",
+      "version": "0.1.0",
+      "shapePath": "schemas/manufacturing/heat-treatment/PMDCo/specs/shape.ttl"
+    },
+    {
       "path": "schemas/characterization/tensile-test/PMDCo/specs/schema.oold.yaml",
       "group": "characterization",
       "maturity": "draft",

@@ -1,0 +1,161 @@
+(
+  /*
+   * Heat Treatment (PMDCo): simplified JSON → OO-LD JSON
+   *
+   * Input fields:
+   *   process_name        string   required
+   *   heat_treatment_type string   required — one of the HeatTreatmentType enum values
+   *   process_id          string   optional, derived from process_name if omitted
+   *   description         string   optional
+   *   inputs              array    optional: each item is a specimen/material IRI string
+   *   outputs             array    optional: each item is a specimen IRI string
+   *   preceded_by         array    optional: each item is a process IRI string
+   *   process_attributes  array    optional
+   *     name              string   required — must match parameter_label enum or use free text
+   *     value             number   optional (omit for qualitative parameters)
+   *     unit              string   optional — SI symbol ("°C", "h", …) or uqudt: CURIE
+   *     type_iri          string   optional — override auto-derived parameter_type IRI
+   *
+   * SDK usage: no need to supply type_iri — the transform auto-injects it from the
+   * parameter name using $paramTypeMap. Pass only name/value/unit.
+   *
+   * Qualitative parameters (atmosphere, cooling medium, furnace type) omit value/unit.
+   * Encode the specific value in the name: "Atmosphere: Argon", "Cooling Medium: Water Quench".
+   */
+
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/manufacturing/heat-treatment/PMDCo/specs/schema.oold.yaml";
+
+  /* ── Heat treatment subtype → dsmsht: class IRI ─────────────────────────── */
+  $htTypeMap := {
+    "Solution Treatment":          "dsmsht:SolutionTreatment",
+    "Artificial Aging":            "dsmsht:ArtificialAging",
+    "Natural Aging":               "dsmsht:NaturalAging",
+    "Full Annealing":              "dsmsht:FullAnnealing",
+    "Partial Annealing":           "dsmsht:PartialAnnealing",
+    "Recrystallization Annealing": "dsmsht:RecrystallizationAnnealing",
+    "Stress Relief Annealing":     "dsmsht:StressReliefAnnealing",
+    "Normalizing":                 "dsmsht:Normalizing",
+    "Tempering":                   "dsmsht:Tempering",
+    "Homogenization":              "dsmsht:Homogenization",
+    "Quenching":                   "dsmsht:Quenching"
+  };
+
+  /* ── Parameter label → dsmsht: class IRI ────────────────────────────────── */
+  /* Auto-derived: SDK users pass only name/value/unit. No type_iri needed.    */
+  $paramTypeMap := {
+    /* Temperatures */
+    "Solutionising Temperature":  "dsmsht:SolutionisationTemperature",
+    "Aging Temperature":          "dsmsht:AgingTemperature",
+    "Annealing Temperature":      "dsmsht:AnnealingTemperature",
+    "Normalizing Temperature":    "dsmsht:NormalizingTemperature",
+    "Tempering Temperature":      "dsmsht:TemperingTemperature",
+    "Homogenization Temperature": "dsmsht:HomogenizationTemperature",
+    /* Times */
+    "Hold Time":                  "dsmsht:HoldTime",
+    "Aging Time":                 "dsmsht:AgingTime",
+    "Tempering Time":             "dsmsht:TemperingTime",
+    "Homogenization Time":        "dsmsht:HomogenizationTime",
+    /* Rates */
+    "Heating Rate":               "dsmsht:HeatingRate",
+    "Cooling Rate":               "dsmsht:CoolingRate",
+    /* Delays */
+    "Quench Delay":               "dsmsht:QuenchDelay",
+    /* Qualitative — atmosphere */
+    "Atmosphere: Air":            "dsmsht:Atmosphere",
+    "Atmosphere: Argon":          "dsmsht:Atmosphere",
+    "Atmosphere: Nitrogen":       "dsmsht:Atmosphere",
+    "Atmosphere: Vacuum":         "dsmsht:Atmosphere",
+    /* Qualitative — cooling medium */
+    "Cooling Medium: Water Quench":    "dsmsht:CoolingMedium",
+    "Cooling Medium: Oil Quench":      "dsmsht:CoolingMedium",
+    "Cooling Medium: Air Cool":        "dsmsht:CoolingMedium",
+    "Cooling Medium: Forced Air Cool": "dsmsht:CoolingMedium",
+    "Cooling Medium: Polymer Quench":  "dsmsht:CoolingMedium",
+    "Cooling Medium: Salt Bath":       "dsmsht:CoolingMedium",
+    "Cooling Medium: Furnace Cool":    "dsmsht:CoolingMedium",
+    /* Qualitative — furnace type */
+    "Furnace Type: Muffle Furnace":           "dsmsht:FurnaceType",
+    "Furnace Type: Recirculating Air Furnace": "dsmsht:FurnaceType",
+    "Furnace Type: Salt Bath Furnace":        "dsmsht:FurnaceType",
+    "Furnace Type: Vacuum Furnace":           "dsmsht:FurnaceType",
+    "Furnace Type: Box Furnace":              "dsmsht:FurnaceType"
+  };
+
+  /* ── Unit label → QUDT unit CURIE ───────────────────────────────────────── */
+  $unitMap := {
+    "°C":     "uqudt:DEG_C",
+    "K":      "uqudt:K",
+    "h":      "uqudt:HR",
+    "min":    "uqudt:MIN",
+    "s":      "uqudt:SEC",
+    "°C/min": "uqudt:K-PER-MIN",
+    "K/min":  "uqudt:K-PER-MIN",
+    "K/s":    "uqudt:K-PER-SEC"
+  };
+
+  /* ── Node IDs ────────────────────────────────────────────────────────────── */
+  $slug   := $replace($lowercase($trim(process_name)), /[^a-z0-9]+/, "-");
+  $procId := $exists(process_id) ? process_id : "process-" & $slug;
+
+  /* ── Process subtype IRI ─────────────────────────────────────────────────── */
+  $htTypeIri := $exists(heat_treatment_type) ? $lookup($htTypeMap, heat_treatment_type) : undefined;
+
+  /* ── Process attributes ──────────────────────────────────────────────────── */
+  $attrs := $exists(process_attributes) and $count(process_attributes) > 0
+    ? $map(process_attributes, function($p, $i) {(
+        /* Base node — always present */
+        $node := {
+          "type": ["pmdco:PMD_0000013"],
+          "id":   $procId & "-param-" & $string($i + 1),
+          "parameter_label": $p.name
+        };
+
+        /* parameter_type: explicit type_iri overrides auto-lookup from name */
+        $resolvedTypeIri := $exists($p.type_iri) ? $p.type_iri : $lookup($paramTypeMap, $p.name);
+        $withType := $exists($resolvedTypeIri)
+          ? $merge([$node, {"parameter_type": $resolvedTypeIri}])
+          : $node;
+
+        /* parameter_value: numeric parameters only */
+        $withValue := $exists($p.value)
+          ? $merge([$withType, {"parameter_value": $p.value}])
+          : $withType;
+
+        /* parameter_unit: resolve SI label to QUDT CURIE; pass through if already CURIE */
+        $resolvedUnit := $exists($p.unit)
+          ? ($lookup($unitMap, $p.unit) != null ? $lookup($unitMap, $p.unit) : $p.unit)
+          : undefined;
+        $exists($resolvedUnit)
+          ? $merge([$withValue, {"parameter_unit": $resolvedUnit}])
+          : $withValue
+      )})
+    : undefined;
+
+  /* ── OO-LD output ────────────────────────────────────────────────────────── */
+  $base := {
+    "conforms_to": $schemaUri,
+    "type":  $exists($htTypeIri) ? ["pmdco:PMD_0000833", $htTypeIri] : ["pmdco:PMD_0000833"],
+    "id":    $procId,
+    "label": process_name
+  };
+
+  $withDesc := $exists(description)
+    ? $merge([$base, {"description": description}])
+    : $base;
+
+  $withInputs := $exists(inputs) and $count(inputs) > 0
+    ? $merge([$withDesc, {"has_specified_input": inputs}])
+    : $withDesc;
+
+  $withOutputs := $exists(outputs) and $count(outputs) > 0
+    ? $merge([$withInputs, {"has_specified_output": outputs}])
+    : $withInputs;
+
+  $withPreceded := $exists(preceded_by) and $count(preceded_by) > 0
+    ? $merge([$withOutputs, {"preceded_by": preceded_by}])
+    : $withOutputs;
+
+  $exists($attrs)
+    ? $merge([$withPreceded, {"process_attributes": $attrs}])
+    : $withPreceded
+)
