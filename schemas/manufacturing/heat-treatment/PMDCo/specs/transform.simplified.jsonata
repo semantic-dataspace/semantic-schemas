@@ -44,44 +44,47 @@
     "Quenching":                   "dsmsht:Quenching"
   };
 
-  /* -- Parameter label -> dsmsht: class IRI ---------------------------------------- */
+  /* -- Parameter label -> dsmsht: class full IRI ------------------------------------ */
+  /* Full IRIs required: vocabulary-backed parameter_type field stores full IRIs.      */
   /* Auto-derived: SDK users pass only name/value(/unit). No type_iri needed.          */
-  /* Qualitative category names map to their semantic class.                           */
+  $dsmsht := "https://w3id.org/dsms/heattreatment#";
   $paramTypeMap := {
     /* Temperatures */
-    "Solutionising Temperature":  "dsmsht:SolutionisationTemperature",
-    "Aging Temperature":          "dsmsht:AgingTemperature",
-    "Annealing Temperature":      "dsmsht:AnnealingTemperature",
-    "Normalizing Temperature":    "dsmsht:NormalizingTemperature",
-    "Tempering Temperature":      "dsmsht:TemperingTemperature",
-    "Homogenization Temperature": "dsmsht:HomogenizationTemperature",
+    "Solutionising Temperature":  $dsmsht & "SolutionisationTemperature",
+    "Aging Temperature":          $dsmsht & "AgingTemperature",
+    "Annealing Temperature":      $dsmsht & "AnnealingTemperature",
+    "Normalizing Temperature":    $dsmsht & "NormalizingTemperature",
+    "Tempering Temperature":      $dsmsht & "TemperingTemperature",
+    "Homogenization Temperature": $dsmsht & "HomogenizationTemperature",
     /* Times */
-    "Hold Time":                  "dsmsht:HoldTime",
-    "Aging Time":                 "dsmsht:AgingTime",
-    "Tempering Time":             "dsmsht:TemperingTime",
-    "Homogenization Time":        "dsmsht:HomogenizationTime",
+    "Hold Time":                  $dsmsht & "HoldTime",
+    "Aging Time":                 $dsmsht & "AgingTime",
+    "Tempering Time":             $dsmsht & "TemperingTime",
+    "Homogenization Time":        $dsmsht & "HomogenizationTime",
     /* Rates */
-    "Heating Rate":               "dsmsht:HeatingRate",
-    "Cooling Rate":               "dsmsht:CoolingRate",
+    "Heating Rate":               $dsmsht & "HeatingRate",
+    "Cooling Rate":               $dsmsht & "CoolingRate",
     /* Delays */
-    "Quench Delay":               "dsmsht:QuenchDelay",
+    "Quench Delay":               $dsmsht & "QuenchDelay",
     /* Qualitative categories -- value supplied separately as a string */
-    "Atmosphere":                 "dsmsht:Atmosphere",
-    "Cooling Medium":             "dsmsht:CoolingMedium",
-    "Furnace Type":               "dsmsht:FurnaceType"
+    "Atmosphere":                 $dsmsht & "Atmosphere",
+    "Cooling Medium":             $dsmsht & "CoolingMedium",
+    "Furnace Type":               $dsmsht & "FurnaceType"
   };
 
-  /* -- Unit label -> QUDT unit CURIE ----------------------------------------------- */
+  /* -- Unit label -> QUDT unit full IRI --------------------------------------------- */
+  /* Full IRIs required: vocabulary-backed parameter_unit field stores full IRIs.       */
+  $ubase := "http://qudt.org/vocab/unit/";
   $unitMap := {
-    "°C":    "uqudt:DEG_C",
-    "degC":  "uqudt:DEG_C",
-    "K":      "uqudt:K",
-    "h":      "uqudt:HR",
-    "min":    "uqudt:MIN",
-    "s":      "uqudt:SEC",
-    "C/min":  "uqudt:K-PER-MIN",
-    "K/min":  "uqudt:K-PER-MIN",
-    "K/s":    "uqudt:K-PER-SEC"
+    "°C":    $ubase & "DEG_C",
+    "degC":  $ubase & "DEG_C",
+    "K":     $ubase & "K",
+    "h":     $ubase & "HR",
+    "min":   $ubase & "MIN",
+    "s":     $ubase & "SEC",
+    "C/min": $ubase & "K-PER-MIN",
+    "K/min": $ubase & "K-PER-MIN",
+    "K/s":   $ubase & "K-PER-SEC"
   };
 
   /* -- Node IDs --------------------------------------------------------------------- */

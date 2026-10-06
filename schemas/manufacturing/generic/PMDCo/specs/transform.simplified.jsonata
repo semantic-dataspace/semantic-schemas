@@ -24,38 +24,40 @@
    */
   $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/manufacturing-generic-PMDCo-v0.2.1/schemas/manufacturing/generic/PMDCo/specs/schema.oold.generated.json";
 
-  /* ── Unit label → QUDT unit CURIE ───────────────────────────────────────── */
+  /* ── Unit label → QUDT unit full IRI ────────────────────────────────────── */
+  /* Full IRIs required: vocabulary-backed parameter_unit field stores full IRIs. */
+  $ubase := "http://qudt.org/vocab/unit/";
   $unitMap := {
-    "°C":     "uqudt:DEG_C",
-    "K":      "uqudt:K",
-    "h":      "uqudt:HR",
-    "min":    "uqudt:MIN",
-    "s":      "uqudt:SEC",
-    "°C/min": "uqudt:K-PER-MIN",
-    "K/min":  "uqudt:K-PER-MIN",
-    "K/s":    "uqudt:K-PER-SEC",
-    "MPa":    "uqudt:MegaPascal",
-    "GPa":    "uqudt:GigaPA",
-    "kPa":    "uqudt:KiloPA",
-    "Pa":     "uqudt:PA",
-    "bar":    "uqudt:BAR",
-    "µm":     "uqudt:MicroM",
-    "um":     "uqudt:MicroM",
-    "nm":     "uqudt:NanoM",
-    "mm":     "uqudt:MilliM",
-    "cm":     "uqudt:CentiM",
-    "m":      "uqudt:M",
-    "mN":     "uqudt:MilliN",
-    "N":      "uqudt:N",
-    "kN":     "uqudt:KiloN",
-    "1/s":    "uqudt:PER-SEC",
-    "Hz":     "uqudt:HZ",
-    "%":      "uqudt:PERCENT",
-    "kWh":    "uqudt:KiloW-HR",
-    "J":      "uqudt:J",
-    "kJ":     "uqudt:KiloJ",
-    "–":      "uqudt:UNITLESS",
-    "-":      "uqudt:UNITLESS"
+    "°C":     $ubase & "DEG_C",
+    "K":      $ubase & "K",
+    "h":      $ubase & "HR",
+    "min":    $ubase & "MIN",
+    "s":      $ubase & "SEC",
+    "°C/min": $ubase & "K-PER-MIN",
+    "K/min":  $ubase & "K-PER-MIN",
+    "K/s":    $ubase & "K-PER-SEC",
+    "MPa":    $ubase & "MegaPascal",
+    "GPa":    $ubase & "GigaPA",
+    "kPa":    $ubase & "KiloPA",
+    "Pa":     $ubase & "PA",
+    "bar":    $ubase & "BAR",
+    "µm":     $ubase & "MicroM",
+    "um":     $ubase & "MicroM",
+    "nm":     $ubase & "NanoM",
+    "mm":     $ubase & "MilliM",
+    "cm":     $ubase & "CentiM",
+    "m":      $ubase & "M",
+    "mN":     $ubase & "MilliN",
+    "N":      $ubase & "N",
+    "kN":     $ubase & "KiloN",
+    "1/s":    $ubase & "PER-SEC",
+    "Hz":     $ubase & "HZ",
+    "%":      $ubase & "PERCENT",
+    "kWh":    $ubase & "KiloW-HR",
+    "J":      $ubase & "J",
+    "kJ":     $ubase & "KiloJ",
+    "–":      $ubase & "UNITLESS",
+    "-":      $ubase & "UNITLESS"
   };
 
   /* ── Node IDs ────────────────────────────────────────────────────────────── */
