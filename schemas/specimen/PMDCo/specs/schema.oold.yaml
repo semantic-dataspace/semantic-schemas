@@ -10,7 +10,12 @@
 #
 #   Specimen (TQC)  a  bfo:BFO_0000030, pmdco:PMD_0000068
 #     is_state_of  (PMD_0000070) ─────► Material KItem
-#     exists_at    (BFO_0000108) ─────► TemporalRegion (BFO_0000008)
+#     prov:wasDerivedFrom ─────────────► parent Specimen / Billet KItem  (optional)
+#     exists_at    (BFO_0000108) ─────► TemporalInterval (BFO_0000202)
+#       has_first_instant (BFO_0000222) ► TemporalInstant (BFO_0000148)
+#         dcterms:date ─────────────────── xsd:date  (when specimen entered this state)
+#       has_last_instant  (BFO_0000224) ► TemporalInstant (BFO_0000148)  (optional)
+#         dcterms:date ─────────────────── xsd:date  (when specimen left this state)
 #     has_quality  (RO_0000086)  ─────► QualityNode  [× 0..N]
 #       a  <quality class IRI>           (PMD_0050153|PMD_0050154|PMD_0040001|…)
 #       inheres_in    (RO_0000052) ──── Specimen ← back-ref
@@ -94,10 +99,20 @@
     "@id": "iao:0000039"               # IAO_0000039  has_measurement_unit_label
     "@type": "@id"
 
+  # Temporal interval internals (BFO_0000202 has_first/last_instant)
+  has_first_instant:
+    "@id": "http://purl.obolibrary.org/obo/BFO_0000222"
+  has_last_instant:
+    "@id": "http://purl.obolibrary.org/obo/BFO_0000224"
+  instant_date:
+    "@id": "http://purl.org/dc/terms/date"
+    "@type": "xsd:date"
+
   # Provenance
   source:
     "@id": "http://www.w3.org/ns/prov#wasDerivedFrom"
     "@type": "@id"
+    "@container": "@set"
 
   # DSMS specimen metadata
   temporal_state:
@@ -114,7 +129,7 @@ $comment: >-
   dynamic quality-node array, mirroring the chemical-composition has_member
   pattern. Each row: select property type (PMDCo quality class IRI), enter
   value, pick unit.
-x-schema-version: '0.6.0'
+x-schema-version: '0.7.0'
 x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/specimen/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'draft'
 title: Specimen
@@ -167,10 +182,11 @@ properties:
       ktypeIds: [material]
 
   exists_at:
-    title: Exists At (Temporal Region)
+    title: Exists At (Temporal Interval)
     description: >-
-      Temporal region during which this specimen exists in this state
-      (BFO_0000108 → BFO_0000008 TemporalRegion).
+      Temporal interval during which this specimen exists in this state
+      (BFO_0000108 → BFO_0000202 TemporalInterval). Optionally add start/end
+      dates via has_first_instant / has_last_instant.
     type: object
     required:
       - type
@@ -181,37 +197,88 @@ properties:
         type: array
         items: {type: string}
         readOnly: true
-        const: ["bfo:0000008"]
-        default: ["bfo:0000008"]
+        const: ["bfo:0000202"]
+        default: ["bfo:0000202"]
         options:
           enum_titles:
-            - bfo:TemporalRegion
+            - bfo:TemporalInterval
       id:
-        title: Temporal Region ID
+        title: Temporal Interval ID
         type: string
         readOnly: true
-        default: temporal-region
-      label:
-        title: Description
-        description: "e.g. 'before nanoindentation', 'after sawing'"
-        type: string
+        default: temporal-interval
+      has_first_instant:
+        title: Start Instant
+        description: Moment this specimen entered this state (BFO_0000222).
+        type: object
+        properties:
+          type:
+            title: Type
+            type: array
+            items: {type: string}
+            readOnly: true
+            const: ["bfo:0000148"]
+            default: ["bfo:0000148"]
+          id:
+            title: ID
+            type: string
+            readOnly: true
+            default: temporal-start
+          instant_date:
+            title: Start Date
+            type: string
+            format: date
+      has_last_instant:
+        title: End Instant
+        description: Moment this specimen left this state (BFO_0000224). Optional.
+        type: object
+        properties:
+          type:
+            title: Type
+            type: array
+            items: {type: string}
+            readOnly: true
+            const: ["bfo:0000148"]
+            default: ["bfo:0000148"]
+          id:
+            title: ID
+            type: string
+            readOnly: true
+            default: temporal-end
+          instant_date:
+            title: End Date
+            type: string
+            format: date
 
   temporal_state:
     title: Temporal State
-    description: "Controlled lifecycle label: as-received, pre-test, or post-test."
+    description: "Controlled lifecycle label describing the specimen's processing history."
     type: string
     enum:
       - as-received
       - pre-test
       - post-test
+      - aged
+      - heat-treated
+      - machined
+      - polished
+      - mounted
 
   source:
-    title: Source
-    description: Semi-finished product this specimen was cut from (prov:wasDerivedFrom).
-    type: string
+    title: Source Material(s)
+    description: >-
+      Parent billet, semi-finished product, or specimen(s) this specimen was
+      derived from (prov:wasDerivedFrom). Add multiple entries when a specimen
+      is cut from a piece that was itself cut from a billet (multi-hop provenance).
+    type: array
     format: kitem
     x-kitem:
-      ktypeIds: [semi-finished-product]
+      ktypeIds: [semi-finished-product, specimen, material]
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
 
   # ── Physical properties ────────────────────────────────────────────────────
   # Dynamic quality-node array. Each row:

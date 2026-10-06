@@ -165,7 +165,7 @@
       "path": "schemas/specimen/PMDCo/specs/schema.oold.yaml",
       "group": "specimen",
       "maturity": "draft",
-      "version": "0.4.1",
+      "version": "0.7.0",
       "shapePath": "schemas/specimen/PMDCo/specs/shape.ttl"
     },
     {

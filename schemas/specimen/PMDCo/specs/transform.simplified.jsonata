@@ -2,19 +2,21 @@
   /*
    * Specimen (PMDCo): simplified JSON → OO-LD JSON
    *
-   * Input fields (see schema.simplified.json):
+   * Input fields:
    *   specimen_name        string   required
-   *   material             string   optional: IRI of an existing material kitem
-   *   source               string   optional: IRI of an existing semi-finished-product kitem
-   *   temporal_state       string   optional: "as-received" | "pre-test" | "post-test"
-   *   specimen_form        string   optional: "Bulk" | "Thin Film" | ...
+   *   material             string   optional: IRI of material kitem
+   *   source               string|array  optional: IRI(s) of parent billet/specimen kitem(s)
+   *   temporal_state       string   optional: "as-received"|"pre-test"|"post-test"|"aged"|"heat-treated"|...
+   *   temporal_start       string   optional: ISO date (YYYY-MM-DD) — start of this temporal state
+   *   temporal_end         string   optional: ISO date (YYYY-MM-DD) — end of this temporal state
+   *   specimen_form        string   optional: "Bulk"|"Thin Film"|...
    *   surface_preparation  string   optional: free text
    *   physical_properties  array    optional: [{type, value, unit}]
    *   mass_value           number   optional: deprecated, kept for backwards compat
    *   mass_unit            string   optional: deprecated
    */
 
-  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/main/schemas/specimen/PMDCo/specs/schema.oold.yaml";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/specimen/PMDCo/specs/schema.oold.yaml";
 
   /* ── Node ID ─────────────────────────────────────────────────────────── */
   $slug   := $replace($lowercase($trim(specimen_name)), /[^a-z0-9]+/, "-");
@@ -77,17 +79,55 @@
     $exists($legacyMass) ? [$legacyMass] : []
   );
 
+  /* ── Temporal interval (BFO_0000202 + instants) ─────────────────────── */
+  /* Build exists_at only when at least a start date is provided.          */
+  $startInstant := $exists(temporal_start) ? {
+    "type": ["bfo:0000148"],
+    "id":   $specId & "-temporal-start",
+    "instant_date": temporal_start
+  } : undefined;
+
+  $endInstant := $exists(temporal_end) ? {
+    "type": ["bfo:0000148"],
+    "id":   $specId & "-temporal-end",
+    "instant_date": temporal_end
+  } : undefined;
+
+  $temporalInterval := $exists($startInstant) ? $merge([
+    {
+      "type": ["bfo:0000202"],
+      "id":   $specId & "-temporal-interval",
+      "has_first_instant": $startInstant
+    },
+    $exists($endInstant) ? {"has_last_instant": $endInstant} : {}
+  ]) : undefined;
+
+  /* ── Source: normalise scalar string → array ─────────────────────────── */
+  $sourceArr := $type(source) = "string" ? [source]
+              : ($exists(source) and $count(source) > 0) ? source
+              : undefined;
+
   /* ── OO-LD output ────────────────────────────────────────────────────── */
-  {
-    "conforms_to":        $schemaUri,
-    "type":               ["bfo:0000030", "pmdco:PMD_0000068"],
-    "id":                 $specId,
-    "label":              specimen_name,
-    "material":           material,
-    "source":             source,
-    "temporal_state":     temporal_state,
-    "specimen_form":      specimen_form,
-    "surface_preparation": surface_preparation,
-    "physical_properties": $count($allPhys) > 0 ? $allPhys : undefined
-  }
+  $base := {
+    "conforms_to":         $schemaUri,
+    "type":                ["bfo:0000030", "pmdco:PMD_0000068"],
+    "id":                  $specId,
+    "label":               specimen_name,
+    "material":            material,
+    "temporal_state":      temporal_state,
+    "specimen_form":       specimen_form,
+    "surface_preparation": surface_preparation
+  };
+
+  $withSource := $exists($sourceArr)
+    ? $merge([$base, {"source": $sourceArr}])
+    : $base;
+
+  $withTemporal := $exists($temporalInterval)
+    ? $merge([$withSource, {"exists_at": $temporalInterval}])
+    : $withSource;
+
+  $exists($allPhys) and $count($allPhys) > 0
+    ? $merge([$withTemporal, {"physical_properties": $allPhys}])
+    : $withTemporal
 )
