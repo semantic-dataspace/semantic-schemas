@@ -94,10 +94,7 @@
   /* -- Process attributes ----------------------------------------------------------- */
   $attrs := $exists(process_attributes) and $count(process_attributes) > 0
     ? $map(process_attributes, function($p, $i) {(
-        /* Detect qualitative: value is a non-empty string */
-        $isQualitative := $exists($p.value) and $type($p.value) = "string";
-
-        /* Base node — parameter_label always stores the category/name only */
+        /* Base node */
         $node := {
           "type": ["pmdco:PMD_0000013"],
           "id":   $procId & "-param-" & $string($i + 1),
@@ -110,16 +107,10 @@
           ? $merge([$node, {"parameter_type": $resolvedTypeIri}])
           : $node;
 
-        /* qualitative_value: string value for atmosphere/cooling medium/furnace type */
-        $withQualValue := $isQualitative
-          ? $merge([$withType, {"qualitative_value": $p.value}])
+        /* parameter_value: numeric value OR qualitative string -- both go in same field */
+        $withValue := $exists($p.value)
+          ? $merge([$withType, {"parameter_value": $p.value}])
           : $withType;
-
-        /* parameter_value: numeric parameters only */
-        $numericValue := $exists($p.value) and $type($p.value) = "number" ? $p.value : undefined;
-        $withValue := $exists($numericValue)
-          ? $merge([$withQualValue, {"parameter_value": $numericValue}])
-          : $withQualValue;
 
         /* parameter_unit: resolve SI label to QUDT CURIE; pass through if already CURIE */
         $resolvedUnit := $exists($p.unit)

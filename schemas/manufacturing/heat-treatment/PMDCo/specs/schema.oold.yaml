@@ -74,12 +74,9 @@
     "@type": "@id"
   parameter_value:
     "@id": "qudt:value"
-    "@type": "xsd:double"
   parameter_unit:
     "@id": "qudt:hasUnit"
     "@type": "@id"
-  qualitative_value:
-    "@id": "rdfs:value"
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Heat treatment process schema — PMDCo pattern with dsmsht parameter type IRIs
@@ -254,22 +251,10 @@ properties:
 
         parameter_value:
           title: Value
-          description: Numeric magnitude (leave blank for qualitative parameters).
-          type: number
-
-        qualitative_value:
-          title: Qualitative Value
           description: >-
-            Specific value for qualitative parameters (Atmosphere, Cooling Medium, Furnace Type).
-            Examples: "Air", "Argon", "Water Quench", "Muffle Furnace".
-            Set via SDK as {"name": "Atmosphere", "value": "Air"}.
+            Numeric magnitude for quantitative parameters, or descriptive string
+            for qualitative parameters (e.g. "Air", "Water Quench", "Muffle Furnace").
           type: string
-          x-depends-on:
-            field: parameter_label
-            values:
-              Atmosphere:       true
-              "Cooling Medium": true
-              "Furnace Type":   true
 
         parameter_unit:
           title: Unit
