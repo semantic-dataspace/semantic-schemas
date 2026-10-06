@@ -261,10 +261,15 @@ properties:
           title: Qualitative Value
           description: >-
             Specific value for qualitative parameters (Atmosphere, Cooling Medium, Furnace Type).
-            Set via SDK/transform only (e.g. {"name": "Atmosphere", "value": "Argon"}).
+            Examples: "Air", "Argon", "Water Quench", "Muffle Furnace".
+            Set via SDK as {"name": "Atmosphere", "value": "Air"}.
           type: string
-          options:
-            hidden: true
+          x-depends-on:
+            field: parameter_label
+            values:
+              Atmosphere:       true
+              "Cooling Medium": true
+              "Furnace Type":   true
 
         parameter_unit:
           title: Unit
