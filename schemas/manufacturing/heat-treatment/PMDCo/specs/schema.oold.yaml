@@ -189,7 +189,7 @@ properties:
     uniqueItems: true
     default: []
 
-  process_attributes:
+  has_process_attribute:
     title: Process Parameters
     description: >-
       Quantitative conditions and protocol parameters for this heat treatment step.
