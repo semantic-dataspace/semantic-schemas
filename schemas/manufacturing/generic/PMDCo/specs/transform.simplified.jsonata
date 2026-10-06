@@ -70,7 +70,8 @@
           "id":   $procId & "-param-" & $string($i + 1),
           "parameter_label": $p.name
         };
-        $withValue := $exists($p.value) ? $merge([$node, {"parameter_value": $p.value}]) : $node;
+        $withType  := $exists($p.type_iri)   ? $merge([$node,      {"parameter_type":  $p.type_iri}]) : $node;
+        $withValue := $exists($p.value)       ? $merge([$withType,  {"parameter_value": $p.value}])    : $withType;
         $resolvedUnit := $exists($p.unit)
           ? ($lookup($unitMap, $p.unit) != null ? $lookup($unitMap, $p.unit) : $p.unit)
           : undefined;

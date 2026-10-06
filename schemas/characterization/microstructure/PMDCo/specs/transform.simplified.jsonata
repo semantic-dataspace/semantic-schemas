@@ -31,6 +31,24 @@
     "deg":    "uqudt:DEG"
   };
 
+  /* ── Quality class: result label → dsmsms: controlled vocabulary IRI ─── */
+  /* Classes minted in dsmsms: namespace until an EMMO microstructure module */
+  /* provides canonical IRIs for grain/phase/precipitate descriptors.        */
+  $qualityMap := {
+    "Mean Grain Diameter":        "dsmsms:MeanGrainDiameter",
+    "D10 Grain Diameter":         "dsmsms:D10GrainDiameter",
+    "D50 Grain Diameter":         "dsmsms:D50GrainDiameter",
+    "D90 Grain Diameter":         "dsmsms:D90GrainDiameter",
+    "Grain Aspect Ratio":         "dsmsms:GrainAspectRatio",
+    "Phase Fraction Al-matrix":   "dsmsms:PhaseFractionAlMatrix",
+    "Phase Fraction S-phase":     "dsmsms:PhaseFractionSPhase",
+    "Phase Fraction Al2Cu":       "dsmsms:PhaseFractionAl2Cu",
+    "Phase Fraction Al9FeNi":     "dsmsms:PhaseFractionAl9FeNi",
+    "Mean Precipitate Diameter":  "dsmsms:MeanPrecipitateDiameter",
+    "Precipitate Number Density": "dsmsms:PrecipitateNumberDensity",
+    "Porosity":                   "dsmsms:Porosity"
+  };
+
   /* ── Capture document fields as $ vars for closures ─────────────────── */
   $specimenIri := specimen_iri;
   $slug        := $replace($lowercase($trim(experiment_name)), /[^a-z0-9]+/, "-");
@@ -40,8 +58,7 @@
   $conds := [];
   $conds := $exists(technique)
     ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-technique",
-        "parameter_label": "Technique", "parameter_value": 0, "parameter_unit": "uqudt:UNITLESS",
-        "label": technique}])
+        "parameter_label": "Technique", "label": technique}])
     : $conds;
   $conds := $exists(magnification)
     ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-magnification",
@@ -56,27 +73,29 @@
         "parameter_label": "Area Analysed", "parameter_value": area_analysed_um2, "parameter_unit": "uqudt:MicroM2"}])
     : $conds;
 
-  /* ── Measured results (OBI measurement pattern) ──────────────────────── */
-  /* $nameSlug binding inside $map body caused JSONata parse failure with    */
-  /* the Python jsonata implementation — inline the slug expression instead. */
-  /* Platform cannot pass-through absolute IRI strings as @id refs in nested array items —
-     it creates path-based sub-node IRIs instead. Drop is_about / is_quality_measurement_of
-     from SMD nodes and specifies_value_of / is_about from SVS nodes.
-     Specimen linkage is already established at assay level via has_specified_input. */
+  /* ── Measured results: MeasurementDatum + quality individual + ScalarValueSpec ─ */
+  /* Full OBI pattern: datum IAO_0000136 quality_individual; quality_individual
+     rdf:type <dsmsms:QualityClass>; quality_individual RO_0000080 specimen. */
   $measured := $exists(results) and $count(results) > 0
-    ? $map(results, function($r, $i) {
+    ? $map(results, function($r, $i) {(
+        $rSlug     := $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-");
+        $datumBase := $expId & "-result-" & $rSlug;
+        $qType     := $lookup($qualityMap, $r.name);
         {
           "type":  "obo:IAO_0000109",
-          "id":    $expId & "-result-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-") & "-smd",
+          "id":    $datumBase & "-smd",
           "label": $r.name,
+          "is_about": $exists($qType)
+            ? { "quality_type": $qType, "id": $datumBase & "-quality", "quality_of": $specimenIri }
+            : { "id": $datumBase & "-quality", "quality_of": $specimenIri },
           "has_value_spec": {
             "type":         "obo:OBI_0001931",
-            "id":           $expId & "-result-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-") & "-svs",
+            "id":           $datumBase & "-svs",
             "result_value": $r.value,
             "result_unit":  $lookup($unitMap, $r.unit)
           }
         }
-      })
+      )})
     : undefined;
 
   /* ── OO-LD output ─────────────────────────────────────────────────────── */

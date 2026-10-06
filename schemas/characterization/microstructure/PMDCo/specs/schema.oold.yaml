@@ -48,18 +48,26 @@
   parameter_unit:
     "@id": "qudt:hasUnit"
     "@type": "@id"
-  # dsms:etching_method and software — annotation-only properties
+  dsmsms:  "https://w3id.org/dsms/microstructure#"
+  # sample preparation note — dcterms:description is generic but universally understood
   etching_method:
-    "@id": "http://www.w3.org/2004/02/skos/core#scopeNote"
+    "@id": "http://purl.org/dc/terms/description"
   software:
-    "@id": "http://schema.org/softwareVersion"
+    "@id": "http://www.w3.org/ns/prov#used"
   # obi:OBI_0000299 — measured result nodes
   measured_properties:
     "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
     "@container": "@set"
-  # iao:IAO_0000136 — datum / SVS is_about the specimen
+  # iao:IAO_0000136 — datum is_about a quality individual (nested node, NOT plain IRI)
   is_about:
     "@id": "http://purl.obolibrary.org/obo/IAO_0000136"
+  # quality_type maps rdf:type on the quality individual node
+  quality_type:
+    "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+    "@type": "@id"
+  # quality_of (RO_0000080): quality individual is quality_of the specimen
+  quality_of:
+    "@id": "http://purl.obolibrary.org/obo/RO_0000080"
     "@type": "@id"
   # iao:IAO_0000221 — datum is a quality measurement of the quality node
   is_quality_measurement_of:

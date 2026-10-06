@@ -27,11 +27,13 @@
    */
   $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/chemical-composition-PMDCo-v1.0.0/schemas/chemical-composition/PMDCo/specs/schema.oold.generated.json";
 
-  /* ── Unit label → Unit Ontology IRI ──────────────────────────────────── */
+  /* ── Unit label → QUDT unit IRI ─────────────────────────────────────── */
+  /* All fraction types map to uqudt:PERCENT; semantic distinction (mass/vol/mol)
+     is carried by the quality/property context, not the unit IRI.           */
   $unitMap := {
-    "mass%": "uo:0000163",
-    "vol%":  "uo:0000164",
-    "mol%":  "uo:0000165"
+    "mass%": "uqudt:PERCENT",
+    "vol%":  "uqudt:PERCENT",
+    "mol%":  "uqudt:PERCENT"
   };
 
   /* ── Element symbol → PMDCo PortionOfChemicalElement IRI ─────────────── */

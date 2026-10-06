@@ -44,6 +44,7 @@
     "@id": "http://purl.obolibrary.org/obo/BFO_"
     "@prefix": true
   pmdco: "https://w3id.org/pmd/co/"
+  dsmsht: "https://w3id.org/dsms/heattreatment#"
   qudt: "http://qudt.org/schema/qudt/"
   uqudt: "http://qudt.org/vocab/unit/"
   # Instance IRI base (deployment-specific); override when serialising to RDF.
@@ -72,6 +73,11 @@
     "@container": "@set"
   parameter_label:
     "@id": "rdfs:label"
+  # parameter_type adds a domain-specific rdf:type on the ParameterSpecification node
+  # e.g. dsmsht:AgingTemperature — enables IRI-based SPARQL queries over parameters
+  parameter_type:
+    "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+    "@type": "@id"
   parameter_value:
     "@id": "qudt:value"
     "@type": "xsd:double"
