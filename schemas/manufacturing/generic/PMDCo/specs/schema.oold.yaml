@@ -191,7 +191,7 @@ properties:
       required:
         - type
         - id
-        - parameter_label
+        - parameter_type
       properties:
         type:
           title: Type
@@ -210,11 +210,16 @@ properties:
           type: string
           readOnly: true
           default: param-1
+        parameter_type:
+          title: Parameter Type
+          description: Search and select a parameter type from the vocabulary. Stores the IRI as rdf:type on the ParameterSpecification node.
+          type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/process-parameter/use-cases/all/terms"
         parameter_label:
-          title: Parameter Name
+          title: Parameter Name (custom)
           description: >-
-            Human-readable name for this parameter
-            (e.g. "Sintering Temperature", "Applied Pressure", "Energy Consumption").
+            Optional free-text label. Leave blank to use the vocabulary term label.
+            Use for custom parameter names not in the vocabulary.
           type: string
         parameter_value:
           title: Value

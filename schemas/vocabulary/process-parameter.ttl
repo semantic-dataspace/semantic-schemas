@@ -1,0 +1,65 @@
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:   <http://www.w3.org/2004/02/skos/core#> .
+
+@prefix pp:     <https://w3id.org/dsms/process-parameter#> .
+@prefix dsmsht: <https://w3id.org/dsms/heattreatment#> .
+@prefix dnano:  <https://w3id.org/dsms/nanoindentation#> .
+
+# =============================================================================
+# DSMS process parameter type vocabulary
+# Curated parameter class IRIs across all DSMS process schemas.
+# Hosted at: schemas/vocabulary/process-parameter.ttl
+# Vocabulary service namespace: process-parameter
+# x-vocabulary URL: https://vocabulary.materials-data.space/api/vocabulary/namespaces/process-parameter/use-cases/all/terms
+# =============================================================================
+
+# ── Generic manufacturing parameters ─────────────────────────────────────────
+pp:Temperature          a owl:Class ; rdfs:label "Temperature"@en .
+pp:Pressure             a owl:Class ; rdfs:label "Pressure"@en .
+pp:Duration             a owl:Class ; rdfs:label "Duration"@en .
+pp:HeatingRate          a owl:Class ; rdfs:label "Heating Rate"@en .
+pp:CoolingRate          a owl:Class ; rdfs:label "Cooling Rate"@en .
+pp:Force                a owl:Class ; rdfs:label "Force"@en .
+pp:Speed                a owl:Class ; rdfs:label "Speed"@en .
+pp:RotationSpeed        a owl:Class ; rdfs:label "Rotation Speed"@en .
+pp:Power                a owl:Class ; rdfs:label "Power"@en .
+pp:Energy               a owl:Class ; rdfs:label "Energy"@en .
+pp:Mass                 a owl:Class ; rdfs:label "Mass"@en .
+pp:Volume               a owl:Class ; rdfs:label "Volume"@en .
+pp:FlowRate             a owl:Class ; rdfs:label "Flow Rate"@en .
+pp:Atmosphere           a owl:Class ; rdfs:label "Atmosphere"@en .
+pp:Humidity             a owl:Class ; rdfs:label "Humidity"@en .
+pp:pH                   a owl:Class ; rdfs:label "pH"@en .
+pp:Viscosity            a owl:Class ; rdfs:label "Viscosity"@en .
+pp:Voltage              a owl:Class ; rdfs:label "Voltage"@en .
+pp:Current              a owl:Class ; rdfs:label "Current"@en .
+
+# ── Heat treatment parameters ─────────────────────────────────────────────────
+# Source: schemas/manufacturing/heat-treatment/PMDCo — dsmsht: namespace
+dsmsht:SolutionisationTemperature  a owl:Class ; rdfs:label "Solutionising Temperature"@en .
+dsmsht:AgingTemperature            a owl:Class ; rdfs:label "Aging Temperature"@en .
+dsmsht:AnnealingTemperature        a owl:Class ; rdfs:label "Annealing Temperature"@en .
+dsmsht:NormalizingTemperature      a owl:Class ; rdfs:label "Normalizing Temperature"@en .
+dsmsht:TemperingTemperature        a owl:Class ; rdfs:label "Tempering Temperature"@en .
+dsmsht:HomogenizationTemperature   a owl:Class ; rdfs:label "Homogenization Temperature"@en .
+dsmsht:HoldTime                    a owl:Class ; rdfs:label "Hold Time"@en .
+dsmsht:AgingTime                   a owl:Class ; rdfs:label "Aging Time"@en .
+dsmsht:TemperingTime               a owl:Class ; rdfs:label "Tempering Time"@en .
+dsmsht:HomogenizationTime          a owl:Class ; rdfs:label "Homogenization Time"@en .
+dsmsht:HeatingRate                 a owl:Class ; rdfs:label "Heating Rate (Heat Treatment)"@en .
+dsmsht:CoolingRate                 a owl:Class ; rdfs:label "Cooling Rate (Heat Treatment)"@en .
+dsmsht:QuenchDelay                 a owl:Class ; rdfs:label "Quench Delay"@en .
+dsmsht:Atmosphere                  a owl:Class ; rdfs:label "Atmosphere (Heat Treatment)"@en .
+dsmsht:CoolingMedium               a owl:Class ; rdfs:label "Cooling Medium"@en .
+dsmsht:FurnaceType                 a owl:Class ; rdfs:label "Furnace Type"@en .
+
+# ── Nanoindentation test parameters ───────────────────────────────────────────
+# Source: schemas/characterization/nanoindentation/PMDCo — dnano: namespace
+dnano:MaxDepth          a owl:Class ; rdfs:label "Max Indentation Depth"@en .
+dnano:MinDepth          a owl:Class ; rdfs:label "Min Indentation Depth"@en .
+dnano:MaxLoad           a owl:Class ; rdfs:label "Maximum Load"@en .
+dnano:LoadingRate       a owl:Class ; rdfs:label "Loading Rate"@en .
+dnano:HoldTime          a owl:Class ; rdfs:label "Hold Time at Maximum Load"@en .
+dnano:AcquisitionRate   a owl:Class ; rdfs:label "Data Acquisition Rate"@en .
+dnano:PoissonRatio      a owl:Class ; rdfs:label "Assumed Poisson's Ratio"@en .

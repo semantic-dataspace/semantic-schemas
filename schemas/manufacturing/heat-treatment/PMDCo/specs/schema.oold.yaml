@@ -18,10 +18,10 @@
 #
 # Design:
 #   - process_subtype enum drives additional rdf:type triple on process root (dsmsht:SolutionTreatment etc.)
-#   - parameter_label enum drives hidden parameter_type (dsmsht: IRI) via x-depends-on
-#   - parameter_unit auto-filtered to valid options via x-depends-on on parameter_label
-#   - SDK users: pass name/value/unit — transform auto-injects parameter_type IRI from label map
-#   - All parameter class IRIs live in dsmsht: namespace (https://w3id.org/dsms/heattreatment#)
+#   - parameter_type uses x-vocabulary → user selects IRI from process-parameter vocabulary service
+#   - parameter_label is optional free-text override (vocabulary term label used by default)
+#   - parameter_unit uses x-vocabulary → measurement-unit vocabulary service (searchable QUDT units)
+#   - Heat treatment IRIs live in dsmsht: namespace (https://w3id.org/dsms/heattreatment#)
 
 "@context":
   rdf:    "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -202,7 +202,7 @@ properties:
       required:
         - type
         - id
-        - parameter_label
+        - parameter_type
       properties:
 
         type:
@@ -222,32 +222,16 @@ properties:
           readOnly: true
           default: param-1
 
-        parameter_label:
-          title: Parameter
-          description: Select from predefined parameters or type a custom name.
+        parameter_type:
+          title: Parameter Type
+          description: Search and select a parameter type from the vocabulary. Stored as rdf:type on the ParameterSpecification node.
           type: string
-          enum:
-            # ── Temperatures ────────────────────────────────────────────────
-            - Solutionising Temperature
-            - Aging Temperature
-            - Annealing Temperature
-            - Normalizing Temperature
-            - Tempering Temperature
-            - Homogenization Temperature
-            # ── Times ───────────────────────────────────────────────────────
-            - Hold Time
-            - Aging Time
-            - Tempering Time
-            - Homogenization Time
-            # ── Rates ───────────────────────────────────────────────────────
-            - Heating Rate
-            - Cooling Rate
-            # ── Delays ──────────────────────────────────────────────────────
-            - Quench Delay
-            # ── Qualitative categories (fill value in the Qualitative Value field below)
-            - Atmosphere
-            - "Cooling Medium"
-            - "Furnace Type"
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/process-parameter/use-cases/all/terms"
+
+        parameter_label:
+          title: Parameter Name (custom)
+          description: Optional free-text label override. Leave blank to use the vocabulary term label.
+          type: string
 
         parameter_value:
           title: Value
@@ -258,89 +242,8 @@ properties:
 
         parameter_unit:
           title: Unit
+          description: Search and select a QUDT unit from the vocabulary service.
           type: string
-          enum:
-            - uqudt:DEG_C
-            - uqudt:K
-            - uqudt:HR
-            - uqudt:MIN
-            - uqudt:SEC
-            - uqudt:K-PER-MIN
-            - uqudt:K-PER-SEC
-            - uqudt:UNITLESS
-          options:
-            enum_titles:
-              - °C (degree Celsius)
-              - K (kelvin)
-              - h (hour)
-              - min (minute)
-              - s (second)
-              - K/min (kelvin per minute)
-              - K/s (kelvin per second)
-              - "– (dimensionless)"
-          x-depends-on:
-            field: parameter_label
-            values:
-              Solutionising Temperature:    [uqudt:DEG_C, uqudt:K]
-              Aging Temperature:            [uqudt:DEG_C, uqudt:K]
-              Annealing Temperature:        [uqudt:DEG_C, uqudt:K]
-              Normalizing Temperature:      [uqudt:DEG_C, uqudt:K]
-              Tempering Temperature:        [uqudt:DEG_C, uqudt:K]
-              Homogenization Temperature:   [uqudt:DEG_C, uqudt:K]
-              Hold Time:                    [uqudt:HR, uqudt:MIN, uqudt:SEC]
-              Aging Time:                   [uqudt:HR, uqudt:MIN, uqudt:SEC]
-              Tempering Time:               [uqudt:HR, uqudt:MIN]
-              Homogenization Time:          [uqudt:HR, uqudt:MIN]
-              Heating Rate:                 [uqudt:K-PER-MIN, uqudt:K-PER-SEC]
-              Cooling Rate:                 [uqudt:K-PER-MIN, uqudt:K-PER-SEC]
-              Quench Delay:                 [uqudt:SEC, uqudt:MIN]
-
-        parameter_type:
-          title: Parameter Type IRI
-          description: Semantic IRI for this parameter class — auto-set from parameter label.
-          type: string
-          options:
-            hidden: true
-          enum:
-            # Temperatures
-            - dsmsht:SolutionisationTemperature
-            - dsmsht:AgingTemperature
-            - dsmsht:AnnealingTemperature
-            - dsmsht:NormalizingTemperature
-            - dsmsht:TemperingTemperature
-            - dsmsht:HomogenizationTemperature
-            # Times
-            - dsmsht:HoldTime
-            - dsmsht:AgingTime
-            - dsmsht:TemperingTime
-            - dsmsht:HomogenizationTime
-            # Rates
-            - dsmsht:HeatingRate
-            - dsmsht:CoolingRate
-            # Delays
-            - dsmsht:QuenchDelay
-            # Qualitative
-            - dsmsht:Atmosphere
-            - dsmsht:CoolingMedium
-            - dsmsht:FurnaceType
-          x-depends-on:
-            field: parameter_label
-            values:
-              Solutionising Temperature:           [dsmsht:SolutionisationTemperature]
-              Aging Temperature:                   [dsmsht:AgingTemperature]
-              Annealing Temperature:               [dsmsht:AnnealingTemperature]
-              Normalizing Temperature:             [dsmsht:NormalizingTemperature]
-              Tempering Temperature:               [dsmsht:TemperingTemperature]
-              Homogenization Temperature:          [dsmsht:HomogenizationTemperature]
-              Hold Time:                           [dsmsht:HoldTime]
-              Aging Time:                          [dsmsht:AgingTime]
-              Tempering Time:                      [dsmsht:TemperingTime]
-              Homogenization Time:                 [dsmsht:HomogenizationTime]
-              Heating Rate:                        [dsmsht:HeatingRate]
-              Cooling Rate:                        [dsmsht:CoolingRate]
-              Quench Delay:                        [dsmsht:QuenchDelay]
-              Atmosphere:                          [dsmsht:Atmosphere]
-              "Cooling Medium":                    [dsmsht:CoolingMedium]
-              "Furnace Type":                      [dsmsht:FurnaceType]
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
 
     default: []
