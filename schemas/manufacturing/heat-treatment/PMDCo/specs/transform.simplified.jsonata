@@ -1,31 +1,35 @@
 (
   /*
-   * Heat Treatment (PMDCo): simplified JSON → OO-LD JSON
+   * Heat Treatment (PMDCo): simplified JSON -> OO-LD JSON
    *
    * Input fields:
    *   process_name        string   required
-   *   heat_treatment_type string   required — one of the HeatTreatmentType enum values
+   *   heat_treatment_type string   required -- one of the HeatTreatmentType enum values
    *   process_id          string   optional, derived from process_name if omitted
    *   description         string   optional
    *   inputs              array    optional: each item is a specimen/material IRI string
    *   outputs             array    optional: each item is a specimen IRI string
    *   preceded_by         array    optional: each item is a process IRI string
    *   process_attributes  array    optional
-   *     name              string   required — must match parameter_label enum or use free text
-   *     value             number   optional (omit for qualitative parameters)
-   *     unit              string   optional — SI symbol ("°C", "h", …) or uqudt: CURIE
-   *     type_iri          string   optional — override auto-derived parameter_type IRI
+   *     name              string   required -- must match parameter_label enum or use free text
+   *     value             number   optional (quantitative parameters)
+   *               OR      string   optional (qualitative parameters: atmosphere, cooling medium,
+   *                                furnace type). Compound label built as "name: value" in RDF.
+   *     unit              string   optional -- SI symbol ("degC", "h", ...) or uqudt: CURIE
+   *     type_iri          string   optional -- override auto-derived parameter_type IRI
    *
-   * SDK usage: no need to supply type_iri — the transform auto-injects it from the
-   * parameter name using $paramTypeMap. Pass only name/value/unit.
+   * SDK usage: no need to supply type_iri -- the transform auto-injects it from the
+   * parameter name using $paramTypeMap. Pass only name/value(/unit).
    *
-   * Qualitative parameters (atmosphere, cooling medium, furnace type) omit value/unit.
-   * Encode the specific value in the name: "Atmosphere: Argon", "Cooling Medium: Water Quench".
+   * Qualitative parameters -- pass name as category, value as string:
+   *   {"name": "Atmosphere",     "value": "Argon"}
+   *   {"name": "Cooling Medium", "value": "Water Quench"}
+   *   {"name": "Furnace Type",   "value": "Recirculating Air Furnace"}
    */
 
   $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/manufacturing/heat-treatment/PMDCo/specs/schema.oold.yaml";
 
-  /* ── Heat treatment subtype → dsmsht: class IRI ─────────────────────────── */
+  /* -- Heat treatment subtype -> dsmsht: class IRI ---------------------------------- */
   $htTypeMap := {
     "Solution Treatment":          "dsmsht:SolutionTreatment",
     "Artificial Aging":            "dsmsht:ArtificialAging",
@@ -40,8 +44,9 @@
     "Quenching":                   "dsmsht:Quenching"
   };
 
-  /* ── Parameter label → dsmsht: class IRI ────────────────────────────────── */
-  /* Auto-derived: SDK users pass only name/value/unit. No type_iri needed.    */
+  /* -- Parameter label -> dsmsht: class IRI ---------------------------------------- */
+  /* Auto-derived: SDK users pass only name/value(/unit). No type_iri needed.          */
+  /* Qualitative category names map to their semantic class.                           */
   $paramTypeMap := {
     /* Temperatures */
     "Solutionising Temperature":  "dsmsht:SolutionisationTemperature",
@@ -60,65 +65,60 @@
     "Cooling Rate":               "dsmsht:CoolingRate",
     /* Delays */
     "Quench Delay":               "dsmsht:QuenchDelay",
-    /* Qualitative — atmosphere */
-    "Atmosphere: Air":            "dsmsht:Atmosphere",
-    "Atmosphere: Argon":          "dsmsht:Atmosphere",
-    "Atmosphere: Nitrogen":       "dsmsht:Atmosphere",
-    "Atmosphere: Vacuum":         "dsmsht:Atmosphere",
-    /* Qualitative — cooling medium */
-    "Cooling Medium: Water Quench":    "dsmsht:CoolingMedium",
-    "Cooling Medium: Oil Quench":      "dsmsht:CoolingMedium",
-    "Cooling Medium: Air Cool":        "dsmsht:CoolingMedium",
-    "Cooling Medium: Forced Air Cool": "dsmsht:CoolingMedium",
-    "Cooling Medium: Polymer Quench":  "dsmsht:CoolingMedium",
-    "Cooling Medium: Salt Bath":       "dsmsht:CoolingMedium",
-    "Cooling Medium: Furnace Cool":    "dsmsht:CoolingMedium",
-    /* Qualitative — furnace type */
-    "Furnace Type: Muffle Furnace":           "dsmsht:FurnaceType",
-    "Furnace Type: Recirculating Air Furnace": "dsmsht:FurnaceType",
-    "Furnace Type: Salt Bath Furnace":        "dsmsht:FurnaceType",
-    "Furnace Type: Vacuum Furnace":           "dsmsht:FurnaceType",
-    "Furnace Type: Box Furnace":              "dsmsht:FurnaceType"
+    /* Qualitative categories -- value supplied separately as a string */
+    "Atmosphere":                 "dsmsht:Atmosphere",
+    "Cooling Medium":             "dsmsht:CoolingMedium",
+    "Furnace Type":               "dsmsht:FurnaceType"
   };
 
-  /* ── Unit label → QUDT unit CURIE ───────────────────────────────────────── */
+  /* -- Unit label -> QUDT unit CURIE ----------------------------------------------- */
   $unitMap := {
-    "°C":     "uqudt:DEG_C",
+    "°C":    "uqudt:DEG_C",
+    "degC":  "uqudt:DEG_C",
     "K":      "uqudt:K",
     "h":      "uqudt:HR",
     "min":    "uqudt:MIN",
     "s":      "uqudt:SEC",
-    "°C/min": "uqudt:K-PER-MIN",
+    "C/min":  "uqudt:K-PER-MIN",
     "K/min":  "uqudt:K-PER-MIN",
     "K/s":    "uqudt:K-PER-SEC"
   };
 
-  /* ── Node IDs ────────────────────────────────────────────────────────────── */
+  /* -- Node IDs --------------------------------------------------------------------- */
   $slug   := $replace($lowercase($trim(process_name)), /[^a-z0-9]+/, "-");
   $procId := $exists(process_id) ? process_id : "process-" & $slug;
 
-  /* ── Process subtype IRI ─────────────────────────────────────────────────── */
+  /* -- Process subtype IRI ---------------------------------------------------------- */
   $htTypeIri := $exists(heat_treatment_type) ? $lookup($htTypeMap, heat_treatment_type) : undefined;
 
-  /* ── Process attributes ──────────────────────────────────────────────────── */
+  /* -- Process attributes ----------------------------------------------------------- */
   $attrs := $exists(process_attributes) and $count(process_attributes) > 0
     ? $map(process_attributes, function($p, $i) {(
-        /* Base node — always present */
+        /* Detect qualitative: value is a non-empty string */
+        $isQualitative := $exists($p.value) and $type($p.value) = "string";
+
+        /* Build rdfs:label: qualitative compounds "name: value", quantitative uses name only */
+        $nodeLabel := $isQualitative
+          ? ($p.name & ": " & $p.value)
+          : $p.name;
+
+        /* Base node */
         $node := {
           "type": ["pmdco:PMD_0000013"],
           "id":   $procId & "-param-" & $string($i + 1),
-          "parameter_label": $p.name
+          "parameter_label": $nodeLabel
         };
 
-        /* parameter_type: explicit type_iri overrides auto-lookup from name */
+        /* parameter_type: explicit type_iri overrides auto-lookup from name (category) */
         $resolvedTypeIri := $exists($p.type_iri) ? $p.type_iri : $lookup($paramTypeMap, $p.name);
         $withType := $exists($resolvedTypeIri)
           ? $merge([$node, {"parameter_type": $resolvedTypeIri}])
           : $node;
 
         /* parameter_value: numeric parameters only */
-        $withValue := $exists($p.value)
-          ? $merge([$withType, {"parameter_value": $p.value}])
+        $numericValue := $exists($p.value) and $type($p.value) = "number" ? $p.value : undefined;
+        $withValue := $exists($numericValue)
+          ? $merge([$withType, {"parameter_value": $numericValue}])
           : $withType;
 
         /* parameter_unit: resolve SI label to QUDT CURIE; pass through if already CURIE */
@@ -131,7 +131,7 @@
       )})
     : undefined;
 
-  /* ── OO-LD output ────────────────────────────────────────────────────────── */
+  /* -- OO-LD output ----------------------------------------------------------------- */
   $base := {
     "conforms_to": $schemaUri,
     "type":  $exists($htTypeIri) ? ["pmdco:PMD_0000833", $htTypeIri] : ["pmdco:PMD_0000833"],
