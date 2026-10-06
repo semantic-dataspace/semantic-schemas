@@ -3,7 +3,7 @@
    * Specimen (PMDCo): simplified JSON → OO-LD JSON
    *
    * Input fields:
-   *   specimen_name        string   required
+   *   label                string   required — specimen name (→ rdfs:label)
    *   material             string   optional: IRI of material kitem
    *   source               string|array  optional: IRI(s) of parent billet/specimen kitem(s)
    *   temporal_start       string   optional: ISO date (YYYY-MM-DD) — start of this temporal state
@@ -18,7 +18,7 @@
   $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/specimen/PMDCo/specs/schema.oold.yaml";
 
   /* ── Node ID ─────────────────────────────────────────────────────────── */
-  $slug   := $replace($lowercase($trim(specimen_name)), /[^a-z0-9]+/, "-");
+  $slug   := $replace($lowercase($trim(label)), /[^a-z0-9]+/, "-");
   $specId := "specimen-" & $slug;
 
   /* ── Property type → PMDCo quality class IRI ─────────────────────────── */
@@ -111,7 +111,7 @@
     "conforms_to":         $schemaUri,
     "type":                ["bfo:0000030", "pmdco:PMD_0000068"],
     "id":                  $specId,
-    "label":               specimen_name,
+    "label":               label,
     "material":            material,
     "specimen_form":       specimen_form,
     "surface_preparation": surface_preparation

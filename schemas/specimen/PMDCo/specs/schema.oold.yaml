@@ -227,7 +227,7 @@ properties:
             format: date
       has_last_instant:
         title: End Instant
-        description: Moment this specimen left this state (BFO_0000224). Optional.
+        description: Moment this specimen left this state (BFO_0000224). Optional — leave blank if end date unknown.
         type: object
         properties:
           type:
@@ -235,13 +235,10 @@ properties:
             type: array
             items: {type: string}
             readOnly: true
-            const: ["bfo:0000148"]
-            default: ["bfo:0000148"]
           id:
             title: ID
             type: string
             readOnly: true
-            default: temporal-end
           instant_date:
             title: End Date
             type: string
