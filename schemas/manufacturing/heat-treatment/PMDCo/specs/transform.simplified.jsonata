@@ -156,6 +156,6 @@
     : $withOutputs;
 
   $exists($attrs)
-    ? $merge([$withPreceded, {"process_attributes": $attrs}])
+    ? $merge([$withPreceded, {"has_process_attribute": $attrs}])
     : $withPreceded
 )
