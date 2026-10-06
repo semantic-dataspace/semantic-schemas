@@ -321,10 +321,6 @@ properties:
           description: Search and select a parameter type from the vocabulary. Stored as rdf:type on the ParameterSpecification node.
           type: string
           x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/process-parameter/use-cases/all/terms"
-        parameter_label:
-          title: Parameter Name (custom)
-          description: Optional free-text label override. Leave blank to use the vocabulary term label.
-          type: string
         parameter_value:
           title: Value
           type: number

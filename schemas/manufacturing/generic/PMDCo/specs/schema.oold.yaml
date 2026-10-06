@@ -215,12 +215,6 @@ properties:
           description: Search and select a parameter type from the vocabulary. Stores the IRI as rdf:type on the ParameterSpecification node.
           type: string
           x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/process-parameter/use-cases/all/terms"
-        parameter_label:
-          title: Parameter Name (custom)
-          description: >-
-            Optional free-text label. Leave blank to use the vocabulary term label.
-            Use for custom parameter names not in the vocabulary.
-          type: string
         parameter_value:
           title: Value
           description: Numeric magnitude of the parameter.
