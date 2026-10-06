@@ -97,16 +97,11 @@
         /* Detect qualitative: value is a non-empty string */
         $isQualitative := $exists($p.value) and $type($p.value) = "string";
 
-        /* Build rdfs:label: qualitative compounds "name: value", quantitative uses name only */
-        $nodeLabel := $isQualitative
-          ? ($p.name & ": " & $p.value)
-          : $p.name;
-
-        /* Base node */
+        /* Base node — parameter_label always stores the category/name only */
         $node := {
           "type": ["pmdco:PMD_0000013"],
           "id":   $procId & "-param-" & $string($i + 1),
-          "parameter_label": $nodeLabel
+          "parameter_label": $p.name
         };
 
         /* parameter_type: explicit type_iri overrides auto-lookup from name (category) */
@@ -115,11 +110,16 @@
           ? $merge([$node, {"parameter_type": $resolvedTypeIri}])
           : $node;
 
+        /* qualitative_value: string value for atmosphere/cooling medium/furnace type */
+        $withQualValue := $isQualitative
+          ? $merge([$withType, {"qualitative_value": $p.value}])
+          : $withType;
+
         /* parameter_value: numeric parameters only */
         $numericValue := $exists($p.value) and $type($p.value) = "number" ? $p.value : undefined;
         $withValue := $exists($numericValue)
-          ? $merge([$withType, {"parameter_value": $numericValue}])
-          : $withType;
+          ? $merge([$withQualValue, {"parameter_value": $numericValue}])
+          : $withQualValue;
 
         /* parameter_unit: resolve SI label to QUDT CURIE; pass through if already CURIE */
         $resolvedUnit := $exists($p.unit)

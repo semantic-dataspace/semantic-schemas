@@ -78,6 +78,8 @@
   parameter_unit:
     "@id": "qudt:hasUnit"
     "@type": "@id"
+  qualitative_value:
+    "@id": "rdfs:value"
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Heat treatment process schema — PMDCo pattern with dsmsht parameter type IRIs
@@ -245,30 +247,29 @@ properties:
             - Cooling Rate
             # ── Delays ──────────────────────────────────────────────────────
             - Quench Delay
-            # ── Qualitative — Atmosphere ─────────────────────────────────
-            - "Atmosphere: Air"
-            - "Atmosphere: Argon"
-            - "Atmosphere: Nitrogen"
-            - "Atmosphere: Vacuum"
-            # ── Qualitative — Cooling Medium ─────────────────────────────
-            - "Cooling Medium: Water Quench"
-            - "Cooling Medium: Oil Quench"
-            - "Cooling Medium: Air Cool"
-            - "Cooling Medium: Forced Air Cool"
-            - "Cooling Medium: Polymer Quench"
-            - "Cooling Medium: Salt Bath"
-            - "Cooling Medium: Furnace Cool"
-            # ── Qualitative — Furnace Type ───────────────────────────────
-            - "Furnace Type: Muffle Furnace"
-            - "Furnace Type: Recirculating Air Furnace"
-            - "Furnace Type: Salt Bath Furnace"
-            - "Furnace Type: Vacuum Furnace"
-            - "Furnace Type: Box Furnace"
+            # ── Qualitative categories (fill value in the Qualitative Value field below)
+            - Atmosphere
+            - "Cooling Medium"
+            - "Furnace Type"
 
         parameter_value:
           title: Value
           description: Numeric magnitude (leave blank for qualitative parameters).
           type: number
+
+        qualitative_value:
+          title: Qualitative Value
+          description: >-
+            Specific value for qualitative parameters (Atmosphere, Cooling Medium, Furnace Type).
+            Examples: "Air", "Argon", "Water Quench", "Muffle Furnace", "Recirculating Air Furnace".
+            Any free string is accepted.
+          type: string
+          x-depends-on:
+            field: parameter_label
+            values:
+              Atmosphere:       true
+              "Cooling Medium": true
+              "Furnace Type":   true
 
         parameter_unit:
           title: Unit
@@ -353,21 +354,8 @@ properties:
               Heating Rate:                        [dsmsht:HeatingRate]
               Cooling Rate:                        [dsmsht:CoolingRate]
               Quench Delay:                        [dsmsht:QuenchDelay]
-              "Atmosphere: Air":                   [dsmsht:Atmosphere]
-              "Atmosphere: Argon":                 [dsmsht:Atmosphere]
-              "Atmosphere: Nitrogen":              [dsmsht:Atmosphere]
-              "Atmosphere: Vacuum":                [dsmsht:Atmosphere]
-              "Cooling Medium: Water Quench":      [dsmsht:CoolingMedium]
-              "Cooling Medium: Oil Quench":        [dsmsht:CoolingMedium]
-              "Cooling Medium: Air Cool":          [dsmsht:CoolingMedium]
-              "Cooling Medium: Forced Air Cool":   [dsmsht:CoolingMedium]
-              "Cooling Medium: Polymer Quench":    [dsmsht:CoolingMedium]
-              "Cooling Medium: Salt Bath":         [dsmsht:CoolingMedium]
-              "Cooling Medium: Furnace Cool":      [dsmsht:CoolingMedium]
-              "Furnace Type: Muffle Furnace":      [dsmsht:FurnaceType]
-              "Furnace Type: Recirculating Air Furnace": [dsmsht:FurnaceType]
-              "Furnace Type: Salt Bath Furnace":   [dsmsht:FurnaceType]
-              "Furnace Type: Vacuum Furnace":      [dsmsht:FurnaceType]
-              "Furnace Type: Box Furnace":         [dsmsht:FurnaceType]
+              Atmosphere:                          [dsmsht:Atmosphere]
+              "Cooling Medium":                    [dsmsht:CoolingMedium]
+              "Furnace Type":                      [dsmsht:FurnaceType]
 
     default: []
