@@ -136,7 +136,8 @@
     "conforms_to": $schemaUri,
     "type":  $exists($htTypeIri) ? ["pmdco:PMD_0000833", $htTypeIri] : ["pmdco:PMD_0000833"],
     "id":    $procId,
-    "label": process_name
+    "label": process_name,
+    "heat_treatment_type": heat_treatment_type
   };
 
   $withDesc := $exists(description)
