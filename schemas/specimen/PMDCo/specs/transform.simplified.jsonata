@@ -6,7 +6,6 @@
    *   specimen_name        string   required
    *   material             string   optional: IRI of material kitem
    *   source               string|array  optional: IRI(s) of parent billet/specimen kitem(s)
-   *   temporal_state       string   optional: "as-received"|"pre-test"|"post-test"|"aged"|"heat-treated"|...
    *   temporal_start       string   optional: ISO date (YYYY-MM-DD) — start of this temporal state
    *   temporal_end         string   optional: ISO date (YYYY-MM-DD) — end of this temporal state
    *   specimen_form        string   optional: "Bulk"|"Thin Film"|...
@@ -114,7 +113,6 @@
     "id":                  $specId,
     "label":               specimen_name,
     "material":            material,
-    "temporal_state":      temporal_state,
     "specimen_form":       specimen_form,
     "surface_preparation": surface_preparation
   };

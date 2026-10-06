@@ -23,7 +23,6 @@
 #         has_numeric_value (OBI_0001937)  xsd:double
 #         has_unit_label    (IAO_0000039)  unit IRI
 #     prov:wasDerivedFrom ───────────► semi-finished-product KItem
-#     dsms:temporalState ────────────  "pre-test" | "post-test" | "as-received"
 #     dsms:hasSurfacePreparation ────  text
 #     dsms:hasSpecimenForm ──────────  text enum
 #
@@ -115,8 +114,6 @@
     "@container": "@set"
 
   # DSMS specimen metadata
-  temporal_state:
-    "@id": "dspec:temporalState"
   surface_preparation:
     "@id": "dspec:hasSurfacePreparation"
   specimen_form:
@@ -249,20 +246,6 @@ properties:
             title: End Date
             type: string
             format: date
-
-  temporal_state:
-    title: Temporal State
-    description: "Controlled lifecycle label describing the specimen's processing history."
-    type: string
-    enum:
-      - as-received
-      - pre-test
-      - post-test
-      - aged
-      - heat-treated
-      - machined
-      - polished
-      - mounted
 
   source:
     title: Source Material(s)
