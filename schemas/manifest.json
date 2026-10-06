@@ -26,7 +26,7 @@
       "path": "schemas/manufacturing/heat-treatment/PMDCo/specs/schema.oold.yaml",
       "group": "manufacturing",
       "maturity": "draft",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "shapePath": "schemas/manufacturing/heat-treatment/PMDCo/specs/shape.ttl"
     },
     {

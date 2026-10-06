@@ -83,7 +83,7 @@
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Heat treatment process schema — PMDCo pattern with dsmsht parameter type IRIs
-x-schema-version: '0.1.0'
+x-schema-version: '0.2.0'
 x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/manufacturing/heat-treatment/PMDCo/specs/schema.oold.yaml'
 x-maturity: 'draft'
 x-process-step:
