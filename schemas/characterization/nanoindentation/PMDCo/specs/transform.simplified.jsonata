@@ -15,12 +15,10 @@
    *   indenter_material  string   optional
    *   analysis_method    string   optional: enum
    *   test_standard      string   optional
-   *   max_depth          number   optional (µm)
-   *   max_load           number   optional (mN)
-   *   loading_rate       number   optional (1/s)
-   *   hold_time          number   optional (s)
-   *   acquisition_rate   number   optional (Hz)
-   *   poisson_ratio      number   optional (dimensionless)
+   *   test_conditions    array    optional: PMDCo ParameterSpecification nodes
+   *     name             string   vocabulary label, e.g. "Max Indentation Depth"
+   *     value            number
+   *     unit             string   short code, e.g. "um" | "mN" | "1/s" | "s" | "Hz" | "-"
    *   unload_fit_range   string   optional
    *   tip_area_function  string   optional
    *   test_temperature   number   optional (°C)
@@ -28,7 +26,7 @@
    *   summary_results    array    optional
    *     name             string   e.g. "Mean Hardness HIT"
    *     value            number
-   *     unit             string   vocabulary label, e.g. "Gigapascal (GPa)" | "Micrometre (µm)" | "Dimensionless (–)"
+   *     unit             string   short code or QUDT IRI, e.g. "GPa" | "um" | "-"
    */
 
   $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/characterization/nanoindentation/PMDCo/specs/schema.oold.yaml";
@@ -39,40 +37,53 @@
   $expId       := $exists(experiment_id) ? experiment_id : "nanoindentation-experiment-" & $slug;
 
   /* ── Test conditions (ParameterSpecification nodes) ──────────────────── */
-  /* parameter_unit: vocabulary label strings — SDK resolves to IRI+label.  */
-  /* parameter_type: full IRIs from dnano: namespace.                        */
+  /* parameter_label: human string passed through from input name.           */
+  /* parameter_type:  full IRI via $paramTypeMap; fallback = input name.     */
+  /* parameter_unit:  short code → full QUDT IRI via $condUnitMap.           */
   $dnano := "https://w3id.org/dsms/nanoindentation/";
-  $conds := [];
-  $conds := $exists(max_depth)
-    ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-max-depth",
-        "parameter_label": "Max Depth", "parameter_type": $dnano & "MaxDepth",
-        "parameter_value": max_depth, "parameter_unit": "Micrometre (µm)"}])
-    : $conds;
-  $conds := $exists(max_load)
-    ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-max-load",
-        "parameter_label": "Max Load", "parameter_type": $dnano & "MaxLoad",
-        "parameter_value": max_load, "parameter_unit": "Millinewton (mN)"}])
-    : $conds;
-  $conds := $exists(loading_rate)
-    ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-loading-rate",
-        "parameter_label": "Loading Rate", "parameter_type": $dnano & "LoadingRate",
-        "parameter_value": loading_rate, "parameter_unit": "Per Second (1/s)"}])
-    : $conds;
-  $conds := $exists(hold_time)
-    ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-hold-time",
-        "parameter_label": "Hold Time", "parameter_type": $dnano & "HoldTime",
-        "parameter_value": hold_time, "parameter_unit": "Second (s)"}])
-    : $conds;
-  $conds := $exists(acquisition_rate)
-    ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-acq-rate",
-        "parameter_label": "Acquisition Rate", "parameter_type": $dnano & "AcquisitionRate",
-        "parameter_value": acquisition_rate, "parameter_unit": "Hertz (Hz)"}])
-    : $conds;
-  $conds := $exists(poisson_ratio)
-    ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-poisson",
-        "parameter_label": "Assumed Poisson's Ratio", "parameter_type": $dnano & "PoissonRatio",
-        "parameter_value": poisson_ratio, "parameter_unit": "Dimensionless (–)"}])
-    : $conds;
+
+  $paramTypeMap := {
+    "Max Indentation Depth":     $dnano & "MaxDepth",
+    "Max Depth":                 $dnano & "MaxDepth",
+    "Maximum Load":              $dnano & "MaxLoad",
+    "Max Load":                  $dnano & "MaxLoad",
+    "Loading Rate":              $dnano & "LoadingRate",
+    "Hold Time at Maximum Load": $dnano & "HoldTime",
+    "Hold Time":                 $dnano & "HoldTime",
+    "Data Acquisition Rate":     $dnano & "AcquisitionRate",
+    "Acquisition Rate":          $dnano & "AcquisitionRate",
+    "Assumed Poisson's Ratio":   $dnano & "PoissonRatio",
+    "Poisson Ratio":             $dnano & "PoissonRatio"
+  };
+
+  $condUnitMap := {
+    "um":   "http://qudt.org/vocab/unit/MicroM",
+    "µm":   "http://qudt.org/vocab/unit/MicroM",
+    "mN":   "http://qudt.org/vocab/unit/MilliN",
+    "1/s":  "http://qudt.org/vocab/unit/PER-SEC",
+    "s":    "http://qudt.org/vocab/unit/SEC",
+    "Hz":   "http://qudt.org/vocab/unit/HZ",
+    "-":    "http://qudt.org/vocab/unit/UNITLESS",
+    "–":    "http://qudt.org/vocab/unit/UNITLESS",
+    "%":    "http://qudt.org/vocab/unit/PERCENT",
+    "GPa":  "http://qudt.org/vocab/unit/GigaPA"
+  };
+
+  $conds := $exists(test_conditions) and $count(test_conditions) > 0
+    ? $map(test_conditions, function($c, $i) {(
+        $cSlug   := $replace($lowercase($trim($c.name)), /[^a-z0-9]+/, "-");
+        $typeIri := $lookup($paramTypeMap, $c.name);
+        $unit    := $lookup($condUnitMap, $c.unit);
+        {
+          "type":            "pmdco:PMD_0000013",
+          "id":              $expId & "-cond-" & $cSlug,
+          "parameter_label": $c.name,
+          "parameter_type":  $typeIri ? $typeIri : $c.name,
+          "parameter_value": $c.value,
+          "parameter_unit":  $unit ? $unit : $c.unit
+        }
+      )})
+    : [];
 
   /* ── Unit map: symbol → full QUDT IRI (for SDK x-vocabulary IRI match) ── */
   $summaryUnitMap := {

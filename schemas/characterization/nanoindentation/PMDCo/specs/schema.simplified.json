@@ -86,48 +86,43 @@
       "type": "string",
       "examples": ["ISO 14577-1:2015", "ASTM E2546"]
     },
-    "max_depth": {
-      "title": "Max Depth (µm)",
-      "description": "Target maximum indentation depth in micrometres.",
-      "type": "number",
-      "exclusiveMinimum": 0,
-      "examples": [1.0, 0.5, 2.0]
-    },
-    "max_load": {
-      "title": "Max Load (mN)",
-      "description": "Target maximum applied force in millinewtons (load-controlled only).",
-      "type": "number",
-      "exclusiveMinimum": 0,
-      "examples": [50.0, 100.0]
-    },
-    "loading_rate": {
-      "title": "Loading Rate (1/s)",
-      "description": "Strain rate or loading rate in per second.",
-      "type": "number",
-      "exclusiveMinimum": 0,
-      "examples": [0.2, 0.05]
-    },
-    "hold_time": {
-      "title": "Hold Time (s)",
-      "description": "Dwell time at maximum load/depth in seconds.",
-      "type": "number",
-      "minimum": 0,
-      "examples": [10.0, 5.0, 30.0]
-    },
-    "acquisition_rate": {
-      "title": "Acquisition Rate (Hz)",
-      "description": "Data acquisition rate in hertz.",
-      "type": "number",
-      "exclusiveMinimum": 0,
-      "examples": [10.0, 50.0]
-    },
-    "poisson_ratio": {
-      "title": "Assumed Poisson's Ratio",
-      "description": "Poisson's ratio assumed for elastic modulus calculation (dimensionless).",
-      "type": "number",
-      "minimum": 0,
-      "maximum": 0.5,
-      "examples": [0.3, 0.33, 0.25]
+    "test_conditions": {
+      "title": "Test Protocol Parameters",
+      "description": "Numeric test protocol parameters as PMDCo ParameterSpecification nodes. Each entry: name (parameter label or IRI), value (number), unit (short code or QUDT IRI).",
+      "type": "array",
+      "items": {
+        "title": "Parameter",
+        "type": "object",
+        "required": ["name", "value", "unit"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "title": "Parameter Name",
+            "description": "Label matching the process-parameter vocabulary.",
+            "type": "string",
+            "examples": [
+              "Max Indentation Depth",
+              "Maximum Load",
+              "Loading Rate",
+              "Hold Time at Maximum Load",
+              "Data Acquisition Rate",
+              "Assumed Poisson's Ratio"
+            ]
+          },
+          "value": {
+            "title": "Value",
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "unit": {
+            "title": "Unit",
+            "description": "Short code (um, mN, 1/s, s, Hz, -) or full QUDT IRI.",
+            "type": "string",
+            "examples": ["um", "mN", "1/s", "s", "Hz", "-"]
+          }
+        }
+      },
+      "default": []
     },
     "unload_fit_range": {
       "title": "Unload Fit Range",
@@ -186,8 +181,8 @@
           "unit": {
             "title": "Unit",
             "type": "string",
-            "enum": ["GPa", "um", "-"],
-            "description": "GPa for hardness/modulus, um for depth, - for counts"
+            "description": "Short code (GPa, um, -) or full QUDT IRI.",
+            "examples": ["GPa", "um", "-", "http://qudt.org/vocab/unit/GigaPA"]
           }
         }
       },
@@ -205,11 +200,13 @@
       "indenter_material": "Diamond",
       "analysis_method": "Oliver & Pharr",
       "test_standard": "ISO 14577-1:2015",
-      "max_depth": 1.0,
-      "loading_rate": 0.2,
-      "hold_time": 10.0,
-      "acquisition_rate": 10.0,
-      "poisson_ratio": 0.33,
+      "test_conditions": [
+        { "name": "Max Indentation Depth",  "value": 1.0,  "unit": "um" },
+        { "name": "Loading Rate",           "value": 0.2,  "unit": "1/s" },
+        { "name": "Hold Time at Maximum Load", "value": 10.0, "unit": "s" },
+        { "name": "Data Acquisition Rate",  "value": 10.0, "unit": "Hz" },
+        { "name": "Assumed Poisson's Ratio","value": 0.33, "unit": "-" }
+      ],
       "summary_results": [
         { "name": "Mean Hardness HIT",           "value": 1.450, "unit": "GPa" },
         { "name": "Std Dev Hardness HIT",         "value": 0.211, "unit": "GPa" },
