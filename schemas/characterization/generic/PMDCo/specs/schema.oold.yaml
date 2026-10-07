@@ -72,6 +72,9 @@
     "@container": "@set"
   parameter_label:
     "@id": "rdfs:label"
+  parameter_type:
+    "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+    "@type": "@id"
   parameter_value:
     "@id": "qudt:value"
     "@type": "xsd:double"
@@ -201,12 +204,17 @@ properties:
           type: string
           readOnly: true
           default: param-1
-        parameter_label:
+        parameter_type:
           title: Parameter Name
-          description: >-
-            Human-readable name for this parameter
-            (e.g. "Strain Rate", "Test Temperature", "Gauge Length").
+          description: Search and select a parameter type from the process-parameter vocabulary.
           type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/process-parameter/use-cases/all/terms"
+        parameter_label:
+          title: Parameter Label
+          description: Human-readable label — set by transform, not edited manually.
+          type: string
+          options:
+            hidden: true
         parameter_value:
           title: Value
           description: Numeric magnitude of the parameter.
