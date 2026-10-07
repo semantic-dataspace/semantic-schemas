@@ -1,0 +1,88 @@
+(
+  /*
+   * DSC Dataset (PMDCo): simplified JSON → OO-LD JSON
+   *
+   * Produces a dcat:Dataset document representing one DSC measurement file:
+   * scalar results as MeasurementDatum + ScalarValueSpecification nodes,
+   * and timeseries column semantic specs.
+   *
+   * Units are passed through as vocabulary labels — the SDK resolves each
+   * result_unit label to a QUDT IRI via the measurement-unit vocabulary service.
+   * No hardcoded unit map is needed here.
+   *
+   * Input fields (see schema.simplified.json):
+   *   dataset_name    string   required
+   *   dataset_id      string   optional, derived from dataset_name if omitted
+   *   format          string   optional, default "NETZSCH DSC TXT"
+   *   specimen_iri    string   optional URI — links quality individuals to specimen
+   *   results         array    optional scalar results from analysis software
+   *     name          string   vocabulary label, e.g. "Onset Temperature"
+   *     value         number
+   *     unit          string   measurement-unit vocabulary label, e.g. "Degree Celsius (°C)"
+   *   columns         array    optional timeseries column semantic specs from parser
+   *     name          string   column header as it appears in the CSV
+   *     property_iri  string   DSC ontology observable property IRI
+   *     unit_iri      string   QUDT unit IRI
+   */
+
+  $schemaUri   := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/dataset/dsc/PMDCo/specs/schema.oold.generated.json";
+
+  $slug        := $replace($lowercase($trim(dataset_name)), /[^a-z0-9]+/, "-");
+  $dsId        := $exists(dataset_id) ? dataset_id : "dsc-dataset-" & $slug;
+  $specimenIri := $exists(specimen_iri) ? specimen_iri : undefined;
+
+  /* ── Scalar results: MeasurementDatum + quality individual + ScalarValueSpec ── */
+  /* result_unit is a vocabulary label — SDK calls _resolve_vocab_value() to       */
+  /* convert it to the QUDT IRI via the measurement-unit vocabulary service.       */
+  $measured := $exists(results) and $count(results) > 0
+    ? $map(results, function($r, $i) {(
+        $rSlug     := $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-");
+        $datumBase := $dsId & "-result-" & $rSlug;
+        {
+          "type":  "obo:IAO_0000109",
+          "id":    $datumBase & "-smd",
+          "label": $r.name,
+          "is_about": $exists($specimenIri)
+            ? { "quality_type": $r.name, "id": $datumBase & "-quality", "quality_of": $specimenIri }
+            : { "quality_type": $r.name, "id": $datumBase & "-quality" },
+          "has_value_spec": {
+            "type":         "obo:OBI_0001931",
+            "id":           $datumBase & "-svs",
+            "result_value": $r.value,
+            "result_unit":  $r.unit
+          }
+        }
+      )})
+    : undefined;
+
+  /* ── Assemble OO-LD output ─────────────────────────────────────────────────── */
+  $base := {
+    "conforms_to": $schemaUri,
+    "type":        ["dcat:Dataset"],
+    "id":          $dsId,
+    "label":       dataset_name
+  };
+
+  $withFormat  := $merge([$base, {"format": $exists(format) ? format : "NETZSCH DSC TXT"}]);
+
+  /* ── Timeseries column semantic specifications ─────────────────────────────── */
+  $colSpecs := $exists(columns) and $count(columns) > 0
+    ? $map(columns, function($c) {
+        {
+          "id":           $dsId & "-col-" & $replace($lowercase($trim($c.name)), /[^a-z0-9]+/, "-"),
+          "type":         ["csvw:Column"],
+          "col_name":     $c.name,
+          "property_url": $c.property_iri,
+          "has_unit":     $c.unit_iri
+        }
+      })
+    : undefined;
+
+  $withColumns := $exists($colSpecs)
+    ? $merge([$withFormat, {"timeseries_column": $colSpecs}])
+    : $withFormat;
+
+  $exists($measured)
+    ? $merge([$withColumns, {"measured_properties": $measured}])
+    : $withColumns
+)

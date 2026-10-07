@@ -1,0 +1,280 @@
+# OO-LD Schema for DSC Dataset (DCAT + PMDCo pattern)
+#
+# Digital twin of a single DSC heat-flow measurement file.
+# Extends the generic dataset/DCAT schema with:
+#   - Scalar characterization results as MeasurementDatum + ScalarValueSpecification nodes
+#   - Raw heat-flow time-series (attached CSV file)
+#
+# Relationships to the parent DSC process KItem and specimen are expressed via
+# DSMS linked_kitems, not as fields in the semantic schema.
+#
+# Graph pattern (additions to DCAT base):
+#
+#   dcat:Dataset
+#     obi:OBI_0000299 (measured_properties) ─────────────► MeasurementDatum [× 0..N]
+#       obi:OBI_0001938 (has_value_spec) ───────────────► ScalarValueSpecification
+#         obi:OBI_0001937 (result_value) ────────── xsd:double
+#         iao:IAO_0000039 (result_unit) ──────────── unit IRI (QUDT, resolved by vocab service)
+#     csvw:column        (timeseries_column) ──────────► csvw:Column [× 0..N]
+#       csvw:name        (col_name)  ──── column header string
+#       csvw:propertyUrl (property_url) ── observable property IRI
+#       qudt:hasUnit     (has_unit) ────── QUDT unit IRI
+
+"@context":
+  rdf:     "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  rdfs:    "http://www.w3.org/2000/01/rdf-schema#"
+  xsd:     "http://www.w3.org/2001/XMLSchema#"
+  dcterms: "http://purl.org/dc/terms/"
+  dcat:    "http://www.w3.org/ns/dcat#"
+  obo:     "http://purl.obolibrary.org/obo/"
+  obi:
+    "@id": "http://purl.obolibrary.org/obo/OBI_"
+    "@prefix": true
+  qudt:    "http://qudt.org/schema/qudt/"
+  uqudt:   "http://qudt.org/vocab/unit/"
+  ddsc:    "https://w3id.org/dsms/dsc-result#"
+  csvw:    "http://www.w3.org/ns/csvw#"
+  type:    "@type"
+  id:      "@id"
+  label:
+    "@id": "rdfs:label"
+  description:
+    "@id": "http://purl.org/dc/terms/description"
+  identifier:
+    "@id": "http://purl.org/dc/terms/identifier"
+  keywords:
+    "@id": "http://www.w3.org/ns/dcat#keyword"
+    "@container": "@set"
+  format:
+    "@id": "http://purl.org/dc/terms/format"
+  created:
+    "@id": "http://purl.org/dc/terms/created"
+    "@type": "xsd:date"
+  modified:
+    "@id": "http://purl.org/dc/terms/modified"
+    "@type": "xsd:date"
+  license:
+    "@id": "http://purl.org/dc/terms/license"
+  has_part:
+    "@id": "http://purl.org/dc/terms/hasPart"
+    "@type": "@id"
+    "@container": "@set"
+  measured_properties:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
+    "@container": "@set"
+  is_about:
+    "@id": "http://purl.obolibrary.org/obo/IAO_0000136"
+  quality_type:
+    "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+    "@type": "@id"
+  quality_of:
+    "@id": "http://purl.obolibrary.org/obo/RO_0000080"
+    "@type": "@id"
+  has_value_spec:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0001938"
+  result_value:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0001937"
+    "@type": "xsd:double"
+  result_unit:
+    "@id": "http://purl.obolibrary.org/obo/IAO_0000039"
+    "@type": "@id"
+  timeseries_column:
+    "@id": "http://www.w3.org/ns/csvw#column"
+    "@container": "@set"
+  col_name:
+    "@id": "http://www.w3.org/ns/csvw#name"
+  property_url:
+    "@id": "http://www.w3.org/ns/csvw#propertyUrl"
+    "@type": "@id"
+  has_unit:
+    "@id": "http://qudt.org/schema/qudt/hasUnit"
+    "@type": "@id"
+
+allOf:
+  - $ref: "../../../generic/DCAT/specs/schema.oold.yaml"
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: Digital twin of a DSC heat-flow measurement file — metadata + scalar results + raw time-series.
+x-schema-version: '0.1.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/dataset/dsc/PMDCo/specs/schema.oold.generated.json'
+x-maturity: 'draft'
+title: DSC Dataset (PMDCo)
+type: object
+
+required:
+  - type
+  - id
+  - label
+
+properties:
+
+  type:
+    title: Type
+    type: array
+    items:
+      type: string
+    readOnly: true
+    const: ["dcat:Dataset"]
+    default: ["dcat:Dataset"]
+    options:
+      enum_titles:
+        - dcat:Dataset
+
+  id:
+    title: ID
+    type: string
+    readOnly: true
+    default: dsc-dataset
+
+  label:
+    title: Dataset Name
+    description: "e.g. A2618 SHT DSC Scan 01 — Probe 1"
+    type: string
+
+  description:
+    title: Description
+    type: string
+    format: textarea
+
+  format:
+    title: File Format
+    description: "Instrument file format (e.g. NETZSCH DSC TXT, Mettler-Toledo STARe, TA Instruments TRIOS)"
+    type: string
+
+  measured_properties:
+    title: DSC Results
+    description: >-
+      Scalar results extracted from the DSC heat-flow curve (e.g. onset/peak temperature,
+      enthalpy, specific heat capacity). Each entry is a MeasurementDatum (IAO_0000109)
+      with an embedded ScalarValueSpecification (OBI_0001931).
+      Result type and unit are resolved via the characterization-result and
+      measurement-unit vocabulary services.
+    type: array
+    items:
+      type: object
+      title: DSC Result
+      required:
+        - type
+        - id
+        - label
+        - has_value_spec
+      properties:
+        type:
+          title: Type
+          type: array
+          items:
+            type: string
+          readOnly: true
+          const: ["obo:IAO_0000109"]
+          default: ["obo:IAO_0000109"]
+          options:
+            enum_titles:
+              - iao:MeasurementDatum
+        id:
+          title: Datum ID
+          type: string
+          readOnly: true
+          default: result-1-smd
+        label:
+          title: Result Name
+          description: Search and select a DSC result type from the characterization-result vocabulary.
+          type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/all/terms"
+        has_value_spec:
+          title: Value Specification
+          type: object
+          required:
+            - type
+            - id
+            - result_value
+            - result_unit
+          properties:
+            type:
+              title: Type
+              type: array
+              items:
+                type: string
+              readOnly: true
+              const: ["obo:OBI_0001931"]
+              default: ["obo:OBI_0001931"]
+              options:
+                enum_titles:
+                  - obi:ScalarValueSpecification
+            id:
+              title: Value Spec ID
+              type: string
+              readOnly: true
+              default: result-1-svs
+            result_value:
+              title: Value
+              type: number
+            result_unit:
+              title: Unit
+              description: Search and select a unit from the measurement-unit vocabulary.
+              type: string
+              x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
+        is_about:
+          title: Quality Individual
+          description: >-
+            Quality individual linking the result to its property class and specimen.
+            Populated automatically by the transform.
+          type: object
+          properties:
+            quality_type:
+              title: Quality Class
+              type: string
+              options:
+                hidden: true
+              x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/all/terms"
+            id:
+              title: Quality Individual ID
+              type: string
+              readOnly: true
+              default: result-1-quality
+              options:
+                hidden: true
+            quality_of:
+              title: Specimen IRI
+              type: string
+              options:
+                hidden: true
+    default: []
+
+  timeseries_column:
+    title: Timeseries Column Specifications
+    description: >-
+      Semantic column specifications for the DSC heat-flow CSV attachment.
+      Each entry maps one column name to its physical property IRI (DSC ontology)
+      and QUDT unit IRI. Populated automatically by the parser.
+    type: array
+    items:
+      type: object
+      required:
+        - col_name
+        - property_url
+        - has_unit
+      properties:
+        id:
+          title: Column Spec ID
+          type: string
+          readOnly: true
+        type:
+          title: Type
+          type: array
+          items:
+            type: string
+          readOnly: true
+          const: ["csvw:Column"]
+          default: ["csvw:Column"]
+        col_name:
+          title: Column Name
+          type: string
+        property_url:
+          title: Physical Property IRI
+          description: DSC ontology property IRI for this column.
+          type: string
+        has_unit:
+          title: Unit IRI
+          description: QUDT unit IRI for this column.
+          type: string
+    default: []

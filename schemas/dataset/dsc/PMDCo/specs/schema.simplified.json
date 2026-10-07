@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.simplified.json",
+  "title": "DSC Dataset: PMDCo (Simplified Input)",
+  "description": "Simplified input for a DSC heat-flow dataset KItem. Provide the dataset name, optional scalar results (onset/peak temperature, enthalpy, etc.), and column specs from the parser. The transform converts this to full OO-LD (MeasurementDatum + ScalarValueSpecification nodes). Result type and unit labels are resolved to IRIs by the vocabulary service — no hardcoded unit codes needed.",
+  "type": "object",
+  "required": ["dataset_name"],
+  "additionalProperties": false,
+  "properties": {
+    "dataset_name": {
+      "title": "Dataset Name",
+      "description": "Human-readable name for this DSC dataset.",
+      "type": "string",
+      "minLength": 1,
+      "examples": ["A2618 SHT DSC Scan 01 — Probe 1"]
+    },
+    "dataset_id": {
+      "title": "Dataset ID",
+      "description": "Optional IRI slug. Auto-derived from dataset_name if omitted.",
+      "type": "string"
+    },
+    "format": {
+      "title": "File Format",
+      "description": "Instrument file format of the raw data.",
+      "type": "string",
+      "default": "NETZSCH DSC TXT",
+      "examples": ["NETZSCH DSC TXT", "Mettler-Toledo STARe", "TA Instruments TRIOS"]
+    },
+    "specimen_iri": {
+      "title": "Specimen IRI",
+      "description": "Optional IRI of the specimen. When provided, each quality individual gains a RO_0000080 (quality_of) link to the specimen, enabling SPARQL queries across specimens.",
+      "type": "string",
+      "format": "uri",
+      "examples": ["https://example.org/knowledge/specimen/my-specimen-abc123"]
+    },
+    "columns": {
+      "title": "Timeseries Column Specifications",
+      "description": "Semantic column specs from the parser — column name mapped to property IRI and QUDT unit IRI.",
+      "type": "array",
+      "items": {
+        "title": "Column Spec",
+        "type": "object",
+        "required": ["name", "property_iri", "unit_iri"],
+        "additionalProperties": false,
+        "properties": {
+          "name":         { "title": "Column Name",    "type": "string" },
+          "property_iri": { "title": "Property IRI",   "type": "string" },
+          "unit_iri":     { "title": "Unit IRI",       "type": "string" }
+        }
+      },
+      "default": []
+    },
+    "results": {
+      "title": "DSC Results",
+      "description": "Scalar results from DSC analysis software (NETZSCH Proteus, TRIOS, STARe, etc.). Add one entry per extracted quantity. The 'unit' field must be a vocabulary label from the measurement-unit vocabulary service — it is resolved to a QUDT IRI automatically.",
+      "type": "array",
+      "items": {
+        "title": "Result Entry",
+        "type": "object",
+        "required": ["name", "value", "unit"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "title": "Result Name",
+            "description": "Must match a label in the characterization-result vocabulary (ddsc: namespace).",
+            "type": "string",
+            "examples": [
+              "Onset Temperature",
+              "Peak Temperature",
+              "End Temperature",
+              "Enthalpy of Transformation",
+              "Specific Heat Capacity",
+              "Glass Transition Temperature (Tg)",
+              "Solidus Temperature",
+              "Liquidus Temperature"
+            ]
+          },
+          "value": {
+            "title": "Value",
+            "type": "number",
+            "examples": [280.5, 315.2, -45.3, 0.92]
+          },
+          "unit": {
+            "title": "Unit",
+            "description": "Vocabulary label from the measurement-unit vocabulary service. Resolved to QUDT IRI by the SDK — no hardcoded codes needed.",
+            "type": "string",
+            "examples": [
+              "Degree Celsius (°C)",
+              "Joule per Gram (J/g)",
+              "Kilojoule per Kilogram (kJ/kg)",
+              "Joule per Gram Kelvin (J/(g·K))",
+              "Watt per Gram (W/g)"
+            ]
+          }
+        }
+      },
+      "default": []
+    }
+  },
+  "examples": [
+    {
+      "dataset_name": "A2618 SHT DSC Scan 01 — Probe 1",
+      "format": "NETZSCH DSC TXT",
+      "results": [
+        { "name": "Onset Temperature",         "value": 280.5,  "unit": "Degree Celsius (°C)" },
+        { "name": "Peak Temperature",           "value": 315.2,  "unit": "Degree Celsius (°C)" },
+        { "name": "End Temperature",            "value": 345.0,  "unit": "Degree Celsius (°C)" },
+        { "name": "Enthalpy of Transformation", "value": -45.3,  "unit": "Joule per Gram (J/g)" }
+      ]
+    }
+  ]
+}

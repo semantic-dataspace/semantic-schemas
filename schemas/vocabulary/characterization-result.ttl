@@ -15,6 +15,10 @@
 # DSMS nanoindentation quality class namespace
 @prefix dnano:  <https://w3id.org/dsms/nanoindentation/> .
 
+# DSMS DSC result class namespace (authoritative: dsc-heat-flow-measurement.ttl)
+@prefix dsmdsc: <https://w3id.org/dsms/DSCMeasurement/> .
+
+
 # =============================================================================
 # DSMS characterization-result controlled vocabulary
 #
@@ -324,13 +328,23 @@ dnano:NumberOfValidIndentations
 # pmdco:PMD_XXXXXXX  a owl:Class ; rdfs:label "Grain Aspect Ratio"@en .
 
 # =============================================================================
-# 6. FATIGUE / DSC / TGA — EMMO classes
-#    EMMO modules not yet stable; IRIs TBD.
+# 6. DSC (Differential Scanning Calorimetry) — dsmdsc: namespace
+#    IRIs defined in dsc-heat-flow-measurement.ttl. Copied here so the
+#    characterization-result vocabulary service exposes them in dropdowns.
+# =============================================================================
+
+dsmdsc:OnsetTemperature           a owl:Class ; rdfs:label "Onset Temperature"@en .
+dsmdsc:PeakTemperature            a owl:Class ; rdfs:label "Peak Temperature"@en .
+dsmdsc:EndTemperature             a owl:Class ; rdfs:label "End Temperature"@en .
+dsmdsc:GlassTransitionTemperature a owl:Class ; rdfs:label "Glass Transition Temperature (Tg)"@en .
+dsmdsc:SolidusTemperature         a owl:Class ; rdfs:label "Solidus Temperature"@en .
+dsmdsc:LiquidusTemperature        a owl:Class ; rdfs:label "Liquidus Temperature"@en .
+dsmdsc:Enthalpy                   a owl:Class ; rdfs:label "Enthalpy of Transformation"@en .
+dsmdsc:SpecificHeatCapacity       a owl:Class ; rdfs:label "Specific Heat Capacity"@en .
+
+# =============================================================================
+# 7. FATIGUE — EMMO classes (IRIs TBD; placeholder)
 # =============================================================================
 
 # emmo:EMMO_XXXXXXXX  a owl:Class ; rdfs:label "Fatigue Life (Nf)"@en .
 # emmo:EMMO_XXXXXXXX  a owl:Class ; rdfs:label "Stress Amplitude"@en .
-# emmo:EMMO_XXXXXXXX  a owl:Class ; rdfs:label "Melting Temperature"@en .
-# emmo:EMMO_XXXXXXXX  a owl:Class ; rdfs:label "Glass Transition Temperature"@en .
-# emmo:EMMO_XXXXXXXX  a owl:Class ; rdfs:label "Enthalpy of Fusion"@en .
-# emmo:EMMO_XXXXXXXX  a owl:Class ; rdfs:label "Onset Temperature"@en .
