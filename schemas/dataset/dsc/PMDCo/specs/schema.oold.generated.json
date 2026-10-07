@@ -8,186 +8,147 @@
     "dcat": "http://www.w3.org/ns/dcat#",
     "type": "@type",
     "id": "@id",
-    "label": {
-      "@id": "rdfs:label"
-    },
-    "description": {
-      "@id": "http://purl.org/dc/terms/description"
-    },
-    "identifier": {
-      "@id": "http://purl.org/dc/terms/identifier"
-    },
-    "keywords": {
-      "@id": "http://www.w3.org/ns/dcat#keyword",
-      "@container": "@set"
-    },
-    "format": {
-      "@id": "http://purl.org/dc/terms/format"
-    },
-    "created": {
-      "@id": "http://purl.org/dc/terms/created",
-      "@type": "xsd:date"
-    },
-    "modified": {
-      "@id": "http://purl.org/dc/terms/modified",
-      "@type": "xsd:date"
-    },
-    "license": {
-      "@id": "http://purl.org/dc/terms/license"
-    },
-    "has_part": {
-      "@id": "http://purl.org/dc/terms/hasPart",
-      "@type": "@id",
-      "@container": "@set"
-    },
+    "label": { "@id": "rdfs:label" },
+    "description": { "@id": "http://purl.org/dc/terms/description" },
+    "identifier": { "@id": "http://purl.org/dc/terms/identifier" },
+    "keywords": { "@id": "http://www.w3.org/ns/dcat#keyword", "@container": "@set" },
+    "format": { "@id": "http://purl.org/dc/terms/format" },
+    "created": { "@id": "http://purl.org/dc/terms/created", "@type": "xsd:date" },
+    "modified": { "@id": "http://purl.org/dc/terms/modified", "@type": "xsd:date" },
+    "license": { "@id": "http://purl.org/dc/terms/license" },
+    "has_part": { "@id": "http://purl.org/dc/terms/hasPart", "@type": "@id", "@container": "@set" },
     "obo": "http://purl.obolibrary.org/obo/",
-    "obi": {
-      "@id": "http://purl.obolibrary.org/obo/OBI_",
-      "@prefix": true
-    },
+    "obi": { "@id": "http://purl.obolibrary.org/obo/OBI_", "@prefix": true },
     "qudt": "http://qudt.org/schema/qudt/",
     "uqudt": "http://qudt.org/vocab/unit/",
-    "ddsc": "https://w3id.org/dsms/dsc-result#",
+    "dsmdsc": "https://w3id.org/dsms/DSCMeasurement/",
     "csvw": "http://www.w3.org/ns/csvw#",
-    "measured_properties": {
-      "@id": "http://purl.obolibrary.org/obo/OBI_0000299",
-      "@container": "@set"
-    },
-    "is_about": {
-      "@id": "http://purl.obolibrary.org/obo/IAO_0000136"
-    },
-    "quality_type": {
-      "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-      "@type": "@id"
-    },
-    "quality_of": {
-      "@id": "http://purl.obolibrary.org/obo/RO_0000080",
-      "@type": "@id"
-    },
-    "has_value_spec": {
-      "@id": "http://purl.obolibrary.org/obo/OBI_0001938"
-    },
-    "result_value": {
-      "@id": "http://purl.obolibrary.org/obo/OBI_0001937",
-      "@type": "xsd:double"
-    },
-    "result_unit": {
-      "@id": "http://purl.obolibrary.org/obo/IAO_0000039",
-      "@type": "@id"
-    },
-    "timeseries_column": {
-      "@id": "http://www.w3.org/ns/csvw#column",
-      "@container": "@set"
-    },
-    "col_name": {
-      "@id": "http://www.w3.org/ns/csvw#name"
-    },
-    "property_url": {
-      "@id": "http://www.w3.org/ns/csvw#propertyUrl",
-      "@type": "@id"
-    },
-    "has_unit": {
-      "@id": "http://qudt.org/schema/qudt/hasUnit",
-      "@type": "@id"
-    }
+    "measurement_datetime": { "@id": "https://w3id.org/dsms/DSCMeasurement/hasMeasurementDateTime", "@type": "xsd:dateTime" },
+    "operator":                    { "@id": "https://w3id.org/dsms/DSCMeasurement/hasOperator" },
+    "laboratory":                  { "@id": "https://w3id.org/dsms/DSCMeasurement/hasLaboratory" },
+    "project_id":                  { "@id": "https://w3id.org/dsms/DSCMeasurement/hasProjectID" },
+    "source_file":                 { "@id": "https://w3id.org/dsms/DSCMeasurement/hasSourceFile" },
+    "identity":                    { "@id": "https://w3id.org/dsms/DSCMeasurement/hasFileIdentity" },
+    "remark":                      { "@id": "http://www.w3.org/2000/01/rdf-schema#comment" },
+    "sample_name":                 { "@id": "https://w3id.org/dsms/DSCMeasurement/hasSampleName" },
+    "sample_mass_mg":              { "@id": "https://w3id.org/dsms/DSCMeasurement/hasSampleMass", "@type": "xsd:double" },
+    "material":                    { "@id": "https://w3id.org/dsms/DSCMeasurement/hasMaterial" },
+    "reference_sample":            { "@id": "https://w3id.org/dsms/DSCMeasurement/hasReferenceSample" },
+    "reference_mass_mg":           { "@id": "https://w3id.org/dsms/DSCMeasurement/hasReferenceMass", "@type": "xsd:double" },
+    "sample_crucible_mass_mg":     { "@id": "https://w3id.org/dsms/DSCMeasurement/hasSampleCrucibleMass", "@type": "xsd:double" },
+    "reference_crucible_mass_mg":  { "@id": "https://w3id.org/dsms/DSCMeasurement/hasReferenceCrucibleMass", "@type": "xsd:double" },
+    "crucible_type":               { "@id": "https://w3id.org/dsms/DSCMeasurement/hasCrucibleType" },
+    "purge_gas":                   { "@id": "https://w3id.org/dsms/DSCMeasurement/hasPurgeGas" },
+    "purge_gas_flow_rate_ml_min":  { "@id": "https://w3id.org/dsms/DSCMeasurement/hasPurgeGasFlowRate", "@type": "xsd:double" },
+    "heating_rate_k_min":          { "@id": "https://w3id.org/dsms/DSCMeasurement/hasHeatingRate", "@type": "xsd:double" },
+    "temperature_start_degC":      { "@id": "https://w3id.org/dsms/DSCMeasurement/hasStartTemperature", "@type": "xsd:double" },
+    "temperature_end_degC":        { "@id": "https://w3id.org/dsms/DSCMeasurement/hasEndTemperature", "@type": "xsd:double" },
+    "segment":                     { "@id": "https://w3id.org/dsms/DSCMeasurement/hasSegmentDescription" },
+    "measurement_range_uV":        { "@id": "https://w3id.org/dsms/DSCMeasurement/hasMeasurementRange", "@type": "xsd:double" },
+    "exo_sign":                    { "@id": "https://w3id.org/dsms/DSCMeasurement/hasExothermicSign", "@type": "xsd:integer" },
+    "manufacturer":                { "@id": "https://w3id.org/dsms/DSCMeasurement/hasInstrumentManufacturer" },
+    "instrument_model":            { "@id": "https://w3id.org/dsms/DSCMeasurement/hasInstrumentModel" },
+    "baseline_correction_file":    { "@id": "https://w3id.org/dsms/DSCMeasurement/hasBaselineCorrection" },
+    "temperature_calibration_file":{ "@id": "https://w3id.org/dsms/DSCMeasurement/hasTemperatureCalibration" },
+    "sensitivity_calibration_file":{ "@id": "https://w3id.org/dsms/DSCMeasurement/hasHeatFlowCalibration" },
+    "correction_code":             { "@id": "https://w3id.org/dsms/DSCMeasurement/hasCorrectionCode" },
+    "tau_r":                       { "@id": "https://w3id.org/dsms/DSCMeasurement/hasTauR" },
+    "measured_properties": { "@id": "http://purl.obolibrary.org/obo/OBI_0000299", "@container": "@set" },
+    "is_about":     { "@id": "http://purl.obolibrary.org/obo/IAO_0000136" },
+    "quality_type": { "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "@type": "@id" },
+    "quality_of":   { "@id": "http://purl.obolibrary.org/obo/RO_0000080", "@type": "@id" },
+    "has_value_spec": { "@id": "http://purl.obolibrary.org/obo/OBI_0001938" },
+    "result_value": { "@id": "http://purl.obolibrary.org/obo/OBI_0001937", "@type": "xsd:double" },
+    "result_unit":  { "@id": "http://purl.obolibrary.org/obo/IAO_0000039", "@type": "@id" },
+    "timeseries_column": { "@id": "http://www.w3.org/ns/csvw#column", "@container": "@set" },
+    "col_name":     { "@id": "http://www.w3.org/ns/csvw#name" },
+    "property_url": { "@id": "http://www.w3.org/ns/csvw#propertyUrl", "@type": "@id" },
+    "has_unit":     { "@id": "http://qudt.org/schema/qudt/hasUnit", "@type": "@id" }
   },
-  "allOf": [
-    {
-      "$ref": "../../../generic/DCAT/specs/schema.oold.yaml"
-    }
-  ],
+  "allOf": [{ "$ref": "../../../generic/DCAT/specs/schema.oold.yaml" }],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$comment": "Digital twin of a DSC heat-flow measurement file — metadata + scalar results + raw time-series.",
+  "$comment": "Digital twin of a DSC heat-flow measurement file — full provenance + conditions + scalar results + raw time-series.",
   "x-schema-version": "0.1.0",
   "x-schema-uri": "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/dataset/dsc/PMDCo/specs/schema.oold.generated.json",
   "x-maturity": "draft",
   "title": "DSC Dataset (PMDCo)",
   "type": "object",
-  "required": [
-    "type",
-    "id",
-    "label"
-  ],
+  "required": ["type", "id", "label"],
   "properties": {
     "type": {
-      "title": "Type",
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "readOnly": true,
-      "const": [
-        "dcat:Dataset"
-      ],
-      "default": [
-        "dcat:Dataset"
-      ],
-      "options": {
-        "enum_titles": [
-          "dcat:Dataset"
-        ]
-      }
+      "title": "Type", "type": "array", "items": {"type": "string"},
+      "readOnly": true, "const": ["dcat:Dataset"], "default": ["dcat:Dataset"],
+      "options": {"enum_titles": ["dcat:Dataset"]}
     },
-    "id": {
-      "title": "ID",
-      "type": "string",
-      "readOnly": true,
-      "default": "dsc-dataset"
-    },
-    "label": {
-      "title": "Dataset Name",
-      "description": "e.g. A2618 SHT DSC Scan 01 — Probe 1",
-      "type": "string"
-    },
-    "description": {
-      "title": "Description",
-      "type": "string",
-      "format": "textarea"
-    },
+    "id":    { "title": "ID",           "type": "string", "readOnly": true, "default": "dsc-dataset" },
+    "label": { "title": "Dataset Name", "type": "string", "description": "e.g. A2618 SHT DSC Scan 01 — Probe 1" },
+    "description": { "title": "Description", "type": "string", "format": "textarea" },
     "format": {
       "title": "File Format",
       "description": "Instrument file format (e.g. NETZSCH DSC TXT, Mettler-Toledo STARe, TA Instruments TRIOS)",
       "type": "string"
     },
+    "measurement_datetime": {
+      "title": "Measurement Date/Time",
+      "description": "Date and time of measurement start in ISO 8601, e.g. 2026-07-14T20:53:29+02:00",
+      "type": "string", "format": "date-time"
+    },
+    "operator":    { "title": "Operator",    "description": "Name or ID of the person who performed the measurement.", "type": "string" },
+    "laboratory":  { "title": "Laboratory",  "description": "Name of the laboratory where the measurement was performed.", "type": "string" },
+    "project_id":  { "title": "Project ID",  "description": "Project or order number under which the measurement was conducted.", "type": "string" },
+    "source_file": { "title": "Source File", "description": "Original NETZSCH project file name (.ngb-ddc) from which the export was generated.", "type": "string" },
+    "identity":    { "title": "File Identity", "description": "IDENTITY key from the NETZSCH file — typically the experiment run ID.", "type": "string" },
+    "remark":      { "title": "Remark", "description": "Free-text remark entered by the operator.", "type": "string", "format": "textarea" },
+    "sample_name": { "title": "Sample Name", "description": "Name of the measured sample as entered in the instrument software.", "type": "string" },
+    "sample_mass_mg": {
+      "title": "Sample Mass (mg)",
+      "description": "Mass of the sample in milligrams — required for enthalpy normalisation to J/g.",
+      "type": "number"
+    },
+    "material":         { "title": "Material",             "description": "Material designation from the instrument file.", "type": "string" },
+    "reference_sample": { "title": "Reference Sample",     "description": "Description of the reference material (empty = inert pan only).", "type": "string" },
+    "reference_mass_mg":          { "title": "Reference Mass (mg)",          "description": "Mass of the reference material in milligrams.", "type": "number" },
+    "sample_crucible_mass_mg":    { "title": "Sample Crucible Mass (mg)",    "description": "Mass of the empty sample crucible in milligrams.", "type": "number" },
+    "reference_crucible_mass_mg": { "title": "Reference Crucible Mass (mg)", "description": "Mass of the empty reference crucible in milligrams.", "type": "number" },
+    "crucible_type": {
+      "title": "Crucible Type",
+      "description": "Material and geometry of the crucible, e.g. DSC/TG pan Pt-Rh+Al2O3.",
+      "type": "string"
+    },
+    "purge_gas":      { "title": "Purge Gas",                  "description": "Primary purge gas, e.g. ARGON, NITROGEN.", "type": "string" },
+    "purge_gas_flow_rate_ml_min": { "title": "Purge Gas Flow Rate (ml/min)", "description": "Volumetric flow rate of the primary purge gas in ml/min.", "type": "number" },
+    "heating_rate_k_min":         { "title": "Heating Rate (K/min)",         "description": "Temperature ramp rate in Kelvin per minute.", "type": "number" },
+    "temperature_start_degC":     { "title": "Temperature Start (°C)",       "description": "Start temperature of the measurement program in degrees Celsius.", "type": "number" },
+    "temperature_end_degC":       { "title": "Temperature End (°C)",         "description": "End temperature of the measurement program in degrees Celsius.", "type": "number" },
+    "segment":           { "title": "Segment Description", "description": "Segment identifier and count in multi-segment programs, e.g. S1/3.", "type": "string" },
+    "measurement_range_uV": { "title": "Measurement Range (µV)", "description": "Full-scale measurement range of the DSC sensor in microvolts.", "type": "number" },
+    "exo_sign": {
+      "title": "Exothermic Sign Convention",
+      "description": "-1 = exothermic peaks point up (NETZSCH default); +1 = exothermic peaks point down (IUPAC).",
+      "type": "integer", "enum": [-1, 1]
+    },
+    "manufacturer":     { "title": "Instrument Manufacturer", "description": "Manufacturer of the DSC instrument, e.g. NETZSCH.", "type": "string" },
+    "instrument_model": { "title": "Instrument Model",        "description": "Model designation of the DSC instrument, e.g. DSC 404C.", "type": "string" },
+    "baseline_correction_file":    { "title": "Baseline Correction File",           "description": "Name of the baseline correction file applied (.ngb-bdc).", "type": "string" },
+    "temperature_calibration_file":{ "title": "Temperature Calibration File",       "description": "Name of the temperature calibration file used (.ngb-tdc).", "type": "string" },
+    "sensitivity_calibration_file":{ "title": "Sensitivity / Heat Flow Calibration File", "description": "Name of the heat flow sensitivity calibration file used (.ngb-edc).", "type": "string" },
+    "correction_code": { "title": "Correction Code", "description": "NETZSCH internal correction code applied during data processing.", "type": "string" },
+    "tau_r":            { "title": "Tau-R Correction", "description": "Tau-R thermal lag correction setting (--- = disabled).", "type": "string" },
     "measured_properties": {
       "title": "DSC Results",
-      "description": "Scalar results extracted from the DSC heat-flow curve (e.g. onset/peak temperature, enthalpy, specific heat capacity). Each entry is a MeasurementDatum (IAO_0000109) with an embedded ScalarValueSpecification (OBI_0001931). Result type and unit are resolved via the characterization-result and measurement-unit vocabulary services.",
+      "description": "Scalar results from the DSC heat-flow curve. Each entry is a MeasurementDatum (IAO_0000109) with an embedded ScalarValueSpecification (OBI_0001931). Result type and unit resolved via vocabulary services.",
       "type": "array",
       "items": {
         "type": "object",
         "title": "DSC Result",
-        "required": [
-          "type",
-          "id",
-          "label",
-          "has_value_spec"
-        ],
+        "required": ["type", "id", "label", "has_value_spec"],
         "properties": {
           "type": {
-            "title": "Type",
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "readOnly": true,
-            "const": [
-              "obo:IAO_0000109"
-            ],
-            "default": [
-              "obo:IAO_0000109"
-            ],
-            "options": {
-              "enum_titles": [
-                "iao:MeasurementDatum"
-              ]
-            }
+            "title": "Type", "type": "array", "items": {"type": "string"},
+            "readOnly": true, "const": ["obo:IAO_0000109"], "default": ["obo:IAO_0000109"],
+            "options": {"enum_titles": ["iao:MeasurementDatum"]}
           },
-          "id": {
-            "title": "Datum ID",
-            "type": "string",
-            "readOnly": true,
-            "default": "result-1-smd"
-          },
+          "id":    { "title": "Datum ID",      "type": "string", "readOnly": true, "default": "result-1-smd" },
           "label": {
             "title": "Result Name",
             "description": "Search and select a DSC result type from the characterization-result vocabulary.",
@@ -195,44 +156,16 @@
             "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/all/terms"
           },
           "has_value_spec": {
-            "title": "Value Specification",
-            "type": "object",
-            "required": [
-              "type",
-              "id",
-              "result_value",
-              "result_unit"
-            ],
+            "title": "Value Specification", "type": "object",
+            "required": ["type", "id", "result_value", "result_unit"],
             "properties": {
               "type": {
-                "title": "Type",
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "readOnly": true,
-                "const": [
-                  "obo:OBI_0001931"
-                ],
-                "default": [
-                  "obo:OBI_0001931"
-                ],
-                "options": {
-                  "enum_titles": [
-                    "obi:ScalarValueSpecification"
-                  ]
-                }
+                "title": "Type", "type": "array", "items": {"type": "string"},
+                "readOnly": true, "const": ["obo:OBI_0001931"], "default": ["obo:OBI_0001931"],
+                "options": {"enum_titles": ["obi:ScalarValueSpecification"]}
               },
-              "id": {
-                "title": "Value Spec ID",
-                "type": "string",
-                "readOnly": true,
-                "default": "result-1-svs"
-              },
-              "result_value": {
-                "title": "Value",
-                "type": "number"
-              },
+              "id":           { "title": "Value Spec ID", "type": "string", "readOnly": true, "default": "result-1-svs" },
+              "result_value": { "title": "Value", "type": "number" },
               "result_unit": {
                 "title": "Unit",
                 "description": "Search and select a unit from the measurement-unit vocabulary.",
@@ -247,29 +180,12 @@
             "type": "object",
             "properties": {
               "quality_type": {
-                "title": "Quality Class",
-                "type": "string",
-                "options": {
-                  "hidden": true
-                },
+                "title": "Quality Class", "type": "string",
+                "options": {"hidden": true},
                 "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/all/terms"
               },
-              "id": {
-                "title": "Quality Individual ID",
-                "type": "string",
-                "readOnly": true,
-                "default": "result-1-quality",
-                "options": {
-                  "hidden": true
-                }
-              },
-              "quality_of": {
-                "title": "Specimen IRI",
-                "type": "string",
-                "options": {
-                  "hidden": true
-                }
-              }
+              "id":          { "title": "Quality Individual ID", "type": "string", "readOnly": true, "default": "result-1-quality", "options": {"hidden": true} },
+              "quality_of":  { "title": "Specimen IRI", "type": "string", "options": {"hidden": true} }
             }
           }
         }
@@ -278,49 +194,17 @@
     },
     "timeseries_column": {
       "title": "Timeseries Column Specifications",
-      "description": "Semantic column specifications for the DSC heat-flow CSV attachment. Each entry maps one column name to its physical property IRI (DSC ontology) and QUDT unit IRI. Populated automatically by the parser.",
+      "description": "Semantic column specifications for the DSC heat-flow CSV attachment. Each entry maps one column name to its DSC ontology property IRI and QUDT unit IRI. Populated automatically by the parser.",
       "type": "array",
       "items": {
         "type": "object",
-        "required": [
-          "col_name",
-          "property_url",
-          "has_unit"
-        ],
+        "required": ["col_name", "property_url", "has_unit"],
         "properties": {
-          "id": {
-            "title": "Column Spec ID",
-            "type": "string",
-            "readOnly": true
-          },
-          "type": {
-            "title": "Type",
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "readOnly": true,
-            "const": [
-              "csvw:Column"
-            ],
-            "default": [
-              "csvw:Column"
-            ]
-          },
-          "col_name": {
-            "title": "Column Name",
-            "type": "string"
-          },
-          "property_url": {
-            "title": "Physical Property IRI",
-            "description": "DSC ontology property IRI for this column.",
-            "type": "string"
-          },
-          "has_unit": {
-            "title": "Unit IRI",
-            "description": "QUDT unit IRI for this column.",
-            "type": "string"
-          }
+          "id":   { "title": "Column Spec ID",       "type": "string", "readOnly": true },
+          "type": { "title": "Type", "type": "array", "items": {"type": "string"}, "readOnly": true, "const": ["csvw:Column"], "default": ["csvw:Column"] },
+          "col_name":     { "title": "Column Name",          "type": "string" },
+          "property_url": { "title": "Physical Property IRI","type": "string", "description": "DSC ontology property IRI for this column." },
+          "has_unit":     { "title": "Unit IRI",             "type": "string", "description": "QUDT unit IRI for this column." }
         }
       },
       "default": []

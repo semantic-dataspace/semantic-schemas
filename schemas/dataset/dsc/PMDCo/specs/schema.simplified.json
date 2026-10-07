@@ -2,17 +2,18 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "schema.simplified.json",
   "title": "DSC Dataset: PMDCo (Simplified Input)",
-  "description": "Simplified input for a DSC heat-flow dataset KItem. Provide the dataset name, optional scalar results (onset/peak temperature, enthalpy, etc.), and column specs from the parser. The transform converts this to full OO-LD (MeasurementDatum + ScalarValueSpecification nodes). Result type and unit labels are resolved to IRIs by the vocabulary service — no hardcoded unit codes needed.",
+  "description": "Simplified input for a DSC heat-flow dataset KItem. The NETZSCH5DSCDatasetParser populates most fields automatically from the instrument file header. Scalar results (onset/peak temperature, enthalpy, etc.) must be added manually from the Proteus analysis report. The transform converts this to full OO-LD (MeasurementDatum + ScalarValueSpecification nodes). Unit labels are resolved to QUDT IRIs by the vocabulary service.",
   "type": "object",
   "required": ["dataset_name"],
   "additionalProperties": false,
   "properties": {
+
     "dataset_name": {
       "title": "Dataset Name",
       "description": "Human-readable name for this DSC dataset.",
       "type": "string",
       "minLength": 1,
-      "examples": ["A2618 SHT DSC Scan 01 — Probe 1"]
+      "examples": ["A2618 SHT — DSC Scan 01 Probe 1"]
     },
     "dataset_id": {
       "title": "Dataset ID",
@@ -21,18 +22,66 @@
     },
     "format": {
       "title": "File Format",
-      "description": "Instrument file format of the raw data.",
       "type": "string",
       "default": "NETZSCH DSC TXT",
       "examples": ["NETZSCH DSC TXT", "Mettler-Toledo STARe", "TA Instruments TRIOS"]
     },
     "specimen_iri": {
       "title": "Specimen IRI",
-      "description": "Optional IRI of the specimen. When provided, each quality individual gains a RO_0000080 (quality_of) link to the specimen, enabling SPARQL queries across specimens.",
+      "description": "Optional IRI of the specimen. When provided, each result quality individual gains a RO_0000080 link to the specimen.",
       "type": "string",
-      "format": "uri",
-      "examples": ["https://example.org/knowledge/specimen/my-specimen-abc123"]
+      "format": "uri"
     },
+
+    "measurement_datetime": {
+      "title": "Measurement Date/Time",
+      "description": "ISO 8601 datetime of measurement start, e.g. 2026-07-14T20:53:29+02:00",
+      "type": "string"
+    },
+    "operator":   { "title": "Operator",    "type": "string", "examples": ["auge"] },
+    "laboratory": { "title": "Laboratory",  "type": "string", "examples": ["FHG_IWM_TP-Labor"] },
+    "project_id": { "title": "Project ID",  "type": "string", "examples": ["038282"] },
+    "source_file":{ "title": "Source File", "type": "string", "examples": ["038282_A2618_SHT_Probe1_01.ngb-ddc"] },
+    "identity":   { "title": "File Identity","type": "string", "examples": ["038282_A2618_SHT_01"] },
+    "remark":     { "title": "Remark",      "type": "string" },
+
+    "sample_name": { "title": "Sample Name", "type": "string", "examples": ["A2618_SHT_Probe1_01"] },
+    "sample_mass_mg": {
+      "title": "Sample Mass (mg)",
+      "description": "Required for enthalpy normalisation to J/g.",
+      "type": "number",
+      "examples": [30.6]
+    },
+    "material":         { "title": "Material",        "type": "string", "examples": ["A2618"] },
+    "reference_sample": { "title": "Reference Sample","type": "string" },
+    "reference_mass_mg":          { "title": "Reference Mass (mg)",          "type": "number", "examples": [0] },
+    "sample_crucible_mass_mg":    { "title": "Sample Crucible Mass (mg)",    "type": "number", "examples": [0] },
+    "reference_crucible_mass_mg": { "title": "Reference Crucible Mass (mg)", "type": "number", "examples": [0] },
+
+    "crucible_type": { "title": "Crucible Type",    "type": "string", "examples": ["DSC/TG pan Pt-Rh+Al2O3"] },
+    "purge_gas":     { "title": "Purge Gas",         "type": "string", "examples": ["ARGON"] },
+    "purge_gas_flow_rate_ml_min": { "title": "Purge Gas Flow Rate (ml/min)", "type": "number", "examples": [40] },
+    "heating_rate_k_min":     { "title": "Heating Rate (K/min)",     "type": "number", "examples": [50] },
+    "temperature_start_degC": { "title": "Temperature Start (°C)",   "type": "number", "examples": [25] },
+    "temperature_end_degC":   { "title": "Temperature End (°C)",     "type": "number", "examples": [550] },
+    "segment": { "title": "Segment Description", "type": "string", "examples": ["S1/3"] },
+    "measurement_range_uV": { "title": "Measurement Range (µV)", "type": "number", "examples": [5000] },
+    "exo_sign": {
+      "title": "Exothermic Sign Convention",
+      "description": "-1 = exo up (NETZSCH); +1 = exo down (IUPAC)",
+      "type": "integer",
+      "enum": [-1, 1],
+      "examples": [-1]
+    },
+
+    "manufacturer":     { "title": "Instrument Manufacturer", "type": "string", "examples": ["NETZSCH"] },
+    "instrument_model": { "title": "Instrument Model",        "type": "string", "examples": ["DSC 404C"] },
+    "baseline_correction_file":    { "title": "Baseline Correction File",           "type": "string", "examples": ["038282_Basis_01.ngb-bdc"] },
+    "temperature_calibration_file":{ "title": "Temperature Calibration File",       "type": "string", "examples": ["Temp_DSC_50K_Ar_Pt+Al2O3_2026-07.ngb-tdc"] },
+    "sensitivity_calibration_file":{ "title": "Sensitivity / Heat Flow Calibration File","type": "string", "examples": ["Empf_DSC_10K_Ar_Pt+Al2O3_2025_06.ngb-edc"] },
+    "correction_code": { "title": "Correction Code", "type": "string", "examples": ["020"] },
+    "tau_r":            { "title": "Tau-R Correction","type": "string", "examples": ["---"] },
+
     "columns": {
       "title": "Timeseries Column Specifications",
       "description": "Semantic column specs from the parser — column name mapped to property IRI and QUDT unit IRI.",
@@ -43,16 +92,17 @@
         "required": ["name", "property_iri", "unit_iri"],
         "additionalProperties": false,
         "properties": {
-          "name":         { "title": "Column Name",    "type": "string" },
-          "property_iri": { "title": "Property IRI",   "type": "string" },
-          "unit_iri":     { "title": "Unit IRI",       "type": "string" }
+          "name":         { "title": "Column Name",  "type": "string" },
+          "property_iri": { "title": "Property IRI", "type": "string" },
+          "unit_iri":     { "title": "Unit IRI",     "type": "string" }
         }
       },
       "default": []
     },
+
     "results": {
       "title": "DSC Results",
-      "description": "Scalar results from DSC analysis software (NETZSCH Proteus, TRIOS, STARe, etc.). Add one entry per extracted quantity. The 'unit' field must be a vocabulary label from the measurement-unit vocabulary service — it is resolved to a QUDT IRI automatically.",
+      "description": "Scalar results from DSC analysis software (NETZSCH Proteus, TRIOS, STARe, etc.). Add one entry per extracted quantity. The 'unit' field accepts a vocabulary label, short code, or QUDT IRI — resolved automatically.",
       "type": "array",
       "items": {
         "title": "Result Entry",
@@ -62,34 +112,22 @@
         "properties": {
           "name": {
             "title": "Result Name",
-            "description": "Must match a label in the characterization-result vocabulary (ddsc: namespace).",
+            "description": "Label from the characterization-result vocabulary (DSCMeasurement namespace).",
             "type": "string",
             "examples": [
-              "Onset Temperature",
-              "Peak Temperature",
-              "End Temperature",
-              "Enthalpy of Transformation",
-              "Specific Heat Capacity",
-              "Glass Transition Temperature (Tg)",
-              "Solidus Temperature",
-              "Liquidus Temperature"
+              "Onset Temperature", "Peak Temperature", "End Temperature",
+              "Enthalpy of Transformation", "Specific Heat Capacity",
+              "Glass Transition Temperature (Tg)", "Solidus Temperature", "Liquidus Temperature"
             ]
           },
-          "value": {
-            "title": "Value",
-            "type": "number",
-            "examples": [280.5, 315.2, -45.3, 0.92]
-          },
+          "value": { "title": "Value", "type": "number", "examples": [280.5, 295.3, -45.3] },
           "unit": {
             "title": "Unit",
-            "description": "Vocabulary label from the measurement-unit vocabulary service. Resolved to QUDT IRI by the SDK — no hardcoded codes needed.",
+            "description": "Vocabulary label, short code, or QUDT IRI. Resolved by SDK.",
             "type": "string",
             "examples": [
-              "Degree Celsius (°C)",
-              "Joule per Gram (J/g)",
-              "Kilojoule per Kilogram (kJ/kg)",
-              "Joule per Gram Kelvin (J/(g·K))",
-              "Watt per Gram (W/g)"
+              "Degree Celsius (°C)", "Joule per Gram (J/g)",
+              "Kilojoule per Kilogram (kJ/kg)", "Joule per Gram Kelvin (J/(g·K))"
             ]
           }
         }
@@ -97,15 +135,43 @@
       "default": []
     }
   },
+
   "examples": [
     {
-      "dataset_name": "A2618 SHT DSC Scan 01 — Probe 1",
-      "format": "NETZSCH DSC TXT",
+      "dataset_name":   "A2618 SHT — DSC Scan 01 Probe 1",
+      "format":         "NETZSCH DSC TXT",
+      "measurement_datetime": "2026-07-14T20:53:29+02:00",
+      "operator":       "auge",
+      "laboratory":     "FHG_IWM_TP-Labor",
+      "project_id":     "038282",
+      "source_file":    "038282_A2618_SHT_Probe1_01.ngb-ddc",
+      "identity":       "038282_A2618_SHT_01",
+      "sample_name":    "A2618_SHT_Probe1_01",
+      "sample_mass_mg": 30.6,
+      "material":       "A2618",
+      "reference_mass_mg": 0.0,
+      "sample_crucible_mass_mg": 0.0,
+      "reference_crucible_mass_mg": 0.0,
+      "crucible_type":  "DSC/TG pan Pt-Rh+Al2O3",
+      "purge_gas":      "ARGON",
+      "purge_gas_flow_rate_ml_min": 40,
+      "heating_rate_k_min":     50.0,
+      "temperature_start_degC": 25.0,
+      "temperature_end_degC":   550.0,
+      "segment":        "S1/3",
+      "measurement_range_uV": 5000.0,
+      "exo_sign":       -1,
+      "manufacturer":   "NETZSCH",
+      "instrument_model": "DSC 404C",
+      "baseline_correction_file":     "038282_Basis_01.ngb-bdc",
+      "temperature_calibration_file": "Temp_DSC_50K_Ar_Pt+Al2O3_2026-07.ngb-tdc",
+      "sensitivity_calibration_file": "Empf_DSC_10K_Ar_Pt+Al2O3_2025_06.ngb-edc",
+      "correction_code": "020",
       "results": [
-        { "name": "Onset Temperature",         "value": 280.5,  "unit": "Degree Celsius (°C)" },
-        { "name": "Peak Temperature",           "value": 315.2,  "unit": "Degree Celsius (°C)" },
-        { "name": "End Temperature",            "value": 345.0,  "unit": "Degree Celsius (°C)" },
-        { "name": "Enthalpy of Transformation", "value": -45.3,  "unit": "Joule per Gram (J/g)" }
+        { "name": "Onset Temperature",          "value": 280.5, "unit": "Degree Celsius (°C)" },
+        { "name": "Peak Temperature",           "value": 295.3, "unit": "Degree Celsius (°C)" },
+        { "name": "End Temperature",            "value": 315.1, "unit": "Degree Celsius (°C)" },
+        { "name": "Enthalpy of Transformation", "value": -45.3, "unit": "Joule per Gram (J/g)" }
       ]
     }
   ]

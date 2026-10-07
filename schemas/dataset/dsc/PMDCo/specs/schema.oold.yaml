@@ -2,6 +2,8 @@
 #
 # Digital twin of a single DSC heat-flow measurement file.
 # Extends the generic dataset/DCAT schema with:
+#   - Full instrument provenance (operator, lab, datetime, calibration files)
+#   - Complete measurement conditions (sample mass, crucible, atmosphere, heating rate)
 #   - Scalar characterization results as MeasurementDatum + ScalarValueSpecification nodes
 #   - Raw heat-flow time-series (attached CSV file)
 #
@@ -11,14 +13,44 @@
 # Graph pattern (additions to DCAT base):
 #
 #   dcat:Dataset
-#     obi:OBI_0000299 (measured_properties) ─────────────► MeasurementDatum [× 0..N]
-#       obi:OBI_0001938 (has_value_spec) ───────────────► ScalarValueSpecification
-#         obi:OBI_0001937 (result_value) ────────── xsd:double
-#         iao:IAO_0000039 (result_unit) ──────────── unit IRI (QUDT, resolved by vocab service)
-#     csvw:column        (timeseries_column) ──────────► csvw:Column [× 0..N]
-#       csvw:name        (col_name)  ──── column header string
+#     dsmdsc:hasOperator               → xsd:string
+#     dsmdsc:hasLaboratory             → xsd:string
+#     dsmdsc:hasProjectID              → xsd:string
+#     dcterms:created                  → xsd:dateTime
+#     dsmdsc:hasSourceFile             → xsd:string
+#     dsmdsc:hasFileIdentity           → xsd:string
+#     rdfs:comment                     → xsd:string  (remark)
+#     dsmdsc:hasSampleName             → xsd:string
+#     dsmdsc:hasSampleMass             → xsd:double  (mg)
+#     dsmdsc:hasMaterial               → xsd:string
+#     dsmdsc:hasReferenceSample        → xsd:string
+#     dsmdsc:hasReferenceMass          → xsd:double  (mg)
+#     dsmdsc:hasSampleCrucibleMass     → xsd:double  (mg)
+#     dsmdsc:hasReferenceCrucibleMass  → xsd:double  (mg)
+#     dsmdsc:hasCrucibleType           → xsd:string
+#     dsmdsc:hasPurgeGas               → xsd:string
+#     dsmdsc:hasPurgeGasFlowRate       → xsd:double  (ml/min)
+#     dsmdsc:hasHeatingRate            → xsd:double  (K/min)
+#     dsmdsc:hasStartTemperature       → xsd:double  (°C)
+#     dsmdsc:hasEndTemperature         → xsd:double  (°C)
+#     dsmdsc:hasSegmentDescription     → xsd:string
+#     dsmdsc:hasMeasurementRange       → xsd:double  (µV)
+#     dsmdsc:hasExothermicSign         → xsd:integer (-1 NETZSCH / +1 IUPAC)
+#     dsmdsc:hasInstrumentManufacturer → xsd:string
+#     dsmdsc:hasInstrumentModel        → xsd:string
+#     dsmdsc:hasBaselineCorrection     → xsd:string
+#     dsmdsc:hasTemperatureCalibration → xsd:string
+#     dsmdsc:hasHeatFlowCalibration    → xsd:string
+#     dsmdsc:hasCorrectionCode         → xsd:string
+#     dsmdsc:hasTauR                   → xsd:string
+#     obi:OBI_0000299 (measured_properties) ──────────► MeasurementDatum [× 0..N]
+#       obi:OBI_0001938 (has_value_spec) ──────────────► ScalarValueSpecification
+#         obi:OBI_0001937 (result_value) ───────── xsd:double
+#         iao:IAO_0000039 (result_unit) ─────────── unit IRI (QUDT, resolved by vocab service)
+#     csvw:column (timeseries_column) ────────────────► csvw:Column [× 0..N]
+#       csvw:name        (col_name)     ── column header string
 #       csvw:propertyUrl (property_url) ── observable property IRI
-#       qudt:hasUnit     (has_unit) ────── QUDT unit IRI
+#       qudt:hasUnit     (has_unit)     ── QUDT unit IRI
 
 "@context":
   rdf:     "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -32,7 +64,7 @@
     "@prefix": true
   qudt:    "http://qudt.org/schema/qudt/"
   uqudt:   "http://qudt.org/vocab/unit/"
-  ddsc:    "https://w3id.org/dsms/dsc-result#"
+  dsmdsc:  "https://w3id.org/dsms/DSCMeasurement/"
   csvw:    "http://www.w3.org/ns/csvw#"
   type:    "@type"
   id:      "@id"
@@ -59,6 +91,87 @@
     "@id": "http://purl.org/dc/terms/hasPart"
     "@type": "@id"
     "@container": "@set"
+
+  # ── Provenance ───────────────────────────────────────────────────────────────
+  measurement_datetime:
+    "@id": "dsmdsc:hasMeasurementDateTime"
+    "@type": "xsd:dateTime"
+  operator:
+    "@id": "dsmdsc:hasOperator"
+  laboratory:
+    "@id": "dsmdsc:hasLaboratory"
+  project_id:
+    "@id": "dsmdsc:hasProjectID"
+  source_file:
+    "@id": "dsmdsc:hasSourceFile"
+  identity:
+    "@id": "dsmdsc:hasFileIdentity"
+  remark:
+    "@id": "rdfs:comment"
+
+  # ── Sample / specimen ────────────────────────────────────────────────────────
+  sample_name:
+    "@id": "dsmdsc:hasSampleName"
+  sample_mass_mg:
+    "@id": "dsmdsc:hasSampleMass"
+    "@type": "xsd:double"
+  material:
+    "@id": "dsmdsc:hasMaterial"
+  reference_sample:
+    "@id": "dsmdsc:hasReferenceSample"
+  reference_mass_mg:
+    "@id": "dsmdsc:hasReferenceMass"
+    "@type": "xsd:double"
+  sample_crucible_mass_mg:
+    "@id": "dsmdsc:hasSampleCrucibleMass"
+    "@type": "xsd:double"
+  reference_crucible_mass_mg:
+    "@id": "dsmdsc:hasReferenceCrucibleMass"
+    "@type": "xsd:double"
+
+  # ── Measurement conditions ───────────────────────────────────────────────────
+  crucible_type:
+    "@id": "dsmdsc:hasCrucibleType"
+  purge_gas:
+    "@id": "dsmdsc:hasPurgeGas"
+  purge_gas_flow_rate_ml_min:
+    "@id": "dsmdsc:hasPurgeGasFlowRate"
+    "@type": "xsd:double"
+  heating_rate_k_min:
+    "@id": "dsmdsc:hasHeatingRate"
+    "@type": "xsd:double"
+  temperature_start_degC:
+    "@id": "dsmdsc:hasStartTemperature"
+    "@type": "xsd:double"
+  temperature_end_degC:
+    "@id": "dsmdsc:hasEndTemperature"
+    "@type": "xsd:double"
+  segment:
+    "@id": "dsmdsc:hasSegmentDescription"
+  measurement_range_uV:
+    "@id": "dsmdsc:hasMeasurementRange"
+    "@type": "xsd:double"
+  exo_sign:
+    "@id": "dsmdsc:hasExothermicSign"
+    "@type": "xsd:integer"
+
+  # ── Instrument & calibration ─────────────────────────────────────────────────
+  manufacturer:
+    "@id": "dsmdsc:hasInstrumentManufacturer"
+  instrument_model:
+    "@id": "dsmdsc:hasInstrumentModel"
+  baseline_correction_file:
+    "@id": "dsmdsc:hasBaselineCorrection"
+  temperature_calibration_file:
+    "@id": "dsmdsc:hasTemperatureCalibration"
+  sensitivity_calibration_file:
+    "@id": "dsmdsc:hasHeatFlowCalibration"
+  correction_code:
+    "@id": "dsmdsc:hasCorrectionCode"
+  tau_r:
+    "@id": "dsmdsc:hasTauR"
+
+  # ── Measurement results & timeseries ─────────────────────────────────────────
   measured_properties:
     "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
     "@container": "@set"
@@ -94,7 +207,7 @@ allOf:
   - $ref: "../../../generic/DCAT/specs/schema.oold.yaml"
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
-$comment: Digital twin of a DSC heat-flow measurement file — metadata + scalar results + raw time-series.
+$comment: Digital twin of a DSC heat-flow measurement file — full provenance + conditions + scalar results + raw time-series.
 x-schema-version: '0.1.0'
 x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/dataset/dsc/PMDCo/specs/schema.oold.generated.json'
 x-maturity: 'draft'
@@ -140,6 +253,169 @@ properties:
     title: File Format
     description: "Instrument file format (e.g. NETZSCH DSC TXT, Mettler-Toledo STARe, TA Instruments TRIOS)"
     type: string
+
+  # ── Provenance ───────────────────────────────────────────────────────────────
+
+  measurement_datetime:
+    title: Measurement Date/Time
+    description: "Date and time of measurement start in ISO 8601, e.g. 2026-07-14T20:53:29+02:00"
+    type: string
+    format: date-time
+
+  operator:
+    title: Operator
+    description: Name or ID of the person who performed the measurement.
+    type: string
+
+  laboratory:
+    title: Laboratory
+    description: Name of the laboratory where the measurement was performed.
+    type: string
+
+  project_id:
+    title: Project ID
+    description: Project or order number under which the measurement was conducted.
+    type: string
+
+  source_file:
+    title: Source File
+    description: Original NETZSCH project file name (.ngb-ddc) from which the export was generated.
+    type: string
+
+  identity:
+    title: File Identity
+    description: IDENTITY key from the NETZSCH file — typically the experiment run ID.
+    type: string
+
+  remark:
+    title: Remark
+    description: Free-text remark entered by the operator.
+    type: string
+    format: textarea
+
+  # ── Sample / specimen ────────────────────────────────────────────────────────
+
+  sample_name:
+    title: Sample Name
+    description: Name of the measured sample as entered in the instrument software.
+    type: string
+
+  sample_mass_mg:
+    title: Sample Mass (mg)
+    description: Mass of the sample in milligrams — required for enthalpy normalisation to J/g.
+    type: number
+
+  material:
+    title: Material
+    description: "Material designation from the instrument file (alloy grade, compound name, etc.)."
+    type: string
+
+  reference_sample:
+    title: Reference Sample
+    description: Description of the reference material used (empty = inert pan only).
+    type: string
+
+  reference_mass_mg:
+    title: Reference Mass (mg)
+    description: Mass of the reference material in milligrams.
+    type: number
+
+  sample_crucible_mass_mg:
+    title: Sample Crucible Mass (mg)
+    description: Mass of the empty sample crucible in milligrams.
+    type: number
+
+  reference_crucible_mass_mg:
+    title: Reference Crucible Mass (mg)
+    description: Mass of the empty reference crucible in milligrams.
+    type: number
+
+  # ── Measurement conditions ───────────────────────────────────────────────────
+
+  crucible_type:
+    title: Crucible Type
+    description: "Material and geometry of the crucible, e.g. DSC/TG pan Pt-Rh+Al2O3."
+    type: string
+
+  purge_gas:
+    title: Purge Gas
+    description: "Primary purge gas, e.g. ARGON, NITROGEN."
+    type: string
+
+  purge_gas_flow_rate_ml_min:
+    title: Purge Gas Flow Rate (ml/min)
+    description: Volumetric flow rate of the primary purge gas in ml/min.
+    type: number
+
+  heating_rate_k_min:
+    title: Heating Rate (K/min)
+    description: Temperature ramp rate in Kelvin per minute.
+    type: number
+
+  temperature_start_degC:
+    title: Temperature Start (°C)
+    description: Start temperature of the measurement program in degrees Celsius.
+    type: number
+
+  temperature_end_degC:
+    title: Temperature End (°C)
+    description: End temperature of the measurement program in degrees Celsius.
+    type: number
+
+  segment:
+    title: Segment Description
+    description: "Segment identifier and count in multi-segment programs, e.g. S1/3."
+    type: string
+
+  measurement_range_uV:
+    title: Measurement Range (µV)
+    description: Full-scale measurement range of the DSC sensor in microvolts.
+    type: number
+
+  exo_sign:
+    title: Exothermic Sign Convention
+    description: "-1 = exothermic peaks point up (NETZSCH default); +1 = exothermic peaks point down (IUPAC)."
+    type: integer
+    enum: [-1, 1]
+
+  # ── Instrument & calibration ─────────────────────────────────────────────────
+
+  manufacturer:
+    title: Instrument Manufacturer
+    description: "Manufacturer of the DSC instrument, e.g. NETZSCH."
+    type: string
+
+  instrument_model:
+    title: Instrument Model
+    description: "Model designation of the DSC instrument, e.g. DSC 404C."
+    type: string
+
+  baseline_correction_file:
+    title: Baseline Correction File
+    description: Name of the baseline correction file applied (.ngb-bdc).
+    type: string
+
+  temperature_calibration_file:
+    title: Temperature Calibration File
+    description: Name of the temperature calibration file used (.ngb-tdc).
+    type: string
+
+  sensitivity_calibration_file:
+    title: Sensitivity / Heat Flow Calibration File
+    description: Name of the heat flow sensitivity calibration file used (.ngb-edc).
+    type: string
+
+  correction_code:
+    title: Correction Code
+    description: NETZSCH internal correction code applied during data processing.
+    type: string
+
+  tau_r:
+    title: Tau-R Correction
+    description: "Tau-R thermal lag correction setting (--- = disabled)."
+    type: string
+
+  # ── Scalar results ───────────────────────────────────────────────────────────
 
   measured_properties:
     title: DSC Results
@@ -239,6 +515,8 @@ properties:
               options:
                 hidden: true
     default: []
+
+  # ── Timeseries column specs ───────────────────────────────────────────────────
 
   timeseries_column:
     title: Timeseries Column Specifications

@@ -2,27 +2,60 @@
   /*
    * DSC Dataset (PMDCo): simplified JSON → OO-LD JSON
    *
-   * Produces a dcat:Dataset document representing one DSC measurement file:
-   * scalar results as MeasurementDatum + ScalarValueSpecification nodes,
+   * Produces a dcat:Dataset document with full instrument provenance, measurement
+   * conditions, scalar results as MeasurementDatum + ScalarValueSpecification nodes,
    * and timeseries column semantic specs.
    *
-   * Units are passed through as vocabulary labels — the SDK resolves each
-   * result_unit label to a QUDT IRI via the measurement-unit vocabulary service.
-   * No hardcoded unit map is needed here.
+   * Units in results[] are passed through as vocabulary labels — the SDK resolves
+   * each result_unit label to a QUDT IRI via the measurement-unit vocabulary service.
    *
    * Input fields (see schema.simplified.json):
-   *   dataset_name    string   required
-   *   dataset_id      string   optional, derived from dataset_name if omitted
-   *   format          string   optional, default "NETZSCH DSC TXT"
-   *   specimen_iri    string   optional URI — links quality individuals to specimen
-   *   results         array    optional scalar results from analysis software
-   *     name          string   vocabulary label, e.g. "Onset Temperature"
-   *     value         number
-   *     unit          string   measurement-unit vocabulary label, e.g. "Degree Celsius (°C)"
-   *   columns         array    optional timeseries column semantic specs from parser
-   *     name          string   column header as it appears in the CSV
-   *     property_iri  string   DSC ontology observable property IRI
-   *     unit_iri      string   QUDT unit IRI
+   *   dataset_name               string   required
+   *   dataset_id                 string   optional — derived from dataset_name if omitted
+   *   format                     string   optional
+   *   specimen_iri               string   optional URI — links quality individuals to specimen
+   *
+   *   -- Provenance (auto-populated by parser from file header) --
+   *   measurement_datetime       string   ISO 8601
+   *   operator                   string
+   *   laboratory                 string
+   *   project_id                 string
+   *   source_file                string
+   *   identity                   string
+   *   remark                     string
+   *
+   *   -- Sample --
+   *   sample_name                string
+   *   sample_mass_mg             number   mg
+   *   material                   string
+   *   reference_sample           string
+   *   reference_mass_mg          number   mg
+   *   sample_crucible_mass_mg    number   mg
+   *   reference_crucible_mass_mg number   mg
+   *
+   *   -- Measurement conditions --
+   *   crucible_type              string
+   *   purge_gas                  string
+   *   purge_gas_flow_rate_ml_min number   ml/min
+   *   heating_rate_k_min         number   K/min
+   *   temperature_start_degC     number   °C
+   *   temperature_end_degC       number   °C
+   *   segment                    string
+   *   measurement_range_uV       number   µV
+   *   exo_sign                   integer  -1 or +1
+   *
+   *   -- Instrument & calibration --
+   *   manufacturer               string
+   *   instrument_model           string
+   *   baseline_correction_file   string
+   *   temperature_calibration_file string
+   *   sensitivity_calibration_file string
+   *   correction_code            string
+   *   tau_r                      string
+   *
+   *   -- Timeseries & results --
+   *   columns  array  [{name, property_iri, unit_iri}]
+   *   results  array  [{name, value, unit}]
    */
 
   $schemaUri   := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/dataset/dsc/PMDCo/specs/schema.oold.generated.json";
@@ -31,9 +64,11 @@
   $dsId        := $exists(dataset_id) ? dataset_id : "dsc-dataset-" & $slug;
   $specimenIri := $exists(specimen_iri) ? specimen_iri : undefined;
 
+  /* helper: include a field only if it exists and is non-empty */
+  $opt := function($v) { $exists($v) and $string($v) != "" ? $v : undefined };
+  $optN := function($v) { $exists($v) ? $v : undefined };
+
   /* ── Scalar results: MeasurementDatum + quality individual + ScalarValueSpec ── */
-  /* result_unit is a vocabulary label — SDK calls _resolve_vocab_value() to       */
-  /* convert it to the QUDT IRI via the measurement-unit vocabulary service.       */
   $measured := $exists(results) and $count(results) > 0
     ? $map(results, function($r, $i) {(
         $rSlug     := $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-");
@@ -55,16 +90,6 @@
       )})
     : undefined;
 
-  /* ── Assemble OO-LD output ─────────────────────────────────────────────────── */
-  $base := {
-    "conforms_to": $schemaUri,
-    "type":        ["dcat:Dataset"],
-    "id":          $dsId,
-    "label":       dataset_name
-  };
-
-  $withFormat  := $merge([$base, {"format": $exists(format) ? format : "NETZSCH DSC TXT"}]);
-
   /* ── Timeseries column semantic specifications ─────────────────────────────── */
   $colSpecs := $exists(columns) and $count(columns) > 0
     ? $map(columns, function($c) {
@@ -78,11 +103,65 @@
       })
     : undefined;
 
-  $withColumns := $exists($colSpecs)
-    ? $merge([$withFormat, {"timeseries_column": $colSpecs}])
-    : $withFormat;
+  /* ── Base node ─────────────────────────────────────────────────────────────── */
+  $base := {
+    "conforms_to": $schemaUri,
+    "type":        ["dcat:Dataset"],
+    "id":          $dsId,
+    "label":       dataset_name
+  };
 
-  $exists($measured)
-    ? $merge([$withColumns, {"measured_properties": $measured}])
-    : $withColumns
+  /* ── Provenance ─────────────────────────────────────────────────────────────── */
+  $provenance := {
+    "format":               $opt(format),
+    "measurement_datetime": $opt(measurement_datetime),
+    "operator":             $opt(operator),
+    "laboratory":           $opt(laboratory),
+    "project_id":           $opt(project_id),
+    "source_file":          $opt(source_file),
+    "identity":             $opt(identity),
+    "remark":               $opt(remark)
+  };
+
+  /* ── Sample / specimen ──────────────────────────────────────────────────────── */
+  $sample := {
+    "sample_name":                $opt(sample_name),
+    "sample_mass_mg":             $optN(sample_mass_mg),
+    "material":                   $opt(material),
+    "reference_sample":           $opt(reference_sample),
+    "reference_mass_mg":          $optN(reference_mass_mg),
+    "sample_crucible_mass_mg":    $optN(sample_crucible_mass_mg),
+    "reference_crucible_mass_mg": $optN(reference_crucible_mass_mg)
+  };
+
+  /* ── Measurement conditions ──────────────────────────────────────────────────── */
+  $conditions := {
+    "crucible_type":              $opt(crucible_type),
+    "purge_gas":                  $opt(purge_gas),
+    "purge_gas_flow_rate_ml_min": $optN(purge_gas_flow_rate_ml_min),
+    "heating_rate_k_min":         $optN(heating_rate_k_min),
+    "temperature_start_degC":     $optN(temperature_start_degC),
+    "temperature_end_degC":       $optN(temperature_end_degC),
+    "segment":                    $opt(segment),
+    "measurement_range_uV":       $optN(measurement_range_uV),
+    "exo_sign":                   $optN(exo_sign)
+  };
+
+  /* ── Instrument & calibration ────────────────────────────────────────────────── */
+  $instrument := {
+    "manufacturer":               $opt(manufacturer),
+    "instrument_model":           $opt(instrument_model),
+    "baseline_correction_file":   $opt(baseline_correction_file),
+    "temperature_calibration_file": $opt(temperature_calibration_file),
+    "sensitivity_calibration_file": $opt(sensitivity_calibration_file),
+    "correction_code":            $opt(correction_code),
+    "tau_r":                      $opt(tau_r)
+  };
+
+  /* ── Assemble ────────────────────────────────────────────────────────────────── */
+  $doc := $merge([$base, $provenance, $sample, $conditions, $instrument]);
+  $doc := $exists($colSpecs) ? $merge([$doc, {"timeseries_column": $colSpecs}]) : $doc;
+  $doc := $exists($measured) ? $merge([$doc, {"measured_properties": $measured}]) : $doc;
+
+  $doc
 )
