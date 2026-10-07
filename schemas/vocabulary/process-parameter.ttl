@@ -5,6 +5,7 @@
 @prefix pp:     <https://w3id.org/dsms/process-parameter#> .
 @prefix dsmsht: <https://w3id.org/dsms/heattreatment#> .
 @prefix dnano:  <https://w3id.org/dsms/nanoindentation/> .
+@prefix dmech:  <https://w3id.org/dsms/mechanical-testing#> .
 
 # =============================================================================
 # DSMS process parameter type vocabulary
@@ -14,8 +15,9 @@
 # x-vocabulary URL: https://vocabulary.materials-data.space/api/vocabulary/namespaces/process-parameter/use-cases/all/terms
 # =============================================================================
 
-# ── Generic manufacturing parameters ─────────────────────────────────────────
+# ── Generic process parameters ────────────────────────────────────────────────
 pp:Temperature          a owl:Class ; rdfs:label "Temperature"@en .
+pp:TestTemperature      a owl:Class ; rdfs:label "Test Temperature"@en .
 pp:Pressure             a owl:Class ; rdfs:label "Pressure"@en .
 pp:Duration             a owl:Class ; rdfs:label "Duration"@en .
 pp:HeatingRate          a owl:Class ; rdfs:label "Heating Rate"@en .
@@ -34,6 +36,14 @@ pp:pH                   a owl:Class ; rdfs:label "pH"@en .
 pp:Viscosity            a owl:Class ; rdfs:label "Viscosity"@en .
 pp:Voltage              a owl:Class ; rdfs:label "Voltage"@en .
 pp:Current              a owl:Class ; rdfs:label "Current"@en .
+pp:Frequency            a owl:Class ; rdfs:label "Frequency"@en .
+pp:Amplitude            a owl:Class ; rdfs:label "Amplitude"@en .
+pp:Displacement         a owl:Class ; rdfs:label "Displacement"@en .
+pp:DisplacementRate     a owl:Class ; rdfs:label "Displacement Rate"@en .
+pp:StrainRate           a owl:Class ; rdfs:label "Strain Rate"@en .
+pp:Strain               a owl:Class ; rdfs:label "Strain"@en .
+pp:Stress               a owl:Class ; rdfs:label "Stress"@en .
+pp:Length               a owl:Class ; rdfs:label "Length"@en .
 
 # ── Heat treatment parameters ─────────────────────────────────────────────────
 # Source: schemas/manufacturing/heat-treatment/PMDCo — dsmsht: namespace
@@ -53,6 +63,17 @@ dsmsht:QuenchDelay                 a owl:Class ; rdfs:label "Quench Delay"@en .
 dsmsht:Atmosphere                  a owl:Class ; rdfs:label "Atmosphere (Heat Treatment)"@en .
 dsmsht:CoolingMedium               a owl:Class ; rdfs:label "Cooling Medium"@en .
 dsmsht:FurnaceType                 a owl:Class ; rdfs:label "Furnace Type"@en .
+
+# ── Mechanical characterization parameters ────────────────────────────────────
+# Source: schemas/characterization/generic/PMDCo and tensile-test schemas
+# dmech: namespace covers tensile, compression, bending, fatigue and DMA tests
+dmech:CrossheadSpeed          a owl:Class ; rdfs:label "Crosshead Speed"@en .
+dmech:GaugeLength             a owl:Class ; rdfs:label "Gauge Length"@en .
+dmech:ExtensometerGaugeLength a owl:Class ; rdfs:label "Extensometer Gauge Length"@en .
+dmech:ParallelLength          a owl:Class ; rdfs:label "Parallel Length"@en .
+dmech:PreloadForce            a owl:Class ; rdfs:label "Pre-load Force"@en .
+dmech:StressRatio             a owl:Class ; rdfs:label "Stress Ratio (R)"@en .
+dmech:NumberOfCycles          a owl:Class ; rdfs:label "Number of Cycles"@en .
 
 # ── Nanoindentation test parameters ───────────────────────────────────────────
 # Source: schemas/characterization/nanoindentation/PMDCo — dnano: namespace
