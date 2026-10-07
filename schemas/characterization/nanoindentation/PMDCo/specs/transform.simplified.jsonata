@@ -74,23 +74,15 @@
         "parameter_value": poisson_ratio, "parameter_unit": "Dimensionless (–)"}])
     : $conds;
 
-  /* ── Quality class: result label → dnano: controlled vocabulary IRI ──── */
-  /* Classes not yet in EMMO/PMDCo are minted in the dnano: namespace.
-     Align to EMMO nanoindentation module IRIs once confirmed. */
-  $qualityMap := {
-    "Mean Hardness HIT":               "dnano:MeanHardnessHIT",
-    "Std Dev Hardness HIT":            "dnano:StdDevHardnessHIT",
-    "Mean Elastic Modulus EIT":        "dnano:MeanElasticModulusEIT",
-    "Std Dev Elastic Modulus EIT":     "dnano:StdDevElasticModulusEIT",
-    "Mean Indentation Modulus Er":     "dnano:MeanIndentationModulusEr",
-    "Std Dev Indentation Modulus Er":  "dnano:StdDevIndentationModulusEr",
-    "Mean Reduced Modulus E*":         "dnano:MeanReducedModulusE",
-    "Std Dev Reduced Modulus E*":      "dnano:StdDevReducedModulusE",
-    "Mean Vickers Equivalent HVIT":    "dnano:MeanVickersHVIT",
-    "Std Dev Vickers Equivalent HVIT": "dnano:StdDevVickersHVIT",
-    "Mean Maximum Depth hmax":         "dnano:MeanMaximumDepthhmax",
-    "Std Dev Maximum Depth hmax":      "dnano:StdDevMaximumDepthhmax",
-    "Number of Valid Indentations":    "dnano:NumberOfValidIndentations"
+  /* ── Unit map: symbol → full QUDT IRI (for SDK x-vocabulary IRI match) ── */
+  $summaryUnitMap := {
+    "GPa":  "http://qudt.org/vocab/unit/GigaPA",
+    "um":   "http://qudt.org/vocab/unit/MicroM",
+    "µm":   "http://qudt.org/vocab/unit/MicroM",
+    "mN":   "http://qudt.org/vocab/unit/MilliN",
+    "%":    "http://qudt.org/vocab/unit/PERCENT",
+    "-":    "http://qudt.org/vocab/unit/UNITLESS",
+    "–":    "http://qudt.org/vocab/unit/UNITLESS"
   };
 
   /* ── Summary results: MeasurementDatum + quality individual + ScalarValueSpec ─ */
@@ -105,7 +97,7 @@
           "id":    $datumBase & "-smd",
           "label": $r.name,
           "is_about": {
-            "quality_type": $lookup($qualityMap, $r.name),
+            "quality_type": $r.name,
             "id":           $datumBase & "-quality",
             "quality_of":   $specimenIri
           },
@@ -113,7 +105,7 @@
             "type":         "obo:OBI_0001931",
             "id":           $datumBase & "-svs",
             "result_value": $r.value,
-            "result_unit":  $r.unit
+            "result_unit":  $exists($lookup($summaryUnitMap, $r.unit)) ? $lookup($summaryUnitMap, $r.unit) : $r.unit
           }
         }
       )}))

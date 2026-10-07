@@ -371,20 +371,7 @@ properties:
         label:
           title: Result Name
           type: string
-          enum:
-            - Mean Hardness HIT
-            - Std Dev Hardness HIT
-            - Mean Elastic Modulus EIT
-            - Std Dev Elastic Modulus EIT
-            - Mean Indentation Modulus Er
-            - Std Dev Indentation Modulus Er
-            - Mean Reduced Modulus E*
-            - Std Dev Reduced Modulus E*
-            - Mean Vickers Equivalent HVIT
-            - Std Dev Vickers Equivalent HVIT
-            - Mean Maximum Depth hmax
-            - Std Dev Maximum Depth hmax
-            - Number of Valid Indentations
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/all/terms"
         has_value_spec:
           title: Value Specification
           type: object
@@ -416,31 +403,7 @@ properties:
             result_unit:
               title: Unit
               type: string
-              enum:
-                - uqudt:GigaPA
-                - uqudt:MicroM
-                - uqudt:UNITLESS
-              options:
-                enum_titles:
-                  - GPa (gigapascal)
-                  - µm (micrometre)
-                  - "– (count / dimensionless)"
-              x-depends-on:
-                field: label
-                values:
-                  Mean Hardness HIT:             [uqudt:GigaPA]
-                  Std Dev Hardness HIT:          [uqudt:GigaPA]
-                  Mean Elastic Modulus EIT:      [uqudt:GigaPA]
-                  Std Dev Elastic Modulus EIT:   [uqudt:GigaPA]
-                  Mean Indentation Modulus Er:   [uqudt:GigaPA]
-                  Std Dev Indentation Modulus Er: [uqudt:GigaPA]
-                  Mean Reduced Modulus E*:       [uqudt:GigaPA]
-                  Std Dev Reduced Modulus E*:    [uqudt:GigaPA]
-                  Mean Vickers Equivalent HVIT:  [uqudt:UNITLESS]
-                  Std Dev Vickers Equivalent HVIT: [uqudt:UNITLESS]
-                  Mean Maximum Depth hmax:       [uqudt:MicroM]
-                  Std Dev Maximum Depth hmax:    [uqudt:MicroM]
-                  Number of Valid Indentations:  [uqudt:UNITLESS]
+              x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
         is_about:
           title: Quality Individual
           description: >-
@@ -453,36 +416,7 @@ properties:
               type: string
               options:
                 hidden: true
-              enum:
-                - dnano:MeanHardnessHIT
-                - dnano:StdDevHardnessHIT
-                - dnano:MeanElasticModulusEIT
-                - dnano:StdDevElasticModulusEIT
-                - dnano:MeanIndentationModulusEr
-                - dnano:StdDevIndentationModulusEr
-                - dnano:MeanReducedModulusE
-                - dnano:StdDevReducedModulusE
-                - dnano:MeanVickersHVIT
-                - dnano:StdDevVickersHVIT
-                - dnano:MeanMaximumDepthhmax
-                - dnano:StdDevMaximumDepthhmax
-                - dnano:NumberOfValidIndentations
-              x-depends-on:
-                field: label
-                values:
-                  Mean Hardness HIT:               [dnano:MeanHardnessHIT]
-                  Std Dev Hardness HIT:            [dnano:StdDevHardnessHIT]
-                  Mean Elastic Modulus EIT:        [dnano:MeanElasticModulusEIT]
-                  Std Dev Elastic Modulus EIT:     [dnano:StdDevElasticModulusEIT]
-                  Mean Indentation Modulus Er:     [dnano:MeanIndentationModulusEr]
-                  Std Dev Indentation Modulus Er:  [dnano:StdDevIndentationModulusEr]
-                  "Mean Reduced Modulus E*":       [dnano:MeanReducedModulusE]
-                  "Std Dev Reduced Modulus E*":    [dnano:StdDevReducedModulusE]
-                  Mean Vickers Equivalent HVIT:    [dnano:MeanVickersHVIT]
-                  Std Dev Vickers Equivalent HVIT: [dnano:StdDevVickersHVIT]
-                  Mean Maximum Depth hmax:         [dnano:MeanMaximumDepthhmax]
-                  Std Dev Maximum Depth hmax:      [dnano:StdDevMaximumDepthhmax]
-                  Number of Valid Indentations:    [dnano:NumberOfValidIndentations]
+              x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/all/terms"
             id:
               title: Quality Individual ID
               type: string
