@@ -207,27 +207,7 @@ properties:
         label:
           title: Result Name
           type: string
-          enum:
-            - Hardness HIT
-            - Elastic Modulus EIT
-            - Reduced Modulus E*
-            - Indentation Modulus Er
-            - Vickers Equivalent HVIT
-            - Maximum Force Fmax
-            - Maximum Depth hmax
-            - Contact Depth hc
-            - Residual Depth hr
-            - Plastic Depth hp
-            - Contact Stiffness S
-            - Projected Contact Area Ap
-            - Elastic Work Welast
-            - Plastic Work Wplast
-            - Total Work Wtotal
-            - Elastic Work Ratio nIT
-            - Reverse Indentation Ratio RIT
-            - Loading Exponent m
-            - Geometry Factor Epsilon
-            - Fit Quality R2
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/all/terms"
         has_value_spec:
           title: Value Specification
           type: object
@@ -259,48 +239,7 @@ properties:
             result_unit:
               title: Unit
               type: string
-              enum:
-                - uqudt:GigaPA
-                - uqudt:MicroM
-                - uqudt:MicroM2
-                - uqudt:MilliN
-                - uqudt:MilliN-PER-MicroM
-                - uqudt:PERCENT
-                - uqudt:UNITLESS
-                - uqudt:MicroJ
-              options:
-                enum_titles:
-                  - GPa (gigapascal)
-                  - "um (micrometre)"
-                  - "um2 (square micrometre)"
-                  - mN (millinewton)
-                  - "mN/um (millinewton per micrometre)"
-                  - "% (percent)"
-                  - "- (dimensionless)"
-                  - "uJ (microjoule)"
-              x-depends-on:
-                field: label
-                values:
-                  Hardness HIT:              [uqudt:GigaPA]
-                  Elastic Modulus EIT:       [uqudt:GigaPA]
-                  Reduced Modulus E*:        [uqudt:GigaPA]
-                  Indentation Modulus Er:    [uqudt:GigaPA]
-                  Vickers Equivalent HVIT:   [uqudt:UNITLESS]
-                  Maximum Force Fmax:        [uqudt:MilliN]
-                  Maximum Depth hmax:        [uqudt:MicroM]
-                  Contact Depth hc:          [uqudt:MicroM]
-                  Residual Depth hr:         [uqudt:MicroM]
-                  Plastic Depth hp:          [uqudt:MicroM]
-                  Contact Stiffness S:       [uqudt:MilliN-PER-MicroM]
-                  Projected Contact Area Ap: [uqudt:MicroM2]
-                  Elastic Work Welast:       [uqudt:MicroJ]
-                  Plastic Work Wplast:       [uqudt:MicroJ]
-                  Total Work Wtotal:         [uqudt:MicroJ]
-                  Elastic Work Ratio nIT:    [uqudt:PERCENT]
-                  Reverse Indentation Ratio RIT: [uqudt:PERCENT]
-                  Loading Exponent m:        [uqudt:UNITLESS]
-                  Geometry Factor Epsilon:   [uqudt:UNITLESS]
-                  Fit Quality R2:            [uqudt:UNITLESS]
+              x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
         is_about:
           title: Quality Individual
           description: >-
@@ -313,50 +252,7 @@ properties:
               type: string
               options:
                 hidden: true
-              enum:
-                - dnano:HardnessHIT
-                - dnano:ElasticModulusEIT
-                - dnano:ReducedModulusE
-                - dnano:IndentationModulusEr
-                - dnano:VickersHVIT
-                - dnano:MaximumForceFmax
-                - dnano:MaximumDepthhmax
-                - dnano:ContactDepthhc
-                - dnano:ResidualDepthhR
-                - dnano:PlasticDepthhp
-                - dnano:ContactStiffnessS
-                - dnano:ProjectedContactAreaAp
-                - dnano:ElasticWorkWelast
-                - dnano:PlasticWorkWplast
-                - dnano:TotalWorkWtotal
-                - dnano:ElasticWorkRatioNIT
-                - dnano:ReverseIndentationRatioRIT
-                - dnano:LoadingExponentM
-                - dnano:GeometryFactorEpsilon
-                - dnano:FitQualityR2
-              x-depends-on:
-                field: label
-                values:
-                  Hardness HIT:                  [dnano:HardnessHIT]
-                  Elastic Modulus EIT:           [dnano:ElasticModulusEIT]
-                  "Reduced Modulus E*":          [dnano:ReducedModulusE]
-                  Indentation Modulus Er:        [dnano:IndentationModulusEr]
-                  Vickers Equivalent HVIT:       [dnano:VickersHVIT]
-                  Maximum Force Fmax:            [dnano:MaximumForceFmax]
-                  Maximum Depth hmax:            [dnano:MaximumDepthhmax]
-                  Contact Depth hc:              [dnano:ContactDepthhc]
-                  Residual Depth hr:             [dnano:ResidualDepthhR]
-                  Plastic Depth hp:              [dnano:PlasticDepthhp]
-                  Contact Stiffness S:           [dnano:ContactStiffnessS]
-                  Projected Contact Area Ap:     [dnano:ProjectedContactAreaAp]
-                  Elastic Work Welast:           [dnano:ElasticWorkWelast]
-                  Plastic Work Wplast:           [dnano:PlasticWorkWplast]
-                  Total Work Wtotal:             [dnano:TotalWorkWtotal]
-                  Elastic Work Ratio nIT:        [dnano:ElasticWorkRatioNIT]
-                  Reverse Indentation Ratio RIT: [dnano:ReverseIndentationRatioRIT]
-                  Loading Exponent m:            [dnano:LoadingExponentM]
-                  Geometry Factor Epsilon:       [dnano:GeometryFactorEpsilon]
-                  Fit Quality R2:                [dnano:FitQualityR2]
+              x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/all/terms"
             id:
               title: Quality Individual ID
               type: string
