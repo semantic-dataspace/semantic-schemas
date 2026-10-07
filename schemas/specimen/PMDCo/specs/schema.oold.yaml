@@ -142,8 +142,8 @@ properties:
     items:
       type: string
     readOnly: true
-    const: ["bfo:0000030", "pmdco:PMD_0000068"]
-    default: ["bfo:0000030", "pmdco:PMD_0000068"]
+    const: ["obo:BFO_0000030", "pmdco:PMD_0000068"]
+    default: ["obo:BFO_0000030", "pmdco:PMD_0000068"]
     options:
       enum_titles:
         - bfo:Object
@@ -190,8 +190,8 @@ properties:
         type: array
         items: {type: string}
         readOnly: true
-        const: ["bfo:0000202"]
-        default: ["bfo:0000202"]
+        const: ["obo:BFO_0000202"]
+        default: ["obo:BFO_0000202"]
         options:
           enum_titles:
             - bfo:TemporalInterval
@@ -210,8 +210,8 @@ properties:
             type: array
             items: {type: string}
             readOnly: true
-            const: ["bfo:0000148"]
-            default: ["bfo:0000148"]
+            const: ["obo:BFO_0000148"]
+            default: ["obo:BFO_0000148"]
           id:
             title: ID
             type: string
@@ -333,8 +333,8 @@ properties:
               type: array
               items: {type: string}
               readOnly: true
-              const: ["obi:0001931"]
-              default: ["obi:0001931"]
+              const: ["obo:OBI_0001931"]
+              default: ["obo:OBI_0001931"]
               options:
                 enum_titles:
                   - obi:ScalarValueSpecification

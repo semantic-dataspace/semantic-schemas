@@ -52,7 +52,7 @@
       "id":         "phys-prop-" & $string($i + 1) & "-" & $specId,
       "inheres_in": $specId,
       "specified_by_value": {
-        "type":  ["obi:0001931"],
+        "type":  ["obo:OBI_0001931"],
         "id":    "phys-prop-svs-" & $string($i + 1) & "-" & $specId,
         "value": $p.value,
         "unit":  $resolveUnit($p.unit)
@@ -68,7 +68,7 @@
     "id":         "mass-" & $specId,
     "inheres_in": $specId,
     "specified_by_value": {
-      "type":  ["obi:0001931"],
+      "type":  ["obo:OBI_0001931"],
       "id":    "mass-svs-" & $specId,
       "value": mass_value,
       "unit":  $resolveUnit($exists(mass_unit) ? mass_unit : "g")
@@ -84,20 +84,20 @@
   /* ── Temporal interval (BFO_0000202 + instants) ─────────────────────── */
   /* Build exists_at only when at least a start date is provided.          */
   $startInstant := $exists(temporal_start) ? {
-    "type": ["bfo:0000148"],
+    "type": ["obo:BFO_0000148"],
     "id":   $specId & "-temporal-start",
     "instant_date": temporal_start
   } : undefined;
 
   $endInstant := $exists(temporal_end) ? {
-    "type": ["bfo:0000148"],
+    "type": ["obo:BFO_0000148"],
     "id":   $specId & "-temporal-end",
     "instant_date": temporal_end
   } : undefined;
 
   $temporalInterval := $exists($startInstant) ? $merge([
     {
-      "type": ["bfo:0000202"],
+      "type": ["obo:BFO_0000202"],
       "id":   $specId & "-temporal-interval",
       "has_first_instant": $startInstant
     },
@@ -112,7 +112,7 @@
   /* ── OO-LD output ────────────────────────────────────────────────────── */
   $base := {
     "conforms_to":         $schemaUri,
-    "type":                ["bfo:0000030", "pmdco:PMD_0000068"],
+    "type":                ["obo:BFO_0000030", "pmdco:PMD_0000068"],
     "id":                  $specId,
     "label":               label,
     "material":            material,
