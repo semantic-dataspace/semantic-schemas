@@ -1,0 +1,255 @@
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:   <http://www.w3.org/2004/02/skos/core#> .
+@prefix obo:    <http://purl.obolibrary.org/obo/> .
+
+# DSMS nanoindentation quality class namespace
+@prefix dnano:  <https://w3id.org/dsms/nanoindentation#> .
+
+# =============================================================================
+# Characterization result types — Nanoindentation (brand-new DSMS terms)
+#
+# Vocabulary service namespace : characterization-result
+# Use-case served              : nanoindentation, all
+# Complementary file           : characterization-result-existing.ttl
+#
+# These classes are not yet in EMMO nanoindentation or PMDCo and are defined
+# here as DSMS-specific terms until a stable home in a standard ontology is
+# confirmed. Class IRIs: https://w3id.org/dsms/nanoindentation#
+#
+# Labels MUST match the strings used in schemas and parsers exactly — the
+# vocabulary service resolves result names to class IRIs via label matching.
+# Change a label only in concert with all consuming schemas/notebooks.
+#
+# All classes are subclasses of obo:BFO_0000019 (Quality).
+# Use-case: per-indent measurement results (dataset/nanoindentation/PMDCo)
+# and per-session statistical aggregates (characterization/nanoindentation/PMDCo).
+# =============================================================================
+
+# ── Per-indent result classes ────────────────────────────────────────────────
+
+# Mechanical response
+dnano:HardnessHIT
+    a owl:Class ;
+    rdfs:label "Hardness HIT"@en ;
+    skos:altLabel "HIT"@en ;
+    skos:definition "Indentation hardness per ISO 14577: Fmax / Ap. Units: GPa."@en ;
+    rdfs:subClassOf obo:BFO_0000019 .
+
+dnano:ElasticModulusEIT
+    a owl:Class ;
+    rdfs:label "Elastic Modulus EIT"@en ;
+    skos:altLabel "EIT"@en ;
+    skos:definition "Indentation elastic modulus derived from Oliver-Pharr unloading analysis. Units: GPa."@en ;
+    rdfs:subClassOf obo:BFO_0000019 .
+
+dnano:ReducedModulusE
+    a owl:Class ;
+    rdfs:label "Reduced Modulus E*"@en ;
+    skos:altLabel "E*"@en ;
+    skos:definition "Combined elastic modulus of indenter-sample contact (tip + specimen elasticity). Units: GPa."@en ;
+    rdfs:subClassOf obo:BFO_0000019 .
+
+dnano:IndentationModulusEr
+    a owl:Class ;
+    rdfs:label "Indentation Modulus Er"@en ;
+    skos:altLabel "Er"@en ;
+    skos:definition "Reduced modulus corrected for diamond indenter compliance (plane-strain modulus). Units: GPa."@en ;
+    rdfs:subClassOf obo:BFO_0000019 .
+
+dnano:VickersHVIT
+    a owl:Class ;
+    rdfs:label "Vickers Equivalent HVIT"@en ;
+    skos:altLabel "HVIT"@en ;
+    skos:definition "HIT converted to Vickers scale via geometric equivalence factor. Dimensionless (HV)."@en ;
+    rdfs:subClassOf obo:BFO_0000019 .
+
+# Force / depth geometry
+dnano:MaximumForceFmax
+    a owl:Class ;
+    rdfs:label "Maximum Force Fmax"@en ;
+    skos:altLabel "Fmax"@en ;
+    skos:definition "Peak applied force at maximum indentation depth. Units: mN."@en ;
+    rdfs:subClassOf obo:BFO_0000019 .
+
+dnano:MaximumDepthhmax
+    a owl:Class ;
+    rdfs:label "Maximum Depth hmax"@en ;
+    skos:altLabel "hmax"@en ;
+    skos:definition "Total indentation depth at maximum applied force (elastic + plastic). Units: µm."@en ;
+    rdfs:subClassOf obo:BFO_0000019 .
+
+dnano:ContactDepthhc
+    a owl:Class ;
+    rdfs:label "Contact Depth hc"@en ;
+    skos:altLabel "hc"@en ;
+    skos:definition "Depth of indenter-specimen contact at maximum force (Oliver-Pharr). Units: µm."@en ;
+    rdfs:subClassOf obo:BFO_0000019 .
+
+dnano:ResidualDepthhR
+    a owl:Class ;
+    rdfs:label "Residual Depth hr"@en ;
+    skos:altLabel "hr"@en ;
+    skos:definition "Depth of residual impression after full unloading. Units: µm."@en ;
+    rdfs:subClassOf obo:BFO_0000019 .
+
+dnano:PlasticDepthhp
+    a owl:Class ;
+    rdfs:label "Plastic Depth hp"@en ;
+    skos:altLabel "hp"@en ;
+    skos:definition "Irrecoverable (plastic) component of indentation depth. Units: µm."@en ;
+    rdfs:subClassOf obo:BFO_0000019 .
+
+dnano:ContactStiffnessS
+    a owl:Class ;
+    rdfs:label "Contact Stiffness S"@en ;
+    skos:altLabel "S"@en ;
+    skos:definition "Slope of the unloading curve at maximum depth (dF/dh). Units: mN/µm."@en ;
+    rdfs:subClassOf obo:BFO_0000019 .
+
+dnano:ProjectedContactAreaAp
+    a owl:Class ;
+    rdfs:label "Projected Contact Area Ap"@en ;
+    skos:altLabel "Ap"@en ;
+    skos:definition "Projected contact area at maximum force, from hc via calibrated tip area function. Units: µm²."@en ;
+    rdfs:subClassOf obo:BFO_0000019 .
+
+# Work / energy
+dnano:ElasticWorkWelast
+    a owl:Class ;
+    rdfs:label "Elastic Work Welast"@en ;
+    skos:altLabel "Welast"@en ;
+    skos:definition "Recoverable (elastic) work: area between loading and unloading curves. Units: µJ."@en ;
+    rdfs:subClassOf obo:BFO_0000019 .
+
+dnano:PlasticWorkWplast
+    a owl:Class ;
+    rdfs:label "Plastic Work Wplast"@en ;
+    skos:altLabel "Wplast"@en ;
+    skos:definition "Irrecoverable (plastic) work during indentation. Units: µJ."@en ;
+    rdfs:subClassOf obo:BFO_0000019 .
+
+dnano:TotalWorkWtotal
+    a owl:Class ;
+    rdfs:label "Total Work Wtotal"@en ;
+    skos:altLabel "Wtotal"@en ;
+    skos:definition "Total work during indentation (Welast + Wplast). Units: µJ."@en ;
+    rdfs:subClassOf obo:BFO_0000019 .
+
+# Derived ratios / model parameters
+dnano:ElasticWorkRatioNIT
+    a owl:Class ;
+    rdfs:label "Elastic Work Ratio nIT"@en ;
+    skos:altLabel "nIT"@en ;
+    skos:definition "Welast / Wtotal — dimensionless elastic recovery index. Units: %."@en ;
+    rdfs:subClassOf obo:BFO_0000019 .
+
+dnano:ReverseIndentationRatioRIT
+    a owl:Class ;
+    rdfs:label "Reverse Indentation Ratio RIT"@en ;
+    skos:altLabel "RIT"@en ;
+    skos:definition "Ratio characterising reverse deformation on unloading. Units: %."@en ;
+    rdfs:subClassOf obo:BFO_0000019 .
+
+dnano:LoadingExponentM
+    a owl:Class ;
+    rdfs:label "Loading Exponent m"@en ;
+    skos:altLabel "m"@en ;
+    skos:definition "Exponent in power-law fit F = C·hᵐ to the loading segment (Oliver-Pharr). Dimensionless."@en ;
+    rdfs:subClassOf obo:BFO_0000019 .
+
+dnano:GeometryFactorEpsilon
+    a owl:Class ;
+    rdfs:label "Geometry Factor Epsilon"@en ;
+    skos:altLabel "ε"@en ;
+    skos:definition "Correction factor ε relating contact depth hc to compliance (≈ 0.75 Berkovich). Dimensionless."@en ;
+    rdfs:subClassOf obo:BFO_0000019 .
+
+dnano:FitQualityR2
+    a owl:Class ;
+    rdfs:label "Fit Quality R2"@en ;
+    skos:altLabel "R²"@en ;
+    skos:definition "Coefficient of determination for power-law fit to unloading segment. Dimensionless."@en ;
+    rdfs:subClassOf obo:BFO_0000019 .
+
+# ── Per-session statistical aggregates ───────────────────────────────────────
+# Used by characterization/nanoindentation/PMDCo (experiment/session level).
+# Labels are "Mean/Std Dev <base-label> (session)" to distinguish from per-indent.
+
+dnano:MeanHardnessHIT
+    a owl:Class ;
+    rdfs:label "Mean Hardness HIT"@en ;
+    skos:definition "Arithmetic mean of HIT over all valid indents in a session. Units: GPa."@en ;
+    rdfs:subClassOf dnano:HardnessHIT .
+
+dnano:StdDevHardnessHIT
+    a owl:Class ;
+    rdfs:label "Std Dev Hardness HIT"@en ;
+    skos:definition "Sample standard deviation of HIT over all valid indents in a session. Units: GPa."@en ;
+    rdfs:subClassOf dnano:HardnessHIT .
+
+dnano:MeanElasticModulusEIT
+    a owl:Class ;
+    rdfs:label "Mean Elastic Modulus EIT"@en ;
+    skos:definition "Arithmetic mean of EIT over all valid indents in a session. Units: GPa."@en ;
+    rdfs:subClassOf dnano:ElasticModulusEIT .
+
+dnano:StdDevElasticModulusEIT
+    a owl:Class ;
+    rdfs:label "Std Dev Elastic Modulus EIT"@en ;
+    skos:definition "Sample standard deviation of EIT over all valid indents in a session. Units: GPa."@en ;
+    rdfs:subClassOf dnano:ElasticModulusEIT .
+
+dnano:MeanIndentationModulusEr
+    a owl:Class ;
+    rdfs:label "Mean Indentation Modulus Er"@en ;
+    skos:definition "Arithmetic mean of Er over all valid indents in a session. Units: GPa."@en ;
+    rdfs:subClassOf dnano:IndentationModulusEr .
+
+dnano:StdDevIndentationModulusEr
+    a owl:Class ;
+    rdfs:label "Std Dev Indentation Modulus Er"@en ;
+    skos:definition "Sample standard deviation of Er over all valid indents in a session. Units: GPa."@en ;
+    rdfs:subClassOf dnano:IndentationModulusEr .
+
+dnano:MeanReducedModulusE
+    a owl:Class ;
+    rdfs:label "Mean Reduced Modulus E*"@en ;
+    skos:definition "Arithmetic mean of E* over all valid indents in a session. Units: GPa."@en ;
+    rdfs:subClassOf dnano:ReducedModulusE .
+
+dnano:StdDevReducedModulusE
+    a owl:Class ;
+    rdfs:label "Std Dev Reduced Modulus E*"@en ;
+    skos:definition "Sample standard deviation of E* over all valid indents in a session. Units: GPa."@en ;
+    rdfs:subClassOf dnano:ReducedModulusE .
+
+dnano:MeanVickersHVIT
+    a owl:Class ;
+    rdfs:label "Mean Vickers Equivalent HVIT"@en ;
+    skos:definition "Arithmetic mean of HVIT over all valid indents in a session. Dimensionless (HV)."@en ;
+    rdfs:subClassOf dnano:VickersHVIT .
+
+dnano:StdDevVickersHVIT
+    a owl:Class ;
+    rdfs:label "Std Dev Vickers Equivalent HVIT"@en ;
+    skos:definition "Sample standard deviation of HVIT over all valid indents in a session. Dimensionless."@en ;
+    rdfs:subClassOf dnano:VickersHVIT .
+
+dnano:MeanMaximumDepthhmax
+    a owl:Class ;
+    rdfs:label "Mean Maximum Depth hmax"@en ;
+    skos:definition "Arithmetic mean of hmax over all valid indents in a session. Units: µm."@en ;
+    rdfs:subClassOf dnano:MaximumDepthhmax .
+
+dnano:StdDevMaximumDepthhmax
+    a owl:Class ;
+    rdfs:label "Std Dev Maximum Depth hmax"@en ;
+    skos:definition "Sample standard deviation of hmax over all valid indents in a session. Units: µm."@en ;
+    rdfs:subClassOf dnano:MaximumDepthhmax .
+
+dnano:NumberOfValidIndentations
+    a owl:Class ;
+    rdfs:label "Number of Valid Indentations"@en ;
+    skos:definition "Count of indents passing all quality criteria in a session. Dimensionless integer."@en ;
+    rdfs:subClassOf obo:BFO_0000019 .
