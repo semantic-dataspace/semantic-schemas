@@ -213,8 +213,7 @@ properties:
           type: number
         parameter_unit:
           title: Unit
-          description: >-
-            QUDT unit IRI for this parameter value (e.g. uqudt:PER-SEC, uqudt:DEG_C).
-            Use a QUDT unit IRI for interoperability.
+          description: Search and select a QUDT unit from the vocabulary service.
           type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
     default: []

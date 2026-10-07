@@ -22,9 +22,10 @@
   $conditions := $exists(conditions) and $count(conditions) > 0
     ? $map(conditions, function($c, $i) {(
         $node := {
-          "type": "pmdco:PMD_0000013",
-          "id":   $stepId & "-condition-" & $string($i + 1),
-          "parameter_label": $c.name
+          "type":            "pmdco:PMD_0000013",
+          "id":              $stepId & "-condition-" & $string($i + 1),
+          "parameter_label": $c.name,
+          "parameter_type":  $exists($c.type_iri) ? $c.type_iri : $c.name
         };
         $withValue := $exists($c.value) ? $merge([$node, {"parameter_value": $c.value}]) : $node;
         $exists($c.unit) ? $merge([$withValue, {"parameter_unit": $c.unit}]) : $withValue
