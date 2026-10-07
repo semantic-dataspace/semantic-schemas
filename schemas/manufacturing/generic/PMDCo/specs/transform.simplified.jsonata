@@ -13,6 +13,8 @@
    *     name              string   required
    *     value             number   optional
    *     unit              string   optional — vocabulary label ("Degree Celsius (°C)") or full IRI
+   *     type              string   optional — parameter type: vocabulary label or full IRI
+   *                                           (type_iri accepted as alias for backward compat)
    *
    * Run with the jsonata-python CLI:
    *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
@@ -36,8 +38,9 @@
           "id":   $procId & "-param-" & $string($i + 1),
           "parameter_label": $p.name
         };
-        $withType  := $exists($p.type_iri)   ? $merge([$node,      {"parameter_type":  $p.type_iri}]) : $node;
-        $withValue := $exists($p.value)       ? $merge([$withType,  {"parameter_value": $p.value}])    : $withType;
+        $resolvedType := $exists($p.type_iri) ? $p.type_iri : ($exists($p.type) ? $p.type : undefined);
+        $withType  := $exists($resolvedType)  ? $merge([$node,      {"parameter_type":  $resolvedType}]) : $node;
+        $withValue := $exists($p.value)       ? $merge([$withType,  {"parameter_value": $p.value}])      : $withType;
         $exists($p.unit) ? $merge([$withValue, {"parameter_unit": $p.unit}]) : $withValue
       )})
     : undefined;
