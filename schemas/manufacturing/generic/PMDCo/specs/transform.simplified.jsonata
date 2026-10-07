@@ -12,7 +12,7 @@
    *   process_attributes  array    optional
    *     name              string   required
    *     value             number   optional
-   *     unit              string   optional — SI symbol ("°C", "h", "MPa") or uqudt: CURIE
+   *     unit              string   optional — vocabulary label ("Degree Celsius (°C)") or full IRI
    *
    * Run with the jsonata-python CLI:
    *   python -m jsonata -e transform.jsonata -i ../docs/example.input.json
@@ -23,42 +23,6 @@
    * Update $schemaUri whenever x-schema-version in specs/schema.oold.yaml changes.
    */
   $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/manufacturing-generic-PMDCo-v0.2.1/schemas/manufacturing/generic/PMDCo/specs/schema.oold.generated.json";
-
-  /* ── Unit label → QUDT unit full IRI ────────────────────────────────────── */
-  /* Full IRIs required: vocabulary-backed parameter_unit field stores full IRIs. */
-  $ubase := "http://qudt.org/vocab/unit/";
-  $unitMap := {
-    "°C":     $ubase & "DEG_C",
-    "K":      $ubase & "K",
-    "h":      $ubase & "HR",
-    "min":    $ubase & "MIN",
-    "s":      $ubase & "SEC",
-    "°C/min": $ubase & "K-PER-MIN",
-    "K/min":  $ubase & "K-PER-MIN",
-    "K/s":    $ubase & "K-PER-SEC",
-    "MPa":    $ubase & "MegaPascal",
-    "GPa":    $ubase & "GigaPA",
-    "kPa":    $ubase & "KiloPA",
-    "Pa":     $ubase & "PA",
-    "bar":    $ubase & "BAR",
-    "µm":     $ubase & "MicroM",
-    "um":     $ubase & "MicroM",
-    "nm":     $ubase & "NanoM",
-    "mm":     $ubase & "MilliM",
-    "cm":     $ubase & "CentiM",
-    "m":      $ubase & "M",
-    "mN":     $ubase & "MilliN",
-    "N":      $ubase & "N",
-    "kN":     $ubase & "KiloN",
-    "1/s":    $ubase & "PER-SEC",
-    "Hz":     $ubase & "HZ",
-    "%":      $ubase & "PERCENT",
-    "kWh":    $ubase & "KiloW-HR",
-    "J":      $ubase & "J",
-    "kJ":     $ubase & "KiloJ",
-    "–":      $ubase & "UNITLESS",
-    "-":      $ubase & "UNITLESS"
-  };
 
   /* ── Node IDs ────────────────────────────────────────────────────────────── */
   $slug   := $replace($lowercase($trim(process_name)), /[^a-z0-9]+/, "-");
@@ -74,10 +38,7 @@
         };
         $withType  := $exists($p.type_iri)   ? $merge([$node,      {"parameter_type":  $p.type_iri}]) : $node;
         $withValue := $exists($p.value)       ? $merge([$withType,  {"parameter_value": $p.value}])    : $withType;
-        $resolvedUnit := $exists($p.unit)
-          ? ($lookup($unitMap, $p.unit) != null ? $lookup($unitMap, $p.unit) : $p.unit)
-          : undefined;
-        $exists($resolvedUnit) ? $merge([$withValue, {"parameter_unit": $resolvedUnit}]) : $withValue
+        $exists($p.unit) ? $merge([$withValue, {"parameter_unit": $p.unit}]) : $withValue
       )})
     : undefined;
 

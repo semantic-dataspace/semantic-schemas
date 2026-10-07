@@ -15,7 +15,7 @@
    *     value             number   optional (quantitative parameters)
    *               OR      string   optional (qualitative parameters: atmosphere, cooling medium,
    *                                furnace type). Compound label built as "name: value" in RDF.
-   *     unit              string   optional -- SI symbol ("degC", "h", ...) or uqudt: CURIE
+   *     unit              string   optional -- vocabulary label ("Degree Celsius (°C)") or full IRI
    *     type_iri          string   optional -- override auto-derived parameter_type IRI
    *
    * SDK usage: no need to supply type_iri -- the transform auto-injects it from the
@@ -72,21 +72,6 @@
     "Furnace Type":               $dsmsht & "FurnaceType"
   };
 
-  /* -- Unit label -> QUDT unit full IRI --------------------------------------------- */
-  /* Full IRIs required: vocabulary-backed parameter_unit field stores full IRIs.       */
-  $ubase := "http://qudt.org/vocab/unit/";
-  $unitMap := {
-    "°C":    $ubase & "DEG_C",
-    "degC":  $ubase & "DEG_C",
-    "K":     $ubase & "K",
-    "h":     $ubase & "HR",
-    "min":   $ubase & "MIN",
-    "s":     $ubase & "SEC",
-    "C/min": $ubase & "K-PER-MIN",
-    "K/min": $ubase & "K-PER-MIN",
-    "K/s":   $ubase & "K-PER-SEC"
-  };
-
   /* -- Node IDs --------------------------------------------------------------------- */
   $slug   := $replace($lowercase($trim(process_name)), /[^a-z0-9]+/, "-");
   $procId := $exists(process_id) ? process_id : "process-" & $slug;
@@ -115,12 +100,9 @@
           ? $merge([$withType, {"parameter_value": $p.value}])
           : $withType;
 
-        /* parameter_unit: resolve SI label to QUDT CURIE; pass through if already CURIE */
-        $resolvedUnit := $exists($p.unit)
-          ? ($lookup($unitMap, $p.unit) != null ? $lookup($unitMap, $p.unit) : $p.unit)
-          : undefined;
-        $exists($resolvedUnit)
-          ? $merge([$withValue, {"parameter_unit": $resolvedUnit}])
+        /* parameter_unit: pass vocabulary label or full IRI — SDK resolves */
+        $exists($p.unit)
+          ? $merge([$withValue, {"parameter_unit": $p.unit}])
           : $withValue
       )})
     : undefined;

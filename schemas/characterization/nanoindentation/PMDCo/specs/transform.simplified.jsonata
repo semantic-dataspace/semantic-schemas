@@ -28,25 +28,10 @@
    *   summary_results    array    optional
    *     name             string   e.g. "Mean Hardness HIT"
    *     value            number
-   *     unit             string   "GPa" | "um" | "-"
+   *     unit             string   vocabulary label, e.g. "Gigapascal (GPa)" | "Micrometre (µm)" | "Dimensionless (–)"
    */
 
   $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/characterization/nanoindentation/PMDCo/specs/schema.oold.yaml";
-
-  /* ── Unit label → QUDT unit full IRI ─────────────────────────────────── */
-  /* Full IRIs required: vocabulary-backed fields store full IRIs.          */
-  $ubase := "http://qudt.org/vocab/unit/";
-  $unitMap := {
-    "GPa": $ubase & "GigaPA",
-    "mN":  $ubase & "MilliN",
-    "um":  $ubase & "MicroM",
-    "%":   $ubase & "PERCENT",
-    "-":   $ubase & "UNITLESS",
-    "uJ":  $ubase & "MicroJ",
-    "1/s": $ubase & "PER-SEC",
-    "s":   $ubase & "SEC",
-    "Hz":  $ubase & "HZ"
-  };
 
   /* ── Capture document fields as $ vars for use in closures ───────────── */
   $specimenIri := specimen_iri;
@@ -54,39 +39,39 @@
   $expId       := $exists(experiment_id) ? experiment_id : "nanoindentation-experiment-" & $slug;
 
   /* ── Test conditions (ParameterSpecification nodes) ──────────────────── */
-  /* Full IRIs for parameter_type and parameter_unit: vocabulary-backed     */
-  /* fields store and expect full IRIs, not CURIEs.                         */
+  /* parameter_unit: vocabulary label strings — SDK resolves to IRI+label.  */
+  /* parameter_type: full IRIs from dnano: namespace.                        */
   $dnano := "https://w3id.org/dsms/nanoindentation#";
   $conds := [];
   $conds := $exists(max_depth)
     ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-max-depth",
         "parameter_label": "Max Depth", "parameter_type": $dnano & "MaxDepth",
-        "parameter_value": max_depth, "parameter_unit": $ubase & "MicroM"}])
+        "parameter_value": max_depth, "parameter_unit": "Micrometre (µm)"}])
     : $conds;
   $conds := $exists(max_load)
     ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-max-load",
         "parameter_label": "Max Load", "parameter_type": $dnano & "MaxLoad",
-        "parameter_value": max_load, "parameter_unit": $ubase & "MilliN"}])
+        "parameter_value": max_load, "parameter_unit": "Millinewton (mN)"}])
     : $conds;
   $conds := $exists(loading_rate)
     ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-loading-rate",
         "parameter_label": "Loading Rate", "parameter_type": $dnano & "LoadingRate",
-        "parameter_value": loading_rate, "parameter_unit": $ubase & "PER-SEC"}])
+        "parameter_value": loading_rate, "parameter_unit": "Per Second (1/s)"}])
     : $conds;
   $conds := $exists(hold_time)
     ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-hold-time",
         "parameter_label": "Hold Time", "parameter_type": $dnano & "HoldTime",
-        "parameter_value": hold_time, "parameter_unit": $ubase & "SEC"}])
+        "parameter_value": hold_time, "parameter_unit": "Second (s)"}])
     : $conds;
   $conds := $exists(acquisition_rate)
     ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-acq-rate",
         "parameter_label": "Acquisition Rate", "parameter_type": $dnano & "AcquisitionRate",
-        "parameter_value": acquisition_rate, "parameter_unit": $ubase & "HZ"}])
+        "parameter_value": acquisition_rate, "parameter_unit": "Hertz (Hz)"}])
     : $conds;
   $conds := $exists(poisson_ratio)
     ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-poisson",
         "parameter_label": "Assumed Poisson's Ratio", "parameter_type": $dnano & "PoissonRatio",
-        "parameter_value": poisson_ratio, "parameter_unit": $ubase & "UNITLESS"}])
+        "parameter_value": poisson_ratio, "parameter_unit": "Dimensionless (–)"}])
     : $conds;
 
   /* ── Quality class: result label → dnano: controlled vocabulary IRI ──── */
@@ -128,7 +113,7 @@
             "type":         "obo:OBI_0001931",
             "id":           $datumBase & "-svs",
             "result_value": $r.value,
-            "result_unit":  $lookup($unitMap, $r.unit)
+            "result_unit":  $r.unit
           }
         }
       )}))
