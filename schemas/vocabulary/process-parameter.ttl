@@ -4,7 +4,7 @@
 
 @prefix pp:     <https://w3id.org/dsms/process-parameter#> .
 @prefix dsmsht: <https://w3id.org/dsms/heattreatment#> .
-@prefix dnano:  <https://w3id.org/dsms/nanoindentation#> .
+@prefix dnano:  <https://w3id.org/dsms/nanoindentation/> .
 
 # =============================================================================
 # DSMS process parameter type vocabulary

@@ -58,7 +58,7 @@
   uqudt:   "http://qudt.org/vocab/unit/"
   obo:     "http://purl.obolibrary.org/obo/"
   pmdco:   "https://w3id.org/pmd/co/"
-  dnano:   "https://w3id.org/dsms/nanoindentation#"
+  dnano:   "https://w3id.org/dsms/nanoindentation/"
 
   raw_data_files:
     "@id": "http://www.w3.org/ns/prov#generated"

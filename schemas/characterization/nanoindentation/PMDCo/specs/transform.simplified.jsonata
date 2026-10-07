@@ -41,7 +41,7 @@
   /* ── Test conditions (ParameterSpecification nodes) ──────────────────── */
   /* parameter_unit: vocabulary label strings — SDK resolves to IRI+label.  */
   /* parameter_type: full IRIs from dnano: namespace.                        */
-  $dnano := "https://w3id.org/dsms/nanoindentation#";
+  $dnano := "https://w3id.org/dsms/nanoindentation/";
   $conds := [];
   $conds := $exists(max_depth)
     ? $append($conds, [{"type": "pmdco:PMD_0000013", "id": $expId & "-cond-max-depth",

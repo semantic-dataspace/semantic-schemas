@@ -75,7 +75,7 @@
     },
     "chameo": "https://w3id.org/emmo/domain/characterisation-methodology/chameo#",
     "nanoind": "https://w3id.org/emmo/domain/nanoindentation#",
-    "dnano": "https://w3id.org/dsms/nanoindentation#",
+    "dnano": "https://w3id.org/dsms/nanoindentation/",
     "raw_data_files": {
       "@id": "http://www.w3.org/ns/prov#generated",
       "@type": "@id",

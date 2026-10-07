@@ -13,7 +13,7 @@
 @prefix emmo:   <https://w3id.org/emmo#> .
 
 # DSMS nanoindentation quality class namespace
-@prefix dnano:  <https://w3id.org/dsms/nanoindentation#> .
+@prefix dnano:  <https://w3id.org/dsms/nanoindentation/> .
 
 # =============================================================================
 # DSMS characterization-result controlled vocabulary
@@ -69,7 +69,7 @@ tto:TTO_0000038  a owl:Class ; rdfs:label "Reduction of Area (Z)"@en ;
 # =============================================================================
 # 2. NANOINDENTATION — per-indent result classes (new DSMS terms)
 #    Not yet in EMMO nanoindentation or PMDCo; propose upstream when stable.
-#    IRI base: https://w3id.org/dsms/nanoindentation#
+#    IRI base: https://w3id.org/dsms/nanoindentation/
 # =============================================================================
 
 # ── Mechanical response ──────────────────────────────────────────────────────

@@ -33,7 +33,7 @@
   qudt:    "http://qudt.org/schema/qudt/"
   uqudt:   "http://qudt.org/vocab/unit/"
   chameo:  "https://w3id.org/emmo/domain/characterisation-methodology/chameo#"
-  dnano:   "https://w3id.org/dsms/nanoindentation#"
+  dnano:   "https://w3id.org/dsms/nanoindentation/"
   csvw:    "http://www.w3.org/ns/csvw#"
   type:    "@type"
   id:      "@id"
