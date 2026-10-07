@@ -3,32 +3,77 @@
 @prefix skos:   <http://www.w3.org/2004/02/skos/core#> .
 @prefix obo:    <http://purl.obolibrary.org/obo/> .
 
+# Tensile Test Ontology (TTO) v3.0.0 — https://w3id.org/pmd/tto/
+@prefix tto:    <https://w3id.org/pmd/tto/> .
+
+# Platform MaterialDigital Core Ontology (PMDCo) — https://w3id.org/pmd/co/
+@prefix pmdco:  <https://w3id.org/pmd/co/> .
+
+# European Materials Modelling Ontology (EMMO) — https://emmo.info/
+@prefix emmo:   <https://w3id.org/emmo#> .
+
 # DSMS nanoindentation quality class namespace
 @prefix dnano:  <https://w3id.org/dsms/nanoindentation#> .
 
 # =============================================================================
-# Characterization result types — Nanoindentation (brand-new DSMS terms)
+# DSMS characterization-result controlled vocabulary
 #
 # Vocabulary service namespace : characterization-result
-# Use-case served              : nanoindentation, all
-# Complementary file           : characterization-result-existing.ttl
+# Use-cases served             : tensile-test, nanoindentation, hardness, all
 #
-# These classes are not yet in EMMO nanoindentation or PMDCo and are defined
-# here as DSMS-specific terms until a stable home in a standard ontology is
-# confirmed. Class IRIs: https://w3id.org/dsms/nanoindentation#
+# Labels MUST match the strings used in schemas and parsers exactly —
+# the vocabulary service resolves result names to class IRIs via label match.
+# Change any label only in concert with all consuming schemas and notebooks.
 #
-# Labels MUST match the strings used in schemas and parsers exactly — the
-# vocabulary service resolves result names to class IRIs via label matching.
-# Change a label only in concert with all consuming schemas/notebooks.
-#
-# All classes are subclasses of obo:BFO_0000019 (Quality).
-# Use-case: per-indent measurement results (dataset/nanoindentation/PMDCo)
-# and per-session statistical aggregates (characterization/nanoindentation/PMDCo).
+# Sections:
+#   1. Tensile test           — TTO IRIs (existing ontology, unchanged)
+#   2. Nanoindentation        — dnano: IRIs (new DSMS terms, per-indent)
+#   3. Nanoindentation stats  — dnano: IRIs (new DSMS terms, per-session)
+#   4. Hardness               — PMDCo IRIs (commented; verify before activating)
+#   5. Microstructure         — PMDCo IRIs (commented; verify before activating)
+#   6. Fatigue / DSC / TGA    — EMMO IRIs  (commented; IRIs TBD)
 # =============================================================================
 
-# ── Per-indent result classes ────────────────────────────────────────────────
+# =============================================================================
+# 1. TENSILE TEST — TTO classes (TTO v3.0.0)
+#    IRIs confirmed from schemas/characterization/tensile-test/TTO/specs/schema.oold.yaml
+# =============================================================================
 
-# Mechanical response
+tto:TTO_0000009  a owl:Class ; rdfs:label "Yield Strength (Re)"@en ;
+    skos:definition "Lower yield strength or general yield stress under uniaxial tension (ISO 6892-1)."@en .
+
+tto:TTO_0000059  a owl:Class ; rdfs:label "Upper Yield Strength (ReH)"@en ;
+    skos:definition "Maximum stress before the first force decrease during plastic yielding (ISO 6892-1)."@en .
+
+tto:TTO_0000022  a owl:Class ; rdfs:label "Lower Yield Strength (ReL)"@en ;
+    skos:definition "Lowest stress during plastic yielding, ignoring transient initial effects (ISO 6892-1)."@en .
+
+tto:TTO_0000053  a owl:Class ; rdfs:label "Tensile Strength (Rm)"@en ;
+    skos:definition "Maximum force divided by original cross-sectional area (ISO 6892-1)."@en .
+
+tto:TTO_0000047  a owl:Class ; rdfs:label "Proof Strength (Rp0.2)"@en ;
+    skos:definition "Stress at which plastic strain equals 0.2 % of gauge length (ISO 6892-1)."@en .
+
+tto:TTO_0000033  a owl:Class ; rdfs:label "Elongation After Fracture (A)"@en ;
+    skos:definition "Permanent elongation of gauge length after fracture, as percentage (ISO 6892-1)."@en .
+
+tto:TTO_0000035  a owl:Class ; rdfs:label "Uniform Elongation (Ag)"@en ;
+    skos:definition "Elongation at maximum force, onset of necking (ISO 6892-1)."@en .
+
+tto:TTO_0000038  a owl:Class ; rdfs:label "Reduction of Area (Z)"@en ;
+    skos:definition "Change in cross-sectional area at fracture divided by original area (ISO 6892-1)."@en .
+
+# Young's Modulus — TTO IRI not yet confirmed; uncomment when verified.
+# tto:TTO_0000YYY  a owl:Class ; rdfs:label "Young's Modulus (E)"@en .
+
+# =============================================================================
+# 2. NANOINDENTATION — per-indent result classes (new DSMS terms)
+#    Not yet in EMMO nanoindentation or PMDCo; propose upstream when stable.
+#    IRI base: https://w3id.org/dsms/nanoindentation#
+# =============================================================================
+
+# ── Mechanical response ──────────────────────────────────────────────────────
+
 dnano:HardnessHIT
     a owl:Class ;
     rdfs:label "Hardness HIT"@en ;
@@ -40,21 +85,21 @@ dnano:ElasticModulusEIT
     a owl:Class ;
     rdfs:label "Elastic Modulus EIT"@en ;
     skos:altLabel "EIT"@en ;
-    skos:definition "Indentation elastic modulus derived from Oliver-Pharr unloading analysis. Units: GPa."@en ;
+    skos:definition "Indentation elastic modulus from Oliver-Pharr unloading analysis. Units: GPa."@en ;
     rdfs:subClassOf obo:BFO_0000019 .
 
 dnano:ReducedModulusE
     a owl:Class ;
     rdfs:label "Reduced Modulus E*"@en ;
     skos:altLabel "E*"@en ;
-    skos:definition "Combined elastic modulus of indenter-sample contact (tip + specimen elasticity). Units: GPa."@en ;
+    skos:definition "Combined elastic modulus of indenter-sample contact (tip + specimen). Units: GPa."@en ;
     rdfs:subClassOf obo:BFO_0000019 .
 
 dnano:IndentationModulusEr
     a owl:Class ;
     rdfs:label "Indentation Modulus Er"@en ;
     skos:altLabel "Er"@en ;
-    skos:definition "Reduced modulus corrected for diamond indenter compliance (plane-strain modulus). Units: GPa."@en ;
+    skos:definition "Reduced modulus corrected for diamond indenter compliance. Units: GPa."@en ;
     rdfs:subClassOf obo:BFO_0000019 .
 
 dnano:VickersHVIT
@@ -64,7 +109,8 @@ dnano:VickersHVIT
     skos:definition "HIT converted to Vickers scale via geometric equivalence factor. Dimensionless (HV)."@en ;
     rdfs:subClassOf obo:BFO_0000019 .
 
-# Force / depth geometry
+# ── Force / depth geometry ───────────────────────────────────────────────────
+
 dnano:MaximumForceFmax
     a owl:Class ;
     rdfs:label "Maximum Force Fmax"@en ;
@@ -104,17 +150,18 @@ dnano:ContactStiffnessS
     a owl:Class ;
     rdfs:label "Contact Stiffness S"@en ;
     skos:altLabel "S"@en ;
-    skos:definition "Slope of the unloading curve at maximum depth (dF/dh). Units: mN/µm."@en ;
+    skos:definition "Slope of unloading curve at maximum depth (dF/dh). Units: mN/µm."@en ;
     rdfs:subClassOf obo:BFO_0000019 .
 
 dnano:ProjectedContactAreaAp
     a owl:Class ;
     rdfs:label "Projected Contact Area Ap"@en ;
     skos:altLabel "Ap"@en ;
-    skos:definition "Projected contact area at maximum force, from hc via calibrated tip area function. Units: µm²."@en ;
+    skos:definition "Projected contact area at maximum force, from hc via tip area function. Units: µm²."@en ;
     rdfs:subClassOf obo:BFO_0000019 .
 
-# Work / energy
+# ── Work / energy ────────────────────────────────────────────────────────────
+
 dnano:ElasticWorkWelast
     a owl:Class ;
     rdfs:label "Elastic Work Welast"@en ;
@@ -136,12 +183,13 @@ dnano:TotalWorkWtotal
     skos:definition "Total work during indentation (Welast + Wplast). Units: µJ."@en ;
     rdfs:subClassOf obo:BFO_0000019 .
 
-# Derived ratios / model parameters
+# ── Derived ratios / model parameters ────────────────────────────────────────
+
 dnano:ElasticWorkRatioNIT
     a owl:Class ;
     rdfs:label "Elastic Work Ratio nIT"@en ;
     skos:altLabel "nIT"@en ;
-    skos:definition "Welast / Wtotal — dimensionless elastic recovery index. Units: %."@en ;
+    skos:definition "Welast / Wtotal — elastic recovery index. Units: %."@en ;
     rdfs:subClassOf obo:BFO_0000019 .
 
 dnano:ReverseIndentationRatioRIT
@@ -155,14 +203,14 @@ dnano:LoadingExponentM
     a owl:Class ;
     rdfs:label "Loading Exponent m"@en ;
     skos:altLabel "m"@en ;
-    skos:definition "Exponent in power-law fit F = C·hᵐ to the loading segment (Oliver-Pharr). Dimensionless."@en ;
+    skos:definition "Exponent in power-law fit F = C·hᵐ to loading segment (Oliver-Pharr). Dimensionless."@en ;
     rdfs:subClassOf obo:BFO_0000019 .
 
 dnano:GeometryFactorEpsilon
     a owl:Class ;
     rdfs:label "Geometry Factor Epsilon"@en ;
     skos:altLabel "ε"@en ;
-    skos:definition "Correction factor ε relating contact depth hc to compliance (≈ 0.75 Berkovich). Dimensionless."@en ;
+    skos:definition "Correction factor ε relating hc to compliance (≈ 0.75 Berkovich). Dimensionless."@en ;
     rdfs:subClassOf obo:BFO_0000019 .
 
 dnano:FitQualityR2
@@ -172,9 +220,10 @@ dnano:FitQualityR2
     skos:definition "Coefficient of determination for power-law fit to unloading segment. Dimensionless."@en ;
     rdfs:subClassOf obo:BFO_0000019 .
 
-# ── Per-session statistical aggregates ───────────────────────────────────────
-# Used by characterization/nanoindentation/PMDCo (experiment/session level).
-# Labels are "Mean/Std Dev <base-label> (session)" to distinguish from per-indent.
+# =============================================================================
+# 3. NANOINDENTATION — per-session statistical aggregates (new DSMS terms)
+#    Used by characterization/nanoindentation/PMDCo (experiment/session level).
+# =============================================================================
 
 dnano:MeanHardnessHIT
     a owl:Class ;
@@ -253,3 +302,35 @@ dnano:NumberOfValidIndentations
     rdfs:label "Number of Valid Indentations"@en ;
     skos:definition "Count of indents passing all quality criteria in a session. Dimensionless integer."@en ;
     rdfs:subClassOf obo:BFO_0000019 .
+
+# =============================================================================
+# 4. HARDNESS — PMDCo classes
+#    Commented out pending IRI verification in PMDCo release.
+# =============================================================================
+
+# pmdco:PMD_0050050  a owl:Class ; rdfs:label "Hardness"@en .
+# pmdco:PMD_0050052  a owl:Class ; rdfs:label "Vickers Hardness (HV)"@en .
+# pmdco:PMD_0050053  a owl:Class ; rdfs:label "Brinell Hardness (HBW)"@en .
+# pmdco:PMD_0050054  a owl:Class ; rdfs:label "Rockwell Hardness (HR)"@en .
+# pmdco:PMD_0050055  a owl:Class ; rdfs:label "Shore Hardness"@en .
+# pmdco:PMD_0050056  a owl:Class ; rdfs:label "Knoop Hardness (HK)"@en .
+
+# =============================================================================
+# 5. MICROSTRUCTURE — PMDCo classes
+#    IRIs provisional; verify against PMDCo release before activating.
+# =============================================================================
+
+# pmdco:PMD_XXXXXXX  a owl:Class ; rdfs:label "Mean Grain Diameter"@en .
+# pmdco:PMD_XXXXXXX  a owl:Class ; rdfs:label "Grain Aspect Ratio"@en .
+
+# =============================================================================
+# 6. FATIGUE / DSC / TGA — EMMO classes
+#    EMMO modules not yet stable; IRIs TBD.
+# =============================================================================
+
+# emmo:EMMO_XXXXXXXX  a owl:Class ; rdfs:label "Fatigue Life (Nf)"@en .
+# emmo:EMMO_XXXXXXXX  a owl:Class ; rdfs:label "Stress Amplitude"@en .
+# emmo:EMMO_XXXXXXXX  a owl:Class ; rdfs:label "Melting Temperature"@en .
+# emmo:EMMO_XXXXXXXX  a owl:Class ; rdfs:label "Glass Transition Temperature"@en .
+# emmo:EMMO_XXXXXXXX  a owl:Class ; rdfs:label "Enthalpy of Fusion"@en .
+# emmo:EMMO_XXXXXXXX  a owl:Class ; rdfs:label "Onset Temperature"@en .
