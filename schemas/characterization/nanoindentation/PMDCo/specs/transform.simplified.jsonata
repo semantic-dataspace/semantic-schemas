@@ -37,51 +37,30 @@
   $expId       := $exists(experiment_id) ? experiment_id : "nanoindentation-experiment-" & $slug;
 
   /* ── Test conditions (ParameterSpecification nodes) ──────────────────── */
-  /* parameter_label: human string passed through from input name.           */
-  /* parameter_type:  full IRI via $paramTypeMap; fallback = input name.     */
-  /* parameter_unit:  short code → full QUDT IRI via $condUnitMap.           */
-  $dnano := "https://w3id.org/dsms/nanoindentation/";
-
-  $paramTypeMap := {
-    "Max Indentation Depth":     $dnano & "MaxDepth",
-    "Max Depth":                 $dnano & "MaxDepth",
-    "Maximum Load":              $dnano & "MaxLoad",
-    "Max Load":                  $dnano & "MaxLoad",
-    "Loading Rate":              $dnano & "LoadingRate",
-    "Hold Time at Maximum Load": $dnano & "HoldTime",
-    "Hold Time":                 $dnano & "HoldTime",
-    "Data Acquisition Rate":     $dnano & "AcquisitionRate",
-    "Acquisition Rate":          $dnano & "AcquisitionRate",
-    "Assumed Poisson's Ratio":   $dnano & "PoissonRatio",
-    "Poisson Ratio":             $dnano & "PoissonRatio"
-  };
-
-  $condUnitMap := {
-    "um":   "http://qudt.org/vocab/unit/MicroM",
-    "µm":   "http://qudt.org/vocab/unit/MicroM",
-    "mN":   "http://qudt.org/vocab/unit/MilliN",
-    "1/s":  "http://qudt.org/vocab/unit/PER-SEC",
-    "s":    "http://qudt.org/vocab/unit/SEC",
-    "Hz":   "http://qudt.org/vocab/unit/HZ",
-    "-":    "http://qudt.org/vocab/unit/UNITLESS",
-    "–":    "http://qudt.org/vocab/unit/UNITLESS",
-    "%":    "http://qudt.org/vocab/unit/PERCENT",
-    "GPa":  "http://qudt.org/vocab/unit/GigaPA"
-  };
+  /* Mirrors heat-treatment transform pattern exactly:                       */
+  /* parameter_label: human label for rdfs:label.                            */
+  /* parameter_type:  name IS the vocabulary label; SDK resolves label →     */
+  /*                  IRI via process-parameter vocabulary service.           */
+  /*                  type_iri field accepted as explicit IRI override.       */
+  /* parameter_unit:  vocabulary label or short code; SDK resolves via       */
+  /*                  measurement-unit vocabulary service.                    */
 
   $conds := $exists(test_conditions) and $count(test_conditions) > 0
     ? $map(test_conditions, function($c, $i) {(
-        $cSlug   := $replace($lowercase($trim($c.name)), /[^a-z0-9]+/, "-");
-        $typeIri := $lookup($paramTypeMap, $c.name);
-        $unit    := $lookup($condUnitMap, $c.unit);
-        {
+        $cSlug    := $replace($lowercase($trim($c.name)), /[^a-z0-9]+/, "-");
+        $node     := {
           "type":            "pmdco:PMD_0000013",
           "id":              $expId & "-cond-" & $cSlug,
-          "parameter_label": $c.name,
-          "parameter_type":  $typeIri ? $typeIri : $c.name,
-          "parameter_value": $c.value,
-          "parameter_unit":  $unit ? $unit : $c.unit
-        }
+          "parameter_label": $c.name
+        };
+        $paramType := $exists($c.type_iri) ? $c.type_iri : $c.name;
+        $withType  := $merge([$node, {"parameter_type": $paramType}]);
+        $withValue := $exists($c.value)
+          ? $merge([$withType, {"parameter_value": $c.value}])
+          : $withType;
+        $exists($c.unit)
+          ? $merge([$withValue, {"parameter_unit": $c.unit}])
+          : $withValue
       )})
     : [];
 
