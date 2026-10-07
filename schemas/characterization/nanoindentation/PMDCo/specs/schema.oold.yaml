@@ -316,10 +316,16 @@ properties:
           type: string
           readOnly: true
           default: param-1
-        parameter_type:
-          title: Parameter Type
-          description: Search and select a parameter type from the vocabulary. Stored as rdf:type on the ParameterSpecification node.
+        parameter_label:
+          title: Parameter Name
+          description: Human-readable name for this parameter (e.g. "Max Depth").
           type: string
+        parameter_type:
+          title: Parameter Type IRI
+          description: rdf:type IRI for this ParameterSpecification node — set by transform, not edited manually.
+          type: string
+          options:
+            hidden: true
           x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/process-parameter/use-cases/all/terms"
         parameter_value:
           title: Value
