@@ -50,7 +50,6 @@
   # bfo:BFO_0000055 : the assay realizes the evaluant role
   realizes:
     "@id": "http://purl.obolibrary.org/obo/BFO_0000055"
-    "@type": "@id"
     "@container": "@set"
   # bfo:BFO_0000054 : inverse of realizes; set on the role node pointing back to the assay
   realized_in:
@@ -59,7 +58,6 @@
   # pmdco:PMD_0000009 "has process attribute": process-level quantitative conditions
   has_process_attribute:
     "@id": "pmdco:PMD_0000009"
-    "@type": "@id"
     "@container": "@set"
   parameter_label:
     "@id": "rdfs:label"
@@ -213,8 +211,10 @@ properties:
     description: >-
       The material sample (specimen) that was tested.
       Select the corresponding entry from the knowledge graph.
-    x-ktype: [specimen]
     type: array
+    format: kitem
+    x-kitem:
+      ktypeIds: [specimen]
     minItems: 1
     items:
       type: string
@@ -289,34 +289,9 @@ properties:
           type: number
         parameter_unit:
           title: Unit
+          description: Search and select a QUDT unit from the vocabulary service.
           type: string
-          enum:
-            - uqudt:PER-SEC
-            - uqudt:MilliM-PER-MIN
-            - uqudt:MilliM-PER-SEC
-            - uqudt:DEG_C
-            - uqudt:K
-            - uqudt:MilliM
-            - uqudt:N
-            - uqudt:MegaPascal
-          options:
-            enum_titles:
-              - "1/s (strain rate)"
-              - "mm/min (speed)"
-              - "mm/s (speed)"
-              - "°C (Celsius)"
-              - "K (Kelvin)"
-              - "mm (length)"
-              - "N (Newton)"
-              - "MPa (megapascal)"
-          x-depends-on:
-            field: parameter_label
-            values:
-              Strain Rate: [uqudt:PER-SEC]
-              Test Speed: [uqudt:MilliM-PER-MIN, uqudt:MilliM-PER-SEC]
-              Temperature: [uqudt:DEG_C, uqudt:K]
-              Gauge Length: [uqudt:MilliM]
-              Pre-load: [uqudt:N, uqudt:MegaPascal]
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
     default: []
 
   measured_properties:
@@ -423,16 +398,9 @@ properties:
               minimum: 0
             result_unit:
               title: Unit
+              description: Search and select a QUDT unit from the vocabulary service.
               type: string
-              enum:
-                - uqudt:MegaPascal
-                - uqudt:GigaPascal
-                - uqudt:PERCENT
-              options:
-                enum_titles:
-                  - MPa (megapascal)
-                  - GPa (gigapascal)
-                  - "% (percent)"
+              x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
             specifies_value_of:
               title: Specifies Value Of
               description: IRI of the quality this value quantifies (derived by transformer).

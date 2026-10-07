@@ -11,17 +11,15 @@
    *   outputs             array    optional: each item is a specimen IRI string
    *   preceded_by         array    optional: each item is a process IRI string
    *   process_attributes  array    optional
-   *     name              string   required -- must match parameter_label enum or use free text
+   *     name              string   required — vocabulary label from process-parameter vocab
+   *                                           (e.g. "Temperature", "Hold Time", "Heating Rate")
+   *                                           Used as both rdfs:label and parameter_type lookup key.
    *     value             number   optional (quantitative parameters)
-   *               OR      string   optional (qualitative parameters: atmosphere, cooling medium,
-   *                                furnace type). Compound label built as "name: value" in RDF.
-   *     unit              string   optional -- vocabulary label ("Degree Celsius (°C)") or full IRI
-   *     type_iri          string   optional -- override auto-derived parameter_type IRI
+   *               OR      string   optional (qualitative parameters: atmosphere, cooling medium, furnace type)
+   *     unit              string   optional — vocabulary label ("Degree Celsius (°C)") or full IRI
+   *     type_iri          string   optional — explicit IRI override for parameter_type
    *
-   * SDK usage: no need to supply type_iri -- the transform auto-injects it from the
-   * parameter name using $paramTypeMap. Pass only name/value(/unit).
-   *
-   * Qualitative parameters -- pass name as category, value as string:
+   * Qualitative parameters — pass name as category, value as string:
    *   {"name": "Atmosphere",     "value": "Argon"}
    *   {"name": "Cooling Medium", "value": "Water Quench"}
    *   {"name": "Furnace Type",   "value": "Recirculating Air Furnace"}
@@ -44,34 +42,6 @@
     "Quenching":                   "dsmsht:Quenching"
   };
 
-  /* -- Parameter label -> dsmsht: class full IRI ------------------------------------ */
-  /* Full IRIs required: vocabulary-backed parameter_type field stores full IRIs.      */
-  /* Auto-derived: SDK users pass only name/value(/unit). No type_iri needed.          */
-  $dsmsht := "https://w3id.org/dsms/heattreatment#";
-  $paramTypeMap := {
-    /* Temperatures */
-    "Solutionising Temperature":  $dsmsht & "SolutionisationTemperature",
-    "Aging Temperature":          $dsmsht & "AgingTemperature",
-    "Annealing Temperature":      $dsmsht & "AnnealingTemperature",
-    "Normalizing Temperature":    $dsmsht & "NormalizingTemperature",
-    "Tempering Temperature":      $dsmsht & "TemperingTemperature",
-    "Homogenization Temperature": $dsmsht & "HomogenizationTemperature",
-    /* Times */
-    "Hold Time":                  $dsmsht & "HoldTime",
-    "Aging Time":                 $dsmsht & "AgingTime",
-    "Tempering Time":             $dsmsht & "TemperingTime",
-    "Homogenization Time":        $dsmsht & "HomogenizationTime",
-    /* Rates */
-    "Heating Rate":               $dsmsht & "HeatingRate",
-    "Cooling Rate":               $dsmsht & "CoolingRate",
-    /* Delays */
-    "Quench Delay":               $dsmsht & "QuenchDelay",
-    /* Qualitative categories -- value supplied separately as a string */
-    "Atmosphere":                 $dsmsht & "Atmosphere",
-    "Cooling Medium":             $dsmsht & "CoolingMedium",
-    "Furnace Type":               $dsmsht & "FurnaceType"
-  };
-
   /* -- Node IDs --------------------------------------------------------------------- */
   $slug   := $replace($lowercase($trim(process_name)), /[^a-z0-9]+/, "-");
   $procId := $exists(process_id) ? process_id : "process-" & $slug;
@@ -89,11 +59,10 @@
           "parameter_label": $p.name
         };
 
-        /* parameter_type: explicit type_iri overrides auto-lookup from name (category) */
-        $resolvedTypeIri := $exists($p.type_iri) ? $p.type_iri : $lookup($paramTypeMap, $p.name);
-        $withType := $exists($resolvedTypeIri)
-          ? $merge([$node, {"parameter_type": $resolvedTypeIri}])
-          : $node;
+        /* parameter_type: name IS the vocabulary label; SDK resolves to IRI via vocabulary service.
+           type_iri accepted as explicit IRI override for advanced use. */
+        $paramType := $exists($p.type_iri) ? $p.type_iri : $p.name;
+        $withType  := $merge([$node, {"parameter_type": $paramType}]);
 
         /* parameter_value: numeric value OR qualitative string -- both go in same field */
         $withValue := $exists($p.value)

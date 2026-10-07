@@ -38,7 +38,7 @@
    *     PMD_0000006  → xsd:float value
    */
 
-  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/tensile-test-TTO-v0.1.1/schemas/characterization/tensile-test/TTO/specs/schema.oold.yaml";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/tensile-test-TTO-v0.2.0/schemas/characterization/tensile-test/TTO/specs/schema.oold.yaml";
 
   /* ── Property key → TTO class CURIE (numeric IRIs, TTO v3.0.0) ─────────── */
   $propertyMap := {
@@ -52,10 +52,24 @@
     "PercentageReductionOfArea":         "tto:TTO_0000038"
   };
 
+  /* ── Human-readable name → property key (allows name field as alternative) ─ */
+  $nameToPropertyMap := {
+    "Yield Strength":                     "YieldStrength",
+    "Upper Yield Strength":               "UpperYieldStrength",
+    "Lower Yield Strength":               "LowerYieldStrength",
+    "Tensile Strength":                   "TensileStrength",
+    "Proof Strength":                     "ProofStrength",
+    "Elongation After Fracture":          "PercentageElongationAfterFracture",
+    "Percentage Elongation After Fracture": "PercentageElongationAfterFracture",
+    "Uniform Elongation":                 "PercentagePermanentElongation",
+    "Reduction of Area":                  "PercentageReductionOfArea",
+    "Percentage Reduction of Area":       "PercentageReductionOfArea"
+  };
+
   /* ── Unit label → QUDT unit IRI ──────────────────────────────────────────── */
   $unitMap := {
-    "MPa":  "unit:MegaPa",
-    "GPa":  "unit:GigaPa",
+    "MPa":  "unit:MegaPascal",
+    "GPa":  "unit:GigaPascal",
     "%":    "unit:PERCENT",
     "°C":   "unit:DEG_C",
     "mm":   "unit:MilliM",
@@ -98,6 +112,7 @@
         "has_value_spec": {
           "type":               "obo:OBI_0001931",
           "id":                 $testId & "-strain-rate-svs",
+          "result_unit":        $exists(strain_rate_unit) ? $lookup($unitMap, strain_rate_unit) : "unit:PER-SEC",
           "is_about":           $testId & "-strain-rate",
           "specifies_value_of": $testId & "-strain-rate",
           "result_value":       strain_rate
@@ -120,28 +135,32 @@
       }])
     : $condSmds;
 
+  /* ── Helper functions (avoid := inside $map lambda bodies) ─────────────── */
+  /* Resolve property key from either results[].property or results[].name.   */
+  $getPropKey  := function($r) { $exists($r.property) ? $r.property : $lookup($nameToPropertyMap, $r.name) };
+  $getPropSlug := function($r) { $replace($lowercase($trim($getPropKey($r))), /[^a-z0-9]+/, "-") };
+
   /* ── Result SMD nodes ────────────────────────────────────────────────────── */
   /* The quality instance is embedded in the is_about field (node object).     */
   /* JSON-LD will expand it as a named node, producing:                        */
   /*   quality rdf:type tto:TTO_XXXXX                                          */
   /*   quality IAO_0000417 smd                                                 */
-  /* slug computation is inlined to avoid := inside map callback body.         */
   $resultSmds := $exists(results) and $count(results) > 0
     ? $map(results, function($r, $i) {
         {
           "type":     "obo:IAO_0000109",
-          "id":       $testId & "-" & $replace($lowercase($trim($r.property)), /[^a-z0-9]+/, "-") & "-smd",
+          "id":       $testId & "-" & $getPropSlug($r) & "-smd",
           "is_about": {
-            "type": $lookup($propertyMap, $r.property),
-            "id":   $testId & "-" & $replace($lowercase($trim($r.property)), /[^a-z0-9]+/, "-"),
-            "is_quality_measured_as": $testId & "-" & $replace($lowercase($trim($r.property)), /[^a-z0-9]+/, "-") & "-smd"
+            "type": $lookup($propertyMap, $getPropKey($r)),
+            "id":   $testId & "-" & $getPropSlug($r),
+            "is_quality_measured_as": $testId & "-" & $getPropSlug($r) & "-smd"
           },
           "has_value_spec": {
             "type":               "obo:OBI_0001931",
-            "id":                 $testId & "-" & $replace($lowercase($trim($r.property)), /[^a-z0-9]+/, "-") & "-svs",
+            "id":                 $testId & "-" & $getPropSlug($r) & "-svs",
             "result_unit":        $lookup($unitMap, $r.unit),
-            "is_about":           $testId & "-" & $replace($lowercase($trim($r.property)), /[^a-z0-9]+/, "-"),
-            "specifies_value_of": $testId & "-" & $replace($lowercase($trim($r.property)), /[^a-z0-9]+/, "-"),
+            "is_about":           $testId & "-" & $getPropSlug($r),
+            "specifies_value_of": $testId & "-" & $getPropSlug($r),
             "result_value":       $r.value
           }
         }

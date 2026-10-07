@@ -32,17 +32,20 @@
     "Surface Roughness Rq":  "dspec:SurfaceRoughnessRq"
   };
 
-  /* ── Unit label → Unit Ontology IRI ─────────────────────────────────── */
+  /* ── Short unit string → full QUDT IRI ───────────────────────────────── */
+  /* Full IRIs pass through vocabulary enrichment unchanged; vocabulary      */
+  /* labels (e.g. "Millimeter (mm)") are also accepted and resolved by SDK. */
   $unitMap := {
-    "mm": "obo:UO_0000015",
-    "um": "obo:UO_0000017",
-    "nm": "obo:UO_0000018",
-    "g":  "obo:UO_0000021",
-    "kg": "obo:UO_0000022",
-    "mg": "obo:UO_0000023"
+    "mm": "http://qudt.org/vocab/unit/MilliM",
+    "um": "http://qudt.org/vocab/unit/MicroM",
+    "nm": "http://qudt.org/vocab/unit/NanoM",
+    "g":  "http://qudt.org/vocab/unit/GM",
+    "kg": "http://qudt.org/vocab/unit/KiloGM",
+    "mg": "http://qudt.org/vocab/unit/MilliGM"
   };
+  $resolveUnit := function($u) { ($lookup($unitMap, $u)) ? $lookup($unitMap, $u) : $u };
 
-  /* ── Build physical property quality nodes ───────────────────────────── */
+  /* ── Build physical property quality nodes (PMDCo SVS pattern) ───────── */
   $physProps := $append([], $map(physical_properties, function($p, $i) {
     {
       "type":       $lookup($typeMap, $p.type),
@@ -52,7 +55,7 @@
         "type":  ["obi:0001931"],
         "id":    "phys-prop-svs-" & $string($i + 1) & "-" & $specId,
         "value": $p.value,
-        "unit":  $lookup($unitMap, $p.unit)
+        "unit":  $resolveUnit($p.unit)
       }
     }
   }));
@@ -68,7 +71,7 @@
       "type":  ["obi:0001931"],
       "id":    "mass-svs-" & $specId,
       "value": mass_value,
-      "unit":  $lookup($unitMap, $exists(mass_unit) ? mass_unit : "g")
+      "unit":  $resolveUnit($exists(mass_unit) ? mass_unit : "g")
     }
   } : undefined;
 

@@ -49,17 +49,13 @@
   obi:
     "@id": "http://purl.obolibrary.org/obo/OBI_"
     "@prefix": true
-  iao:
-    "@id": "http://purl.obolibrary.org/obo/IAO_"
-    "@prefix": true
-  uo:
-    "@id": "http://purl.obolibrary.org/obo/UO_"
-    "@prefix": true
   rdfs:    "http://www.w3.org/2000/01/rdf-schema#"
   xsd:     "http://www.w3.org/2001/XMLSchema#"
   dcterms: "http://purl.org/dc/terms/"
   pmdco:   "https://w3id.org/pmd/co/"
   dspec:   "https://w3id.org/dsms/specimen#"
+  qudt:    "http://qudt.org/schema/qudt/"
+  uqudt:   "http://qudt.org/vocab/unit/"
 
   conforms_to:
     "@id": "http://purl.org/dc/terms/conformsTo"
@@ -95,7 +91,7 @@
     "@id": "obi:0001937"               # OBI_0001937  has_specified_numeric_value
     "@type": "xsd:double"
   unit:
-    "@id": "iao:0000039"               # IAO_0000039  has_measurement_unit_label
+    "@id": "http://qudt.org/schema/qudt/hasUnit"   # qudt:hasUnit (QUDT alignment)
     "@type": "@id"
 
   # Temporal interval internals (BFO_0000202 has_first/last_instant)
@@ -353,32 +349,9 @@ properties:
               minimum: 0
             unit:
               title: Unit
+              description: Search and select a QUDT unit from the vocabulary service.
               type: string
-              enum:
-                - "obo:UO_0000015"    # mm
-                - "obo:UO_0000017"    # µm
-                - "obo:UO_0000018"    # nm
-                - "obo:UO_0000021"    # g
-                - "obo:UO_0000022"    # kg
-                - "obo:UO_0000023"    # mg
-              options:
-                enum_titles:
-                  - mm (millimetre)
-                  - µm (micrometre)
-                  - nm (nanometre)
-                  - g (gram)
-                  - kg (kilogram)
-                  - mg (milligram)
-              x-depends-on:
-                field: type
-                values:
-                  pmdco:PMD_0050153:      ["obo:UO_0000015", "obo:UO_0000017"]
-                  pmdco:PMD_0050154:      ["obo:UO_0000015", "obo:UO_0000017"]
-                  pmdco:PMD_0040001:      ["obo:UO_0000015", "obo:UO_0000017"]
-                  pmdco:PMD_0050051:      ["obo:UO_0000015", "obo:UO_0000017"]
-                  pmdco:PMD_0020133:      ["obo:UO_0000021", "obo:UO_0000022", "obo:UO_0000023"]
-                  dspec:SurfaceRoughnessRa: ["obo:UO_0000018", "obo:UO_0000017"]
-                  dspec:SurfaceRoughnessRq: ["obo:UO_0000018", "obo:UO_0000017"]
+              x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
     default: []
 
   # ── Surface preparation (text field — no quality class) ────────────────────

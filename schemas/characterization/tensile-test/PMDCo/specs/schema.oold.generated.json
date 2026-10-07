@@ -63,7 +63,6 @@
     },
     "realizes": {
       "@id": "http://purl.obolibrary.org/obo/BFO_0000055",
-      "@type": "@id",
       "@container": "@set"
     },
     "realized_in": {
@@ -72,7 +71,6 @@
     },
     "has_process_attribute": {
       "@id": "pmdco:PMD_0000009",
-      "@type": "@id",
       "@container": "@set"
     },
     "parameter_label": {
@@ -239,10 +237,13 @@
     "has_specified_input": {
       "title": "Specimen",
       "description": "The material sample (specimen) that was tested. Select the corresponding entry from the knowledge graph.",
-      "x-ktype": [
-        "specimen"
-      ],
       "type": "array",
+      "format": "kitem",
+      "x-kitem": {
+        "ktypeIds": [
+          "specimen"
+        ]
+      },
       "minItems": 1,
       "items": {
         "type": "string",

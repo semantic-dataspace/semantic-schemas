@@ -5,6 +5,7 @@
    * Input fields (see schema.simplified.json):
    *   test_name         string   required
    *   specimen_iri      string   required: IRI of the specimen node
+   *   output_iris       array    optional: IRIs of output kitems (datasets, specimens)
    *   test_id           string   optional, derived from test_name if omitted
    *   description       string   optional
    *   test_standard     string   optional
@@ -23,12 +24,22 @@
 
   $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/tensile-test-PMDCo-v0.2.0/schemas/characterization/tensile-test/PMDCo/specs/schema.oold.yaml";
 
-  /* ── Unit label → QUDT unit IRI ──────────────────────────────────────── */
+  /* ── Short unit string → full QUDT IRI ───────────────────────────────── */
+  /* Full IRIs pass through vocabulary enrichment unchanged; labels and     */
+  /* short codes are resolved by the SDK / semantic_schemas via x-vocabulary. */
   $unitMap := {
-    "MPa": "uqudt:MegaPascal",
-    "GPa": "uqudt:GigaPascal",
-    "%":   "uqudt:PERCENT"
+    "MPa":    "http://qudt.org/vocab/unit/MegaPascal",
+    "GPa":    "http://qudt.org/vocab/unit/GigaPascal",
+    "%":      "http://qudt.org/vocab/unit/PERCENT",
+    "1/s":    "http://qudt.org/vocab/unit/PER-SEC",
+    "°C":     "http://qudt.org/vocab/unit/DEG_C",
+    "K":      "http://qudt.org/vocab/unit/K",
+    "mm":     "http://qudt.org/vocab/unit/MilliM",
+    "N":      "http://qudt.org/vocab/unit/N",
+    "mm/min": "http://qudt.org/vocab/unit/MilliM-PER-MIN",
+    "mm/s":   "http://qudt.org/vocab/unit/MilliM-PER-SEC"
   };
+  $resolveUnit := function($u) { ($lookup($unitMap, $u)) ? $lookup($unitMap, $u) : $u };
 
   /* ── Node IDs: capture input fields as $ variables so closures work ── */
   /* specimen_iri and test_name are document fields, not $ variables;       */
@@ -44,8 +55,7 @@
     ? $append($conds, [{
         "type": "pmdco:PMD_0000013",
         "id":   $testId & "-condition-standard",
-        "parameter_label": "Test Standard",
-        "parameter_unit":  test_standard
+        "parameter_label": test_standard
       }])
     : $conds;
   $conds := $exists(strain_rate)
@@ -54,7 +64,7 @@
         "id":   $testId & "-condition-strain-rate",
         "parameter_label": "Strain Rate",
         "parameter_value": strain_rate,
-        "parameter_unit":  $exists(strain_rate_unit) ? strain_rate_unit : "1/s"
+        "parameter_unit":  $resolveUnit($exists(strain_rate_unit) ? strain_rate_unit : "1/s")
       }])
     : $conds;
   $conds := $exists(temperature)
@@ -63,7 +73,7 @@
         "id":   $testId & "-condition-temperature",
         "parameter_label": "Temperature",
         "parameter_value": temperature,
-        "parameter_unit":  "°C"
+        "parameter_unit":  $resolveUnit("°C")
       }])
     : $conds;
   $conds := $exists(gauge_length)
@@ -72,7 +82,7 @@
         "id":   $testId & "-condition-gauge-length",
         "parameter_label": "Gauge Length",
         "parameter_value": gauge_length,
-        "parameter_unit":  $exists(gauge_length_unit) ? gauge_length_unit : "mm"
+        "parameter_unit":  $resolveUnit($exists(gauge_length_unit) ? gauge_length_unit : "mm")
       }])
     : $conds;
   $conds := $exists(preload)
@@ -81,7 +91,7 @@
         "id":   $testId & "-condition-preload",
         "parameter_label": "Pre-load",
         "parameter_value": preload,
-        "parameter_unit":  $exists(preload_unit) ? preload_unit : "MPa"
+        "parameter_unit":  $resolveUnit($exists(preload_unit) ? preload_unit : "MPa")
       }])
     : $conds;
 
@@ -102,7 +112,7 @@
             "type":               "obo:OBI_0001931",
             "id":                 $testId & "-result-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-") & "-svs",
             "result_value":       $r.value,
-            "result_unit":        $lookup($unitMap, $r.unit),
+            "result_unit":        $resolveUnit($r.unit),
             "specifies_value_of": $specimenIri & "-quality-" & $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-"),
             "is_about":           $specimenIri
           }
@@ -120,11 +130,14 @@
     "has_specified_input": [$specimenIri]
   };
 
-  $withDate  := $exists(test_date)   ? $merge([$base,     {"date": test_date}])                  : $base;
-  $withDesc  := $exists(description) ? $merge([$withDate, {"description": description}])         : $withDate;
-  $withConds := $count($conds) > 0   ? $merge([$withDesc, {"has_process_attribute": $conds}])    : $withDesc;
+  $withDate    := $exists(test_date)   ? $merge([$base,       {"date": test_date}])                       : $base;
+  $withDesc    := $exists(description) ? $merge([$withDate,   {"description": description}])              : $withDate;
+  $withConds   := $count($conds) > 0   ? $merge([$withDesc,   {"has_process_attribute": $conds}])         : $withDesc;
+  $withOutputs := ($exists(output_iris) and $count(output_iris) > 0)
+                    ? $merge([$withConds, {"has_specified_output": output_iris}])
+                    : $withConds;
 
   $exists($measured)
-    ? $merge([$withConds, {"measured_properties": $measured}])
-    : $withConds
+    ? $merge([$withOutputs, {"measured_properties": $measured}])
+    : $withOutputs
 )
