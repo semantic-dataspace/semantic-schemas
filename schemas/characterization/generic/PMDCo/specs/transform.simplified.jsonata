@@ -44,6 +44,6 @@
   $withPreceded := $exists(preceded_by) and $count(preceded_by) > 0 ? $merge([$withInputs, {"preceded_by": preceded_by}]) : $withInputs;
 
   $exists($conditions)
-    ? $merge([$withPreceded, {"has_process_condition": $conditions}])
+    ? $merge([$withPreceded, {"has_process_attribute": $conditions}])
     : $withPreceded
 )
