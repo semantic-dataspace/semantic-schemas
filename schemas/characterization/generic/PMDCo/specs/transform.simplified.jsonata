@@ -37,22 +37,29 @@
       )})
     : undefined;
 
+  $firstInput := $exists(inputs) and $count(inputs) > 0 ? inputs[0] : undefined;
+
   $measured := $exists(results) and $count(results) > 0
     ? $map(results, function($r, $i) {(
-        $rSlug := $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-");
-        $datum := {
-          "type":        "obo:IAO_0000109",
-          "id":          $stepId & "-result-" & $rSlug & "-smd",
-          "label":       $r.name,
-          "result_type": $r.name
-        };
+        $rSlug     := $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-");
+        $datumBase := $stepId & "-result-" & $rSlug;
+        $qualityNode := $merge([
+          {"quality_type": $r.name, "id": $datumBase & "-quality"},
+          $exists($firstInput) ? {"quality_of": $firstInput} : {}
+        ]);
         $svs := {
           "type":         "obo:OBI_0001931",
-          "id":           $stepId & "-result-" & $rSlug & "-svs",
+          "id":           $datumBase & "-svs",
           "result_value": $r.value
         };
         $withUnit := $exists($r.unit) ? $merge([$svs, {"result_unit": $r.unit}]) : $svs;
-        $merge([$datum, {"has_value_spec": $withUnit}])
+        {
+          "type":           "obo:IAO_0000109",
+          "id":             $datumBase & "-smd",
+          "label":          $r.name,
+          "is_about":       $qualityNode,
+          "has_value_spec": $withUnit
+        }
       )})
     : undefined;
 

@@ -99,9 +99,16 @@
   result_type:
     "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
     "@type": "@id"
-  # iao:IAO_0000136 : datum is about the evaluated specimen
+  # iao:IAO_0000136 : datum is_about the quality individual (embedded node, not IRI ref)
   is_about:
     "@id": "http://purl.obolibrary.org/obo/IAO_0000136"
+  # rdf:type on quality individual (vocabulary-resolved class IRI)
+  quality_type:
+    "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+    "@type": "@id"
+  # ro:RO_0000080 : quality individual is quality of specimen
+  quality_of:
+    "@id": "http://purl.obolibrary.org/obo/RO_0000080"
     "@type": "@id"
   # obi:OBI_0001938 : scalar value specification embedded in each datum
   has_value_spec:
@@ -300,16 +307,33 @@ properties:
           default: result-1-smd
         label:
           title: Property Name
-          description: >-
-            Human-readable name for this result (rdfs:label on the MeasurementDatum node).
+          description: Human-readable name for this result (rdfs:label on the MeasurementDatum node).
           type: string
-        result_type:
-          title: Property Type (IRI)
+        is_about:
+          title: Quality Individual
           description: >-
-            Class IRI for this result type from the characterization-result vocabulary
-            (rdf:type on the MeasurementDatum node).
-          type: string
-          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/base/terms"
+            Quality individual typed with the measured property class.
+            Populated automatically by the transform — do not edit manually.
+          type: object
+          properties:
+            quality_type:
+              title: Quality Class
+              type: string
+              x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/base/terms"
+              options:
+                hidden: true
+            id:
+              title: Quality Individual ID
+              type: string
+              readOnly: true
+              default: result-1-quality
+              options:
+                hidden: true
+            quality_of:
+              title: Specimen IRI
+              type: string
+              options:
+                hidden: true
         has_value_spec:
           title: Value Specification
           description: Scalar value specification holding the numeric value and unit.
