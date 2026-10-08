@@ -309,8 +309,8 @@
           },
           "label": {
             "title": "Property Name",
-            "description": "Human-readable name for this result (rdfs:label on the MeasurementDatum node).",
-            "type": "string"
+            "type": "string",
+            "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/base/terms"
           },
           "is_about": {
             "title": "Quality Individual",
