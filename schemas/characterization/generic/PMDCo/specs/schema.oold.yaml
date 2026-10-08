@@ -135,7 +135,7 @@ allOf:
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for an obi:Assay (generic characterization record)
-x-schema-version: '0.3.0'
+x-schema-version: '0.4.0'
 x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/characterization/generic/PMDCo/specs/schema.oold.generated.json'
 x-maturity: 'draft'
 x-process-step:
@@ -174,6 +174,16 @@ properties:
       Human-readable name for this characterization record
       (e.g. "Tensile test specimen 1", "Hardness measurement batch A").
     type: string
+
+  measurement_device:
+    title: Measurement Device
+    description: >-
+      The instrument used to perform this characterization step.
+      Links to a measurement-device KItem (chameo:usesInstrument).
+    type: string
+    format: kitem
+    x-kitem:
+      ktypeIds: [measurement-device]
 
   has_specified_input:
     title: Inputs
