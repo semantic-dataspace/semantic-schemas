@@ -13,19 +13,28 @@
 #   Assay  (obi:OBI_0000070)
 #     rdfs:label ──────────────────────────────────────── name string
 #     rdfs:comment ────────────────────────────────────── description string  (optional)
-#     has_specified_input ────────────────────────────► Material/Specimen IRI  [× 0..N]
+#     has_specified_input ────────────────────────────► Material/Specimen IRI  [× 0..N]    (obi:OBI_0000293)
+#     has_specified_output ───────────────────────────► Dataset/Specimen IRI  [× 0..N]     (obi:OBI_0000299)
 #     preceded_by ────────────────────────────────────► Assay IRI  [× 0..N]  (optional)
 #     has_process_attribute ─────────────────────────► ParameterSpecification (pmdco:PMD_0000013)  [× 0..N]  (optional)
 #       rdfs:label ──────── parameter name
 #       qudt:value ──────── numeric value (xsd:double)
 #       qudt:hasUnit ─────── QUDT unit IRI
+#     measured_properties ───────────────────────────► MeasurementDatum (iao:IAO_0000109)  [× 0..N]  (obi:OBI_0000299)
+#       rdfs:label ─────────── result name
+#       iao:IAO_0000136 ─────► Specimen IRI  (is_about, optional)
+#       obi:OBI_0001938 ─────► ScalarValueSpecification (obi:OBI_0001931)
+#         obi:OBI_0001937 ──── numeric value (xsd:double)
+#         iao:IAO_0000039 ──── QUDT unit IRI
 #
 # Design notes:
 #   - OBI Assay (OBI_0000070) is the canonical class for planned characterization
 #     processes in the PMDCo ecosystem.  It is the superclass from which domain-
 #     specific characterization schemas (e.g. tensile test, hardness test) inherit.
-#   - Measured results are not included here: each specialised schema defines its
-#     own result fields, typed to the appropriate domain ontology classes.
+#   - has_specified_output (obi:OBI_0000299) links to output Dataset/Specimen KItem IRIs.
+#   - measured_properties uses the same obi:OBI_0000299 predicate but as embedded
+#     MeasurementDatum nodes — valid because JSON-LD context keys differ (@type:@id vs node).
+#   - Specialised schemas may override label enum and add domain-specific fields.
 #   - This schema is the characterization counterpart of manufacturing/record/PMDCo/.
 #     The structural pattern (inputs, conditions, chain position) is identical;
 #     only the root class differs.
@@ -81,13 +90,37 @@
   parameter_unit:
     "@id": "qudt:hasUnit"
     "@type": "@id"
+  # obi:OBI_0000299 : inline MeasurementDatum result nodes (same IRI as has_specified_output
+  # but no @type:@id — objects are embedded node objects, not IRI strings)
+  measured_properties:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
+    "@container": "@set"
+  # iao:IAO_0000136 : datum is about the evaluated specimen
+  is_about:
+    "@id": "http://purl.obolibrary.org/obo/IAO_0000136"
+    "@type": "@id"
+  # obi:OBI_0001938 : scalar value specification embedded in each datum
+  has_value_spec:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0001938"
+  # obi:OBI_0001937 : numeric value predicate for ScalarValueSpecification
+  result_value:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0001937"
+    "@type": "xsd:double"
+  # iao:IAO_0000039 : unit IRI
+  result_unit:
+    "@id": "http://purl.obolibrary.org/obo/IAO_0000039"
+    "@type": "@id"
+  # obi:OBI_0001927 : value spec points back to the quality it quantifies
+  specifies_value_of:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0001927"
+    "@type": "@id"
 
 allOf:
   - $ref: "../../../../process-step/PMDCo/specs/schema.oold.yaml"
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for an obi:Assay (generic characterization record)
-x-schema-version: '0.2.1'
+x-schema-version: '0.3.0'
 x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/characterization/generic/PMDCo/specs/schema.oold.generated.json'
 x-maturity: 'draft'
 x-process-step:
@@ -224,4 +257,95 @@ properties:
           description: Search and select a QUDT unit from the vocabulary service.
           type: string
           x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
+    default: []
+
+  measured_properties:
+    title: Measured Properties
+    description: >-
+      Scalar results identified from this characterization step.
+      Each entry is a MeasurementDatum (IAO_0000109) with a property name,
+      numeric value, and unit. Optionally links back to the specimen via is_about.
+      Maps to obi:OBI_0000299 "has specified output" as inline embedded nodes
+      (distinct from has_specified_output which carries KItem IRI links).
+    type: array
+    items:
+      type: object
+      title: Measurement Result
+      required:
+        - type
+        - id
+        - label
+        - has_value_spec
+      properties:
+        type:
+          title: Type
+          type: array
+          items:
+            type: string
+          readOnly: true
+          const: ["obo:IAO_0000109"]
+          default: ["obo:IAO_0000109"]
+          options:
+            enum_titles:
+              - iao:MeasurementDatum
+        id:
+          title: Datum ID
+          description: Identifier for this result node; managed by the consumer.
+          type: string
+          readOnly: true
+          default: result-1-smd
+        label:
+          title: Property Name
+          description: >-
+            Name of the measured property. Select from the characterization-result
+            vocabulary or enter a custom label.
+          type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/all/terms"
+        is_about:
+          title: Is About (Specimen)
+          description: IRI of the specimen this result was measured on (auto-filled by transformer).
+          type: string
+          readOnly: true
+          default: ""
+        has_value_spec:
+          title: Value Specification
+          description: Scalar value specification holding the numeric value and unit.
+          type: object
+          required:
+            - type
+            - id
+            - result_value
+            - result_unit
+          properties:
+            type:
+              title: Type
+              type: array
+              items:
+                type: string
+              readOnly: true
+              const: ["obo:OBI_0001931"]
+              default: ["obo:OBI_0001931"]
+              options:
+                enum_titles:
+                  - obi:ScalarValueSpecification
+            id:
+              title: Value Spec ID
+              type: string
+              readOnly: true
+              default: result-1-svs
+            result_value:
+              title: Value
+              description: Numeric measurement value.
+              type: number
+            result_unit:
+              title: Unit
+              description: Search and select a QUDT unit from the vocabulary service.
+              type: string
+              x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
+            specifies_value_of:
+              title: Specifies Value Of
+              description: IRI of the quality this value quantifies (derived by transformer).
+              type: string
+              readOnly: true
+              default: ""
     default: []
