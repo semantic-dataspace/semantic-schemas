@@ -30,7 +30,7 @@
 # Change any label only in concert with all consuming schemas and notebooks.
 #
 # Sections:
-#   1. Tensile test           — TTO IRIs (existing ontology, unchanged)
+#   1. Tensile test           — TTO v3.0.0 IRIs (strength, elongation, area, ratios)
 #   2. Nanoindentation        — dnano: IRIs (new DSMS terms, per-indent)
 #   3. Nanoindentation stats  — dnano: IRIs (new DSMS terms, per-session)
 #   4. Hardness               — PMDCo IRIs (commented; verify before activating)
@@ -40,34 +40,66 @@
 
 # =============================================================================
 # 1. TENSILE TEST — TTO classes (TTO v3.0.0)
-#    IRIs confirmed from schemas/characterization/tensile-test/TTO/specs/schema.oold.yaml
+#    IRIs confirmed from tto-full.ttl (https://w3id.org/pmd/tto/).
+#    TTO v3 labels are German; English labels below follow ISO 6892-1:2019-11
+#    symbol conventions and are authoritative within DSMS.
 # =============================================================================
 
+# ── Strength results ─────────────────────────────────────────────────────────
+
 tto:TTO_0000009  a owl:Class ; rdfs:label "Yield Strength (Re)"@en ;
-    skos:definition "Lower yield strength or general yield stress under uniaxial tension (ISO 6892-1)."@en .
+    skos:definition "Lower yield strength or general yield stress under uniaxial tension (ISO 6892-1 §3.10.1/3.10.2). TTO: Streckgrenze."@en .
 
 tto:TTO_0000059  a owl:Class ; rdfs:label "Upper Yield Strength (ReH)"@en ;
-    skos:definition "Maximum stress before the first force decrease during plastic yielding (ISO 6892-1)."@en .
+    skos:definition "Maximum stress before the first force decrease during plastic yielding (ISO 6892-1 §3.10.2.1). TTO: Obere Streckgrenze."@en .
 
 tto:TTO_0000022  a owl:Class ; rdfs:label "Lower Yield Strength (ReL)"@en ;
-    skos:definition "Lowest stress during plastic yielding, ignoring transient initial effects (ISO 6892-1)."@en .
+    skos:definition "Lowest stress during plastic yielding, ignoring transient initial effects (ISO 6892-1 §3.10.2.2). TTO: lower yield strength."@en .
 
 tto:TTO_0000053  a owl:Class ; rdfs:label "Tensile Strength (Rm)"@en ;
-    skos:definition "Maximum force divided by original cross-sectional area (ISO 6892-1)."@en .
+    skos:definition "Maximum force divided by original cross-sectional area (ISO 6892-1 §3.10.4). TTO: Zugfestigkeit."@en .
 
 tto:TTO_0000047  a owl:Class ; rdfs:label "Proof Strength (Rp0.2)"@en ;
-    skos:definition "Stress at which plastic strain equals 0.2 % of gauge length (ISO 6892-1)."@en .
+    skos:definition "Stress at which non-proportional extension equals 0.2 % of extensometer gauge length (ISO 6892-1 §3.10.3.1). TTO: Dehngrenze bei plastischer Extensometer-Dehnung Rp02."@en .
+
+tto:TTO_0000046  a owl:Class ; rdfs:label "Proof Strength (Rp0.1)"@en ;
+    skos:definition "Stress at which non-proportional extension equals 0.1 % of extensometer gauge length (ISO 6892-1 §3.10.3.1). TTO: Dehngrenze bei plastischer Extensometer-Dehnung Rp01."@en .
+
+tto:TTO_0000045  a owl:Class ; rdfs:label "Proof Strength, Total Extension (Rt0.5)"@en ;
+    skos:definition "Stress at which total extension (elastic + plastic) equals 0.5 % of extensometer gauge length (ISO 6892-1 §3.10.3.2). TTO: Dehngrenze bei gesamter Extensometer-Dehnung."@en .
+
+# ── Elongation / strain results ───────────────────────────────────────────────
 
 tto:TTO_0000033  a owl:Class ; rdfs:label "Elongation After Fracture (A)"@en ;
-    skos:definition "Permanent elongation of gauge length after fracture, as percentage (ISO 6892-1)."@en .
+    skos:definition "Permanent elongation of gauge length after fracture expressed as percentage of original gauge length (ISO 6892-1 §3.6.1). TTO: Bruchdehnung."@en .
 
-tto:TTO_0000035  a owl:Class ; rdfs:label "Uniform Elongation (Ag)"@en ;
-    skos:definition "Elongation at maximum force, onset of necking (ISO 6892-1)."@en .
+tto:TTO_0000037  a owl:Class ; rdfs:label "Non-proportional Elongation at Max Force (Ag)"@en ;
+    skos:definition "Non-proportional (plastic) elongation at maximum force expressed as percentage (ISO 6892-1 §3.6.4). TTO: Plastische Extensometer-Dehnung bei Höchstkraft."@en .
+
+tto:TTO_0000040  a owl:Class ; rdfs:label "Total Elongation at Max Force (Agt)"@en ;
+    skos:definition "Total elongation (elastic + plastic) at maximum force expressed as percentage (ISO 6892-1 §3.6.5). TTO: Gesamte Extensometer-Dehnung bei Höchstkraft."@en .
+
+tto:TTO_0000039  a owl:Class ; rdfs:label "Total Elongation at Fracture (At)"@en ;
+    skos:definition "Total elongation at fracture including elastic component, expressed as percentage (ISO 6892-1). TTO: Gesamte Extensometer-Dehnung beim Bruch."@en .
+
+tto:TTO_0000041  a owl:Class ; rdfs:label "Yield Point Extension (Ae)"@en ;
+    skos:definition "Extension during discontinuous yielding between upper and lower yield strength (ISO 6892-1 §3.6.3). TTO: Streckgrenzen-Extensometer-Dehnung."@en .
+
+tto:TTO_0000035  a owl:Class ; rdfs:label "Permanent Elongation (Ae)"@en ;
+    skos:definition "Residual (plastic) elongation after removal of a specified stress, expressed as percentage (ISO 6892-1). TTO: Bleibende Dehnung."@en .
+
+# ── Area / geometry results ───────────────────────────────────────────────────
 
 tto:TTO_0000038  a owl:Class ; rdfs:label "Reduction of Area (Z)"@en ;
-    skos:definition "Change in cross-sectional area at fracture divided by original area (ISO 6892-1)."@en .
+    skos:definition "Change in cross-sectional area at fracture as percentage of original cross-sectional area (ISO 6892-1 §3.8). TTO: Brucheinschnürung."@en .
 
-# Young's Modulus — TTO IRI not yet confirmed; uncomment when verified.
+# ── Derived ratios ────────────────────────────────────────────────────────────
+
+tto:TTO_1000000  a owl:Class ; rdfs:label "Yield Strength Ratio (Re/Rm)"@en ;
+    skos:definition "Ratio of yield strength to tensile strength, used as a measure of work-hardening capacity. TTO: Streckgrenzenverhältnis."@en .
+
+# ── Not yet active ────────────────────────────────────────────────────────────
+# Young's Modulus — TTO IRI not confirmed in v3.0.0; uncomment when verified.
 # tto:TTO_0000YYY  a owl:Class ; rdfs:label "Young's Modulus (E)"@en .
 
 # =============================================================================

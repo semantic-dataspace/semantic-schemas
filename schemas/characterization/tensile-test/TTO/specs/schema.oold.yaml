@@ -345,9 +345,15 @@ properties:
                 - tto:TTO_0000022
                 - tto:TTO_0000053
                 - tto:TTO_0000047
+                - tto:TTO_0000046
+                - tto:TTO_0000045
                 - tto:TTO_0000033
-                - tto:TTO_0000035
+                - tto:TTO_0000037
+                - tto:TTO_0000040
+                - tto:TTO_0000039
+                - tto:TTO_0000041
                 - tto:TTO_0000038
+                - tto:TTO_1000000
               options:
                 enum_titles:
                   - Yield Strength (Re)
@@ -355,9 +361,15 @@ properties:
                   - Lower Yield Strength (ReL)
                   - Tensile Strength (Rm)
                   - Proof Strength (Rp0.2)
+                  - Proof Strength (Rp0.1)
+                  - Proof Strength, Total Extension (Rt0.5)
                   - Elongation After Fracture (A)
-                  - Uniform Elongation (Ag)
+                  - Non-proportional Elongation at Max Force (Ag)
+                  - Total Elongation at Max Force (Agt)
+                  - Total Elongation at Fracture (At)
+                  - Yield Point Extension (Ae)
                   - Reduction of Area (Z)
+                  - Yield Strength Ratio (Re/Rm)
             id:
               title: Quality IRI
               type: string
