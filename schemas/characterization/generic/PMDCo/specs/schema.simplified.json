@@ -39,6 +39,12 @@
       "uniqueItems": true,
       "default": []
     },
+    "measurement_device": {
+      "title": "Measurement Device IRI",
+      "description": "IRI of the measurement-device KItem used to perform this characterization step (chameo:usesInstrument).",
+      "type": "string",
+      "format": "uri"
+    },
     "preceded_by": {
       "title": "Preceded By (Step IRIs)",
       "description": "IRIs of characterization steps that directly precede this one.",

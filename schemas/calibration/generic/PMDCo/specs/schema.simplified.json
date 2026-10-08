@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.simplified.json",
+  "title": "Calibration Record (Simplified Input)",
+  "description": "A user-friendly form to document a calibration event for a measurement instrument. Captures calibration type, validity period, reference standards used, conditions, and accuracy claims. Automatically converted to a standardised RDF representation (CHAMEO/PMDCo OO-LD). Link this record to the instrument KItem via the 'instrument' field — instruments can have multiple calibration records.",
+  "type": "object",
+  "required": ["calibration_name", "calibration_type", "valid_from"],
+  "additionalProperties": false,
+  "properties": {
+
+    "calibration_name": {
+      "title": "Calibration Name",
+      "description": "Human-readable name for this calibration event. Include type, instrument, and date.",
+      "type": "string",
+      "minLength": 1,
+      "examples": [
+        "Temperature Calibration — NETZSCH DSC300 — 2026-01-08",
+        "Sensitivity Calibration — DSC300 Supreme — 2026-01-12"
+      ]
+    },
+    "calibration_id": {
+      "title": "Calibration ID",
+      "description": "Optional IRI slug for this calibration node in the RDF graph. Auto-derived from calibration_name if omitted.",
+      "type": "string"
+    },
+
+    "calibration_type": {
+      "title": "Calibration Type",
+      "description": "Type of calibration performed.",
+      "type": "string",
+      "enum": [
+        "Temperature",
+        "Sensitivity",
+        "TauR",
+        "Load Cell",
+        "Displacement",
+        "Other"
+      ],
+      "examples": ["Temperature", "Sensitivity"]
+    },
+
+    "valid_from": {
+      "title": "Valid From",
+      "description": "Date from which this calibration is valid (ISO 8601, YYYY-MM-DD).",
+      "type": "string",
+      "format": "date",
+      "examples": ["2026-01-08"]
+    },
+    "valid_until": {
+      "title": "Valid Until",
+      "description": "Date until which this calibration is valid. Omit if open-ended.",
+      "type": "string",
+      "format": "date",
+      "examples": ["2026-07-08"]
+    },
+
+    "measurement_device": {
+      "title": "Measurement Device IRI",
+      "description": "IRI of the measurement-device KItem this calibration applies to.",
+      "type": "string",
+      "format": "uri",
+      "examples": ["https://kiran.materials-data.space/knowledge/measurement-device/netzsch-dsc300-supreme-abc123"]
+    },
+
+    "reference_standards": {
+      "title": "Reference Standards",
+      "description": "IRIs of reference material or specimen KItems used as calibration standards (e.g. Indium, Zinc, Aluminium).",
+      "type": "array",
+      "items": { "type": "string", "format": "uri" },
+      "uniqueItems": true,
+      "default": []
+    },
+
+    "conditions": {
+      "title": "Calibration Conditions",
+      "description": "Quantitative conditions under which the calibration was performed. Each entry: name, value, unit.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "additionalProperties": false,
+        "properties": {
+          "name":     { "title": "Condition Name", "type": "string", "examples": ["Heating Rate", "Atmosphere", "Crucible Type"] },
+          "value":    { "title": "Value", "type": "number" },
+          "unit":     { "title": "Unit", "type": "string", "examples": ["K/min", "ml/min"] },
+          "type_iri": { "title": "Parameter Type IRI", "type": "string" }
+        }
+      },
+      "default": []
+    },
+
+    "results": {
+      "title": "Accuracy Claims",
+      "description": "Scalar accuracy results from this calibration. Each entry becomes a MeasurementDatum (IAO_0000109) in the RDF graph. Examples: temperature deviation, correction factor, repeatability.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "value", "unit"],
+        "additionalProperties": false,
+        "properties": {
+          "name":  { "title": "Property Name", "type": "string",
+                     "examples": ["Temperature Deviation", "Correction Factor", "Repeatability", "Onset Temperature (In)"] },
+          "value": { "title": "Value", "type": "number" },
+          "unit":  { "title": "Unit", "type": "string",
+                     "examples": ["Kelvin (K)", "Degree Celsius (°C)", "Dimensionless", "Percent (%)"] }
+        }
+      },
+      "default": [],
+      "examples": [
+        [
+          { "name": "Onset Temperature (In)",  "value": 156.6, "unit": "Degree Celsius (°C)" },
+          { "name": "Temperature Deviation",   "value":   0.3, "unit": "Kelvin (K)" },
+          { "name": "Correction Factor",       "value": 1.002, "unit": "Dimensionless" }
+        ]
+      ]
+    }
+  },
+
+  "examples": [
+    {
+      "calibration_name": "Temperature Calibration — NETZSCH DSC300 — 2026-01-08",
+      "calibration_type": "Temperature",
+      "valid_from": "2026-01-08",
+      "valid_until": "2026-07-08",
+      "measurement_device": "https://kiran.materials-data.space/knowledge/measurement-device/netzsch-dsc300-supreme-abc123",
+      "conditions": [
+        { "name": "Heating Rate", "value": 10.0, "unit": "K/min" },
+        { "name": "Atmosphere",   "value": 50.0, "unit": "ml/min" }
+      ],
+      "results": [
+        { "name": "Onset Temperature (In)",  "value": 156.6, "unit": "Degree Celsius (°C)" },
+        { "name": "Onset Temperature (Zn)",  "value": 419.5, "unit": "Degree Celsius (°C)" },
+        { "name": "Temperature Deviation",   "value":   0.3, "unit": "Kelvin (K)" }
+      ]
+    }
+  ]
+}
