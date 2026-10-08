@@ -6,15 +6,20 @@
    *   step_name    string   required
    *   step_id      string   optional, derived from step_name if omitted
    *   description  string   optional
-   *   inputs       array    optional: each item is a specimen/material IRI string
-   *   preceded_by  array    optional: each item is a step IRI string
-   *   conditions   array    optional
-   *     name       string   required
+   *   inputs       array    optional: specimen/material IRI strings (has_specified_input)
+   *   outputs      array    optional: dataset/specimen IRI strings (has_specified_output)
+   *   preceded_by  array    optional: step IRI strings
+   *   conditions   array    optional: PMDCo ParameterSpecification nodes
+   *     name       string   required: vocabulary label, e.g. "Test Temperature"
    *     value      number   optional
-   *     unit       string   optional
+   *     unit       string   optional: vocabulary label or QUDT IRI
+   *   results      array    optional: MeasurementDatum (IAO_0000109) nodes
+   *     name       string   required: property label (stored as rdfs:label)
+   *     value      number   optional
+   *     unit       string   optional: vocabulary label or QUDT IRI
    */
 
-  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/characterization-generic-PMDCo-v0.1.0/schemas/characterization/generic/PMDCo/specs/schema.oold.yaml";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/characterization/generic/PMDCo/specs/schema.oold.generated.json";
 
   $slug   := $replace($lowercase($trim(step_name)), /[^a-z0-9]+/, "-");
   $stepId := $exists(step_id) ? step_id : "char-generic-" & $slug;
@@ -32,6 +37,24 @@
       )})
     : undefined;
 
+  $measured := $exists(results) and $count(results) > 0
+    ? $map(results, function($r, $i) {(
+        $rSlug := $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-");
+        $datum := {
+          "type":  "obo:IAO_0000109",
+          "id":    $stepId & "-result-" & $rSlug & "-smd",
+          "label": $r.name
+        };
+        $svs := {
+          "type":         "obo:OBI_0001931",
+          "id":           $stepId & "-result-" & $rSlug & "-svs",
+          "result_value": $r.value
+        };
+        $withUnit := $exists($r.unit) ? $merge([$svs, {"result_unit": $r.unit}]) : $svs;
+        $merge([$datum, {"has_value_spec": $withUnit}])
+      )})
+    : undefined;
+
   $base := {
     "conforms_to": $schemaUri,
     "type":  "obi:0000070",
@@ -39,11 +62,13 @@
     "label": step_name
   };
 
-  $withDesc     := $exists(description)  ? $merge([$base,       {"description":           description}])   : $base;
-  $withInputs   := $exists(inputs)   and $count(inputs)   > 0 ? $merge([$withDesc,    {"has_specified_input": inputs}])   : $withDesc;
-  $withPreceded := $exists(preceded_by) and $count(preceded_by) > 0 ? $merge([$withInputs, {"preceded_by": preceded_by}]) : $withInputs;
+  $withDesc     := $exists(description)    ? $merge([$base,         {"description":          description}])  : $base;
+  $withInputs   := $exists(inputs)   and $count(inputs)   > 0 ? $merge([$withDesc,    {"has_specified_input":  inputs}])   : $withDesc;
+  $withOutputs  := $exists(outputs)  and $count(outputs)  > 0 ? $merge([$withInputs,  {"has_specified_output": outputs}])  : $withInputs;
+  $withPreceded := $exists(preceded_by) and $count(preceded_by) > 0 ? $merge([$withOutputs, {"preceded_by": preceded_by}]) : $withOutputs;
+  $withConds    := $exists($conditions) ? $merge([$withPreceded, {"has_process_attribute": $conditions}]) : $withPreceded;
 
-  $exists($conditions)
-    ? $merge([$withPreceded, {"has_process_attribute": $conditions}])
-    : $withPreceded
+  $exists($measured)
+    ? $merge([$withConds, {"measured_properties": $measured}])
+    : $withConds
 )

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "schema.simplified.json",
   "title": "Characterization Step (Simplified Input)",
-  "description": "A user-friendly form to describe a single characterization step (measurement, test, or analysis). Provide a name, the specimens or materials being characterised, and any quantitative test conditions. This input will be automatically converted to a standardised RDF representation (OBI/PMDCo OO-LD).",
+  "description": "A user-friendly form to describe a single characterization step (measurement, test, or analysis). Provide a name, the specimens or materials being characterised, any quantitative test conditions, and scalar results. Automatically converted to a standardised RDF representation (OBI/PMDCo OO-LD).",
   "type": "object",
   "required": ["step_name"],
   "additionalProperties": false,
@@ -25,7 +25,15 @@
     },
     "inputs": {
       "title": "Specimen / Material IRIs",
-      "description": "IRIs of the specimens or materials being characterised. Reference existing knowledge-graph nodes.",
+      "description": "IRIs of the specimens or materials being characterised (obi:has_specified_input).",
+      "type": "array",
+      "items": { "type": "string", "format": "uri" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "outputs": {
+      "title": "Output Dataset / Specimen IRIs",
+      "description": "IRIs of datasets or post-test specimens produced by this step (obi:has_specified_output).",
       "type": "array",
       "items": { "type": "string", "format": "uri" },
       "uniqueItems": true,
@@ -41,19 +49,69 @@
     },
     "conditions": {
       "title": "Test Conditions / Parameters",
-      "description": "Quantitative conditions under which this step is carried out.",
+      "description": "Quantitative conditions under which this step is carried out. Each entry: name (parameter label), value (number), unit (vocabulary label or QUDT IRI).",
       "type": "array",
       "items": {
         "type": "object",
         "required": ["name"],
         "additionalProperties": false,
         "properties": {
-          "name":  { "title": "Condition Name", "type": "string" },
-          "value": { "title": "Value", "type": "number" },
-          "unit":  { "title": "Unit", "type": "string" }
+          "name":     { "title": "Condition Name", "type": "string", "examples": ["Test Temperature", "Crosshead Speed", "Gauge Length"] },
+          "value":    { "title": "Value", "type": "number" },
+          "unit":     { "title": "Unit", "type": "string", "examples": ["Degree Celsius (°C)", "Millimetre per Minute (mm/min)", "Millimetre (mm)"] },
+          "type_iri": { "title": "Parameter Type IRI", "description": "Optional explicit IRI override for rdf:type. If omitted, the name is used as vocabulary label.", "type": "string" }
         }
       },
       "default": []
+    },
+    "results": {
+      "title": "Measured Results",
+      "description": "Scalar results from this characterization step. Each entry becomes a MeasurementDatum (IAO_0000109) in the RDF graph. name: property label; value: numeric magnitude; unit: vocabulary label or QUDT IRI.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "value", "unit"],
+        "additionalProperties": false,
+        "properties": {
+          "name":  {
+            "title": "Property Name",
+            "type": "string",
+            "examples": ["Yield Strength (Re)", "Tensile Strength (Rm)", "Elongation after Fracture (A)", "Vickers Hardness HV10"]
+          },
+          "value": { "title": "Value", "type": "number" },
+          "unit":  {
+            "title": "Unit",
+            "type": "string",
+            "examples": ["Megapascal (MPa)", "Percent (%)", "Degree Celsius (°C)", "http://qudt.org/vocab/unit/MegaPA"]
+          }
+        }
+      },
+      "default": [],
+      "examples": [
+        [
+          { "name": "Yield Strength (Re)",            "value": 285.0, "unit": "Megapascal (MPa)" },
+          { "name": "Tensile Strength (Rm)",          "value": 320.0, "unit": "Megapascal (MPa)" },
+          { "name": "Elongation after Fracture (A)",  "value":   8.5, "unit": "Percent (%)" }
+        ]
+      ]
     }
-  }
+  },
+  "examples": [
+    {
+      "step_name": "Tensile Test AA2618 Aged 200°C 2h — S2",
+      "inputs":  ["https://your-dsms.example.com/knowledge/specimen/my-specimen"],
+      "outputs": ["https://your-dsms.example.com/knowledge/dataset/my-raw-dataset"],
+      "conditions": [
+        { "name": "Test Temperature", "value": 23.0,    "unit": "Degree Celsius (°C)" },
+        { "name": "Crosshead Speed",  "value":  2.0,    "unit": "Millimetre per Minute (mm/min)" },
+        { "name": "Gauge Length",     "value": 50.0,    "unit": "Millimetre (mm)" },
+        { "name": "Strain Rate",      "value": 6.67e-4, "unit": "Per Second (1/s)" }
+      ],
+      "results": [
+        { "name": "Yield Strength (Re)",           "value": 285.0, "unit": "Megapascal (MPa)" },
+        { "name": "Tensile Strength (Rm)",         "value": 320.0, "unit": "Megapascal (MPa)" },
+        { "name": "Elongation after Fracture (A)", "value":   8.5, "unit": "Percent (%)" }
+      ]
+    }
+  ]
 }
