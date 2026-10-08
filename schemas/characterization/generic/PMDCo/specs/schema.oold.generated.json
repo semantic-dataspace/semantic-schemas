@@ -318,20 +318,6 @@
             "type": "string",
             "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/all/terms"
           },
-          "label": {
-            "title": "Property Label",
-            "description": "Human-readable label — auto-filled from vocabulary term, not edited manually.",
-            "type": "string",
-            "options": {
-              "hidden": true
-            }
-          },
-          "is_about": {
-            "title": "Is About (Specimen)",
-            "description": "IRI of the specimen this result was measured on (auto-filled by transformer).",
-            "type": "string",
-            "readOnly": true
-          },
           "has_value_spec": {
             "title": "Value Specification",
             "description": "Scalar value specification holding the numeric value and unit.",
@@ -367,13 +353,6 @@
                 "description": "Search and select a QUDT unit from the vocabulary service.",
                 "type": "string",
                 "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
-              },
-              "specifies_value_of": {
-                "title": "Specifies Value Of",
-                "description": "IRI of the quality this value quantifies (derived by transformer).",
-                "type": "string",
-                "readOnly": true,
-                "default": ""
               }
             }
           }
