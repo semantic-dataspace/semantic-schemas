@@ -41,9 +41,10 @@
     ? $map(results, function($r, $i) {(
         $rSlug := $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-");
         $datum := {
-          "type":  "obo:IAO_0000109",
-          "id":    $stepId & "-result-" & $rSlug & "-smd",
-          "label": $r.name
+          "type":        "obo:IAO_0000109",
+          "id":          $stepId & "-result-" & $rSlug & "-smd",
+          "label":       $r.name,
+          "result_type": $r.name
         };
         $svs := {
           "type":         "obo:OBI_0001931",

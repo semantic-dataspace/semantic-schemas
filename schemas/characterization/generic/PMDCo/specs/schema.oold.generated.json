@@ -302,7 +302,12 @@
           },
           "label": {
             "title": "Property Name",
-            "description": "Result property name (rdfs:label on the MeasurementDatum node). Resolved to a characterization-result class IRI via vocabulary lookup.",
+            "description": "Human-readable name for this result (rdfs:label on the MeasurementDatum node).",
+            "type": "string"
+          },
+          "result_type": {
+            "title": "Property Type (IRI)",
+            "description": "Class IRI for this result type from the characterization-result vocabulary (rdf:type on the MeasurementDatum node).",
             "type": "string",
             "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/base/terms"
           },
