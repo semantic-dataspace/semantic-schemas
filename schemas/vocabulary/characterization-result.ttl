@@ -47,56 +47,98 @@
 
 # ── Strength results ─────────────────────────────────────────────────────────
 
-tto:TTO_0000009  a owl:Class ; rdfs:label "Yield Strength (Re)"@en ;
-    skos:definition "Lower yield strength or general yield stress under uniaxial tension (ISO 6892-1 §3.10.1/3.10.2). TTO: Streckgrenze."@en .
+tto:TTO_0000009  a owl:Class ;
+    rdfs:label "Streckgrenze"@de ;
+    skos:altLabel "Yield Strength"@en , "Re"@en ;
+    skos:definition "Wenn der metallische Werkstoff diese Eigenschaft aufweist: die Spannung zu einem bestimmten Zeitpunkt während des Versuchs bei dem eine plastische Verformung ohne Zunahme der Kraft auftritt."@de ;
+    skos:definition "Lower yield strength or general yield stress during plastic flow (ISO 6892-1)."@en .
 
-tto:TTO_0000059  a owl:Class ; rdfs:label "Upper Yield Strength (ReH)"@en ;
-    skos:definition "Maximum stress before the first force decrease during plastic yielding (ISO 6892-1 §3.10.2.1). TTO: Obere Streckgrenze."@en .
+tto:TTO_0000059  a owl:Class ;
+    rdfs:label "Obere Streckgrenze"@de ;
+    skos:altLabel "Upper Yield Strength"@en , "ReH"@en ;
+    skos:definition "Höchste Spannung, bevor der erste Kraftabfall auftritt."@de ;
+    skos:definition "Maximum stress before the first force decrease during plastic yielding (ISO 6892-1)."@en .
 
-tto:TTO_0000022  a owl:Class ; rdfs:label "Lower Yield Strength (ReL)"@en ;
-    skos:definition "Lowest stress during plastic yielding, ignoring transient initial effects (ISO 6892-1 §3.10.2.2). TTO: lower yield strength."@en .
+tto:TTO_0000022  a owl:Class ;
+    rdfs:label "lower yield strength"@en ;
+    skos:altLabel "Untere Streckgrenze"@de , "ReL"@en ;
+    skos:definition "Lowest stress during plastic flow, ignoring initial transient effects (ISO 6892-1)."@en .
 
-tto:TTO_0000053  a owl:Class ; rdfs:label "Tensile Strength (Rm)"@en ;
-    skos:definition "Maximum force divided by original cross-sectional area (ISO 6892-1 §3.10.4). TTO: Zugfestigkeit."@en .
+tto:TTO_0000053  a owl:Class ;
+    rdfs:label "Zugfestigkeit"@de ;
+    skos:altLabel "Tensile Strength"@en , "Rm"@en ;
+    skos:definition "Spannung, die der Höchstkraft entspricht."@de ;
+    skos:definition "Maximum force divided by original cross-sectional area (ISO 6892-1)."@en .
 
-tto:TTO_0000047  a owl:Class ; rdfs:label "Proof Strength (Rp0.2)"@en ;
-    skos:definition "Stress at which non-proportional extension equals 0.2 % of extensometer gauge length (ISO 6892-1 §3.10.3.1). TTO: Dehngrenze bei plastischer Extensometer-Dehnung Rp02."@en .
+tto:TTO_0000047  a owl:Class ;
+    rdfs:label "Dehngrenze bei plastischer Extensometer-Dehnung Rp02"@de ;
+    skos:altLabel "Proof Strength Rp0.2"@en , "Rp0.2"@en ;
+    skos:definition "Spannung bei einer plastischen Extensometer-Dehnung, die 0,2 Prozent der Extensometer-Messlänge entspricht."@de ;
+    skos:definition "Stress at 0.2 % non-proportional extension of extensometer gauge length (ISO 6892-1)."@en .
 
-tto:TTO_0000046  a owl:Class ; rdfs:label "Proof Strength (Rp0.1)"@en ;
-    skos:definition "Stress at which non-proportional extension equals 0.1 % of extensometer gauge length (ISO 6892-1 §3.10.3.1). TTO: Dehngrenze bei plastischer Extensometer-Dehnung Rp01."@en .
+tto:TTO_0000046  a owl:Class ;
+    rdfs:label "Dehngrenze bei plastischer Extensometer-Dehnung Rp01"@de ;
+    skos:altLabel "Proof Strength Rp0.1"@en , "Rp0.1"@en ;
+    skos:definition "Spannung bei einer plastischen Extensometer-Dehnung, die 0,1 Prozent der Extensometer-Messlänge entspricht."@de ;
+    skos:definition "Stress at 0.1 % non-proportional extension of extensometer gauge length (ISO 6892-1)."@en .
 
-tto:TTO_0000045  a owl:Class ; rdfs:label "Proof Strength, Total Extension (Rt0.5)"@en ;
-    skos:definition "Stress at which total extension (elastic + plastic) equals 0.5 % of extensometer gauge length (ISO 6892-1 §3.10.3.2). TTO: Dehngrenze bei gesamter Extensometer-Dehnung."@en .
+tto:TTO_0000045  a owl:Class ;
+    rdfs:label "Dehngrenze bei gesamter Extensometer-Dehnung"@de ;
+    skos:altLabel "Proof Strength Total Extension"@en , "Rt"@en ;
+    skos:definition "Stress at which total extension equals a specified percentage of extensometer gauge length (ISO 6892-1)."@en .
 
 # ── Elongation / strain results ───────────────────────────────────────────────
 
-tto:TTO_0000033  a owl:Class ; rdfs:label "Elongation After Fracture (A)"@en ;
-    skos:definition "Permanent elongation of gauge length after fracture expressed as percentage of original gauge length (ISO 6892-1 §3.6.1). TTO: Bruchdehnung."@en .
+tto:TTO_0000033  a owl:Class ;
+    rdfs:label "Bruchdehnung"@de ;
+    skos:altLabel "Elongation After Fracture"@en , "A"@en ;
+    skos:definition "Bleibende Verlängerung der Messlänge nach dem Bruch (Lu − Lo), angegeben in Prozent, bezogen auf die Anfangsmesslänge."@de ;
+    skos:definition "Permanent elongation of gauge length after fracture expressed as percentage of original gauge length (ISO 6892-1)."@en .
 
-tto:TTO_0000037  a owl:Class ; rdfs:label "Non-proportional Elongation at Max Force (Ag)"@en ;
-    skos:definition "Non-proportional (plastic) elongation at maximum force expressed as percentage (ISO 6892-1 §3.6.4). TTO: Plastische Extensometer-Dehnung bei Höchstkraft."@en .
+tto:TTO_0000037  a owl:Class ;
+    rdfs:label "Plastische Extensometer-Dehnung bei Höchstkraft"@de ;
+    skos:altLabel "Non-proportional Elongation at Maximum Force"@en , "Ag"@en ;
+    skos:definition "Plastic extension at maximum force, expressed as a percentage of the extensometer gauge length (ISO 6892-1)."@en .
 
-tto:TTO_0000040  a owl:Class ; rdfs:label "Total Elongation at Max Force (Agt)"@en ;
-    skos:definition "Total elongation (elastic + plastic) at maximum force expressed as percentage (ISO 6892-1 §3.6.5). TTO: Gesamte Extensometer-Dehnung bei Höchstkraft."@en .
+tto:TTO_0000040  a owl:Class ;
+    rdfs:label "Gesamte Extensometer-Dehnung bei Höchstkraft"@de ;
+    skos:altLabel "Total Elongation at Maximum Force"@en , "Agt"@en ;
+    skos:definition "Gesamte Verlängerung (elastische plus plastische Verlängerung) der Extensometer-Messlänge bei Höchstkraft, angegeben in Prozent."@de ;
+    skos:definition "Total elongation (elastic + plastic) at maximum force expressed as percentage of extensometer gauge length (ISO 6892-1)."@en .
 
-tto:TTO_0000039  a owl:Class ; rdfs:label "Total Elongation at Fracture (At)"@en ;
-    skos:definition "Total elongation at fracture including elastic component, expressed as percentage (ISO 6892-1). TTO: Gesamte Extensometer-Dehnung beim Bruch."@en .
+tto:TTO_0000039  a owl:Class ;
+    rdfs:label "Gesamte Extensometer-Dehnung beim Bruch"@de ;
+    skos:altLabel "Total Elongation at Fracture"@en , "At"@en ;
+    skos:definition "Gesamte Verlängerung (elastische plus plastische Verlängerung) der Extensometer-Messlänge beim Bruch, angegeben in Prozent."@de ;
+    skos:definition "Total elongation (elastic + plastic) at fracture expressed as percentage of extensometer gauge length (ISO 6892-1)."@en .
 
-tto:TTO_0000041  a owl:Class ; rdfs:label "Yield Point Extension (Ae)"@en ;
-    skos:definition "Extension during discontinuous yielding between upper and lower yield strength (ISO 6892-1 §3.6.3). TTO: Streckgrenzen-Extensometer-Dehnung."@en .
+tto:TTO_0000041  a owl:Class ;
+    rdfs:label "Streckgrenzen-Extensometer-Dehnung"@de ;
+    skos:altLabel "Yield Point Extension"@en , "Ae"@en ;
+    skos:definition "Bei Werkstoffen, die ein diskontinuierliches Fließen zeigen: Verlängerung der Extensometer-Messlänge zwischen dem Beginn örtlichen Fließens und dem Einsetzen gleichmäßiger Verfestigung."@de ;
+    skos:definition "Extension during discontinuous yielding between upper and lower yield strength (ISO 6892-1)."@en .
 
-tto:TTO_0000035  a owl:Class ; rdfs:label "Permanent Elongation (Ae)"@en ;
-    skos:definition "Residual (plastic) elongation after removal of a specified stress, expressed as percentage (ISO 6892-1). TTO: Bleibende Dehnung."@en .
+tto:TTO_0000035  a owl:Class ;
+    rdfs:label "Bleibende Dehnung"@de ;
+    skos:altLabel "Permanent Elongation"@en ;
+    skos:definition "Zunahme der Anfangsmesslänge einer Probe nach Entfernen einer festgelegten Zugspannung, angegeben in Prozent, bezogen auf die Anfangsmesslänge."@de ;
+    skos:definition "Residual elongation after removal of a specified tensile stress, expressed as percentage of original gauge length (ISO 6892-1)."@en .
 
 # ── Area / geometry results ───────────────────────────────────────────────────
 
-tto:TTO_0000038  a owl:Class ; rdfs:label "Reduction of Area (Z)"@en ;
-    skos:definition "Change in cross-sectional area at fracture as percentage of original cross-sectional area (ISO 6892-1 §3.8). TTO: Brucheinschnürung."@en .
+tto:TTO_0000038  a owl:Class ;
+    rdfs:label "Brucheinschnürung"@de ;
+    skos:altLabel "Reduction of Area"@en , "Z"@en ;
+    skos:definition "Größte während des Versuchs aufgetretene Änderung des Querschnitts (So − Su), angegeben in Prozent, bezogen auf den Anfangsquerschnitt So."@de ;
+    skos:definition "Maximum change in cross-sectional area during the test expressed as percentage of original area (ISO 6892-1)."@en .
 
 # ── Derived ratios ────────────────────────────────────────────────────────────
 
-tto:TTO_1000000  a owl:Class ; rdfs:label "Yield Strength Ratio (Re/Rm)"@en ;
-    skos:definition "Ratio of yield strength to tensile strength, used as a measure of work-hardening capacity. TTO: Streckgrenzenverhältnis."@en .
+tto:TTO_1000000  a owl:Class ;
+    rdfs:label "Streckgrenzenverhältnis"@de ;
+    skos:altLabel "Yield Strength Ratio"@en , "Rp0.2/Rm"@en ;
+    skos:definition "Mechanische Eigenschaft, die als Verhältnis zwischen der Dehngrenze Rp0.2 und der Zugfestigkeit Rm bestimmt wird."@de ;
+    skos:definition "Ratio of proof strength Rp0.2 to tensile strength Rm, a measure of work-hardening capacity."@en .
 
 # ── Not yet active ────────────────────────────────────────────────────────────
 # Young's Modulus — TTO IRI not confirmed in v3.0.0; uncomment when verified.

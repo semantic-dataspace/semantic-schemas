@@ -356,20 +356,20 @@ properties:
                 - tto:TTO_1000000
               options:
                 enum_titles:
-                  - Yield Strength (Re)
-                  - Upper Yield Strength (ReH)
-                  - Lower Yield Strength (ReL)
-                  - Tensile Strength (Rm)
-                  - Proof Strength (Rp0.2)
-                  - Proof Strength (Rp0.1)
-                  - Proof Strength, Total Extension (Rt0.5)
-                  - Elongation After Fracture (A)
-                  - Non-proportional Elongation at Max Force (Ag)
-                  - Total Elongation at Max Force (Agt)
-                  - Total Elongation at Fracture (At)
-                  - Yield Point Extension (Ae)
-                  - Reduction of Area (Z)
-                  - Yield Strength Ratio (Re/Rm)
+                  - Streckgrenze
+                  - Obere Streckgrenze
+                  - lower yield strength
+                  - Zugfestigkeit
+                  - Dehngrenze bei plastischer Extensometer-Dehnung Rp02
+                  - Dehngrenze bei plastischer Extensometer-Dehnung Rp01
+                  - Dehngrenze bei gesamter Extensometer-Dehnung
+                  - Bruchdehnung
+                  - Plastische Extensometer-Dehnung bei Höchstkraft
+                  - Gesamte Extensometer-Dehnung bei Höchstkraft
+                  - Gesamte Extensometer-Dehnung beim Bruch
+                  - Streckgrenzen-Extensometer-Dehnung
+                  - Brucheinschnürung
+                  - Streckgrenzenverhältnis
             id:
               title: Quality IRI
               type: string
