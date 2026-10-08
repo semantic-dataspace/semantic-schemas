@@ -1,0 +1,273 @@
+# OO-LD Schema for CalibrationGeneric (PMDCo/CHAMEO pattern)
+# Ontology: Platform MaterialDigital Core Ontology (PMDCo) + CHAMEO
+#   https://w3id.org/pmd/co/
+#   https://w3id.org/emmo/domain/characterisation-methodology/chameo
+#
+# Graph pattern:
+#
+#   Calibration  (chameo:Calibration)
+#     rdfs:label ──────────────────────────────────────── name string
+#     dcterms:type ────────────────────────────────────── calibration type string
+#     schema:validFrom ────────────────────────────────── date string (ISO 8601)
+#     schema:validUntil ───────────────────────────────── date string (optional)
+#     chameo:usesInstrument ──────────────────────────► measurement-device IRI
+#     has_specified_input ────────────────────────────► Reference standard IRI  [× 0..N]
+#     has_process_attribute ─────────────────────────► ParameterSpecification (pmdco:PMD_0000013)  [× 0..N]
+#       rdfs:label ──────── condition name
+#       qudt:value ──────── numeric value (xsd:double)
+#       qudt:hasUnit ─────── QUDT unit IRI
+#     measured_properties ───────────────────────────► MeasurementDatum (iao:IAO_0000109)  [× 0..N]
+#       rdfs:label ─────────── accuracy claim name
+#       obi:OBI_0001938 ─────► ScalarValueSpecification (obi:OBI_0001931)
+#         obi:OBI_0001937 ──── numeric value (xsd:double)
+#         iao:IAO_0000039 ──── QUDT unit IRI
+
+"@context":
+  rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  rdfs: "http://www.w3.org/2000/01/rdf-schema#"
+  xsd: "http://www.w3.org/2001/XMLSchema#"
+  dcterms: "http://purl.org/dc/terms/"
+  schema: "http://schema.org/"
+  conforms_to:
+    "@id": "http://purl.org/dc/terms/conformsTo"
+    "@type": "@id"
+  obo: "http://purl.obolibrary.org/obo/"
+  obi:
+    "@id": "http://purl.obolibrary.org/obo/OBI_"
+    "@prefix": true
+  pmdco: "https://w3id.org/pmd/co/"
+  chameo: "https://w3id.org/emmo/domain/characterisation-methodology/chameo#"
+  qudt: "http://qudt.org/schema/qudt/"
+  uqudt: "http://qudt.org/vocab/unit/"
+  type: "@type"
+  id: "@id"
+  label:
+    "@id": "rdfs:label"
+  calibration_type:
+    "@id": "dcterms:type"
+  valid_from:
+    "@id": "http://schema.org/validFrom"
+    "@type": "xsd:date"
+  valid_until:
+    "@id": "http://schema.org/validUntil"
+    "@type": "xsd:date"
+  uses_instrument:
+    "@id": "chameo:usesInstrument"
+    "@type": "@id"
+  has_specified_input:
+    "@id": "obi:0000293"
+    "@type": "@id"
+    "@container": "@set"
+  has_process_attribute:
+    "@id": "pmdco:PMD_0000009"
+    "@container": "@set"
+  parameter_label:
+    "@id": "rdfs:label"
+  parameter_type:
+    "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+    "@type": "@id"
+  parameter_value:
+    "@id": "qudt:value"
+    "@type": "xsd:double"
+  parameter_unit:
+    "@id": "qudt:hasUnit"
+    "@type": "@id"
+  measured_properties:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
+    "@container": "@set"
+  has_value_spec:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0001938"
+  result_value:
+    "@id": "http://purl.obolibrary.org/obo/OBI_0001937"
+    "@type": "xsd:double"
+  result_unit:
+    "@id": "http://purl.obolibrary.org/obo/IAO_0000039"
+    "@type": "@id"
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: Schema for a chameo:Calibration (generic calibration record)
+x-schema-version: '0.1.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/calibration/generic/PMDCo/specs/schema.oold.generated.json'
+x-maturity: 'draft'
+title: Calibration Generic
+type: object
+required:
+  - type
+  - id
+  - label
+  - calibration_type
+  - valid_from
+
+properties:
+
+  type:
+    title: Type
+    type: array
+    items:
+      type: string
+    readOnly: true
+    const: ["chameo:Calibration"]
+    default: ["chameo:Calibration"]
+
+  id:
+    title: ID
+    description: Identifier for this calibration record instance; managed by the consumer.
+    type: string
+    readOnly: true
+    default: calibration-generic
+
+  label:
+    title: Calibration Name
+    description: Human-readable name for this calibration event.
+    type: string
+
+  calibration_type:
+    title: Calibration Type
+    description: Type of calibration performed.
+    type: string
+    enum:
+      - Temperature
+      - Sensitivity
+      - TauR
+      - Load Cell
+      - Displacement
+      - Other
+
+  valid_from:
+    title: Valid From
+    description: Date from which this calibration is valid (ISO 8601, YYYY-MM-DD).
+    type: string
+    format: date
+
+  valid_until:
+    title: Valid Until
+    description: Date until which this calibration is valid (ISO 8601, YYYY-MM-DD). Omit if open-ended.
+    type: string
+    format: date
+
+  uses_instrument:
+    title: Measurement Device
+    description: IRI of the measurement-device KItem this calibration applies to.
+    type: string
+    format: kitem
+    x-kitem:
+      ktypeIds: [measurement-device]
+
+  has_specified_input:
+    title: Reference Standards
+    description: IRIs of reference material or specimen KItems used as calibration standards.
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds: [specimen, material]
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  has_process_attribute:
+    title: Calibration Conditions
+    description: Quantitative conditions under which the calibration was performed.
+    type: array
+    items:
+      type: object
+      title: Condition
+      required:
+        - type
+        - id
+        - parameter_type
+      properties:
+        type:
+          title: Type
+          type: array
+          items:
+            type: string
+          readOnly: true
+          const: ["pmdco:PMD_0000013"]
+          default: ["pmdco:PMD_0000013"]
+        id:
+          title: ID
+          type: string
+          readOnly: true
+          default: condition-1
+        parameter_type:
+          title: Condition Name
+          type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/process-parameter/use-cases/all/terms"
+        parameter_label:
+          title: Condition Label
+          type: string
+          options:
+            hidden: true
+        parameter_value:
+          title: Value
+          type: number
+        parameter_unit:
+          title: Unit
+          type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
+    default: []
+
+  measured_properties:
+    title: Accuracy Claims
+    description: >-
+      Scalar accuracy results from this calibration event.
+      Each entry is a MeasurementDatum (IAO_0000109) with a property name, numeric value, and unit.
+    type: array
+    items:
+      type: object
+      title: Accuracy Claim
+      required:
+        - type
+        - id
+        - label
+        - has_value_spec
+      properties:
+        type:
+          title: Type
+          type: array
+          items:
+            type: string
+          readOnly: true
+          const: ["obo:IAO_0000109"]
+          default: ["obo:IAO_0000109"]
+        id:
+          title: Datum ID
+          type: string
+          readOnly: true
+          default: result-1-smd
+        label:
+          title: Property Name
+          type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/base/terms"
+        has_value_spec:
+          title: Value Specification
+          type: object
+          required:
+            - type
+            - id
+            - result_value
+            - result_unit
+          properties:
+            type:
+              title: Type
+              type: array
+              items:
+                type: string
+              readOnly: true
+              const: ["obo:OBI_0001931"]
+              default: ["obo:OBI_0001931"]
+            id:
+              title: Value Spec ID
+              type: string
+              readOnly: true
+              default: result-1-svs
+            result_value:
+              title: Value
+              type: number
+            result_unit:
+              title: Unit
+              type: string
+              x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
+    default: []
