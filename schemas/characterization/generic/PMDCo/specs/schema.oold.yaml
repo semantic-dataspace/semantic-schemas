@@ -95,6 +95,10 @@
   measured_properties:
     "@id": "http://purl.obolibrary.org/obo/OBI_0000299"
     "@container": "@set"
+  # rdf:type : property class IRI from characterization-result vocabulary (mirrors parameter_type)
+  result_type:
+    "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+    "@type": "@id"
   # iao:IAO_0000136 : datum is about the evaluated specimen
   is_about:
     "@id": "http://purl.obolibrary.org/obo/IAO_0000136"
@@ -274,7 +278,7 @@ properties:
       required:
         - type
         - id
-        - label
+        - result_type
         - has_value_spec
       properties:
         type:
@@ -294,19 +298,24 @@ properties:
           type: string
           readOnly: true
           default: result-1-smd
-        label:
+        result_type:
           title: Property Name
           description: >-
-            Name of the measured property. Select from the characterization-result
-            vocabulary or enter a custom label.
+            Select the measured property from the characterization-result vocabulary.
+            The IRI is stored as rdf:type on the MeasurementDatum node.
           type: string
           x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/all/terms"
+        label:
+          title: Property Label
+          description: Human-readable label — auto-filled from vocabulary term, not edited manually.
+          type: string
+          options:
+            hidden: true
         is_about:
           title: Is About (Specimen)
           description: IRI of the specimen this result was measured on (auto-filled by transformer).
           type: string
           readOnly: true
-          default: ""
         has_value_spec:
           title: Value Specification
           description: Scalar value specification holding the numeric value and unit.
