@@ -54,6 +54,7 @@
   bfo:
     "@id": "http://purl.obolibrary.org/obo/BFO_"
     "@prefix": true
+  chameo: "https://w3id.org/emmo/domain/characterisation-methodology/chameo#"
   pmdco: "https://w3id.org/pmd/co/"
   qudt: "http://qudt.org/schema/qudt/"
   uqudt: "http://qudt.org/vocab/unit/"
@@ -63,6 +64,9 @@
     "@id": "rdfs:label"
   # description → rdfs:comment removed: process-step already maps notes → rdfs:comment
   # Redefining it here causes a duplicate "Notes/Description" field in the form.
+  measurement_device:
+    "@id": "chameo:usesInstrument"
+    "@type": "@id"
   has_specified_input:
     "@id": "obi:0000293"   # OBI_0000293  has_specified_input
     "@type": "@id"

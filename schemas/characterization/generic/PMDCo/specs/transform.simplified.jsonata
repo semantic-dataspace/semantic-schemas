@@ -6,6 +6,7 @@
    *   step_name    string   required
    *   step_id      string   optional, derived from step_name if omitted
    *   description  string   optional
+   *   measurement_device  string   optional: IRI of measurement-device KItem (chameo:usesInstrument)
    *   inputs       array    optional: specimen/material IRI strings (has_specified_input)
    *   outputs      array    optional: dataset/specimen IRI strings (has_specified_output)
    *   preceded_by  array    optional: step IRI strings
@@ -70,8 +71,9 @@
     "label": step_name
   };
 
-  $withDesc     := $exists(description)    ? $merge([$base,         {"description":          description}])  : $base;
-  $withInputs   := $exists(inputs)   and $count(inputs)   > 0 ? $merge([$withDesc,    {"has_specified_input":  inputs}])   : $withDesc;
+  $withDesc     := $exists(description)       ? $merge([$base,         {"description":           description}])       : $base;
+  $withDevice   := $exists(measurement_device) ? $merge([$withDesc,    {"measurement_device":     measurement_device}]) : $withDesc;
+  $withInputs   := $exists(inputs)   and $count(inputs)   > 0 ? $merge([$withDevice,  {"has_specified_input":  inputs}])   : $withDevice;
   $withOutputs  := $exists(outputs)  and $count(outputs)  > 0 ? $merge([$withInputs,  {"has_specified_output": outputs}])  : $withInputs;
   $withPreceded := $exists(preceded_by) and $count(preceded_by) > 0 ? $merge([$withOutputs, {"preceded_by": preceded_by}]) : $withOutputs;
   $withConds    := $exists($conditions) ? $merge([$withPreceded, {"has_process_attribute": $conditions}]) : $withPreceded;
