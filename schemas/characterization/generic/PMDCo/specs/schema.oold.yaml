@@ -278,7 +278,7 @@ properties:
       required:
         - type
         - id
-        - result_type
+        - label
         - has_value_spec
       properties:
         type:
@@ -298,13 +298,12 @@ properties:
           type: string
           readOnly: true
           default: result-1-smd
-        result_type:
+        label:
           title: Property Name
           description: >-
-            Select the measured property from the characterization-result vocabulary.
-            The IRI is stored as rdf:type on the MeasurementDatum node.
+            Human-readable name for this result (rdfs:label on the MeasurementDatum node).
+            Use consistent names — they are the primary handle for SPARQL queries.
           type: string
-          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/all/terms"
         has_value_spec:
           title: Value Specification
           description: Scalar value specification holding the numeric value and unit.
