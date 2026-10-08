@@ -302,8 +302,9 @@
           },
           "label": {
             "title": "Property Name",
-            "description": "Human-readable name for this result (rdfs:label on the MeasurementDatum node). Use consistent names — they are the primary handle for SPARQL queries.",
-            "type": "string"
+            "description": "Result property name (rdfs:label on the MeasurementDatum node). Resolved to a characterization-result class IRI via vocabulary lookup.",
+            "type": "string",
+            "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/base/terms"
           },
           "has_value_spec": {
             "title": "Value Specification",
