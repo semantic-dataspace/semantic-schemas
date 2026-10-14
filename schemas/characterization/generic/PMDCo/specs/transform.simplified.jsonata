@@ -20,7 +20,7 @@
    *     unit       string   optional: vocabulary label or QUDT IRI
    */
 
-  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/characterization/generic/PMDCo/specs/schema.oold.generated.json";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/characterization-generic-PMDCo-v0.4.0/schemas/characterization/generic/PMDCo/specs/schema.oold.generated.json";
 
   $slug   := $replace($lowercase($trim(step_name)), /[^a-z0-9]+/, "-");
   $stepId := $exists(step_id) ? step_id : "char-generic-" & $slug;

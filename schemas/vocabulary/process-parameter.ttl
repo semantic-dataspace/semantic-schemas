@@ -6,6 +6,7 @@
 @prefix dsmsht: <https://w3id.org/dsms/heattreatment#> .
 @prefix dnano:  <https://w3id.org/dsms/nanoindentation/> .
 @prefix dmech:  <https://w3id.org/dsms/mechanical-testing#> .
+@prefix ddsc:   <https://w3id.org/dsms/dsc#> .
 
 # =============================================================================
 # DSMS process parameter type vocabulary
@@ -74,6 +75,17 @@ dmech:ParallelLength          a owl:Class ; rdfs:label "Parallel Length"@en .
 dmech:PreloadForce            a owl:Class ; rdfs:label "Pre-load Force"@en .
 dmech:StressRatio             a owl:Class ; rdfs:label "Stress Ratio (R)"@en .
 dmech:NumberOfCycles          a owl:Class ; rdfs:label "Number of Cycles"@en .
+
+# ── DSC / thermal analysis parameters ────────────────────────────────────────
+# Source: schemas/characterization/generic/PMDCo and dsc-heat-flow schemas — ddsc: namespace
+# Note: HeatingRate and CoolingRate are covered by generic pp: entries above.
+ddsc:StartTemperature       a owl:Class ; rdfs:label "Start Temperature"@en .
+ddsc:EndTemperature         a owl:Class ; rdfs:label "End Temperature"@en .
+ddsc:PurgeGasFlow           a owl:Class ; rdfs:label "Purge Gas Flow"@en .
+ddsc:IsothermalTemperature  a owl:Class ; rdfs:label "Isothermal Temperature"@en .
+ddsc:IsothermalHoldTime     a owl:Class ; rdfs:label "Isothermal Hold Time"@en .
+ddsc:ModulationAmplitude    a owl:Class ; rdfs:label "Modulation Amplitude"@en .
+ddsc:ModulationPeriod       a owl:Class ; rdfs:label "Modulation Period"@en .
 
 # ── Nanoindentation test parameters ───────────────────────────────────────────
 # Source: schemas/characterization/nanoindentation/PMDCo — dnano: namespace

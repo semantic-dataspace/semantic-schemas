@@ -5,7 +5,7 @@
       "path": "schemas/characterization/generic/PMDCo/specs/schema.oold.yaml",
       "group": "characterization",
       "maturity": "draft",
-      "version": "0.2.1",
+      "version": "0.4.0",
       "shapePath": "schemas/characterization/generic/PMDCo/specs/shape.ttl"
     },
     {
@@ -49,6 +49,20 @@
       "maturity": "draft",
       "version": "0.1.0",
       "shapePath": "schemas/dataset/nanoindentation/PMDCo/specs/shape.ttl"
+    },
+    {
+      "path": "schemas/calibration/generic/PMDCo/specs/schema.oold.yaml",
+      "group": "calibration",
+      "maturity": "draft",
+      "version": "0.1.0",
+      "shapePath": "schemas/calibration/generic/PMDCo/specs/shape.ttl"
+    },
+    {
+      "path": "schemas/dataset/dsc/PMDCo/specs/schema.oold.yaml",
+      "group": "dataset",
+      "maturity": "draft",
+      "version": "0.1.0",
+      "shapePath": "schemas/dataset/dsc/PMDCo/specs/shape.ttl"
     },
     {
       "path": "schemas/chemical-composition/BWMD/specs/schema.oold.yaml",
