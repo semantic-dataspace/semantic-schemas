@@ -1,0 +1,244 @@
+# OO-LD Schema for HeatTreatmentProcess (PMDCo pattern)
+# Ontology: Platform MaterialDigital Core Ontology (PMDCo)
+#   https://w3id.org/pmd/co/
+#
+# Graph pattern:
+#
+#   HeatTreatmentProcess  (pmdco:PMD_0000833 + dsmsht:<ProcessSubtype>)
+#     rdfs:label ──────────────────────────────────────── process name string
+#     rdfs:comment ────────────────────────────────────── description string  (optional)
+#     has_specified_input ────────────────────────────► Specimen / Billet IRI  [× 0..N]
+#     has_specified_output ───────────────────────────► Specimen IRI  [× 0..N]  (optional)
+#     preceded_by ────────────────────────────────────► HeatTreatmentProcess IRI  [× 0..N]  (optional)
+#     has_process_attribute ─────────────────────────► ParameterSpecification (PMD_0000013)  [× 0..N]
+#       rdf:type ─────────────────────────────────────── dsmsht:<ParameterClass>  (auto-derived from label)
+#       rdfs:label ──────── parameter name (human-readable)
+#       qudt:value ──────── numeric value  (xsd:double)
+#       qudt:hasUnit ─────── QUDT unit IRI
+#
+# Design:
+#   - process_subtype enum drives additional rdf:type triple on process root (dsmsht:SolutionTreatment etc.)
+#   - parameter_type uses x-vocabulary → user selects IRI from process-parameter vocabulary service
+#   - parameter_label is optional free-text override (vocabulary term label used by default)
+#   - parameter_unit uses x-vocabulary → measurement-unit vocabulary service (searchable QUDT units)
+#   - Heat treatment IRIs live in dsmsht: namespace (https://w3id.org/dsms/heattreatment#)
+
+"@context":
+  rdf:    "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  rdfs:   "http://www.w3.org/2000/01/rdf-schema#"
+  xsd:    "http://www.w3.org/2001/XMLSchema#"
+  dcterms: "http://purl.org/dc/terms/"
+  conforms_to:
+    "@id": "http://purl.org/dc/terms/conformsTo"
+    "@type": "@id"
+  obo:  "http://purl.obolibrary.org/obo/"
+  obi:
+    "@id": "http://purl.obolibrary.org/obo/OBI_"
+    "@prefix": true
+  bfo:
+    "@id": "http://purl.obolibrary.org/obo/BFO_"
+    "@prefix": true
+  pmdco:  "https://w3id.org/pmd/co/"
+  dsmsht: "https://w3id.org/dsms/heattreatment#"
+  qudt:   "http://qudt.org/schema/qudt/"
+  uqudt:  "http://qudt.org/vocab/unit/"
+
+  type: "@type"
+  id:   "@id"
+
+  label:
+    "@id": "rdfs:label"
+  description:
+    "@id": "rdfs:comment"
+
+  has_specified_input:
+    "@id": "obi:0000293"
+    "@type": "@id"
+    "@container": "@set"
+  has_specified_output:
+    "@id": "obi:0000299"
+    "@type": "@id"
+    "@container": "@set"
+  preceded_by:
+    "@id": "bfo:0000062"
+    "@type": "@id"
+    "@container": "@set"
+  has_process_attribute:
+    "@id": "pmdco:PMD_0000009"
+    "@container": "@set"
+
+  parameter_label:
+    "@id": "rdfs:label"
+  parameter_type:
+    "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+    "@type": "@id"
+  parameter_value:
+    "@id": "qudt:value"
+  parameter_unit:
+    "@id": "qudt:hasUnit"
+    "@type": "@id"
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: Heat treatment process schema — PMDCo pattern with dsmsht parameter type IRIs
+x-schema-version: '0.2.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/manufacturing-heat-treatment-PMDCo-v0.2.0/schemas/manufacturing/heat-treatment/PMDCo/specs/schema.oold.generated.json'
+x-maturity: 'draft'
+x-process-step:
+  category: manufacturing
+title: Heat Treatment Process
+type: object
+required:
+  - type
+  - id
+  - label
+  - heat_treatment_type
+
+properties:
+
+  type:
+    title: Type
+    type: array
+    items:
+      type: string
+    readOnly: true
+    const: ["pmdco:PMD_0000833"]
+    default: ["pmdco:PMD_0000833"]
+    options:
+      enum_titles:
+        - pmdco:ManufacturingProcess
+
+  id:
+    title: ID
+    type: string
+    readOnly: true
+    default: process
+
+  label:
+    title: Process Name
+    description: >-
+      Human-readable name for this heat treatment step
+      (e.g. "Solution Treatment AA2618 — 530 °C / 8 h", "T6 Aging Batch 3").
+    type: string
+
+  description:
+    title: Description
+    description: Optional free-text description of the process conditions and purpose.
+    type: string
+    format: textarea
+
+  heat_treatment_type:
+    title: Heat Treatment Type
+    description: >-
+      Specific heat treatment operation. Drives the semantic sub-type IRI
+      (dsmsht:<Type>) added to the process node in addition to pmdco:PMD_0000833.
+    type: string
+    enum:
+      - Solution Treatment
+      - Artificial Aging
+      - Natural Aging
+      - Full Annealing
+      - Partial Annealing
+      - Recrystallization Annealing
+      - Stress Relief Annealing
+      - Normalizing
+      - Tempering
+      - Homogenization
+      - Quenching
+
+  has_specified_input:
+    title: Input Specimen / Billet
+    description: >-
+      Material, billet, or semi-finished specimen entering this heat treatment step.
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds: [specimen, material, semi-finished-product]
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  has_specified_output:
+    title: Output Specimen
+    description: >-
+      Specimen produced or transformed by this heat treatment step.
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds: [specimen]
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  preceded_by:
+    title: Preceded By
+    description: >-
+      Previous heat treatment step in the process chain
+      (e.g. Solution Treatment precedes Aging).
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds: [heat-treatment, manufacturing-process]
+    items:
+      type: string
+      format: uri
+    uniqueItems: true
+    default: []
+
+  has_process_attribute:
+    title: Process Parameters
+    description: >-
+      Quantitative conditions and protocol parameters for this heat treatment step.
+      Each row is a PMDCo ParameterSpecification (PMD_0000013). Select the parameter
+      from the dropdown — unit and semantic IRI are auto-set. Add qualitative
+      conditions (atmosphere, cooling medium, furnace type) as separate rows.
+    type: array
+    items:
+      type: object
+      title: Parameter
+      required:
+        - type
+        - id
+        - parameter_type
+      properties:
+
+        type:
+          title: Type
+          type: array
+          items: {type: string}
+          readOnly: true
+          const: ["pmdco:PMD_0000013"]
+          default: ["pmdco:PMD_0000013"]
+          options:
+            enum_titles:
+              - pmdco:ParameterSpecification
+
+        id:
+          title: ID
+          type: string
+          readOnly: true
+          default: param-1
+
+        parameter_type:
+          title: Parameter Type
+          description: Search and select a parameter type from the vocabulary. Stored as rdf:type on the ParameterSpecification node.
+          type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/process-parameter/use-cases/all/terms"
+
+        parameter_value:
+          title: Value
+          description: >-
+            Numeric magnitude for quantitative parameters, or descriptive string
+            for qualitative parameters (e.g. "Air", "Water Quench", "Muffle Furnace").
+          type: string
+
+        parameter_unit:
+          title: Unit
+          description: Search and select a QUDT unit from the vocabulary service.
+          type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
+
+    default: []

@@ -1,0 +1,17 @@
+{
+  "dataset_name": "DSC Heat-Flow Dataset — PP-H HE125MO — 007-3-26-02",
+  "sample_name": "PP-H HE125MO",
+  "sample_mass_mg": 10.506,
+  "manufacturer": "NETZSCH",
+  "instrument_model": "DSC300 Supreme",
+  "laboratory": "NGB",
+  "operator": "ST",
+  "measurement_datetime": "2026-02-26T00:49:21+01:00",
+  "heating_rate_k_min": 10.0,
+  "temperature_start_degC": -60.0,
+  "temperature_end_degC": 235.0,
+  "purge_gas": "AIR(80/20)",
+  "purge_gas_flow_rate_ml_min": 3.0,
+  "crucible_type": "Concavus Al, pierced lid",
+  "segment": "S3/10"
+}

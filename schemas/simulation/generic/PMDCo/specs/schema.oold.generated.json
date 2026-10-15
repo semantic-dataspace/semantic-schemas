@@ -57,12 +57,12 @@
       "@prefix": true
     },
     "qudt": "http://qudt.org/schema/qudt/",
+    "uqudt": "http://qudt.org/vocab/unit/",
     "description": {
       "@id": "rdfs:comment"
     },
-    "has_process_condition": {
-      "@id": "pmdco:PMD_0000016",
-      "@type": "@id",
+    "has_process_attribute": {
+      "@id": "pmdco:PMD_0000009",
       "@container": "@set"
     },
     "parameter_label": {
@@ -73,13 +73,14 @@
       "@type": "xsd:double"
     },
     "parameter_unit": {
-      "@id": "qudt:hasUnit"
+      "@id": "qudt:hasUnit",
+      "@type": "@id"
     }
   },
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$comment": "Schema for an obi:ComputerSimulation (generic simulation step)",
-  "x-schema-version": "0.3.0",
-  "x-schema-uri": "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/simulation-generic-PMDCo-v0.3.0/schemas/simulation/generic/PMDCo/specs/schema.oold.generated.json",
+  "x-schema-version": "0.4.0",
+  "x-schema-uri": "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/simulation-generic-PMDCo-v0.4.0/schemas/simulation/generic/PMDCo/specs/schema.oold.generated.json",
   "x-maturity": "draft",
   "x-process-step": {
     "category": "simulation"
@@ -180,15 +181,17 @@
     "operator": {
       "title": "Operator",
       "description": "IRI of the person who performed this simulation step.",
-      "x-ktype": [
-        "expert"
-      ],
       "type": "string",
-      "format": "uri"
+      "format": "kitem",
+      "x-kitem": {
+        "ktypeIds": [
+          "expert"
+        ]
+      }
     },
-    "has_process_condition": {
+    "has_process_attribute": {
       "title": "Simulation Parameters",
-      "description": "Quantitative parameters governing this simulation step (e.g. mesh size, convergence tolerance, time step).",
+      "description": "Quantitative parameters governing this simulation step (e.g. mesh size, convergence tolerance, time step), modelled as PMDCo ParameterSpecification nodes (PMD_0000013).",
       "type": "array",
       "items": {
         "type": "object",
@@ -214,7 +217,7 @@
             ],
             "options": {
               "enum_titles": [
-                "pmdco:ProcessCondition"
+                "pmdco:ParameterSpecification"
               ]
             }
           },

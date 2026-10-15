@@ -1,0 +1,6 @@
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# SHACL shapes for DSC Dataset (PMDCo)
+# Stub — shapes to be defined when validation requirements are confirmed.

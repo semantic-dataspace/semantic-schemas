@@ -11,6 +11,40 @@ The schema IRI encodes the minor version: `…/PMDCo/#v<MAJOR>.<MINOR>.0`.
 
 ---
 
+## [0.4.0] - 2026-10-14
+
+### Changed (breaking)
+
+- **`has_process_condition` renamed to `has_process_attribute`**: predicate IRI
+  changes from `pmdco:PMD_0000016` (has_process_condition) to
+  `pmdco:PMD_0000009` (has_process_attribute). Existing triples using
+  `PMD_0000016` are not migrated automatically. SPARQL queries using
+  `pmdco:PMD_0000016` must be updated.
+
+### Changed
+
+- ParameterSpecification node type label: `pmdco:ProcessCondition` →
+  `pmdco:ParameterSpecification` (display label only; underlying IRI
+  `PMD_0000013` unchanged).
+- `operator` field: `x-ktype: [expert]` + `format: uri` replaced by
+  `format: kitem` + `x-kitem: {ktypeIds: [expert]}`. UI annotation only; no
+  RDF change.
+
+### Added
+
+- `uqudt:` namespace (`http://qudt.org/vocab/unit/`) added to `@context`.
+
+### Migration
+
+```sparql
+# old
+?sim pmdco:PMD_0000016 ?cond .
+# new
+?sim pmdco:PMD_0000009 ?param .
+```
+
+---
+
 ## [0.3.0] - 2026-07-21
 
 ### Added

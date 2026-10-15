@@ -9,6 +9,16 @@ Versions follow [Semantic Versioning](https://semver.org/):
 
 ---
 
+## [0.1.2] - 2026-10-14
+
+### Changed
+
+- `has_specified_input`, `has_specified_output`, and `operator` fields:
+  `x-ktype` annotation replaced by `format: kitem` + `x-kitem: {ktypeIds: [...]}`.
+  UI annotation change only; no RDF graph change.
+
+---
+
 ## [0.1.1] - 2026-07-21
 
 ### Changed

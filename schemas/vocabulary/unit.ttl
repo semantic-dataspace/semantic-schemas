@@ -1,0 +1,99 @@
+@prefix qudt:  <http://qudt.org/schema/qudt/> .
+@prefix unit:  <http://qudt.org/vocab/unit/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+# =============================================================================
+# DEPRECATED — use schemas/vocabulary/measurement-unit.ttl
+# Vocabulary service namespace renamed: unit → measurement-unit
+# =============================================================================
+
+# ── Temperature ───────────────────────────────────────────────────────────────
+unit:DEG_C          a qudt:Unit ; rdfs:label "Degree Celsius (°C)"@en .
+unit:K              a qudt:Unit ; rdfs:label "Kelvin (K)"@en .
+unit:DEG_F          a qudt:Unit ; rdfs:label "Degree Fahrenheit (°F)"@en .
+
+# ── Angle ─────────────────────────────────────────────────────────────────────
+unit:DEG            a qudt:Unit ; rdfs:label "Degree (°) — angle"@en .
+unit:RAD            a qudt:Unit ; rdfs:label "Radian (rad)"@en .
+
+# ── Time ──────────────────────────────────────────────────────────────────────
+unit:SEC            a qudt:Unit ; rdfs:label "Second (s)"@en .
+unit:MIN            a qudt:Unit ; rdfs:label "Minute (min)"@en .
+unit:HR             a qudt:Unit ; rdfs:label "Hour (h)"@en .
+
+# ── Temperature rate ──────────────────────────────────────────────────────────
+unit:K-PER-MIN      a qudt:Unit ; rdfs:label "Kelvin per Minute (K/min = °C/min)"@en .
+unit:K-PER-SEC      a qudt:Unit ; rdfs:label "Kelvin per Second (K/s)"@en .
+
+# ── Pressure ──────────────────────────────────────────────────────────────────
+unit:PA             a qudt:Unit ; rdfs:label "Pascal (Pa)"@en .
+unit:KiloPA         a qudt:Unit ; rdfs:label "Kilopascal (kPa)"@en .
+unit:MegaPascal     a qudt:Unit ; rdfs:label "Megapascal (MPa)"@en .
+unit:MegaPA         a qudt:Unit ; rdfs:label "Megapascal (MPa) — alias"@en .
+unit:GigaPascal     a qudt:Unit ; rdfs:label "Gigapascal (GPa)"@en .
+unit:GigaPA         a qudt:Unit ; rdfs:label "Gigapascal (GPa) — alias"@en .
+unit:BAR            a qudt:Unit ; rdfs:label "Bar (bar)"@en .
+unit:MilliBAR       a qudt:Unit ; rdfs:label "Millibar (mbar)"@en .
+
+# ── Length ────────────────────────────────────────────────────────────────────
+unit:NanoM          a qudt:Unit ; rdfs:label "Nanometre (nm)"@en .
+unit:MicroM         a qudt:Unit ; rdfs:label "Micrometre (µm)"@en .
+unit:MilliM         a qudt:Unit ; rdfs:label "Millimetre (mm)"@en .
+unit:CentiM         a qudt:Unit ; rdfs:label "Centimetre (cm)"@en .
+unit:M              a qudt:Unit ; rdfs:label "Metre (m)"@en .
+
+# ── Area ──────────────────────────────────────────────────────────────────────
+unit:MicroM2        a qudt:Unit ; rdfs:label "Square Micrometre (µm²)"@en .
+unit:MilliM2        a qudt:Unit ; rdfs:label "Square Millimetre (mm²)"@en .
+unit:CentiM2        a qudt:Unit ; rdfs:label "Square Centimetre (cm²)"@en .
+unit:M2             a qudt:Unit ; rdfs:label "Square Metre (m²)"@en .
+
+# ── Volume ────────────────────────────────────────────────────────────────────
+unit:MilliL         a qudt:Unit ; rdfs:label "Millilitre (mL)"@en .
+unit:L              a qudt:Unit ; rdfs:label "Litre (L)"@en .
+unit:M3             a qudt:Unit ; rdfs:label "Cubic Metre (m³)"@en .
+
+# ── Force ─────────────────────────────────────────────────────────────────────
+unit:MilliN         a qudt:Unit ; rdfs:label "Millinewton (mN)"@en .
+unit:N              a qudt:Unit ; rdfs:label "Newton (N)"@en .
+unit:KiloN          a qudt:Unit ; rdfs:label "Kilonewton (kN)"@en .
+
+# ── Compound force/length ─────────────────────────────────────────────────────
+unit:MilliN-PER-MicroM  a qudt:Unit ; rdfs:label "Millinewton per Micrometre (mN/µm)"@en .
+
+# ── Inverse area ─────────────────────────────────────────────────────────────
+unit:PER-M2         a qudt:Unit ; rdfs:label "Per Square Metre (1/m²)"@en .
+
+# ── Mass ──────────────────────────────────────────────────────────────────────
+unit:MilliGM        a qudt:Unit ; rdfs:label "Milligram (mg)"@en .
+unit:GM             a qudt:Unit ; rdfs:label "Gram (g)"@en .
+unit:KiloGM         a qudt:Unit ; rdfs:label "Kilogram (kg)"@en .
+unit:TON            a qudt:Unit ; rdfs:label "Tonne (t)"@en .
+
+# ── Speed / Velocity ──────────────────────────────────────────────────────────
+unit:MilliM-PER-SEC a qudt:Unit ; rdfs:label "Millimetre per Second (mm/s)"@en .
+unit:MilliM-PER-MIN a qudt:Unit ; rdfs:label "Millimetre per Minute (mm/min)"@en .
+unit:M-PER-SEC      a qudt:Unit ; rdfs:label "Metre per Second (m/s)"@en .
+
+# ── Frequency / Rate ──────────────────────────────────────────────────────────
+unit:HZ             a qudt:Unit ; rdfs:label "Hertz (Hz)"@en .
+unit:PER-SEC        a qudt:Unit ; rdfs:label "Per Second (1/s)"@en .
+unit:REV-PER-MIN    a qudt:Unit ; rdfs:label "Revolution per Minute (rpm)"@en .
+
+# ── Energy ────────────────────────────────────────────────────────────────────
+unit:MicroJ         a qudt:Unit ; rdfs:label "Microjoule (µJ)"@en .
+unit:J              a qudt:Unit ; rdfs:label "Joule (J)"@en .
+unit:KiloJ          a qudt:Unit ; rdfs:label "Kilojoule (kJ)"@en .
+unit:KiloW-HR       a qudt:Unit ; rdfs:label "Kilowatt-hour (kWh)"@en .
+
+# ── Electrical ────────────────────────────────────────────────────────────────
+unit:MilliA         a qudt:Unit ; rdfs:label "Milliampere (mA)"@en .
+unit:A              a qudt:Unit ; rdfs:label "Ampere (A)"@en .
+unit:V              a qudt:Unit ; rdfs:label "Volt (V)"@en .
+unit:KiloV          a qudt:Unit ; rdfs:label "Kilovolt (kV)"@en .
+unit:OHM            a qudt:Unit ; rdfs:label "Ohm (Ω)"@en .
+
+# ── Ratio / Dimensionless ─────────────────────────────────────────────────────
+unit:PERCENT        a qudt:Unit ; rdfs:label "Percent (%)"@en .
+unit:UNITLESS       a qudt:Unit ; rdfs:label "Dimensionless (–)"@en .

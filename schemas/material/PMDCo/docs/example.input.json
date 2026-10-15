@@ -1,0 +1,12 @@
+{
+  "type": ["pmdco:PMD_0000000"],
+  "id": "material-aa2618",
+  "label": "AA2618 — 2 h aged (T6-like)",
+  "material_designation": "AA2618",
+  "material_class": "Metal",
+  "material_standard": "EN 573-3",
+  "batch_lot": "BATCH-2024-042",
+  "supplier": "Aleris International",
+  "heat_treatment": "Solution treated 530°C/1h, water quenched, aged 190°C/2h",
+  "notes": "As-received rolled plate, cut into discs for nanoindentation specimens."
+}

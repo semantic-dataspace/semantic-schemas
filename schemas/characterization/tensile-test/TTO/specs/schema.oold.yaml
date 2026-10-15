@@ -98,8 +98,8 @@ allOf:
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: TTO + PMDCo 3 schema for a tensile test process node
-x-schema-version: '0.2.1'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/tensile-test-TTO-v0.2.1/schemas/characterization/tensile-test/TTO/specs/schema.oold.generated.json'
+x-schema-version: '0.3.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/tensile-test-TTO-v0.3.0/schemas/characterization/tensile-test/TTO/specs/schema.oold.generated.json'
 x-maturity: 'draft'
 x-process-step:
   category: characterization
@@ -235,20 +235,9 @@ properties:
       properties:
         type:
           title: Condition Type
-          type: array
-          items:
-            type: string
-          enum:
-            - tto:TTO_0000051
-            - pmdco:PMD_0000967
-            - tto:TTO_0000052
-            - tto:TTO_0000055
-          options:
-            enum_titles:
-              - Strain Rate
-              - Temperature
-              - Test Speed
-              - Gauge Length
+          description: Select the physical quantity from the process-parameter vocabulary.
+          type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/process-parameter/use-cases/all/terms"
         id:
           title: Quality IRI
           type: string
@@ -266,21 +255,7 @@ properties:
         result_unit:
           title: Unit
           type: string
-          enum:
-            - unit:PER-SEC
-            - unit:MilliM-PER-MIN
-            - unit:MilliM-PER-SEC
-            - unit:DEG_C
-            - unit:K
-            - unit:MilliM
-          options:
-            enum_titles:
-              - "1/s (strain rate)"
-              - "mm/min (speed)"
-              - "mm/s (speed)"
-              - "°C (Celsius)"
-              - "K (Kelvin)"
-              - "mm (length)"
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
           x-depends-on:
             field: type
             values:
@@ -335,29 +310,11 @@ properties:
           properties:
             type:
               title: Property Type
-              description: TTO quality class CURIE for this measured property.
-              type: array
-              items:
-                type: string
-              enum:
-                - tto:TTO_0000009
-                - tto:TTO_0000059
-                - tto:TTO_0000022
-                - tto:TTO_0000053
-                - tto:TTO_0000047
-                - tto:TTO_0000033
-                - tto:TTO_0000035
-                - tto:TTO_0000038
-              options:
-                enum_titles:
-                  - Yield Strength (Re)
-                  - Upper Yield Strength (ReH)
-                  - Lower Yield Strength (ReL)
-                  - Tensile Strength (Rm)
-                  - Proof Strength (Rp0.2)
-                  - Elongation After Fracture (A)
-                  - Uniform Elongation (Ag)
-                  - Reduction of Area (Z)
+              description: >-
+                TTO quality class IRI for this measured property.
+                Select from the characterization-result vocabulary.
+              type: string
+              x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/tensile-test/terms"
             id:
               title: Quality IRI
               type: string
@@ -403,17 +360,7 @@ properties:
             result_unit:
               title: Unit
               type: string
-              enum:
-                - unit:MegaPascal
-                - unit:GigaPascal
-                - unit:PERCENT
-                - unit:MilliMETER--PER--MilliMETER
-              options:
-                enum_titles:
-                  - MPa (megapascal)
-                  - GPa (gigapascal)
-                  - "% (percent)"
-                  - mm/mm (dimensionless strain)
+              x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
             is_about:
               title: Quality IRI
               description: IRI of the quality this SVS is about (auto-filled).

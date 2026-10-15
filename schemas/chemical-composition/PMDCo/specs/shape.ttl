@@ -18,15 +18,6 @@
 @prefix :        <https://w3id.org/pmd/co/shapes/chemical_composition/> .
 @base            <https://w3id.org/pmd/co/shapes/chemical_composition/> .
 
-shape:material_label
-    a sh:NodeShape ;
-    sh:property [
-        sh:path rdfs:label ;
-        sh:datatype xsd:string ;
-        sh:minCount 1 ;
-        sh:message "The material linked via quality_of must have an rdfs:label." ;
-    ] .
-
 shape:chemical_composition
     a sh:NodeShape ;
     sh:targetClass  pmd:PMD_0000551 ;  # ChemicalComposition
@@ -38,11 +29,12 @@ shape:chemical_composition
         sh:message "A ChemicalComposition instance must declare dcterms:conformsTo pointing to the versioned schema IRI." ;
     ] ;
     sh:property [
-        sh:path obo:RO_0000080 ;       # quality_of
-        sh:nodeKind sh:BlankNodeOrIRI ; # blank node (labelled material) or full IRI both accepted
+        sh:path obo:RO_0000080 ;   # quality_of
+        # v1.0.0: quality_of now points to a Material kitem IRI (not an inline blank node).
+        # The material's rdfs:label is on the kitem itself and validated separately.
+        sh:nodeKind sh:IRI ;
         sh:minCount 1 ;
-        sh:node shape:material_label ;
-        sh:message "ChemicalComposition must have a quality_of link to a Material with an rdfs:label." ;
+        sh:message "ChemicalComposition must have a quality_of link to a Material IRI (kitem)." ;
     ] ;
     sh:property [
         sh:path pmd:PMD_0000004 ;      # is_subject_of
