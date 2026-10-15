@@ -2,18 +2,18 @@
   "version": 1,
   "tree": [
     {
+      "path": "schemas/calibration/generic/PMDCo/specs/schema.oold.yaml",
+      "group": "calibration",
+      "maturity": "draft",
+      "version": "0.1.0",
+      "shapePath": "schemas/calibration/generic/PMDCo/specs/shape.ttl"
+    },
+    {
       "path": "schemas/characterization/generic/PMDCo/specs/schema.oold.yaml",
       "group": "characterization",
       "maturity": "draft",
       "version": "0.4.0",
       "shapePath": "schemas/characterization/generic/PMDCo/specs/shape.ttl"
-    },
-    {
-      "path": "schemas/characterization/nanoindentation/PMDCo/specs/schema.oold.yaml",
-      "group": "characterization",
-      "maturity": "draft",
-      "version": "0.1.0",
-      "shapePath": "schemas/characterization/nanoindentation/PMDCo/specs/shape.ttl"
     },
     {
       "path": "schemas/characterization/microstructure/PMDCo/specs/schema.oold.yaml",
@@ -23,11 +23,11 @@
       "shapePath": "schemas/characterization/microstructure/PMDCo/specs/shape.ttl"
     },
     {
-      "path": "schemas/manufacturing/heat-treatment/PMDCo/specs/schema.oold.yaml",
-      "group": "manufacturing",
+      "path": "schemas/characterization/nanoindentation/PMDCo/specs/schema.oold.yaml",
+      "group": "characterization",
       "maturity": "draft",
       "version": "0.2.0",
-      "shapePath": "schemas/manufacturing/heat-treatment/PMDCo/specs/shape.ttl"
+      "shapePath": "schemas/characterization/nanoindentation/PMDCo/specs/shape.ttl"
     },
     {
       "path": "schemas/characterization/tensile-test/PMDCo/specs/schema.oold.yaml",
@@ -42,27 +42,6 @@
       "maturity": "draft",
       "version": "0.3.0",
       "shapePath": "schemas/characterization/tensile-test/TTO/specs/shape.ttl"
-    },
-    {
-      "path": "schemas/dataset/nanoindentation/PMDCo/specs/schema.oold.yaml",
-      "group": "dataset",
-      "maturity": "draft",
-      "version": "0.1.0",
-      "shapePath": "schemas/dataset/nanoindentation/PMDCo/specs/shape.ttl"
-    },
-    {
-      "path": "schemas/calibration/generic/PMDCo/specs/schema.oold.yaml",
-      "group": "calibration",
-      "maturity": "draft",
-      "version": "0.1.0",
-      "shapePath": "schemas/calibration/generic/PMDCo/specs/shape.ttl"
-    },
-    {
-      "path": "schemas/dataset/dsc/PMDCo/specs/schema.oold.yaml",
-      "group": "dataset",
-      "maturity": "draft",
-      "version": "0.1.0",
-      "shapePath": "schemas/dataset/dsc/PMDCo/specs/shape.ttl"
     },
     {
       "path": "schemas/chemical-composition/BWMD/specs/schema.oold.yaml",
@@ -93,11 +72,25 @@
       "shapePath": "schemas/dataset/catalog/DCAT/specs/shape.ttl"
     },
     {
+      "path": "schemas/dataset/dsc/PMDCo/specs/schema.oold.yaml",
+      "group": "dataset",
+      "maturity": "draft",
+      "version": "0.1.0",
+      "shapePath": "schemas/dataset/dsc/PMDCo/specs/shape.ttl"
+    },
+    {
       "path": "schemas/dataset/generic/DCAT/specs/schema.oold.yaml",
       "group": "dataset",
       "maturity": "draft",
       "version": "0.1.1",
       "shapePath": "schemas/dataset/generic/DCAT/specs/shape.ttl"
+    },
+    {
+      "path": "schemas/dataset/nanoindentation/PMDCo/specs/schema.oold.yaml",
+      "group": "dataset",
+      "maturity": "draft",
+      "version": "0.1.0",
+      "shapePath": "schemas/dataset/nanoindentation/PMDCo/specs/shape.ttl"
     },
     {
       "path": "schemas/expertise/VIVO/specs/schema.oold.yaml",
@@ -120,11 +113,10 @@
       "shapePath": "schemas/manufacturing/generic/PMDCo/specs/shape.ttl"
     },
     {
-      "path": "schemas/material-card/mechanical/PMDCo/specs/schema.oold.yaml",
-      "group": "material-card",
+      "path": "schemas/manufacturing/heat-treatment/PMDCo/specs/schema.oold.yaml",
+      "group": "manufacturing",
       "maturity": "draft",
-      "version": "0.3.2",
-      "shapePath": "schemas/material-card/mechanical/PMDCo/specs/shape.ttl"
+      "version": "0.2.0"
     },
     {
       "path": "schemas/material/PMDCo/specs/schema.oold.yaml",
@@ -132,6 +124,13 @@
       "maturity": "draft",
       "version": "0.1.0",
       "shapePath": "schemas/material/PMDCo/specs/shape.ttl"
+    },
+    {
+      "path": "schemas/material-card/mechanical/PMDCo/specs/schema.oold.yaml",
+      "group": "material-card",
+      "maturity": "draft",
+      "version": "0.3.2",
+      "shapePath": "schemas/material-card/mechanical/PMDCo/specs/shape.ttl"
     },
     {
       "path": "schemas/measurement-device/PMDCo/specs/schema.oold.yaml",

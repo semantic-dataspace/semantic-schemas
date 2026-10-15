@@ -1,28 +1,10 @@
 {
   "label": "316L Tensile Bar #1",
-  "material": "https://example.org/material-316l",
-  "source": ["https://example.org/sheet-42"],
+  "material": "https://example.materials-data.space/knowledge/material-316l",
+  "source": ["https://example.materials-data.space/knowledge/sheet-42"],
   "physical_properties": [
-    {
-      "type": ["pmdco:PMD_0050153"],
-      "id": "pp-thickness-1",
-      "specified_by_value": {
-        "type": ["obo:OBI_0001931"],
-        "id": "pp-thickness-1-svs",
-        "value": 3.0,
-        "unit": "http://qudt.org/vocab/unit/MilliM"
-      }
-    },
-    {
-      "type": ["pmdco:PMD_0020133"],
-      "id": "pp-mass-1",
-      "specified_by_value": {
-        "type": ["obo:OBI_0001931"],
-        "id": "pp-mass-1-svs",
-        "value": 50.3,
-        "unit": "http://qudt.org/vocab/unit/GM"
-      }
-    }
+    {"type": "Thickness", "value": 3.0, "unit": "mm"},
+    {"type": "Mass",      "value": 50.3, "unit": "g"}
   ],
   "specimen_form": "Bulk",
   "surface_preparation": "SiC 800→1200 grit, 3µm diamond, OPS"
