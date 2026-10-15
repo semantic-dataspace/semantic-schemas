@@ -15,7 +15,7 @@
    *   mass_unit            string   optional: deprecated
    */
 
-  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/specimen/PMDCo/specs/schema.oold.yaml";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/specimen-PMDCo-v0.7.0/schemas/specimen/PMDCo/specs/schema.oold.generated.json";
 
   /* ── Node ID ─────────────────────────────────────────────────────────── */
   $slug   := $replace($lowercase($trim(label)), /[^a-z0-9]+/, "-");

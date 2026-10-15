@@ -38,7 +38,7 @@
    *     PMD_0000006  → xsd:float value
    */
 
-  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/tensile-test-TTO-v0.2.0/schemas/characterization/tensile-test/TTO/specs/schema.oold.yaml";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/tensile-test-TTO-v0.3.0/schemas/characterization/tensile-test/TTO/specs/schema.oold.generated.json";
 
   /* ── Property key → TTO class CURIE (numeric IRIs, TTO v3.0.0) ─────────── */
   $propertyMap := {

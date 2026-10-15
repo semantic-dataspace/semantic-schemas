@@ -22,7 +22,7 @@
    *     unit            string   "MPa" | "GPa" | "%"
    */
 
-  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/tensile-test-PMDCo-v0.2.0/schemas/characterization/tensile-test/PMDCo/specs/schema.oold.yaml";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/tensile-test-PMDCo-v0.4.0/schemas/characterization/tensile-test/PMDCo/specs/schema.oold.generated.json";
 
   /* ── Short unit string → full QUDT IRI ───────────────────────────────── */
   /* Full IRIs pass through vocabulary enrichment unchanged; labels and     */

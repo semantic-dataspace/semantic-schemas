@@ -24,7 +24,7 @@
    * Schema provenance: injected automatically into every output.
    * Update $schemaUri whenever x-schema-version in specs/schema.oold.yaml changes.
    */
-  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/manufacturing-generic-PMDCo-v0.2.1/schemas/manufacturing/generic/PMDCo/specs/schema.oold.generated.json";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/manufacturing-generic-PMDCo-v0.3.0/schemas/manufacturing/generic/PMDCo/specs/schema.oold.generated.json";
 
   /* ── Node IDs ────────────────────────────────────────────────────────────── */
   $slug   := $replace($lowercase($trim(process_name)), /[^a-z0-9]+/, "-");
