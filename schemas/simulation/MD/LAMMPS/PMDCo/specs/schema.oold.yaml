@@ -140,7 +140,6 @@ properties:
     x-kitem:
       ktypeIds: [expert]
     type: string
-    format: uri
 
   material_system:
     title: Material System

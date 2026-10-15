@@ -5,7 +5,7 @@ OBI Assay pattern with CHAMEO instrument linkage.
 
 ## Graph pattern
 
-```
+```text
 Assay  (obi:OBI_0000070)
   rdfs:label                  experiment name
   has_specified_input  ────► Specimen KItem  [× 0..N]
@@ -25,9 +25,12 @@ Assay  (obi:OBI_0000070)
 | `measurement_device` | `chameo:usesInstrument` | Links to measurement-device KItem |
 | `has_process_attribute` | `pmdco:PMD_0000009` | Magnification, voltage, area, preparation |
 
-## Version
+<table>
+<tr><td><strong>Version</strong></td><td><code>0.1.0</code></td></tr>
+<tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
+</table>
 
-Current: **0.1.0** — see [CHANGELOG](CHANGELOG.md).
+See [CHANGELOG](CHANGELOG.md) for history.
 
 ## Namespaces
 

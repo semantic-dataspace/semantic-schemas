@@ -5,7 +5,7 @@ extending the generic DCAT dataset pattern with per-indent scalar results.
 
 ## Graph pattern
 
-```
+```text
 Dataset  (dcat:Dataset)
   dcterms:title               dataset name
   dcterms:description         description (optional)
@@ -24,6 +24,9 @@ Dataset  (dcat:Dataset)
 Parent experiment and specimen links are stored as DSMS `linked_kitems`
 (not schema fields), so this schema captures only the measurement data content.
 
-## Version
+<table>
+<tr><td><strong>Version</strong></td><td><code>0.1.0</code></td></tr>
+<tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
+</table>
 
-Current: **0.1.0** — see [CHANGELOG](CHANGELOG.md).
+See [CHANGELOG](CHANGELOG.md) for history.

@@ -5,7 +5,7 @@ ManufacturingProcess pattern with DSMS heat-treatment vocabulary extensions.
 
 ## Graph pattern
 
-```
+```text
 HeatTreatmentProcess  (pmdco:PMD_0000833 + dsmsht:<Subtype>)
   rdfs:label                  process name
   rdfs:comment                description (optional)
@@ -28,9 +28,12 @@ HeatTreatmentProcess  (pmdco:PMD_0000833 + dsmsht:<Subtype>)
 | `parameter_type` | `rdf:type` | Vocabulary IRI — enables SPARQL filtering by parameter class |
 | `parameter_unit` | `qudt:hasUnit` | QUDT unit IRI from vocabulary service |
 
-## Version
+<table>
+<tr><td><strong>Version</strong></td><td><code>0.2.0</code></td></tr>
+<tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
+</table>
 
-Current: **0.2.0** — see [CHANGELOG](CHANGELOG.md).
+See [CHANGELOG](CHANGELOG.md) for history.
 
 ## Namespaces
 

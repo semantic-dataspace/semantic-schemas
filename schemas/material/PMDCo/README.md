@@ -9,7 +9,7 @@ of any specific specimen state or batch. Specimens link to it via `is_state_of`
 
 ## Graph pattern
 
-```
+```text
 Material  (pmdco:PMD_0000000)
   rdfs:label                              name
   dcterms:title                           normative designation (e.g. AA2618-T6)
@@ -37,9 +37,12 @@ Material  (pmdco:PMD_0000000)
 | `heat_treatment` | `dsms:hasHeatTreatmentDescription` | Thermal processing history |
 | `notes` | `rdfs:comment` | Free text |
 
-## Version
+<table>
+<tr><td><strong>Version</strong></td><td><code>0.1.0</code></td></tr>
+<tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
+</table>
 
-`0.1.0` — see [CHANGELOG.md](CHANGELOG.md)
+See [CHANGELOG](CHANGELOG.md) for history.
 
 ## Namespaces
 

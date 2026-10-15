@@ -131,7 +131,6 @@ properties:
     x-kitem:
       ktypeIds: [expert]
     type: string
-    format: uri
 
   alloy_system:
     title: Alloy System
