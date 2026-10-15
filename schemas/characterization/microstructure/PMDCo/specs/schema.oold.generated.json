@@ -56,14 +56,23 @@
       "@id": "http://purl.obolibrary.org/obo/BFO_",
       "@prefix": true
     },
+    "chameo": "https://w3id.org/emmo/domain/characterisation-methodology/chameo#",
     "qudt": "http://qudt.org/schema/qudt/",
     "uqudt": "http://qudt.org/vocab/unit/",
+    "measurement_device": {
+      "@id": "chameo:usesInstrument",
+      "@type": "@id"
+    },
     "has_process_attribute": {
       "@id": "pmdco:PMD_0000009",
       "@container": "@set"
     },
     "parameter_label": {
       "@id": "rdfs:label"
+    },
+    "parameter_type": {
+      "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+      "@type": "@id"
     },
     "parameter_value": {
       "@id": "qudt:value",
@@ -73,22 +82,23 @@
       "@id": "qudt:hasUnit",
       "@type": "@id"
     },
-    "etching_method": {
-      "@id": "http://www.w3.org/2004/02/skos/core#scopeNote"
-    },
-    "software": {
-      "@id": "http://schema.org/softwareVersion"
-    },
     "measured_properties": {
       "@id": "http://purl.obolibrary.org/obo/OBI_0000299",
       "@container": "@set"
     },
-    "is_about": {
-      "@id": "http://purl.obolibrary.org/obo/IAO_0000136",
+    "result_type": {
+      "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
       "@type": "@id"
     },
-    "is_quality_measurement_of": {
-      "@id": "http://purl.obolibrary.org/obo/IAO_0000221",
+    "is_about": {
+      "@id": "http://purl.obolibrary.org/obo/IAO_0000136"
+    },
+    "quality_type": {
+      "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+      "@type": "@id"
+    },
+    "quality_of": {
+      "@id": "http://purl.obolibrary.org/obo/RO_0000080",
       "@type": "@id"
     },
     "has_value_spec": {
@@ -104,6 +114,17 @@
     },
     "specifies_value_of": {
       "@id": "http://purl.obolibrary.org/obo/OBI_0001927",
+      "@type": "@id"
+    },
+    "dsmsms": "https://w3id.org/dsms/microstructure#",
+    "etching_method": {
+      "@id": "http://purl.org/dc/terms/description"
+    },
+    "software": {
+      "@id": "http://www.w3.org/ns/prov#used"
+    },
+    "is_quality_measurement_of": {
+      "@id": "http://purl.obolibrary.org/obo/IAO_0000221",
       "@type": "@id"
     }
   },

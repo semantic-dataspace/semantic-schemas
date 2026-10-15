@@ -127,8 +127,8 @@
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$comment": "PMDCo measurement pattern schema for a tensile test process",
-  "x-schema-version": "0.3.1",
-  "x-schema-uri": "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/tensile-test-PMDCo-v0.3.1/schemas/characterization/tensile-test/PMDCo/specs/schema.oold.generated.json",
+  "x-schema-version": "0.4.0",
+  "x-schema-uri": "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/tensile-test-PMDCo-v0.4.0/schemas/characterization/tensile-test/PMDCo/specs/schema.oold.generated.json",
   "x-maturity": "draft",
   "x-process-step": {
     "category": "characterization"
@@ -327,52 +327,9 @@
           },
           "parameter_unit": {
             "title": "Unit",
+            "description": "Search and select a QUDT unit from the vocabulary service.",
             "type": "string",
-            "enum": [
-              "uqudt:PER-SEC",
-              "uqudt:MilliM-PER-MIN",
-              "uqudt:MilliM-PER-SEC",
-              "uqudt:DEG_C",
-              "uqudt:K",
-              "uqudt:MilliM",
-              "uqudt:N",
-              "uqudt:MegaPascal"
-            ],
-            "options": {
-              "enum_titles": [
-                "1/s (strain rate)",
-                "mm/min (speed)",
-                "mm/s (speed)",
-                "\u00b0C (Celsius)",
-                "K (Kelvin)",
-                "mm (length)",
-                "N (Newton)",
-                "MPa (megapascal)"
-              ]
-            },
-            "x-depends-on": {
-              "field": "parameter_label",
-              "values": {
-                "Strain Rate": [
-                  "uqudt:PER-SEC"
-                ],
-                "Test Speed": [
-                  "uqudt:MilliM-PER-MIN",
-                  "uqudt:MilliM-PER-SEC"
-                ],
-                "Temperature": [
-                  "uqudt:DEG_C",
-                  "uqudt:K"
-                ],
-                "Gauge Length": [
-                  "uqudt:MilliM"
-                ],
-                "Pre-load": [
-                  "uqudt:N",
-                  "uqudt:MegaPascal"
-                ]
-              }
-            }
+            "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
           }
         }
       },
@@ -504,19 +461,9 @@
               },
               "result_unit": {
                 "title": "Unit",
+                "description": "Search and select a QUDT unit from the vocabulary service.",
                 "type": "string",
-                "enum": [
-                  "uqudt:MegaPascal",
-                  "uqudt:GigaPascal",
-                  "uqudt:PERCENT"
-                ],
-                "options": {
-                  "enum_titles": [
-                    "MPa (megapascal)",
-                    "GPa (gigapascal)",
-                    "% (percent)"
-                  ]
-                }
+                "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
               },
               "specifies_value_of": {
                 "title": "Specifies Value Of",

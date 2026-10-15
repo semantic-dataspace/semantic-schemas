@@ -52,10 +52,22 @@
     "qudt": "http://qudt.org/schema/qudt/",
     "uqudt": "http://qudt.org/vocab/unit/",
     "chameo": "https://w3id.org/emmo/domain/characterisation-methodology/chameo#",
+    "dnano": "https://w3id.org/dsms/nanoindentation/",
     "csvw": "http://www.w3.org/ns/csvw#",
     "measured_properties": {
       "@id": "http://purl.obolibrary.org/obo/OBI_0000299",
       "@container": "@set"
+    },
+    "is_about": {
+      "@id": "http://purl.obolibrary.org/obo/IAO_0000136"
+    },
+    "quality_type": {
+      "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+      "@type": "@id"
+    },
+    "quality_of": {
+      "@id": "http://purl.obolibrary.org/obo/RO_0000080",
+      "@type": "@id"
     },
     "has_value_spec": {
       "@id": "http://purl.obolibrary.org/obo/OBI_0001938"
@@ -66,10 +78,6 @@
     },
     "result_unit": {
       "@id": "http://purl.obolibrary.org/obo/IAO_0000039",
-      "@type": "@id"
-    },
-    "specifies_value_of": {
-      "@id": "http://purl.obolibrary.org/obo/OBI_0001927",
       "@type": "@id"
     },
     "timeseries_column": {
@@ -216,28 +224,7 @@
           "label": {
             "title": "Result Name",
             "type": "string",
-            "enum": [
-              "Hardness HIT",
-              "Elastic Modulus EIT",
-              "Reduced Modulus E*",
-              "Indentation Modulus Er",
-              "Vickers Equivalent HVIT",
-              "Maximum Force Fmax",
-              "Maximum Depth hmax",
-              "Contact Depth hc",
-              "Residual Depth hr",
-              "Plastic Depth hp",
-              "Contact Stiffness S",
-              "Projected Contact Area Ap",
-              "Elastic Work Welast",
-              "Plastic Work Wplast",
-              "Total Work Wtotal",
-              "Elastic Work Ratio nIT",
-              "Reverse Indentation Ratio RIT",
-              "Loading Exponent m",
-              "Geometry Factor Epsilon",
-              "Fit Quality R2"
-            ]
+            "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/all/terms"
           },
           "has_value_spec": {
             "title": "Value Specification",
@@ -281,99 +268,38 @@
               "result_unit": {
                 "title": "Unit",
                 "type": "string",
-                "enum": [
-                  "uqudt:GigaPA",
-                  "uqudt:MicroM",
-                  "uqudt:MicroM2",
-                  "uqudt:MilliN",
-                  "uqudt:MilliN-PER-MicroM",
-                  "uqudt:PERCENT",
-                  "uqudt:UNITLESS",
-                  "uqudt:MicroJ"
-                ],
+                "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
+              }
+            }
+          },
+          "is_about": {
+            "title": "Quality Individual",
+            "description": "BFO quality individual typed with the specific measured property class. Populated automatically by the transform; do not edit manually.",
+            "type": "object",
+            "properties": {
+              "quality_type": {
+                "title": "Quality Class",
+                "type": "string",
                 "options": {
-                  "enum_titles": [
-                    "GPa (gigapascal)",
-                    "um (micrometre)",
-                    "um2 (square micrometre)",
-                    "mN (millinewton)",
-                    "mN/um (millinewton per micrometre)",
-                    "% (percent)",
-                    "- (dimensionless)",
-                    "uJ (microjoule)"
-                  ]
+                  "hidden": true
                 },
-                "x-depends-on": {
-                  "field": "label",
-                  "values": {
-                    "Hardness HIT": [
-                      "uqudt:GigaPA"
-                    ],
-                    "Elastic Modulus EIT": [
-                      "uqudt:GigaPA"
-                    ],
-                    "Reduced Modulus E*": [
-                      "uqudt:GigaPA"
-                    ],
-                    "Indentation Modulus Er": [
-                      "uqudt:GigaPA"
-                    ],
-                    "Vickers Equivalent HVIT": [
-                      "uqudt:UNITLESS"
-                    ],
-                    "Maximum Force Fmax": [
-                      "uqudt:MilliN"
-                    ],
-                    "Maximum Depth hmax": [
-                      "uqudt:MicroM"
-                    ],
-                    "Contact Depth hc": [
-                      "uqudt:MicroM"
-                    ],
-                    "Residual Depth hr": [
-                      "uqudt:MicroM"
-                    ],
-                    "Plastic Depth hp": [
-                      "uqudt:MicroM"
-                    ],
-                    "Contact Stiffness S": [
-                      "uqudt:MilliN-PER-MicroM"
-                    ],
-                    "Projected Contact Area Ap": [
-                      "uqudt:MicroM2"
-                    ],
-                    "Elastic Work Welast": [
-                      "uqudt:MicroJ"
-                    ],
-                    "Plastic Work Wplast": [
-                      "uqudt:MicroJ"
-                    ],
-                    "Total Work Wtotal": [
-                      "uqudt:MicroJ"
-                    ],
-                    "Elastic Work Ratio nIT": [
-                      "uqudt:PERCENT"
-                    ],
-                    "Reverse Indentation Ratio RIT": [
-                      "uqudt:PERCENT"
-                    ],
-                    "Loading Exponent m": [
-                      "uqudt:UNITLESS"
-                    ],
-                    "Geometry Factor Epsilon": [
-                      "uqudt:UNITLESS"
-                    ],
-                    "Fit Quality R2": [
-                      "uqudt:UNITLESS"
-                    ]
-                  }
-                }
+                "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/all/terms"
               },
-              "specifies_value_of": {
-                "title": "Specifies Value Of",
+              "id": {
+                "title": "Quality Individual ID",
                 "type": "string",
                 "readOnly": true,
-                "default": ""
+                "default": "result-1-quality",
+                "options": {
+                  "hidden": true
+                }
+              },
+              "quality_of": {
+                "title": "Specimen IRI",
+                "type": "string",
+                "options": {
+                  "hidden": true
+                }
               }
             }
           }

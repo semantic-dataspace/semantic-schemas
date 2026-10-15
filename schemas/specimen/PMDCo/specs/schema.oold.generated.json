@@ -14,19 +14,13 @@
       "@id": "http://purl.obolibrary.org/obo/OBI_",
       "@prefix": true
     },
-    "iao": {
-      "@id": "http://purl.obolibrary.org/obo/IAO_",
-      "@prefix": true
-    },
-    "uo": {
-      "@id": "http://purl.obolibrary.org/obo/UO_",
-      "@prefix": true
-    },
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "dcterms": "http://purl.org/dc/terms/",
     "pmdco": "https://w3id.org/pmd/co/",
     "dspec": "https://w3id.org/dsms/specimen#",
+    "qudt": "http://qudt.org/schema/qudt/",
+    "uqudt": "http://qudt.org/vocab/unit/",
     "conforms_to": {
       "@id": "http://purl.org/dc/terms/conformsTo",
       "@type": "@id"
@@ -62,15 +56,23 @@
       "@type": "xsd:double"
     },
     "unit": {
-      "@id": "iao:0000039",
+      "@id": "http://qudt.org/schema/qudt/hasUnit",
       "@type": "@id"
+    },
+    "has_first_instant": {
+      "@id": "http://purl.obolibrary.org/obo/BFO_0000222"
+    },
+    "has_last_instant": {
+      "@id": "http://purl.obolibrary.org/obo/BFO_0000224"
+    },
+    "instant_date": {
+      "@id": "http://purl.org/dc/terms/date",
+      "@type": "xsd:date"
     },
     "source": {
       "@id": "http://www.w3.org/ns/prov#wasDerivedFrom",
-      "@type": "@id"
-    },
-    "temporal_state": {
-      "@id": "dspec:temporalState"
+      "@type": "@id",
+      "@container": "@set"
     },
     "surface_preparation": {
       "@id": "dspec:hasSurfacePreparation"
@@ -81,8 +83,8 @@
   },
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$comment": "PMDCo TemporallyQualifiedContinuant schema for a specimen state. Physical properties (geometry, mass, surface roughness) are modelled as a dynamic quality-node array, mirroring the chemical-composition has_member pattern. Each row: select property type (PMDCo quality class IRI), enter value, pick unit.",
-  "x-schema-version": "0.6.0",
-  "x-schema-uri": "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/specimen/PMDCo/specs/schema.oold.yaml",
+  "x-schema-version": "0.7.0",
+  "x-schema-uri": "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/specimen-PMDCo-v0.7.0/schemas/specimen/PMDCo/specs/schema.oold.generated.json",
   "x-maturity": "draft",
   "title": "Specimen",
   "type": "object",
@@ -100,11 +102,11 @@
       },
       "readOnly": true,
       "const": [
-        "bfo:0000030",
+        "obo:BFO_0000030",
         "pmdco:PMD_0000068"
       ],
       "default": [
-        "bfo:0000030",
+        "obo:BFO_0000030",
         "pmdco:PMD_0000068"
       ],
       "options": {
@@ -138,8 +140,8 @@
       }
     },
     "exists_at": {
-      "title": "Exists At (Temporal Region)",
-      "description": "Temporal region during which this specimen exists in this state (BFO_0000108 \u2192 BFO_0000008 TemporalRegion).",
+      "title": "Exists At (Temporal Interval)",
+      "description": "Temporal interval during which this specimen exists in this state (BFO_0000108 \u2192 BFO_0000202 TemporalInterval). Optionally add start/end dates via has_first_instant / has_last_instant.",
       "type": "object",
       "required": [
         "type",
@@ -154,50 +156,100 @@
           },
           "readOnly": true,
           "const": [
-            "bfo:0000008"
+            "obo:BFO_0000202"
           ],
           "default": [
-            "bfo:0000008"
+            "obo:BFO_0000202"
           ],
           "options": {
             "enum_titles": [
-              "bfo:TemporalRegion"
+              "bfo:TemporalInterval"
             ]
           }
         },
         "id": {
-          "title": "Temporal Region ID",
+          "title": "Temporal Interval ID",
           "type": "string",
           "readOnly": true,
-          "default": "temporal-region"
+          "default": "temporal-interval"
         },
-        "label": {
-          "title": "Description",
-          "description": "e.g. 'before nanoindentation', 'after sawing'",
-          "type": "string"
+        "has_first_instant": {
+          "title": "Start Instant",
+          "description": "Moment this specimen entered this state (BFO_0000222).",
+          "type": "object",
+          "properties": {
+            "type": {
+              "title": "Type",
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "readOnly": true,
+              "const": [
+                "obo:BFO_0000148"
+              ],
+              "default": [
+                "obo:BFO_0000148"
+              ]
+            },
+            "id": {
+              "title": "ID",
+              "type": "string",
+              "readOnly": true,
+              "default": "temporal-start"
+            },
+            "instant_date": {
+              "title": "Start Date",
+              "type": "string",
+              "format": "date"
+            }
+          }
+        },
+        "has_last_instant": {
+          "title": "End Instant",
+          "description": "Moment this specimen left this state (BFO_0000224). Optional \u2014 leave blank if end date unknown.",
+          "type": "object",
+          "properties": {
+            "type": {
+              "title": "Type",
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "readOnly": true
+            },
+            "id": {
+              "title": "ID",
+              "type": "string",
+              "readOnly": true
+            },
+            "instant_date": {
+              "title": "End Date",
+              "type": "string",
+              "format": "date"
+            }
+          }
         }
       }
     },
-    "temporal_state": {
-      "title": "Temporal State",
-      "description": "Controlled lifecycle label: as-received, pre-test, or post-test.",
-      "type": "string",
-      "enum": [
-        "as-received",
-        "pre-test",
-        "post-test"
-      ]
-    },
     "source": {
-      "title": "Source",
-      "description": "Semi-finished product this specimen was cut from (prov:wasDerivedFrom).",
-      "type": "string",
+      "title": "Source Material(s)",
+      "description": "Parent billet, semi-finished product, or specimen(s) this specimen was derived from (prov:wasDerivedFrom). Add multiple entries when a specimen is cut from a piece that was itself cut from a billet (multi-hop provenance).",
+      "type": "array",
       "format": "kitem",
       "x-kitem": {
         "ktypeIds": [
-          "semi-finished-product"
+          "semi-finished-product",
+          "specimen",
+          "material"
         ]
-      }
+      },
+      "items": {
+        "type": "string",
+        "format": "uri"
+      },
+      "uniqueItems": true,
+      "default": []
     },
     "physical_properties": {
       "title": "Physical Properties",
@@ -271,10 +323,10 @@
                 },
                 "readOnly": true,
                 "const": [
-                  "obi:0001931"
+                  "obo:OBI_0001931"
                 ],
                 "default": [
-                  "obi:0001931"
+                  "obo:OBI_0001931"
                 ],
                 "options": {
                   "enum_titles": [
@@ -295,59 +347,9 @@
               },
               "unit": {
                 "title": "Unit",
+                "description": "Search and select a QUDT unit from the vocabulary service.",
                 "type": "string",
-                "enum": [
-                  "obo:UO_0000015",
-                  "obo:UO_0000017",
-                  "obo:UO_0000018",
-                  "obo:UO_0000021",
-                  "obo:UO_0000022",
-                  "obo:UO_0000023"
-                ],
-                "options": {
-                  "enum_titles": [
-                    "mm (millimetre)",
-                    "\u00b5m (micrometre)",
-                    "nm (nanometre)",
-                    "g (gram)",
-                    "kg (kilogram)",
-                    "mg (milligram)"
-                  ]
-                },
-                "x-depends-on": {
-                  "field": "type",
-                  "values": {
-                    "pmdco:PMD_0050153": [
-                      "obo:UO_0000015",
-                      "obo:UO_0000017"
-                    ],
-                    "pmdco:PMD_0050154": [
-                      "obo:UO_0000015",
-                      "obo:UO_0000017"
-                    ],
-                    "pmdco:PMD_0040001": [
-                      "obo:UO_0000015",
-                      "obo:UO_0000017"
-                    ],
-                    "pmdco:PMD_0050051": [
-                      "obo:UO_0000015",
-                      "obo:UO_0000017"
-                    ],
-                    "pmdco:PMD_0020133": [
-                      "obo:UO_0000021",
-                      "obo:UO_0000022",
-                      "obo:UO_0000023"
-                    ],
-                    "dspec:SurfaceRoughnessRa": [
-                      "obo:UO_0000018",
-                      "obo:UO_0000017"
-                    ],
-                    "dspec:SurfaceRoughnessRq": [
-                      "obo:UO_0000018",
-                      "obo:UO_0000017"
-                    ]
-                  }
-                }
+                "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
               }
             }
           }

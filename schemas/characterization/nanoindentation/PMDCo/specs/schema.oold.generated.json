@@ -56,14 +56,23 @@
       "@id": "http://purl.obolibrary.org/obo/BFO_",
       "@prefix": true
     },
+    "chameo": "https://w3id.org/emmo/domain/characterisation-methodology/chameo#",
     "qudt": "http://qudt.org/schema/qudt/",
     "uqudt": "http://qudt.org/vocab/unit/",
+    "measurement_device": {
+      "@id": "chameo:usesInstrument",
+      "@type": "@id"
+    },
     "has_process_attribute": {
       "@id": "pmdco:PMD_0000009",
       "@container": "@set"
     },
     "parameter_label": {
       "@id": "http://www.w3.org/2000/01/rdf-schema#label"
+    },
+    "parameter_type": {
+      "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+      "@type": "@id"
     },
     "parameter_value": {
       "@id": "http://qudt.org/schema/qudt/value",
@@ -73,7 +82,40 @@
       "@id": "http://qudt.org/schema/qudt/hasUnit",
       "@type": "@id"
     },
-    "chameo": "https://w3id.org/emmo/domain/characterisation-methodology/chameo#",
+    "measured_properties": {
+      "@id": "http://purl.obolibrary.org/obo/OBI_0000299",
+      "@container": "@set"
+    },
+    "result_type": {
+      "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+      "@type": "@id"
+    },
+    "is_about": {
+      "@id": "http://purl.obolibrary.org/obo/IAO_0000136"
+    },
+    "quality_type": {
+      "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+      "@type": "@id"
+    },
+    "quality_of": {
+      "@id": "http://purl.obolibrary.org/obo/RO_0000080",
+      "@type": "@id"
+    },
+    "has_value_spec": {
+      "@id": "http://purl.obolibrary.org/obo/OBI_0001938"
+    },
+    "result_value": {
+      "@id": "http://purl.obolibrary.org/obo/OBI_0001937",
+      "@type": "xsd:double"
+    },
+    "result_unit": {
+      "@id": "http://purl.obolibrary.org/obo/IAO_0000039",
+      "@type": "@id"
+    },
+    "specifies_value_of": {
+      "@id": "http://purl.obolibrary.org/obo/OBI_0001927",
+      "@type": "@id"
+    },
     "nanoind": "https://w3id.org/emmo/domain/nanoindentation#",
     "dnano": "https://w3id.org/dsms/nanoindentation/",
     "raw_data_files": {
@@ -112,21 +154,6 @@
     "test_humidity": {
       "@id": "dnano:testRelativeHumidity",
       "@type": "xsd:double"
-    },
-    "measured_properties": {
-      "@id": "http://purl.obolibrary.org/obo/OBI_0000299",
-      "@container": "@set"
-    },
-    "has_value_spec": {
-      "@id": "http://purl.obolibrary.org/obo/OBI_0001938"
-    },
-    "result_value": {
-      "@id": "http://purl.obolibrary.org/obo/OBI_0001937",
-      "@type": "xsd:double"
-    },
-    "result_unit": {
-      "@id": "http://purl.obolibrary.org/obo/IAO_0000039",
-      "@type": "@id"
     }
   },
   "allOf": [
@@ -303,7 +330,7 @@
         "required": [
           "type",
           "id",
-          "parameter_label",
+          "parameter_type",
           "parameter_value",
           "parameter_unit"
         ],
@@ -333,18 +360,19 @@
             "readOnly": true,
             "default": "param-1"
           },
-          "parameter_label": {
-            "title": "Parameter",
+          "parameter_type": {
+            "title": "Parameter Name",
+            "description": "Select the parameter type from the process-parameter vocabulary.",
             "type": "string",
-            "enum": [
-              "Max Depth",
-              "Min Depth",
-              "Max Load",
-              "Loading Rate",
-              "Hold Time at Max Load",
-              "Acquisition Rate",
-              "Assumed Poisson's Ratio"
-            ]
+            "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/process-parameter/use-cases/all/terms"
+          },
+          "parameter_label": {
+            "title": "Parameter Label",
+            "description": "Human-readable label \u2014 set by transform, not edited manually.",
+            "type": "string",
+            "options": {
+              "hidden": true
+            }
           },
           "parameter_value": {
             "title": "Value",
@@ -353,51 +381,9 @@
           },
           "parameter_unit": {
             "title": "Unit",
+            "description": "Search and select a QUDT unit from the vocabulary service.",
             "type": "string",
-            "enum": [
-              "uqudt:MicroM",
-              "uqudt:MilliN",
-              "uqudt:PER-SEC",
-              "uqudt:SEC",
-              "uqudt:HZ",
-              "uqudt:UNITLESS"
-            ],
-            "options": {
-              "enum_titles": [
-                "\u00b5m (micrometre)",
-                "mN (millinewton)",
-                "1/s (per second)",
-                "s (second)",
-                "Hz (hertz)",
-                "\u2013 (dimensionless)"
-              ]
-            },
-            "x-depends-on": {
-              "field": "parameter_label",
-              "values": {
-                "Max Depth": [
-                  "uqudt:MicroM"
-                ],
-                "Min Depth": [
-                  "uqudt:MicroM"
-                ],
-                "Max Load": [
-                  "uqudt:MilliN"
-                ],
-                "Loading Rate": [
-                  "uqudt:PER-SEC"
-                ],
-                "Hold Time at Max Load": [
-                  "uqudt:SEC"
-                ],
-                "Acquisition Rate": [
-                  "uqudt:HZ"
-                ],
-                "Assumed Poisson's Ratio": [
-                  "uqudt:UNITLESS"
-                ]
-              }
-            }
+            "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
           }
         }
       },
@@ -445,21 +431,7 @@
           "label": {
             "title": "Result Name",
             "type": "string",
-            "enum": [
-              "Mean Hardness HIT",
-              "Std Dev Hardness HIT",
-              "Mean Elastic Modulus EIT",
-              "Std Dev Elastic Modulus EIT",
-              "Mean Indentation Modulus Er",
-              "Std Dev Indentation Modulus Er",
-              "Mean Reduced Modulus E*",
-              "Std Dev Reduced Modulus E*",
-              "Mean Vickers Equivalent HVIT",
-              "Std Dev Vickers Equivalent HVIT",
-              "Mean Maximum Depth hmax",
-              "Std Dev Maximum Depth hmax",
-              "Number of Valid Indentations"
-            ]
+            "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/all/terms"
           },
           "has_value_spec": {
             "title": "Value Specification",
@@ -504,61 +476,37 @@
               "result_unit": {
                 "title": "Unit",
                 "type": "string",
-                "enum": [
-                  "uqudt:GigaPA",
-                  "uqudt:MicroM",
-                  "uqudt:UNITLESS"
-                ],
+                "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
+              }
+            }
+          },
+          "is_about": {
+            "title": "Quality Individual",
+            "description": "BFO quality individual typed with the specific measured property class. Populated automatically by the transform; do not edit manually.",
+            "type": "object",
+            "properties": {
+              "quality_type": {
+                "title": "Quality Class",
+                "type": "string",
                 "options": {
-                  "enum_titles": [
-                    "GPa (gigapascal)",
-                    "\u00b5m (micrometre)",
-                    "\u2013 (count / dimensionless)"
-                  ]
+                  "hidden": true
                 },
-                "x-depends-on": {
-                  "field": "label",
-                  "values": {
-                    "Mean Hardness HIT": [
-                      "uqudt:GigaPA"
-                    ],
-                    "Std Dev Hardness HIT": [
-                      "uqudt:GigaPA"
-                    ],
-                    "Mean Elastic Modulus EIT": [
-                      "uqudt:GigaPA"
-                    ],
-                    "Std Dev Elastic Modulus EIT": [
-                      "uqudt:GigaPA"
-                    ],
-                    "Mean Indentation Modulus Er": [
-                      "uqudt:GigaPA"
-                    ],
-                    "Std Dev Indentation Modulus Er": [
-                      "uqudt:GigaPA"
-                    ],
-                    "Mean Reduced Modulus E*": [
-                      "uqudt:GigaPA"
-                    ],
-                    "Std Dev Reduced Modulus E*": [
-                      "uqudt:GigaPA"
-                    ],
-                    "Mean Vickers Equivalent HVIT": [
-                      "uqudt:UNITLESS"
-                    ],
-                    "Std Dev Vickers Equivalent HVIT": [
-                      "uqudt:UNITLESS"
-                    ],
-                    "Mean Maximum Depth hmax": [
-                      "uqudt:MicroM"
-                    ],
-                    "Std Dev Maximum Depth hmax": [
-                      "uqudt:MicroM"
-                    ],
-                    "Number of Valid Indentations": [
-                      "uqudt:UNITLESS"
-                    ]
-                  }
+                "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/characterization-result/use-cases/all/terms"
+              },
+              "id": {
+                "title": "Quality Individual ID",
+                "type": "string",
+                "readOnly": true,
+                "default": "result-1-quality",
+                "options": {
+                  "hidden": true
+                }
+              },
+              "quality_of": {
+                "title": "Specimen IRI",
+                "type": "string",
+                "options": {
+                  "hidden": true
                 }
               }
             }

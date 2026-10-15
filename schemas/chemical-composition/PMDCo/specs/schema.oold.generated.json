@@ -18,7 +18,7 @@
     "iao": "http://purl.obolibrary.org/obo/IAO_",
     "uo": "http://purl.obolibrary.org/obo/UO_",
     "pmdco": "https://w3id.org/pmd/co/",
-    "uqudt": "https://qudt.org/vocab/unit/",
+    "uqudt": "http://qudt.org/vocab/unit/",
     "type": "@type",
     "id": "@id",
     "quality_of": {
@@ -418,16 +418,12 @@
                 "description": "Unit of the fraction value",
                 "type": "string",
                 "enum": [
-                  "uo:0000163",
-                  "uo:0000164",
-                  "uo:0000165"
+                  "uqudt:PERCENT"
                 ],
-                "default": "uo:0000163",
+                "default": "uqudt:PERCENT",
                 "options": {
                   "enum_titles": [
-                    "mass percentage (%)",
-                    "volume percentage (%)",
-                    "molar percentage (%)"
+                    "% (mass / volume / mole fraction)"
                   ]
                 }
               },
