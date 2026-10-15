@@ -59,7 +59,7 @@
       "description": "IRI of the measurement-device KItem this calibration applies to.",
       "type": "string",
       "format": "uri",
-      "examples": ["https://kiran.materials-data.space/knowledge/measurement-device/netzsch-dsc300-supreme-abc123"]
+      "examples": ["https://example.materials-data.space/knowledge/measurement-device/netzsch-dsc300-supreme-abc123"]
     },
 
     "reference_standards": {
@@ -122,7 +122,7 @@
       "calibration_type": "Temperature",
       "valid_from": "2026-01-08",
       "valid_until": "2026-07-08",
-      "measurement_device": "https://kiran.materials-data.space/knowledge/measurement-device/netzsch-dsc300-supreme-abc123",
+      "measurement_device": "https://example.materials-data.space/knowledge/measurement-device/netzsch-dsc300-supreme-abc123",
       "conditions": [
         { "name": "Heating Rate", "value": 10.0, "unit": "K/min" },
         { "name": "Atmosphere",   "value": 50.0, "unit": "ml/min" }

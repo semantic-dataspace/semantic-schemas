@@ -25,7 +25,7 @@
       "type": "string",
       "format": "uri",
       "x-kitem": {"ktypeIds": ["specimen"]},
-      "examples": ["https://kiran.materials-data.space/knowledge/aa2618-2hr-set2-specimen"]
+      "examples": ["https://example.materials-data.space/knowledge/aa2618-2hr-set2-specimen"]
     },
     "specimen_post_iri": {
       "title": "Post-test Specimen IRI",
@@ -192,7 +192,7 @@
   "examples": [
     {
       "experiment_name": "AA2618 2hr aged Set 2",
-      "specimen_iri": "https://kiran.materials-data.space/knowledge/aa2618-2hr-set2-specimen",
+      "specimen_iri": "https://example.materials-data.space/knowledge/aa2618-2hr-set2-specimen",
       "test_date": "2026-07-16T00:00:00",
       "instrument_serial": "1000136225",
       "control_mode": "Constant Strain Rate",

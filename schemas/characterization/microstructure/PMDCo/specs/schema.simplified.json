@@ -24,7 +24,7 @@
       "description": "IRI of the specimen KItem being characterized (obi:has_specified_input).",
       "type": "string",
       "format": "uri",
-      "examples": ["https://kiran.materials-data.space/knowledge/aa2618-2hr-set2-specimen"]
+      "examples": ["https://example.materials-data.space/knowledge/aa2618-2hr-set2-specimen"]
     },
     "test_date": {
       "title": "Measurement Date",
@@ -143,7 +143,7 @@
   "examples": [
     {
       "experiment_name": "AA2618 Aged 200°C/2h — SEM grain size",
-      "specimen_iri": "https://kiran.materials-data.space/knowledge/s2-aa2618-2hrs-disc-028",
+      "specimen_iri": "https://example.materials-data.space/knowledge/s2-aa2618-2hrs-disc-028",
       "technique": "SEM",
       "accelerating_voltage_kv": 15,
       "magnification": 1000,
