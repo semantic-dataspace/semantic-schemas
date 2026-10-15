@@ -33,14 +33,14 @@
       "path": "schemas/characterization/tensile-test/PMDCo/specs/schema.oold.yaml",
       "group": "characterization",
       "maturity": "draft",
-      "version": "0.3.1",
+      "version": "0.4.0",
       "shapePath": "schemas/characterization/tensile-test/PMDCo/specs/shape.ttl"
     },
     {
       "path": "schemas/characterization/tensile-test/TTO/specs/schema.oold.yaml",
       "group": "characterization",
       "maturity": "draft",
-      "version": "0.2.1",
+      "version": "0.3.0",
       "shapePath": "schemas/characterization/tensile-test/TTO/specs/shape.ttl"
     },
     {
@@ -82,7 +82,7 @@
       "path": "schemas/data-analysis/generic/PMDCo/specs/schema.oold.yaml",
       "group": "data-analysis",
       "maturity": "draft",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "shapePath": "schemas/data-analysis/generic/PMDCo/specs/shape.ttl"
     },
     {
@@ -116,14 +116,14 @@
       "path": "schemas/manufacturing/generic/PMDCo/specs/schema.oold.yaml",
       "group": "manufacturing",
       "maturity": "draft",
-      "version": "0.2.1",
+      "version": "0.3.0",
       "shapePath": "schemas/manufacturing/generic/PMDCo/specs/shape.ttl"
     },
     {
       "path": "schemas/material-card/mechanical/PMDCo/specs/schema.oold.yaml",
       "group": "material-card",
       "maturity": "draft",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "shapePath": "schemas/material-card/mechanical/PMDCo/specs/shape.ttl"
     },
     {
@@ -165,7 +165,7 @@
       "path": "schemas/simulation/generic/PMDCo/specs/schema.oold.yaml",
       "group": "simulation",
       "maturity": "draft",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "shapePath": "schemas/simulation/generic/PMDCo/specs/shape.ttl"
     },
     {

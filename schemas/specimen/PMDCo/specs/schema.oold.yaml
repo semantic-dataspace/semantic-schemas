@@ -123,7 +123,7 @@ $comment: >-
   pattern. Each row: select property type (PMDCo quality class IRI), enter
   value, pick unit.
 x-schema-version: '0.7.0'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/specimen/PMDCo/specs/schema.oold.yaml'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/specimen-PMDCo-v0.7.0/schemas/specimen/PMDCo/specs/schema.oold.generated.json'
 x-maturity: 'draft'
 title: Specimen
 type: object
