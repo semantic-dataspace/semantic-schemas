@@ -224,7 +224,9 @@ properties:
 
         parameter_type:
           title: Parameter Type
-          description: Search and select a parameter type from the vocabulary. Stored as rdf:type on the ParameterSpecification node.
+          description: >-
+            Search and select a parameter type from the vocabulary.
+            Stored as rdf:type on the ParameterSpecification node.
           type: string
           x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/process-parameter/use-cases/all/terms"
 

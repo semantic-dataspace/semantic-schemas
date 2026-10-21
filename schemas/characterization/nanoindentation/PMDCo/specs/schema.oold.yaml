@@ -45,7 +45,8 @@
 #       rdfs:label  "Max Depth" / "Max Load" / …
 #       qudt:value  xsd:double
 #       qudt:hasUnit  QUDT unit IRI
-#     obi:OBI_0000299 → MeasurementDatum nodes               (has_specified_output, inline — same predicate as KItem links)
+#     obi:OBI_0000299 → MeasurementDatum nodes
+#                        (has_specified_output, inline — same predicate as KItem links)
 #       rdf:type  iao:IAO_0000109
 #       rdfs:label  "Mean Hardness HIT" / "Std Dev EIT" / …
 #       obi:OBI_0001938 → ScalarValueSpecification
