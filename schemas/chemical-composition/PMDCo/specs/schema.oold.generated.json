@@ -418,12 +418,16 @@
                 "description": "Unit of the fraction value",
                 "type": "string",
                 "enum": [
-                  "uqudt:PERCENT"
+                  "uo:0000163",
+                  "uo:0000164",
+                  "uo:0000165"
                 ],
-                "default": "uqudt:PERCENT",
+                "default": "uo:0000163",
                 "options": {
                   "enum_titles": [
-                    "% (mass / volume / mole fraction)"
+                    "mass%",
+                    "vol%",
+                    "mol%"
                   ]
                 }
               },

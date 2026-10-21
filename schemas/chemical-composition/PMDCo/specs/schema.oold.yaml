@@ -460,11 +460,15 @@ properties:
               description: Unit of the fraction value
               type: string
               enum:
-                - uqudt:PERCENT
-              default: uqudt:PERCENT
+                - uo:0000163
+                - uo:0000164
+                - uo:0000165
+              default: uo:0000163
               options:
                 enum_titles:
-                  - "% (mass / volume / mole fraction)"
+                  - "mass%"
+                  - "vol%"
+                  - "mol%"
 
             value:
               title: Fraction Value
