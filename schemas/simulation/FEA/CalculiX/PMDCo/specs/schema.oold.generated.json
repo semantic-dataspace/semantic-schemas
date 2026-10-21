@@ -169,7 +169,7 @@
     "operator": {
       "title": "Operator",
       "description": "IRI of the person who ran or is responsible for this simulation.",
-      "format": "uri",
+      "format": "kitem",
       "x-kitem": {
         "ktypeIds": [
           "expert"
