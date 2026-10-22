@@ -25,7 +25,7 @@
    * Update $schemaUri whenever x-schema-version in specs/schema.oold.yaml changes.
    * Must match the x-schema-uri in schema.oold.yaml exactly.
    */
-  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/chemical-composition-PMDCo-v1.0.0/schemas/chemical-composition/PMDCo/specs/schema.oold.generated.json";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/chemical-composition-PMDCo-v0.3.0/schemas/chemical-composition/PMDCo/specs/schema.oold.generated.json";
 
   /* ── Unit label → UO unit IRI ───────────────────────────────────────── */
   $unitMap := {

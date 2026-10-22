@@ -30,7 +30,7 @@ shape:chemical_composition
     ] ;
     sh:property [
         sh:path obo:RO_0000080 ;   # quality_of
-        # v1.0.0: quality_of now points to a Material kitem IRI (not an inline blank node).
+        # v0.3.0: quality_of now points to a Material kitem IRI (not an inline blank node).
         # The material's rdfs:label is on the kitem itself and validated separately.
         sh:nodeKind sh:IRI ;
         sh:minCount 1 ;

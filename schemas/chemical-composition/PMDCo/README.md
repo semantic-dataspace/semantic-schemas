@@ -5,8 +5,8 @@ contains and in what proportions) following the
 [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/).
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>1.0.0</code></td></tr>
-<tr><td><strong>Maturity</strong></td><td><code>stable</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.3.0</code></td></tr>
+<tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>—</td></tr>
 <tr><td><strong>Extends</strong></td><td>—</td></tr>
 <tr><td><strong>Includes</strong></td><td>—</td></tr>
@@ -130,7 +130,7 @@ ChemicalComposition (PMD_0000551)
           specified_by_value ─────► FractionValueSpecification  (back-ref)
 ```
 
-v1.0.0: `quality_of` now points to a material kitem IRI rather than an inline blank node with a label.
+v0.3.0: `quality_of` now points to a material kitem IRI rather than an inline blank node with a label.
 Provide `material_uri` in your input to link to the real material kitem.
 
 Key decisions:

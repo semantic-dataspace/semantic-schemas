@@ -11,7 +11,7 @@ The schema IRI encodes the minor version: `.../chemical-composition/PMDCo/#v<MAJ
 
 ---
 
-## [1.0.0] - 2026-09-17
+## [0.3.0] - 2026-09-17
 
 ### Changed
 
