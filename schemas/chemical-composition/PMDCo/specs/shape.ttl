@@ -73,10 +73,8 @@ shape:fraction_value_specification
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:in ( <http://purl.obolibrary.org/obo/UO_0000163>
-                <http://purl.obolibrary.org/obo/UO_0000164>
-                <http://purl.obolibrary.org/obo/UO_0000165>
-                <http://purl.obolibrary.org/obo/UO_0000166> ) ;
-        sh:message "Unit must be UO_0000163 (mass%), UO_0000164 (vol%), UO_0000165 (mol%), or UO_0000166 (at%)." ;
+                <http://purl.obolibrary.org/obo/UO_0000165> ) ;
+        sh:message "Unit must be UO_0000163 (mass%) or UO_0000165 (vol%)." ;
     ] ;
     sh:closed false ;
     sh:ignoredProperties ( rdf:type ) .

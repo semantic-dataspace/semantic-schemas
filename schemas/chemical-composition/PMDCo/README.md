@@ -5,7 +5,7 @@ contains and in what proportions) following the
 [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/).
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>0.3.1</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.3.2</code></td></tr>
 <tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>—</td></tr>
 <tr><td><strong>Extends</strong></td><td>—</td></tr>
@@ -102,10 +102,8 @@ print("Conforms:", conforms)
 
 | Input label | Meaning |
 |---|---|
-| `mass%` | mass percentage |
-| `vol%` | volume percentage |
-| `mol%` | molar percentage |
-| `at%` | atom percentage |
+| `mass%` | mass percentage — UO_0000163 (w/w) |
+| `vol%` | volume percentage — UO_0000165 (v/v) |
 
 ---
 

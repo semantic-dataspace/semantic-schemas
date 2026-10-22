@@ -11,13 +11,17 @@ The schema IRI encodes the minor version: `.../chemical-composition/PMDCo/#v<MAJ
 
 ---
 
-## [0.3.1] - 2026-10-22
+## [0.3.2] - 2026-10-22
 
-### Added
+### Changed
 
-- `at%` (atom percent, UO_0000166) added as a supported unit alongside
-  `mass%`, `vol%`, and `mol%`. Transform maps it to `uo:0000166`; SHACL
-  shape `sh:in` list updated accordingly.
+- Unit list corrected against UO ontology:
+  - `mass%` stays → `UO_0000163` (mass percentage, w/w) ✓
+  - `vol%` fixed → `UO_0000165` (volume percentage, v/v); was incorrectly
+    mapped to `UO_0000164` (mass-volume percentage, w/v)
+  - `mol%` removed — no UO IRI exists for mole percent
+  - `at%` removed — no UO IRI exists for atom percent
+- SHACL `sh:in` list updated to match (`UO_0000163`, `UO_0000165` only).
 
 ---
 
