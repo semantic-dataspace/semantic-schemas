@@ -11,6 +11,16 @@ The schema IRI encodes the minor version: `.../chemical-composition/PMDCo/#v<MAJ
 
 ---
 
+## [0.3.1] - 2026-10-22
+
+### Added
+
+- `at%` (atom percent, UO_0000166) added as a supported unit alongside
+  `mass%`, `vol%`, and `mol%`. Transform maps it to `uo:0000166`; SHACL
+  shape `sh:in` list updated accordingly.
+
+---
+
 ## [0.3.0] - 2026-09-17
 
 ### Changed
