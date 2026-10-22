@@ -1,0 +1,46 @@
+(
+  /*
+   * Timeseries Dataset (generic): simplified JSON → OO-LD JSON
+   *
+   * Produces a dcat:Dataset document representing one measurement timeseries file
+   * with per-column semantic annotations (property IRI + QUDT unit IRI).
+   *
+   * Input fields (see schema.simplified.json):
+   *   dataset_name   string   required
+   *   dataset_id     string   optional, derived from dataset_name if omitted
+   *   description    string   optional
+   *   columns        array    optional: timeseries column semantic specs
+   *     name         string   column header as it appears in the file
+   *     property_iri string   physical property IRI (e.g. QUDT quantitykind or domain IRI)
+   *     unit_iri     string   QUDT unit IRI
+   */
+
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/dataset/timeseries/generic/specs/schema.oold.yaml";
+
+  $slug  := $replace($lowercase($trim(dataset_name)), /[^a-z0-9]+/, "-");
+  $dsId  := $exists(dataset_id) ? dataset_id : "timeseries-dataset-" & $slug;
+
+  $colSpecs := $exists(columns) and $count(columns) > 0
+    ? $map(columns, function($c) {
+        {
+          "id":           $dsId & "-col-" & $replace($lowercase($trim($c.name)), /[^a-z0-9]+/, "-"),
+          "type":         ["csvw:Column"],
+          "col_name":     $c.name,
+          "property_url": $c.property_iri,
+          "has_unit":     $c.unit_iri
+        }
+      })
+    : undefined;
+
+  $base := {
+    "conforms_to": $schemaUri,
+    "type":        ["dcat:Dataset"],
+    "id":          $dsId,
+    "label":       dataset_name
+  };
+
+  $withDesc    := $exists(description) ? $merge([$base,     {"description": description}])     : $base;
+  $withColumns := $exists($colSpecs)   ? $merge([$withDesc, {"timeseries_column": $colSpecs}]) : $withDesc;
+
+  $withColumns
+)
