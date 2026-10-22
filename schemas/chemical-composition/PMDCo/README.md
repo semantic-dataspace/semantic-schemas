@@ -5,7 +5,7 @@ contains and in what proportions) following the
 [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/pmd/co/).
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>0.3.2</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.3.0</code></td></tr>
 <tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>—</td></tr>
 <tr><td><strong>Extends</strong></td><td>—</td></tr>
