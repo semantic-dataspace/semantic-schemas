@@ -1,0 +1,14 @@
+{
+  "calibration_name": "Temperature Calibration — DSC300 Supreme — 2026-01-08",
+  "calibration_type": "Temperature",
+  "valid_from": "2026-01-08",
+  "valid_until": "2026-07-08",
+  "measurement_device": "https://example.org/devices/dsc300-supreme-lab1",
+  "conditions": [
+    { "name": "Heating Rate", "value": 10.0, "unit": "K/min" }
+  ],
+  "results": [
+    { "name": "Onset Temperature", "value": 156.6, "unit": "Degree Celsius (°C)" },
+    { "name": "Onset Temperature", "value": 419.5, "unit": "Degree Celsius (°C)" }
+  ]
+}

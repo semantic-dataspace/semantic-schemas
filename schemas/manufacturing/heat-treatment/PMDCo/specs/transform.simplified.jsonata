@@ -1,0 +1,107 @@
+(
+  /*
+   * Heat Treatment (PMDCo): simplified JSON -> OO-LD JSON
+   *
+   * Input fields:
+   *   process_name        string   required
+   *   heat_treatment_type string   required -- one of the HeatTreatmentType enum values
+   *   process_id          string   optional, derived from process_name if omitted
+   *   description         string   optional
+   *   inputs              array    optional: each item is a specimen/material IRI string
+   *   outputs             array    optional: each item is a specimen IRI string
+   *   preceded_by         array    optional: each item is a process IRI string
+   *   process_attributes  array    optional
+   *     name              string   required — vocabulary label from process-parameter vocab
+   *                                           (e.g. "Temperature", "Hold Time", "Heating Rate")
+   *                                           Used as both rdfs:label and parameter_type lookup key.
+   *     value             number   optional (quantitative parameters)
+   *               OR      string   optional (qualitative parameters: atmosphere, cooling medium, furnace type)
+   *     unit              string   optional — vocabulary label ("Degree Celsius (°C)") or full IRI
+   *     type_iri          string   optional — explicit IRI override for parameter_type
+   *
+   * Qualitative parameters — pass name as category, value as string:
+   *   {"name": "Atmosphere",     "value": "Argon"}
+   *   {"name": "Cooling Medium", "value": "Water Quench"}
+   *   {"name": "Furnace Type",   "value": "Recirculating Air Furnace"}
+   */
+
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/manufacturing/heat-treatment/PMDCo/specs/schema.oold.yaml";
+
+  /* -- Heat treatment subtype -> dsmsht: class IRI ---------------------------------- */
+  $htTypeMap := {
+    "Solution Treatment":          "dsmsht:SolutionTreatment",
+    "Artificial Aging":            "dsmsht:ArtificialAging",
+    "Natural Aging":               "dsmsht:NaturalAging",
+    "Full Annealing":              "dsmsht:FullAnnealing",
+    "Partial Annealing":           "dsmsht:PartialAnnealing",
+    "Recrystallization Annealing": "dsmsht:RecrystallizationAnnealing",
+    "Stress Relief Annealing":     "dsmsht:StressReliefAnnealing",
+    "Normalizing":                 "dsmsht:Normalizing",
+    "Tempering":                   "dsmsht:Tempering",
+    "Homogenization":              "dsmsht:Homogenization",
+    "Quenching":                   "dsmsht:Quenching"
+  };
+
+  /* -- Node IDs --------------------------------------------------------------------- */
+  $slug   := $replace($lowercase($trim(process_name)), /[^a-z0-9]+/, "-");
+  $procId := $exists(process_id) ? process_id : "process-" & $slug;
+
+  /* -- Process subtype IRI ---------------------------------------------------------- */
+  $htTypeIri := $exists(heat_treatment_type) ? $lookup($htTypeMap, heat_treatment_type) : undefined;
+
+  /* -- Process attributes ----------------------------------------------------------- */
+  $attrs := $exists(process_attributes) and $count(process_attributes) > 0
+    ? $map(process_attributes, function($p, $i) {(
+        /* Base node */
+        $node := {
+          "type": ["pmdco:PMD_0000013"],
+          "id":   $procId & "-param-" & $string($i + 1),
+          "parameter_label": $p.name
+        };
+
+        /* parameter_type: name IS the vocabulary label; SDK resolves to IRI via vocabulary service.
+           type_iri accepted as explicit IRI override for advanced use. */
+        $paramType := $exists($p.type_iri) ? $p.type_iri : $p.name;
+        $withType  := $merge([$node, {"parameter_type": $paramType}]);
+
+        /* parameter_value: numeric value OR qualitative string -- both go in same field */
+        $withValue := $exists($p.value)
+          ? $merge([$withType, {"parameter_value": $p.value}])
+          : $withType;
+
+        /* parameter_unit: pass vocabulary label or full IRI — SDK resolves */
+        $exists($p.unit)
+          ? $merge([$withValue, {"parameter_unit": $p.unit}])
+          : $withValue
+      )})
+    : undefined;
+
+  /* -- OO-LD output ----------------------------------------------------------------- */
+  $base := {
+    "conforms_to": $schemaUri,
+    "type":  $exists($htTypeIri) ? ["pmdco:PMD_0000833", $htTypeIri] : ["pmdco:PMD_0000833"],
+    "id":    $procId,
+    "label": process_name,
+    "heat_treatment_type": heat_treatment_type
+  };
+
+  $withDesc := $exists(description)
+    ? $merge([$base, {"description": description}])
+    : $base;
+
+  $withInputs := $exists(inputs) and $count(inputs) > 0
+    ? $merge([$withDesc, {"has_specified_input": inputs}])
+    : $withDesc;
+
+  $withOutputs := $exists(outputs) and $count(outputs) > 0
+    ? $merge([$withInputs, {"has_specified_output": outputs}])
+    : $withInputs;
+
+  $withPreceded := $exists(preceded_by) and $count(preceded_by) > 0
+    ? $merge([$withOutputs, {"preceded_by": preceded_by}])
+    : $withOutputs;
+
+  $exists($attrs)
+    ? $merge([$withPreceded, {"has_process_attribute": $attrs}])
+    : $withPreceded
+)

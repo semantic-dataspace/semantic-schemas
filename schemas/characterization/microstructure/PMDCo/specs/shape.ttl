@@ -1,0 +1,96 @@
+# SHACL shape for the PMDCo microstructure characterization pattern.
+#
+# Validates the process node and its MeasurementDatum outputs following
+# the PMDCo / OBI measurement pattern.
+#
+# Class hierarchy:
+#   OBI_0000070 (Assay)          ← root class for this schema
+#
+# Pattern enforced:
+#
+#   Assay (OBI_0000070)
+#     has_specified_input → Specimen (BFO_0000040)          OBI_0000293
+#     has_specified_output → MeasurementDatum (IAO_0000109) OBI_0000299
+#
+#   MeasurementDatum (IAO_0000109)
+#     rdfs:label                   : property name string
+#     is_about                    → Specimen                IAO_0000136
+#     is_quality_measurement_of   → Quality (BFO_0000019)  IAO_0000221
+#     has_value_specification     → ScalarValueSpec         OBI_0001938
+#
+#   ScalarValueSpecification (OBI_0001931)
+#     has_specified_numeric_value   xsd:double              OBI_0001937
+#     has_measurement_unit_label  → unit IRI                IAO_0000039
+#     specifies_value_of          → Quality (BFO_0000019)   OBI_0001927
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix obi:     <http://purl.obolibrary.org/obo/OBI_> .
+@prefix iao:     <http://purl.obolibrary.org/obo/IAO_> .
+@prefix bfo:     <http://purl.obolibrary.org/obo/BFO_> .
+@prefix obo:     <http://purl.obolibrary.org/obo/> .
+@prefix pmdco:   <https://w3id.org/pmd/co/> .
+@prefix uqudt:   <http://qudt.org/vocab/unit/> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+<https://w3id.org/dsms/shapes/microstructure-PMDCo>
+    a dcterms:Standard ;
+    rdfs:label "SHACL shapes for Microstructure Characterization (PMDCo)" ;
+    dcterms:description "Validates microstructure characterization process nodes produced by the characterization/microstructure/PMDCo schema." .
+
+# ── Microstructure Assay ───────────────────────────────────────────────────
+
+<MicrostructureAssayShape>
+    a sh:NodeShape ;
+    sh:targetClass obo:OBI_0000070 ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "Microstructure assay must have exactly one rdfs:label." ;
+    ] ;
+    sh:property [
+        sh:path obo:OBI_0000293 ;     # has_specified_input
+        sh:minCount 1 ;
+        sh:message "Microstructure assay must have at least one specimen as input (OBI_0000293)." ;
+    ] .
+
+# ── MeasurementDatum ────────────────────────────────────────────────────────
+
+<MeasurementDatumShape>
+    a sh:NodeShape ;
+    sh:targetClass obo:IAO_0000109 ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "MeasurementDatum must have a rdfs:label (property name)." ;
+    ] ;
+    sh:property [
+        sh:path obo:OBI_0001938 ;     # has_value_specification
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "MeasurementDatum must have exactly one ScalarValueSpecification (OBI_0001938)." ;
+    ] .
+
+# ── ScalarValueSpecification ────────────────────────────────────────────────
+
+<ScalarValueSpecShape>
+    a sh:NodeShape ;
+    sh:targetClass obo:OBI_0001931 ;
+    sh:property [
+        sh:path obo:OBI_0001937 ;     # has_specified_numeric_value
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:double ;
+        sh:message "ScalarValueSpecification must have exactly one numeric value (OBI_0001937)." ;
+    ] ;
+    sh:property [
+        sh:path obo:IAO_0000039 ;     # has_measurement_unit_label
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "ScalarValueSpecification must have exactly one unit IRI (IAO_0000039)." ;
+    ] .

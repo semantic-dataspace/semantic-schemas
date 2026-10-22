@@ -1,0 +1,5 @@
+# SHACL shapes for nanoindentation dataset schema — stub, to be extended
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+@prefix dcat:  <http://www.w3.org/ns/dcat#> .
+@prefix obi:   <http://purl.obolibrary.org/obo/OBI_> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .

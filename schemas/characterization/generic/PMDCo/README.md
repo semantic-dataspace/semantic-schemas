@@ -6,7 +6,7 @@ analysis) following the
 the [OBI Assay](http://purl.obolibrary.org/obo/OBI_0000070) class.
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>0.2.1</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.4.0</code></td></tr>
 <tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td><a href="https://github.com/materialdigital/core-ontology/tree/main/patterns/measurement">PMDCo measurement pattern</a></td></tr>
 <tr><td><strong>Extends</strong></td><td>—</td></tr>
@@ -41,6 +41,9 @@ Copy [`docs/example.input.json`](docs/example.input.json) and fill in your value
 | `preceded_by` | no | IRIs of steps that come immediately before this one |
 | `conditions` | no | Quantitative test conditions (name, value, unit) |
 | `step_id` | no | Custom IRI slug; auto-derived from `step_name` if omitted |
+| `measurement_device` | no | IRI of the instrument used (chameo:usesInstrument) |
+| `results` | no | Scalar measurement results (name, value, unit) |
+| `outputs` | no | IRIs of datasets or specimens produced |
 
 ---
 

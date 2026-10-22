@@ -29,3 +29,9 @@ build/
 # System files
 .DS_Store
 Thumbs.db
+
+# Local-only vocabulary files (not part of the published schema repo)
+vocabularies/
+
+# Hypothesis test artifacts
+.hypothesis/

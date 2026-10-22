@@ -1,0 +1,24 @@
+{
+  "process_name": "T6 Solution Treatment — AA2618 Batch 3",
+  "heat_treatment_type": "Solution Treatment",
+  "description": "Solution treatment of AA2618 aluminium alloy prior to artificial aging. Held at 530 °C for 8 h, followed by water quench.",
+  "inputs": ["https://example.org/specimens/aa2618-billet-3"],
+  "outputs": ["https://example.org/specimens/aa2618-bar-3-post-solution"],
+  "process_attributes": [
+    {
+      "parameter_type": "https://w3id.org/dsms/heattreatment#SolutionisationTemperature",
+      "parameter_value": 530,
+      "parameter_unit": "http://qudt.org/vocab/unit/DEG_C"
+    },
+    {
+      "parameter_type": "https://w3id.org/dsms/heattreatment#HoldTime",
+      "parameter_value": 8,
+      "parameter_unit": "http://qudt.org/vocab/unit/HR"
+    },
+    {
+      "parameter_type": "https://w3id.org/dsms/heattreatment#CoolingMedium",
+      "parameter_value": 0,
+      "parameter_unit": "http://qudt.org/vocab/unit/UNITLESS"
+    }
+  ]
+}
