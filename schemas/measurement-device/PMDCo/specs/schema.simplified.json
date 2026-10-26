@@ -46,12 +46,16 @@
       "description": "Serial number assigned by the manufacturer to this individual unit.",
       "type": "string"
     },
-    "calibration_date": {
-      "title": "Last Calibration Date",
-      "description": "Date of the most recent calibration, in ISO 8601 format (YYYY-MM-DD).",
+    "location": {
+      "title": "Location",
+      "description": "Room number, lab, or facility where this device is installed.",
       "type": "string",
-      "format": "date",
-      "examples": ["2024-01-15", "2025-06-30"]
+      "examples": ["Lab 3, Room 204", "FHG-IWM Building A"]
+    },
+    "inventory_number": {
+      "title": "Inventory Number",
+      "description": "Institutional inventory or asset number.",
+      "type": "string"
     }
   },
   "examples": [

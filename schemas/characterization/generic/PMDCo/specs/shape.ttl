@@ -51,7 +51,7 @@ shape:assay
         sh:message "Each preceded_by value must be an IRI referencing another characterization step." ;
     ] ;
     sh:property [
-        sh:path pmd:PMD_0000016 ;   # has_process_condition
+        sh:path pmd:PMD_0000009 ;   # has_process_attribute
         sh:node shape:process_condition ;
     ] ;
     sh:closed false ;

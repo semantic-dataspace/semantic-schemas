@@ -7,16 +7,16 @@
 #
 # Graph pattern:
 #
-#   ManufacturingProcess  (pmdco:PMD_0000029)
+#   ManufacturingProcess  (pmdco:PMD_0000833)
 #     rdfs:label ──────────────────────────────────────── name string
 #     rdfs:comment ────────────────────────────────────── description string  (optional)
 #     has_specified_input ────────────────────────────► Material / SemiFinishedProduct IRI  [× 0..N]
 #     has_specified_output ───────────────────────────► Material / Specimen IRI  [× 0..N]
 #     preceded_by ────────────────────────────────────► ManufacturingProcess IRI  [× 0..N]  (optional)
-#     has_process_condition ──────────────────────────► ProcessCondition (pmdco:PMD_0000013)  [× 0..N]  (optional)
+#     has_process_attribute ─────────────────────────► ParameterSpecification (pmdco:PMD_0000013)  [× 0..N]  (optional)
 #       rdfs:label ──────── parameter name
 #       qudt:value ──────── numeric value (xsd:double)
-#       qudt:hasUnit ─────── unit string
+#       qudt:hasUnit ─────── QUDT unit IRI
 #
 # Design notes:
 #   - Non-composite: materials and upstream processes are referenced by IRI, not embedded.
@@ -44,7 +44,9 @@
     "@id": "http://purl.obolibrary.org/obo/BFO_"
     "@prefix": true
   pmdco: "https://w3id.org/pmd/co/"
+  dsmsht: "https://w3id.org/dsms/heattreatment#"
   qudt: "http://qudt.org/schema/qudt/"
+  uqudt: "http://qudt.org/vocab/unit/"
   # Instance IRI base (deployment-specific); override when serialising to RDF.
   # See docs/schema-format.md § "Instance IRI base"
   type: "@type"
@@ -65,22 +67,28 @@
     "@id": "bfo:0000062"   # BFO_0000062  preceded_by
     "@type": "@id"
     "@container": "@set"
-  has_process_condition:
-    "@id": "pmdco:PMD_0000016"   # PMD_0000016  has_process_condition
-    "@type": "@id"
+  # pmdco:PMD_0000009 "has process attribute" — directly links process to ParameterSpecification nodes
+  has_process_attribute:
+    "@id": "pmdco:PMD_0000009"
     "@container": "@set"
   parameter_label:
     "@id": "rdfs:label"
+  # parameter_type adds a domain-specific rdf:type on the ParameterSpecification node
+  # e.g. dsmsht:AgingTemperature — enables IRI-based SPARQL queries over parameters
+  parameter_type:
+    "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+    "@type": "@id"
   parameter_value:
     "@id": "qudt:value"
     "@type": "xsd:double"
   parameter_unit:
     "@id": "qudt:hasUnit"
+    "@type": "@id"
 
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $comment: Schema for a pmdco:ManufacturingProcess (Input and Output of Processes pattern)
-x-schema-version: '0.2.1'
-x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/manufacturing-generic-PMDCo-v0.2.1/schemas/manufacturing/generic/PMDCo/specs/schema.oold.generated.json'
+x-schema-version: '0.3.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/manufacturing-generic-PMDCo-v0.3.0/schemas/manufacturing/generic/PMDCo/specs/schema.oold.generated.json'
 x-maturity: 'draft'
 x-process-step:
   category: manufacturing
@@ -99,8 +107,8 @@ properties:
     items:
       type: string
     readOnly: true
-    const: ["pmdco:PMD_0000029"]
-    default: ["pmdco:PMD_0000029"]
+    const: ["pmdco:PMD_0000833"]
+    default: ["pmdco:PMD_0000833"]
     options:
       enum_titles:
         - pmdco:ManufacturingProcess
@@ -130,8 +138,10 @@ properties:
     description: >-
       Materials or semi-finished products consumed or transformed by this process.
       Select the corresponding entries from the knowledge graph.
-    x-ktype: [material, semi-finished-product]
     type: array
+    format: kitem
+    x-kitem:
+      ktypeIds: [material, semi-finished-product]
     items:
       type: string
       format: uri
@@ -143,8 +153,10 @@ properties:
     description: >-
       Materials or specimens produced by this process.
       Select the corresponding entries from the knowledge graph.
-    x-ktype: [material, specimen]
     type: array
+    format: kitem
+    x-kitem:
+      ktypeIds: [material, specimen]
     items:
       type: string
       format: uri
@@ -156,28 +168,30 @@ properties:
     description: >-
       Processes that directly precede this one in the process chain.
       Select the corresponding process entries from the knowledge graph.
-    x-ktype: [process]
     type: array
+    format: kitem
+    x-kitem:
+      ktypeIds: [process]
     items:
       type: string
       format: uri
     uniqueItems: true
     default: []
 
-  has_process_condition:
-    title: Process Conditions / Parameters
+  has_process_attribute:
+    title: Process Parameters
     description: >-
-      Quantitative conditions (temperatures, pressures, energies, …) under
-      which this process is carried out, modelled as PMDCo ProcessCondition
-      nodes (pmdco:PMD_0000013).
+      Quantitative conditions and protocol parameters for this manufacturing step,
+      modelled as PMDCo ParameterSpecification nodes (PMD_0000013) linked directly
+      via has_process_attribute (PMD_0000009).
     type: array
     items:
       type: object
-      title: Process Condition
+      title: Parameter
       required:
         - type
         - id
-        - parameter_label
+        - parameter_type
       properties:
         type:
           title: Type
@@ -189,27 +203,27 @@ properties:
           default: ["pmdco:PMD_0000013"]
           options:
             enum_titles:
-              - pmdco:ProcessCondition
+              - pmdco:ParameterSpecification
         id:
           title: ID
-          description: Identifier for this process condition instance; managed by the consumer.
+          description: Identifier for this parameter instance; managed by the consumer.
           type: string
           readOnly: true
-          default: condition-1
-        parameter_label:
-          title: Parameter Name
+          default: param-1
+        parameter_type:
+          title: Parameter Type
           description: >-
-            Human-readable name for this condition
-            (e.g. "Sintering Temperature", "Applied Pressure", "Energy Consumption").
+            Search and select a parameter type from the vocabulary.
+            Stores the IRI as rdf:type on the ParameterSpecification node.
           type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/process-parameter/use-cases/all/terms"
         parameter_value:
           title: Value
-          description: Numeric magnitude of the condition.
+          description: Numeric magnitude of the parameter.
           type: number
         parameter_unit:
           title: Unit
-          description: >-
-            Unit of the value as a string label (e.g. "°C", "MPa", "kWh", "bar").
-            Use QUDT unit IRIs when available for interoperability.
+          description: Search and select a QUDT unit from the vocabulary service.
           type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
     default: []

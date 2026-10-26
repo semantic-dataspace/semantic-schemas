@@ -11,6 +11,63 @@ The schema IRI encodes the minor version: `…/PMDCo/#v<MAJOR>.<MINOR>.0`.
 
 ---
 
+## [0.3.0] - 2026-10-14
+
+### Changed (breaking)
+
+- **Root class IRI changed**: `pmdco:PMD_0000029` → `pmdco:PMD_0000833`
+  (ManufacturingProcess). Existing records' `rdf:type` triple changes.
+  SPARQL queries and SHACL shapes filtering on `PMD_0000029` must be updated.
+
+- **`has_process_condition` renamed to `has_process_attribute`**:
+  predicate IRI changes from `pmdco:PMD_0000016` (has_process_condition) to
+  `pmdco:PMD_0000009` (has_process_attribute). Existing triples using
+  `PMD_0000016` are not migrated automatically. SPARQL queries using
+  `pmdco:PMD_0000016` must be updated.
+
+- **`parameter_label` replaced by `parameter_type`**: the parameter
+  identification field on `ParameterSpecification` nodes changes from
+  `rdfs:label` (free-text name) to `rdf:type` (IRI from the process-parameter
+  vocabulary service). This is a semantic change — parameters are now
+  IRI-typed, enabling vocabulary-based SPARQL filtering. Existing records
+  storing a text label in `rdfs:label` are not equivalent to the new IRI in
+  `rdf:type`.
+
+### Changed
+
+- `parameter_unit` field: free-text description replaced by `x-vocabulary` →
+  measurement-unit vocabulary service. Unit stored as QUDT IRI via
+  `qudt:hasUnit`; semantics unchanged for records that already used QUDT IRIs.
+- `has_specified_input`, `has_specified_output`, `preceded_by` fields:
+  `x-ktype` annotation replaced by `format: kitem` + `x-kitem: {ktypeIds: [...]}`.
+  UI change only; no RDF change.
+
+### Added
+
+- `dsmsht:` namespace (`https://w3id.org/dsms/heattreatment#`) added to
+  `@context` for referencing heat-treatment-specific parameter class IRIs
+  (shared with manufacturing/heat-treatment/PMDCo).
+- `uqudt:` namespace (`http://qudt.org/vocab/unit/`) added to `@context`.
+- `parameter_type` field stores vocabulary IRI as `rdf:type` on each
+  ParameterSpecification node, enabling class-based SPARQL queries over
+  process parameters.
+
+### Migration
+
+Update all SPARQL queries and SHACL shapes using `PMD_0000029` or
+`PMD_0000016`:
+
+```sparql
+# old
+?proc a pmdco:PMD_0000029 .
+?proc pmdco:PMD_0000016 ?cond .
+# new
+?proc a pmdco:PMD_0000833 .
+?proc pmdco:PMD_0000009 ?param .
+```
+
+---
+
 ## [0.2.1] - 2026-07-21
 
 ### Changed

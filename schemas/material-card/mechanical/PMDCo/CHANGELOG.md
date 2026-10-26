@@ -11,6 +11,16 @@ The schema IRI encodes the minor version: `.../material-card/mechanical/PMDCo/#v
 
 ---
 
+## [0.3.2] - 2026-10-14
+
+### Changed
+
+- `material` field: `x-ktype: [material]` + `format: uri` replaced by
+  `format: kitem` + `x-kitem: {ktypeIds: [material]}`. UI annotation change
+  only; no RDF graph change.
+
+---
+
 ## [0.3.1] - 2026-07-21
 
 ### Changed

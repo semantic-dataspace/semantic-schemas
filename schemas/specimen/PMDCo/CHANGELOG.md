@@ -11,6 +11,50 @@ The schema IRI encodes the minor version: `.../specimen/PMDCo/#v<MAJOR>.<MINOR>.
 
 ---
 
+## [0.7.0] - 2026-10-15
+
+### Changed (breaking — complete schema rewrite)
+
+Schema rewritten to use PMDCo **TemporallyQualifiedContinuant (TQC)** pattern
+instead of the v0.4.x duality-object/material pattern.
+
+- **Root types**: `["bfo:0000030"]` → `["obo:BFO_0000030", "pmdco:PMD_0000068"]`.
+  Records now also carry `PMD_0000068` (TemporallyQualifiedContinuant). Existing
+  records typed only with `BFO_0000030` are not equivalent.
+- **`material` field predicate**: `schema:material` → `pmdco:PMD_0000070`
+  (is_state_of). Existing triples using `schema:material` are not migrated.
+  SPARQL queries must be updated.
+- **`mass` field removed**: replaced by `physical_properties` array (see Added).
+  Existing records with a `mass` quality node have no automatic migration path.
+- **`source` field**: single URI string → multi-value array with `x-kitem:
+  {ktypeIds: [semi-finished-product, specimen, material]}`, enabling multi-hop
+  provenance chains.
+
+### Added
+
+- `exists_at` field: BFO temporal interval (`BFO_0000202`) with
+  `has_first_instant` / `has_last_instant` date literals, enabling state-change
+  SPARQL queries across pre-test and post-test specimens.
+- `physical_properties` array: dynamic quality-node array (`RO_0000086`
+  has_quality). Supported types: Thickness, Width, Length, Diameter, Mass,
+  Surface Roughness Ra/Rq (PMDCo quality class IRIs). Replaces the single
+  `mass` field.
+- `surface_preparation` field (text): polishing sequence, `dspec:hasSurfacePreparation`.
+- `specimen_form` field (enum): Bulk, Thin Film, Coating on Substrate,
+  Cross-section, Other — `dspec:hasSpecimenForm`.
+- `dspec:` namespace (`https://w3id.org/dsms/specimen#`) added to `@context`.
+
+### Migration
+
+```sparql
+# old material link
+?spec schema:material ?mat .
+# new
+?spec pmdco:PMD_0000070 ?mat .
+```
+
+---
+
 ## [0.4.1] - 2026-07-21
 
 ### Changed

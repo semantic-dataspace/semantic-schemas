@@ -39,15 +39,17 @@ class Schema:
 
     def __init__(self, schema_dir: Union[Path, str]) -> None:
         self.dir = Path(schema_dir)
+        self._schema: dict | None = None
         self._context: dict | None = None
         self._transform_src: str | None = None
+        self._vocab_cache: dict[str, list] = {}
 
     # ------------------------------------------------------------------
     # Private helpers
     # ------------------------------------------------------------------
 
-    def _get_context(self) -> dict:
-        if self._context is None:
+    def _get_schema(self) -> dict:
+        if self._schema is None:
             generated = self.dir / "specs" / "schema.oold.generated.json"
             if generated.exists():
                 raw = json.loads(generated.read_text(encoding="utf-8"))
@@ -55,7 +57,13 @@ class Schema:
                 raw = yaml.safe_load(
                     (self.dir / "specs" / "schema.oold.yaml").read_text(encoding="utf-8")
                 )
+            self._schema = raw
             self._context = raw.get("@context", {})
+        return self._schema
+
+    def _get_context(self) -> dict:
+        if self._context is None:
+            self._get_schema()
         return self._context
 
     def _get_transform_src(self) -> str:
@@ -65,14 +73,173 @@ class Schema:
             ).read_text(encoding="utf-8")
         return self._transform_src
 
+    # ------------------------------------------------------------------
+    # Vocabulary resolution — label/id/IRI → plain IRI string
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def _collect_vocab_fields(properties: dict, result: dict) -> None:
+        """Recursively collect {field_name: vocab_url} from schema properties."""
+        for field_name, field_def in properties.items():
+            if not isinstance(field_def, dict):
+                continue
+            if "x-vocabulary" in field_def:
+                result[field_name] = field_def["x-vocabulary"]
+            items = field_def.get("items")
+            if isinstance(items, dict):
+                Schema._collect_vocab_fields(items.get("properties", {}), result)
+            nested = field_def.get("properties")
+            if isinstance(nested, dict):
+                Schema._collect_vocab_fields(nested, result)
+
+    def _resolve_to_iri(self, value: str, vocab_url: str) -> str:
+        """Resolve a vocabulary value (label, id, or full IRI) to a plain IRI string.
+
+        Lookup order:
+        1. Full IRI (starts with http/https) → return as-is.
+        2. Case-insensitive label match against vocabulary terms.
+        3. Case-insensitive id match (short codes like "MIN", "K-PER-MIN").
+        4. No match → return original value unchanged.
+        """
+        if value.startswith("http://") or value.startswith("https://"):
+            return value
+
+        if vocab_url not in self._vocab_cache:
+            try:
+                import requests as _req
+                resp = _req.get(vocab_url, timeout=15)
+                resp.raise_for_status()
+                self._vocab_cache[vocab_url] = resp.json()
+            except Exception:
+                self._vocab_cache[vocab_url] = []
+
+        terms = self._vocab_cache[vocab_url]
+        if not terms:
+            return value
+
+        value_lower = value.lower()
+        for term in terms:
+            if term.get("label", "").lower() == value_lower:
+                return term["iri"]
+        for term in terms:
+            if term.get("id", "").lower() == value_lower:
+                return term["iri"]
+        return value
+
+    def _walk_vocab(self, node, vocab_fields: dict):
+        """Walk an OO-LD node, resolving vocabulary field values to plain IRIs."""
+        if isinstance(node, dict):
+            return {
+                key: (
+                    self._resolve_to_iri(value, vocab_fields[key])
+                    if key in vocab_fields and isinstance(value, str) and value
+                    else self._walk_vocab(value, vocab_fields)
+                )
+                for key, value in node.items()
+            }
+        if isinstance(node, list):
+            return [self._walk_vocab(item, vocab_fields) for item in node]
+        return node
+
+    def resolve_vocabulary(self, oold_doc: dict) -> dict:
+        """Replace x-vocabulary field values (labels/ids) with plain IRI strings.
+
+        Reads the schema's ``properties`` to find fields annotated with
+        ``x-vocabulary``, fetches the vocabulary terms (cached per Schema
+        instance), then walks the document replacing any label or short id
+        with the corresponding full IRI.  Full IRIs are passed through unchanged.
+
+        This step is required for standalone RDF generation: the JSON-LD
+        ``@context`` maps vocabulary-backed fields with ``"@type": "@id"``,
+        which means rdflib expects plain IRI strings — not human-readable
+        labels or short codes.
+
+        Args:
+            oold_doc: OO-LD document (output of :meth:`transform`).
+
+        Returns:
+            New document with vocabulary field values replaced by full IRIs.
+        """
+        schema = self._get_schema()
+        vocab_fields: dict[str, str] = {}
+        self._collect_vocab_fields(schema.get("properties", {}), vocab_fields)
+        if not vocab_fields:
+            return oold_doc
+        return self._walk_vocab(oold_doc, vocab_fields)
+
+    @staticmethod
+    def _expand_compact_iris(doc: dict, context: dict) -> dict:
+        """Pre-expand compact IRI values in an OO-LD document before JSON-LD parsing.
+
+        rdflib's JSON-LD parser correctly expands compact IRIs that appear as
+        ``@id`` values inside ``@context`` entries (so predicate IRIs are correct).
+        However, it does **not** expand compact IRIs that appear as data values,
+        even when the prefix is defined in the context as a plain string.
+
+        Example without this function::
+
+            # schema @context defines:  "uo": "http://purl.obolibrary.org/obo/UO_"
+            # schema data contains:     "unit": "uo:0000163"
+            # rdflib produces:          (frac, IAO:0000039, URIRef("uo:0000163"))  ← wrong
+            # expected:                 (frac, IAO:0000039, URIRef("http://…/UO_0000163"))
+
+        This is a known rdflib limitation — using ``"@prefix": true`` (JSON-LD 1.1)
+        or plain-string prefix entries both leave data-value compact IRIs unexpanded.
+
+        This method walks the data document (not the ``@context``) and replaces
+        any string value that starts with a plain-string context prefix with the
+        fully-expanded IRI.  Full IRIs, numbers, booleans and ``None`` pass through
+        unchanged.
+
+        Args:
+            doc:     OO-LD data document (the dict without the ``@context`` key).
+            context: The ``@context`` dict loaded from the schema YAML/JSON.
+
+        Returns:
+            New document dict with compact IRI values replaced by full IRIs.
+        """
+        # Only plain-string entries contribute prefixes; object-form entries
+        # (e.g. {"@id": "...", "@type": "@id"}) define named terms, not prefixes.
+        # JSON-LD keywords (keys starting with "@") are skipped.
+        prefix_map = {
+            k + ":": v
+            for k, v in context.items()
+            if isinstance(v, str) and not k.startswith("@")
+        }
+
+        def _expand(val: str) -> str:
+            """Expand val to a full IRI if it starts with a known prefix."""
+            for prefix, base in prefix_map.items():
+                if val.startswith(prefix):
+                    return base + val[len(prefix):]
+            return val
+
+        def _walk(node):
+            """Recursively expand all string leaves in a JSON-like structure."""
+            if isinstance(node, dict):
+                return {k: _walk(v) for k, v in node.items()}
+            if isinstance(node, list):
+                return [_walk(item) for item in node]
+            if isinstance(node, str):
+                return _expand(node)
+            return node  # int, float, bool, None — pass through unchanged
+
+        return _walk(doc)
+
     @staticmethod
     def _parse_oold(
         context: dict, oold_doc: dict, base: str | None = None
     ) -> rdflib.Graph:
         ctx = {**context, **({} if base is None else {"@base": base})}
+        # Pre-expand compact IRI values (e.g. "uo:0000163") before handing the
+        # document to rdflib.  rdflib expands compact IRIs inside @context entries
+        # but leaves them unexpanded when they appear as data values, producing
+        # URIRef("uo:0000163") instead of the correct full IRI.
+        # See _expand_compact_iris for a full explanation and worked example.
+        expanded_doc = Schema._expand_compact_iris(oold_doc, context)
         ds = rdflib.Dataset()
         ds.parse(
-            data=json.dumps({"@context": ctx, **oold_doc}),
+            data=json.dumps({"@context": ctx, **expanded_doc}),
             format="json-ld",
         )
         g = rdflib.Graph()
@@ -114,7 +281,12 @@ class Schema:
 
         return Jsonata(self._get_transform_src()).evaluate(data)
 
-    def to_graph(self, data: dict, base: str | None = None) -> rdflib.Graph:
+    def to_graph(
+        self,
+        data: dict,
+        base: str | None = None,
+        resolve_vocabulary: bool = True,
+    ) -> rdflib.Graph:
         """Transform *data* to OO-LD and parse into a flat rdflib.Graph.
 
         Parameters
@@ -123,8 +295,25 @@ class Schema:
             Simplified input dict (as filled in by the user).
         base :
             Optional base IRI: see :meth:`parse` for details.
+        resolve_vocabulary :
+            When True (default), resolve ``x-vocabulary`` field values
+            (human-readable labels, short ids like ``"MIN"``, or full IRIs)
+            to full IRI strings before JSON-LD parsing.  This is required for
+            schemas where the simplified transform accepts vocabulary labels
+            instead of raw IRIs (e.g. ``"Degree Celsius (°C)"`` for
+            ``parameter_unit``).  Disable only if the input already contains
+            fully-expanded IRIs for all vocabulary-backed fields.
         """
         oold_doc = self.transform(data)
+        if resolve_vocabulary:
+            try:
+                oold_doc = self.resolve_vocabulary(oold_doc)
+            except Exception as exc:
+                import warnings
+                warnings.warn(
+                    f"Vocabulary resolution failed, IRIs may be incorrect: {exc}",
+                    stacklevel=2,
+                )
         return self._parse_oold(self._get_context(), oold_doc, base=base)
 
     @classmethod
@@ -190,8 +379,10 @@ class Schema:
 
         instance = cls.__new__(cls)
         instance.dir = None
-        instance._context = yaml.safe_load(oold_raw).get("@context", {})
+        instance._schema = yaml.safe_load(oold_raw)
+        instance._context = instance._schema.get("@context", {})
         instance._transform_src = _get("transform.simplified.jsonata")
+        instance._vocab_cache = {}
         _schema_cache[cache_key] = instance
         return instance
 

@@ -58,6 +58,7 @@ x-schema-dependencies:
       - '0.1.0'
       - '0.2.0'
       - '0.3.0'
+      - '0.4.0'
     property: (base schema via allOf)
 title: Constitutive Model Calibration
 type: object
@@ -183,7 +184,7 @@ properties:
           default: ["pmdco:PMD_0000013"]
           options:
             enum_titles:
-              - pmdco:ProcessCondition
+              - pmdco:ParameterSpecification
         id:
           title: ID
           type: string
