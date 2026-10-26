@@ -175,10 +175,6 @@ properties:
       (e.g. "Tensile test specimen 1", "Hardness measurement batch A").
     type: string
 
-  instrument:
-    options:
-      hidden: true
-
   measurement_device:
     title: Measurement Device
     description: >-
