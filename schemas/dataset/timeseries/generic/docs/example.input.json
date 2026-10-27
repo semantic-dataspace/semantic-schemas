@@ -1,0 +1,46 @@
+{
+  "dataset_name": "142077_3D-Blechmodelle_AAM000_10",
+  "description": "Tensile test timeseries for specimen AAM000_10, project 142077.",
+  "columns": [
+    {
+      "name": "Zeit  1 - Standardmessrate [s]",
+      "property_iri": "https://qudt.org/vocab/quantitykind/Time",
+      "unit_iri": "http://qudt.org/vocab/unit/SEC"
+    },
+    {
+      "name": "Kraft [kN]",
+      "property_iri": "https://qudt.org/vocab/quantitykind/Force",
+      "unit_iri": "http://qudt.org/vocab/unit/KiloN"
+    },
+    {
+      "name": "Position [mm]",
+      "property_iri": "https://w3id.org/dsms/experiment-workflow/Position",
+      "unit_iri": "http://qudt.org/vocab/unit/MilliM"
+    },
+    {
+      "name": "Extensometerweg_längs [mm]",
+      "property_iri": "https://qudt.org/vocab/quantitykind/Displacement",
+      "unit_iri": "http://qudt.org/vocab/unit/MilliM"
+    },
+    {
+      "name": "Extensometerweg_quer [mm]",
+      "property_iri": "https://w3id.org/dsms/experiment-workflow/TransverseDisplacement",
+      "unit_iri": "http://qudt.org/vocab/unit/MilliM"
+    },
+    {
+      "name": "techn. Spannung [N/mm²]",
+      "property_iri": "https://qudt.org/vocab/quantitykind/Stress",
+      "unit_iri": "http://qudt.org/vocab/unit/MegaPA"
+    },
+    {
+      "name": "techn. Dehnung längs [-]",
+      "property_iri": "https://qudt.org/vocab/quantitykind/Strain",
+      "unit_iri": "http://qudt.org/vocab/unit/UNITLESS"
+    },
+    {
+      "name": "techn. Dehnung quer [-]",
+      "property_iri": "https://qudt.org/vocab/quantitykind/LateralStrain",
+      "unit_iri": "http://qudt.org/vocab/unit/UNITLESS"
+    }
+  ]
+}

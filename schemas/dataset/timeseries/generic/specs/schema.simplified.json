@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Timeseries Dataset (simplified input)",
+  "description": "Simplified input schema for the dataset/timeseries/generic OO-LD transform.",
+  "type": "object",
+  "required": ["dataset_name"],
+  "properties": {
+    "dataset_name": {
+      "type": "string",
+      "description": "Human-readable name for this timeseries dataset (becomes rdfs:label)."
+    },
+    "dataset_id": {
+      "type": "string",
+      "description": "Optional stable IRI slug. Derived from dataset_name if omitted."
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional free-text description of this dataset."
+    },
+    "columns": {
+      "type": "array",
+      "description": "Semantic annotations for each measurement column.",
+      "items": {
+        "type": "object",
+        "required": ["name", "property_iri"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Column header exactly as it appears in the data file."
+          },
+          "property_iri": {
+            "type": "string",
+            "description": "Physical property IRI (e.g. QUDT quantitykind or domain-specific IRI)."
+          },
+          "unit_iri": {
+            "type": "string",
+            "description": "QUDT unit IRI (e.g. http://qudt.org/vocab/unit/SEC)."
+          }
+        }
+      }
+    }
+  }
+}

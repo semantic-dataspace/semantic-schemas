@@ -1,0 +1,125 @@
+# OO-LD Schema for Timeseries Dataset (DCAT + csvw/QUDT pattern)
+#
+# Generic digital twin of a measurement timeseries file.
+# Extends the generic dataset/DCAT schema with per-column semantic annotations:
+#   each column is mapped to a physical property IRI and a QUDT unit IRI.
+#
+# Graph pattern:
+#
+#   dcat:Dataset
+#     csvw:column ──► csvw:Column [× 0..N]
+#       csvw:name        "column header string"
+#       csvw:propertyUrl property IRI
+#       qudt:hasUnit     unit IRI (QUDT)
+
+"@context":
+  rdf:     "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  rdfs:    "http://www.w3.org/2000/01/rdf-schema#"
+  xsd:     "http://www.w3.org/2001/XMLSchema#"
+  dcterms: "http://purl.org/dc/terms/"
+  dcat:    "http://www.w3.org/ns/dcat#"
+  csvw:    "http://www.w3.org/ns/csvw#"
+  qudt:    "http://qudt.org/schema/qudt/"
+  type:    "@type"
+  id:      "@id"
+  label:
+    "@id": "rdfs:label"
+  description:
+    "@id": "http://purl.org/dc/terms/description"
+  keywords:
+    "@id": "http://www.w3.org/ns/dcat#keyword"
+    "@container": "@set"
+  timeseries_column:
+    "@id": "http://www.w3.org/ns/csvw#column"
+    "@container": "@set"
+  col_name:
+    "@id": "http://www.w3.org/ns/csvw#name"
+  property_url:
+    "@id": "http://www.w3.org/ns/csvw#propertyUrl"
+    "@type": "@id"
+  has_unit:
+    "@id": "http://qudt.org/schema/qudt/hasUnit"
+    "@type": "@id"
+
+allOf:
+  - $ref: "../../../generic/DCAT/specs/schema.oold.yaml"
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: Generic digital twin of a measurement timeseries file with per-column semantic annotations.
+x-schema-version: '0.1.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/dataset/timeseries/generic/specs/schema.oold.yaml'
+x-maturity: 'draft'
+title: Timeseries Dataset (generic)
+type: object
+
+required:
+  - type
+  - id
+  - label
+
+properties:
+
+  type:
+    title: Type
+    type: array
+    items:
+      type: string
+    readOnly: true
+    const: ["dcat:Dataset"]
+    default: ["dcat:Dataset"]
+    options:
+      enum_titles:
+        - dcat:Dataset
+
+  id:
+    title: ID
+    type: string
+    readOnly: true
+    default: timeseries-dataset
+
+  label:
+    title: Dataset Name
+    description: "Human-readable name for this timeseries dataset."
+    type: string
+
+  description:
+    title: Description
+    type: string
+    format: textarea
+
+  timeseries_column:
+    title: Column Specifications
+    description: >-
+      Semantic annotations for each column in the measurement timeseries.
+      Each entry maps one column name to its physical property IRI and QUDT unit IRI.
+    type: array
+    items:
+      type: object
+      required:
+        - col_name
+        - property_url
+        - has_unit
+      properties:
+        id:
+          title: Column Spec ID
+          type: string
+          readOnly: true
+        type:
+          title: Type
+          type: array
+          items:
+            type: string
+          readOnly: true
+          const: ["csvw:Column"]
+          default: ["csvw:Column"]
+        col_name:
+          title: Column Name
+          type: string
+        property_url:
+          title: Physical Property IRI
+          type: string
+        has_unit:
+          title: Unit IRI
+          description: QUDT unit IRI for this column.
+          type: string
+    default: []
