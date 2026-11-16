@@ -8,7 +8,7 @@
 #      - input exchanges carry input categories, output exchanges output categories
 #      - WARNING if the inventory is not linked to the process it describes
 #   2. Exchange
-#      - name, category, exactly one value and one QUDT unit
+#      - material KItem or name, category, exactly one value and one QUDT unit
 #      - unit plausible for the category (energy → energy units, material → mass/volume/count …)
 #   3. Technology parameter nodes (via sh:node, not targetClass, so the shape
 #      never interferes with other schemas that reuse pmdco:PMD_0000013)
@@ -118,8 +118,10 @@ shape:unit_process_inventory
         sh:select """
             SELECT $this ?flow WHERE {
                 $this uplci:hasInput ?x .
-                ?x uplci:hasProvider $this ;
-                   <http://www.w3.org/2000/01/rdf-schema#label> ?flow .
+                ?x uplci:hasProvider $this .
+                OPTIONAL { ?x <http://www.w3.org/2000/01/rdf-schema#label> ?name }
+                OPTIONAL { ?x <http://purl.obolibrary.org/obo/IAO_0000136> ?material }
+                BIND (COALESCE(?name, STR(?material), STR(?x)) AS ?flow)
             }""" ;
     ] ;
     sh:closed false ;
@@ -132,9 +134,19 @@ shape:exchange
     sh:targetClass uplci:Exchange ;
     sh:property [
         sh:path rdfs:label ;
-        sh:datatype xsd:string ; sh:minCount 1 ; sh:maxCount 1 ;
-        sh:message "A flow must have exactly one name." ;
+        sh:datatype xsd:string ; sh:maxCount 1 ;
+        sh:message "A flow can have at most one name." ;
     ] ;
+    sh:property [
+        sh:path obo:IAO_0000136 ;
+        sh:nodeKind sh:IRI ; sh:maxCount 1 ;
+        sh:message "A flow can reference at most one material KItem." ;
+    ] ;
+    sh:or (
+        [ sh:path obo:IAO_0000136 ; sh:minCount 1 ]
+        [ sh:path rdfs:label ; sh:minCount 1 ]
+    ) ;
+    sh:message "A flow needs a material KItem or, for energy / personnel / services, a name." ;
     sh:property [
         sh:path uplci:hasExchangeCategory ;
         sh:nodeKind sh:IRI ; sh:minCount 1 ; sh:maxCount 1 ;

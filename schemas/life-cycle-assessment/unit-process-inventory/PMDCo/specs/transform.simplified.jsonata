@@ -5,9 +5,9 @@
    * Input (see schema.simplified.json):
    *   inventory_name*, inventory_id, description, process (IRI), geography*,
    *   date_compiled, access_rights* (public|restricted|confidential), data_owner (IRI),
-   *   inputs[]  : name*, category* (material|energy|personnel|service), value*, unit*,
+   *   inputs[]  : material (IRI) or name, category* (material|energy|personnel|service), value*, unit*,
    *               description, reference, provider (IRI of supplying inventory)
-   *   outputs[] : name*, category* (product|co_product|waste|emission|other), value*, unit*,
+   *   outputs[] : material (IRI) or name, category* (product|co_product|waste|emission|other), value*, unit*,
    *               description, reference, is_reference_flow
    *   parameters[] : name*, category* (facility|process|operation), value, unit,
    *                  description, reference
@@ -68,6 +68,7 @@
     {
       "type":              ["uplci:Exchange"],
       "id":                $inventoryId & "-" & $direction & "-" & $pad2($i),
+      "material":          $e.material,
       "label":             $e.name,
       "category":          $map1($e.category, $categories),
       "is_reference_flow": $e.is_reference_flow = true ? true : undefined,

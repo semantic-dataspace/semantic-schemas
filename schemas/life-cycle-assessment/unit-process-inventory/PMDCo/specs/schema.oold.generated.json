@@ -51,6 +51,10 @@
       "@id": "uplci:hasOutput",
       "@container": "@set"
     },
+    "material": {
+      "@id": "obo:IAO_0000136",
+      "@type": "@id"
+    },
     "category": {
       "@id": "uplci:hasExchangeCategory",
       "@type": "@id"
@@ -214,7 +218,6 @@
         "required": [
           "type",
           "id",
-          "label",
           "category",
           "amount",
           "unit"
@@ -238,8 +241,20 @@
             "readOnly": true,
             "default": "input"
           },
+          "material": {
+            "title": "Material",
+            "description": "Material KItem this flow consists of. Leave empty for energy, personnel or services and enter a name instead.",
+            "type": "string",
+            "format": "kitem",
+            "x-kitem": {
+              "ktypeIds": [
+                "material"
+              ]
+            }
+          },
           "label": {
-            "title": "Name",
+            "title": "Name (if no material)",
+            "description": "e.g. \"Electricity\", \"W\u00e4rmeenergie\".",
             "type": "string"
           },
           "category": {
@@ -304,7 +319,6 @@
         "required": [
           "type",
           "id",
-          "label",
           "category",
           "amount",
           "unit"
@@ -328,8 +342,20 @@
             "readOnly": true,
             "default": "output"
           },
+          "material": {
+            "title": "Material",
+            "description": "Material KItem this flow consists of. Leave empty for energy, personnel or services and enter a name instead.",
+            "type": "string",
+            "format": "kitem",
+            "x-kitem": {
+              "ktypeIds": [
+                "material"
+              ]
+            }
+          },
           "label": {
-            "title": "Name",
+            "title": "Name (if no material)",
+            "description": "e.g. \"Electricity\", \"W\u00e4rmeenergie\".",
             "type": "string"
           },
           "category": {

@@ -30,10 +30,13 @@ process and materials remain PMDCo entities in their own KItems.
 ```text
 UnitProcessInventory ──is about──► ManufacturingProcess KItem
    ├─ name, description, location code, date of compilation, access rights, data owner
-   ├─ inputs[]  ──► Exchange: name · category · value · unit · description · reference · supplied by
-   ├─ outputs[] ──► Exchange: name · category · reference flow ✓ · value · unit · description · reference
+   ├─ inputs[]  ──► Exchange: material KItem (or name) · category · value · unit · description · reference · supplied by
+   ├─ outputs[] ──► Exchange: material KItem (or name) · category · reference flow ✓ · value · unit · description · reference
    └─ technology parameters[] ──► name · category · value · unit · description · reference
 ```
+
+**Material flows** reference `material` KItems; energy, personnel and service
+flows (electricity, heat …) use a name instead.
 
 **Minimal profile:** exactly the data the MPPM service consumes, plus the links
 DSMS needs (process, "supplied by" for the chain, data owner) and access rights.
@@ -52,8 +55,8 @@ annealing step). Field reference: [`specs/schema.simplified.json`](specs/schema.
 | `date_compiled` | Dataset version date |
 | `access_rights` | `public` · `restricted` · `confidential` |
 | `data_owner` | Organisation IRI |
-| `inputs[]` | `name`, `category` (material · energy · personnel · service), `value`, `unit`, `description`, `reference`, `provider` |
-| `outputs[]` | `name`, `category` (product · co_product · waste · emission · other), `value`, `unit`, `description`, `reference`, `is_reference_flow` |
+| `inputs[]` | `material` (KItem IRI) or `name`, `category` (material · energy · personnel · service), `value`, `unit`, `description`, `reference`, `provider` |
+| `outputs[]` | `material` (KItem IRI) or `name`, `category` (product · co_product · waste · emission · other), `value`, `unit`, `description`, `reference`, `is_reference_flow` |
 | `parameters[]` | `name`, `category` (facility · process · operation), `value`, `unit`, `description`, `reference` |
 
 Unit symbols such as `kg`, `kWh`, `MJ`, `h`, `%`, `l/h`, `piece` are mapped to
@@ -64,7 +67,8 @@ QUDT automatically; CURIEs (`uqudt:KiloGM`) and IRIs are passed through.
 - exactly one reference flow, which is a product or valuable by-product
 - input/output categories match the flow direction
 - unit plausible for the category (catches e.g. electricity recorded in `kg`)
-- flows are nodes, not text
+- flows are nodes, not text; each flow has a material KItem or a name
+- an inventory cannot be "supplied by" itself
 - warning: inventory not linked to its process
 
 ## Vocabularies used
