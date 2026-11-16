@@ -3,7 +3,7 @@
 # Validates:
 #   - label, conformsTo, functional unit present
 #   - at least one member inventory; exactly one reference process, which must be a member
-#   - reference amount = one numeric value + one QUDT unit
+#   - reference amount = one number, reference unit = one QUDT unit
 #   - system boundary, background database and access rights from the closed lists
 #
 # Chain consistency across inventories (every provider is a member, no orphan
@@ -11,6 +11,8 @@
 # shape:product_system_chain, which only fires when they are loaded.
 
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix qudt:    <http://qudt.org/schema/qudt/> .
 @prefix obo:     <http://purl.obolibrary.org/obo/> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
@@ -54,8 +56,15 @@ shape:product_system
         sh:path uplci:hasReferenceProduct ; sh:nodeKind sh:IRI ; sh:maxCount 1 ;
     ] ;
     sh:property [
-        sh:path obo:OBI_0001938 ; sh:maxCount 1 ;
-        sh:node shape:reference_amount ;
+        sh:path qudt:value ; sh:datatype xsd:double ; sh:maxCount 1 ;
+        sh:message "Reference amount must be a single number." ;
+    ] ;
+    sh:property [
+        sh:path qudt:hasUnit ; sh:nodeKind sh:IRI ; sh:maxCount 1 ;
+        sh:message "Reference unit must be a single QUDT unit IRI." ;
+    ] ;
+    sh:property [
+        sh:path prov:wasAttributedTo ; sh:nodeKind sh:IRI ;
     ] ;
     sh:property [
         sh:path uplci:hasSystemBoundary ; sh:maxCount 1 ;
@@ -100,16 +109,4 @@ shape:product_system_chain
                 ?inv uplci:hasInput/uplci:hasProvider ?prov .
                 FILTER NOT EXISTS { $this dcterms:hasPart ?prov }
             }""" ;
-    ] .
-
-shape:reference_amount
-    a sh:NodeShape ;
-    sh:class obo:OBI_0001931 ;
-    sh:property [
-        sh:path obo:OBI_0001937 ; sh:datatype xsd:double ; sh:minCount 1 ; sh:maxCount 1 ;
-        sh:message "Reference amount must have exactly one numeric value." ;
-    ] ;
-    sh:property [
-        sh:path obo:IAO_0000039 ; sh:nodeKind sh:IRI ; sh:minCount 1 ; sh:maxCount 1 ;
-        sh:message "Reference amount must have exactly one QUDT unit." ;
     ] .

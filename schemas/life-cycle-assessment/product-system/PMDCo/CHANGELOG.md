@@ -9,6 +9,18 @@ Versions follow [Semantic Versioning](https://semver.org/):
 
 ---
 
+## [0.2.0] - 2026-11-16
+
+### Changed (breaking)
+
+- Reference amount is now flat `qudt:value` + `qudt:hasUnit` (`reference_amount`,
+  `reference_unit`) instead of a nested value-specification object.
+- Modellers → `prov:wasAttributedTo` (DSMS writes `dcterms:creator` itself).
+
+### Added
+
+- Read-only `conforms_to` property so `dcterms:conformsTo` is written for form input too.
+
 ## [0.1.0] - 2026-11-13
 
 ### Added

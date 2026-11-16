@@ -8,13 +8,12 @@ Built on the [Platform MaterialDigital Core Ontology (PMDCo)](https://w3id.org/p
 ([`Orchester/LCA/vocabularies/dsms-uplci.ttl`](../../../../../Orchester/LCA/vocabularies/dsms-uplci.ttl)).
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>0.1.0</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.2.0</code></td></tr>
 <tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>
 IAO information content entity <em>is about</em> a
 <a href="https://github.com/materialdigital/core-ontology/tree/main/patterns/input%20and%20output%20of%20processes">PMDCo process</a>;
-data items with
-<a href="https://github.com/materialdigital/core-ontology/tree/main/patterns/measurement">OBI value specifications</a>
+embedded data items with QUDT values
 </td></tr>
 <tr><td><strong>Extends</strong></td><td>—</td></tr>
 <tr><td><strong>Includes</strong></td><td>—</td></tr>
@@ -35,11 +34,11 @@ UnitProcessInventory ──is about──► ManufacturingProcess KItem
    │                     product | co-product | waste | emission | other
    │     flow type       lci-flow vocabulary (Electricity, Argon …)
    │     material        Material KItem (tracked intermediate / final products)
-   │     amount          value + QUDT unit
+   │     amount          qudt:value + qudt:hasUnit
    │     reference flow  exactly one product output
    │     data derivation measured | calculated | estimated | assumption | …
    │     provider        foreground inventory  OR  background dataset (ecoinvent)
-   │     properties      cost / climate change per unit
+   │     cost, CO2       per unit of flow (flat fields)
    └─ hasTechnologyParameter ──► ParameterSpecification (facility | process | operation)
 ```
 
@@ -65,7 +64,8 @@ annealing step) and fill in your values. Field reference:
 
 Exchange keys: `name`, `category`, `value`, `unit` (required); `flow_object`,
 `material`, `description`, `data_source`, `source_note`, `scaling_slope`,
-`scaling_base`, `provider` *or* `background_provider`, `properties[]`,
+`scaling_base`, `provider` *or* `background_provider{database, activity_name, …}`,
+`monetary_value`, `currency`, `monetary_value_source`, `climate_change`, `climate_change_source`,
 `is_reference_flow` (outputs).
 
 Unit symbols such as `kg`, `kWh`, `MJ`, `h`, `%`, `l/h`, `piece` are mapped to

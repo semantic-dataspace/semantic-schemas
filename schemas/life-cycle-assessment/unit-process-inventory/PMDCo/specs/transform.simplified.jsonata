@@ -10,7 +10,8 @@
    *     name*, category*, value*, unit*, flow_object, material, description,
    *     data_source, source_note, scaling_slope, scaling_base,
    *     provider (IRI), background_provider{database*, activity_name*, …},
-   *     properties[]{type*, value*, unit, currency, name, data_source, source_note},
+   *     monetary_value, currency, monetary_value_source,
+   *     climate_change, climate_change_source,
    *     is_reference_flow (outputs only)
    *   parameters[] : name*, category*, parameter_type, value, unit, description,
    *                  scalable, data_source, source_note
@@ -21,7 +22,7 @@
    * too (labels are resolved later by Schema.resolve_vocabulary()).
    */
 
-  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-unit-process-inventory-PMDCo-v0.1.0/schemas/life-cycle-assessment/unit-process-inventory/PMDCo/specs/schema.oold.generated.json";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-unit-process-inventory-PMDCo-v0.2.0/schemas/life-cycle-assessment/unit-process-inventory/PMDCo/specs/schema.oold.generated.json";
 
   /* ── keyword → IRI maps ───────────────────────────────────────────────── */
   $inputCategory := {
@@ -51,11 +52,6 @@
     "facility":  "uplci:FacilityParameter",
     "process":   "uplci:ProcessParameter",
     "operation": "uplci:OperationParameter"
-  };
-  $propertyType := {
-    "monetary_value": "uplci:MonetaryValuePerUnit",
-    "climate_change": "uplci:ClimateChangePerUnit",
-    "other":          "uplci:OtherFlowProperty"
   };
   $accessRights := {
     "public":       "accr:PUBLIC",
@@ -97,65 +93,35 @@
 
   $inventoryId := $exists(inventory_id) ? inventory_id : "upi-" & $slug(inventory_name);
 
-  $valueSpec := function($id, $value, $unit) {
+  $exchange := function($e, $i, $direction, $categories) {
     {
-      "type":          ["obo:OBI_0001931"],
-      "id":            $id,
-      "numeric_value": $value,
-      "unit":          $map1($unit, $unitSymbol)
+      "type":                  ["uplci:Exchange"],
+      "id":                    $inventoryId & "-" & $direction & "-" & $pad2($i),
+      "label":                 $e.name,
+      "category":              $map1($e.category, $categories),
+      "is_reference_flow":     $e.is_reference_flow = true ? true : undefined,
+      "flow_object":           $e.flow_object,
+      "material":              $e.material,
+      "amount":                $e.value,
+      "unit":                  $map1($e.unit, $unitSymbol),
+      "description":           $e.description,
+      "data_derivation":       $map1($e.data_source, $derivation),
+      "source_note":           $e.source_note,
+      "scaling_slope":         $e.scaling_slope,
+      "scaling_base":          $e.scaling_base,
+      "provider":              $e.provider,
+      "background_database":   $map1($e.background_provider.database, $database),
+      "background_activity":   $e.background_provider.activity_name,
+      "background_product":    $e.background_provider.reference_product,
+      "background_geography":  $e.background_provider.geography,
+      "background_dataset_id": $e.background_provider.uuid,
+      "monetary_value":        $e.monetary_value,
+      "currency":              $e.currency,
+      "monetary_value_source": $e.monetary_value_source,
+      "climate_change":        $e.climate_change,
+      "climate_change_source": $e.climate_change_source
     }
   };
-
-  $flowProperty := function($p, $j, $exchangeId) {(
-    $pid := $exchangeId & "-property-" & $pad2($j);
-    {
-      "type":            ["uplci:FlowPropertyDatum"],
-      "id":              $pid,
-      "label":           $p.name,
-      "property_type":   $map1($p.type, $propertyType),
-      "property_value":  $valueSpec($pid & "-value", $p.value, $p.unit),
-      "currency":        $p.currency,
-      "data_derivation": $map1($p.data_source, $derivation),
-      "source_note":     $p.source_note
-    }
-  )};
-
-  $backgroundProvider := function($b, $exchangeId) {
-    $exists($b) ? {
-      "type":              ["uplci:BackgroundDatasetReference"],
-      "id":                $exchangeId & "-background-provider",
-      "database":          $map1($b.database, $database),
-      "label":             $b.activity_name,
-      "reference_product": $b.reference_product,
-      "geography":         $b.geography,
-      "unit":              $map1($b.unit, $unitSymbol),
-      "dataset_uuid":      $b.uuid
-    } : undefined
-  };
-
-  $exchange := function($e, $i, $direction, $categories) {(
-    $eid := $inventoryId & "-" & $direction & "-" & $pad2($i);
-    {
-      "type":                ["uplci:Exchange"],
-      "id":                  $eid,
-      "label":               $e.name,
-      "category":            $map1($e.category, $categories),
-      "flow_object":         $e.flow_object,
-      "material":            $e.material,
-      "amount":              $valueSpec($eid & "-amount", $e.value, $e.unit),
-      "is_reference_flow":   $e.is_reference_flow = true ? true : undefined,
-      "description":         $e.description,
-      "scaling_slope":       $e.scaling_slope,
-      "scaling_base":        $e.scaling_base,
-      "data_derivation":     $map1($e.data_source, $derivation),
-      "source_note":         $e.source_note,
-      "provider":            $e.provider,
-      "background_provider": $backgroundProvider($e.background_provider, $eid),
-      "properties":          $exists($e.properties)
-                               ? [$map($e.properties, function($p, $j) { $flowProperty($p, $j, $eid) })]
-                               : undefined
-    }
-  )};
 
   $parameter := function($p, $i) {
     {
@@ -187,7 +153,7 @@
     "valid_until":                $exists(valid_until) ? $string(valid_until) : undefined,
     "access_rights":              $map1(access_rights, $accessRights),
     "technology_readiness_level": trl,
-    "creator":                    data_generators,
+    "data_generator":             data_generators,
     "publisher":                  data_owner,
     "reviewer":                   reviewers,
     "source":                     source,

@@ -7,7 +7,7 @@
    *        reference_amount {value, unit}, system_boundary, background_database,
    *        geography, modellers[IRI], owner (IRI), access_rights
    */
-  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-product-system-PMDCo-v0.1.0/schemas/life-cycle-assessment/product-system/PMDCo/specs/schema.oold.generated.json";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-product-system-PMDCo-v0.2.0/schemas/life-cycle-assessment/product-system/PMDCo/specs/schema.oold.generated.json";
 
   $boundary := {
     "cradle-to-gate":   "uplci:CradleToGate",
@@ -48,16 +48,12 @@
     "reference_process":   reference_inventory,
     "reference_product":   reference_product,
     "functional_unit":     functional_unit,
-    "reference_amount":    $exists(reference_amount) ? {
-                             "type":          ["obo:OBI_0001931"],
-                             "id":            $systemId & "-reference-amount",
-                             "numeric_value": reference_amount.value,
-                             "unit":          $map1(reference_amount.unit, $unitSymbol)
-                           } : undefined,
+    "reference_amount":    reference_amount.value,
+    "reference_unit":      $map1(reference_amount.unit, $unitSymbol),
     "system_boundary":     $map1(system_boundary, $boundary),
     "background_database": $map1(background_database, $database),
     "geography":           geography,
-    "creator":             modellers,
+    "modeller":            modellers,
     "publisher":           owner,
     "access_rights":       $map1(access_rights, $accessRights)
   }

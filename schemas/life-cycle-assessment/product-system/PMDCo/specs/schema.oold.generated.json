@@ -4,6 +4,8 @@
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "dcterms": "http://purl.org/dc/terms/",
+    "prov": "http://www.w3.org/ns/prov#",
+    "qudt": "http://qudt.org/schema/qudt/",
     "obo": "http://purl.obolibrary.org/obo/",
     "uqudt": "http://qudt.org/vocab/unit/",
     "uplci": "https://w3id.org/dsms/uplci#",
@@ -40,14 +42,11 @@
       "@id": "uplci:functionalUnit"
     },
     "reference_amount": {
-      "@id": "obo:OBI_0001938"
-    },
-    "numeric_value": {
-      "@id": "obo:OBI_0001937",
+      "@id": "qudt:value",
       "@type": "xsd:double"
     },
-    "unit": {
-      "@id": "obo:IAO_0000039",
+    "reference_unit": {
+      "@id": "qudt:hasUnit",
       "@type": "@id"
     },
     "system_boundary": {
@@ -61,8 +60,8 @@
     "geography": {
       "@id": "uplci:geography"
     },
-    "creator": {
-      "@id": "dcterms:creator",
+    "modeller": {
+      "@id": "prov:wasAttributedTo",
       "@type": "@id",
       "@container": "@set"
     },
@@ -77,8 +76,8 @@
   },
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$comment": "LCA product system (ISO 14040 \u00a73.28): set of linked unit process inventories delivering a functional unit.",
-  "x-schema-version": "0.1.0",
-  "x-schema-uri": "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-product-system-PMDCo-v0.1.0/schemas/life-cycle-assessment/product-system/PMDCo/specs/schema.oold.generated.json",
+  "x-schema-version": "0.2.0",
+  "x-schema-uri": "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-product-system-PMDCo-v0.2.0/schemas/life-cycle-assessment/product-system/PMDCo/specs/schema.oold.generated.json",
   "x-maturity": "draft",
   "title": "LCA Product System",
   "description": "A process chain modelled for LCA: which unit process inventories belong to it, which one delivers the functional unit, and which background database and system boundary apply.",
@@ -110,6 +109,14 @@
           "uplci:ProductSystem"
         ]
       }
+    },
+    "conforms_to": {
+      "title": "Conforms To",
+      "description": "Versioned IRI of this schema; written automatically.",
+      "type": "string",
+      "readOnly": true,
+      "const": "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-product-system-PMDCo-v0.2.0/schemas/life-cycle-assessment/product-system/PMDCo/specs/schema.oold.generated.json",
+      "default": "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-product-system-PMDCo-v0.2.0/schemas/life-cycle-assessment/product-system/PMDCo/specs/schema.oold.generated.json"
     },
     "id": {
       "title": "ID",
@@ -179,43 +186,14 @@
     },
     "reference_amount": {
       "title": "Reference Amount",
-      "type": "object",
-      "required": [
-        "type",
-        "id",
-        "numeric_value",
-        "unit"
-      ],
-      "properties": {
-        "type": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "readOnly": true,
-          "const": [
-            "obo:OBI_0001931"
-          ],
-          "default": [
-            "obo:OBI_0001931"
-          ]
-        },
-        "id": {
-          "type": "string",
-          "readOnly": true,
-          "default": "reference-amount"
-        },
-        "numeric_value": {
-          "title": "Amount",
-          "type": "number",
-          "default": 1
-        },
-        "unit": {
-          "title": "Unit",
-          "type": "string",
-          "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
-        }
-      }
+      "description": "Quantity of the reference product delivered by the functional unit.",
+      "type": "number",
+      "default": 1
+    },
+    "reference_unit": {
+      "title": "Reference Unit",
+      "type": "string",
+      "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
     },
     "system_boundary": {
       "title": "System Boundary",
@@ -267,14 +245,13 @@
       "title": "Geography",
       "type": "string"
     },
-    "creator": {
+    "modeller": {
       "title": "Modeller(s)",
       "type": "array",
       "format": "kitem",
       "x-kitem": {
         "ktypeIds": [
-          "expert",
-          "person"
+          "expert"
         ]
       },
       "items": {

@@ -3,24 +3,24 @@
 # Validates:
 #   1. UnitProcessInventory
 #      - label, conformsTo, geography, access rights (closed list) present
+#      - inputs / outputs / parameters are nodes (not literals)
 #      - at least one output; exactly one reference flow, and it is a product/co-product
 #      - input exchanges carry input categories, output exchanges output categories
 #      - TRL within 1..9; dates typed
 #      - WARNING if the inventory is not linked to the process it describes
 #   2. Exchange
-#      - name, category, exactly one amount (value + QUDT unit)
+#      - name, category, exactly one amount (qudt:value) and one QUDT unit
 #      - unit plausible for the category (energy → energy units, material → mass/volume/count …)
 #      - a foreground and a background provider are not both given
+#      - monetary value requires a currency
 #      - WARNING if data derivation is missing
-#   3. Flow property, background provider, technology parameter nodes
-#
-# Shared PMDCo/OBI classes (OBI_0001931, PMD_0000013) are validated via sh:node
-# from the owning node, not via sh:targetClass, so these shapes never interfere
-# with other schemas that reuse the same classes.
+#   3. Technology parameter nodes (via sh:node, not targetClass, so the shape
+#      never interferes with other schemas that reuse pmdco:PMD_0000013)
 
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix obo:     <http://purl.obolibrary.org/obo/> .
 @prefix pmd:     <https://w3id.org/pmd/co/> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
 @prefix qudt:    <http://qudt.org/schema/qudt/> .
 @prefix uqudt:   <http://qudt.org/vocab/unit/> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -38,7 +38,7 @@ shape:prefixes
     a owl:Ontology ;
     sh:declare
         [ sh:prefix "uplci" ; sh:namespace "https://w3id.org/dsms/uplci#"^^xsd:anyURI ] ,
-        [ sh:prefix "obo"   ; sh:namespace "http://purl.obolibrary.org/obo/"^^xsd:anyURI ] ,
+        [ sh:prefix "qudt"  ; sh:namespace "http://qudt.org/schema/qudt/"^^xsd:anyURI ] ,
         [ sh:prefix "uqudt" ; sh:namespace "http://qudt.org/vocab/unit/"^^xsd:anyURI ] .
 
 # ── Unit process inventory ────────────────────────────────────────────────────
@@ -68,7 +68,7 @@ shape:unit_process_inventory
         sh:message "Access rights must be PUBLIC, RESTRICTED or NON_PUBLIC (EU access-right vocabulary)." ;
     ] ;
     sh:property [
-        sh:path dcterms:created ;
+        sh:path dcterms:date ;
         sh:datatype xsd:date ; sh:maxCount 1 ;
         sh:message "Date of compilation must be a single xsd:date." ;
     ] ;
@@ -90,7 +90,7 @@ shape:unit_process_inventory
         sh:message "The inventory should be linked to exactly one manufacturing process it describes (is about)." ;
     ] ;
     sh:property [
-        sh:path dcterms:creator ; sh:nodeKind sh:IRI ;
+        sh:path prov:wasAttributedTo ; sh:nodeKind sh:IRI ;
         sh:message "Data generators must be referenced by IRI." ;
     ] ;
     sh:property [
@@ -98,15 +98,19 @@ shape:unit_process_inventory
         sh:message "Data owner must be a single organisation IRI." ;
     ] ;
     sh:property [
+        sh:path uplci:reviewedBy ; sh:nodeKind sh:IRI ;
+        sh:message "Reviewers must be referenced by IRI." ;
+    ] ;
+    sh:property [
         sh:path uplci:hasInput ;
         sh:class uplci:Exchange ;
-        sh:message "Inputs must be uplci:Exchange nodes (validated by shape:exchange)." ;
+        sh:message "Inputs must be uplci:Exchange nodes, not literals." ;
     ] ;
     sh:property [
         sh:path uplci:hasOutput ;
         sh:minCount 1 ;
         sh:class uplci:Exchange ;
-        sh:message "An inventory must have at least one output exchange." ;
+        sh:message "An inventory must have at least one output, and outputs must be uplci:Exchange nodes." ;
     ] ;
     sh:property [
         sh:path ( uplci:hasInput uplci:hasExchangeCategory ) ;
@@ -136,6 +140,7 @@ shape:unit_process_inventory
     sh:property [
         sh:path uplci:hasTechnologyParameter ;
         sh:node shape:technology_parameter ;
+        sh:message "Technology parameters must be pmdco:ParameterSpecification nodes with a name and category." ;
     ] ;
     sh:closed false ;
     sh:ignoredProperties ( rdf:type ) .
@@ -156,10 +161,14 @@ shape:exchange
         sh:message "An exchange must have exactly one category." ;
     ] ;
     sh:property [
-        sh:path obo:OBI_0001938 ;
-        sh:minCount 1 ; sh:maxCount 1 ;
-        sh:node shape:amount ;
-        sh:message "An exchange must have exactly one amount (value specification with value and unit)." ;
+        sh:path qudt:value ;
+        sh:datatype xsd:double ; sh:minCount 1 ; sh:maxCount 1 ;
+        sh:message "An exchange must have exactly one numeric amount." ;
+    ] ;
+    sh:property [
+        sh:path qudt:hasUnit ;
+        sh:nodeKind sh:IRI ; sh:minCount 1 ; sh:maxCount 1 ;
+        sh:message "An exchange must have exactly one QUDT unit." ;
     ] ;
     sh:property [
         sh:path uplci:hasFlowObject ; sh:nodeKind sh:IRI ; sh:maxCount 1 ;
@@ -195,12 +204,21 @@ shape:exchange
         sh:message "Foreground provider must be a single inventory IRI." ;
     ] ;
     sh:property [
-        sh:path uplci:hasBackgroundProvider ; sh:maxCount 1 ;
-        sh:node shape:background_provider ;
+        sh:path uplci:backgroundDatabase ; sh:maxCount 1 ;
+        sh:in ( uplci:Ecoinvent_3_8_Cutoff uplci:Ecoinvent_3_8_APOS uplci:Ecoinvent_3_8_Consequential
+                uplci:Ecoinvent_3_9_1_Cutoff uplci:Ecoinvent_3_9_1_APOS uplci:Ecoinvent_3_9_1_Consequential
+                uplci:Ecoinvent_3_10_Cutoff uplci:Ecoinvent_3_10_APOS uplci:Ecoinvent_3_10_Consequential ) ;
+        sh:message "Background database must be a known release / system model." ;
     ] ;
     sh:property [
-        sh:path uplci:hasFlowProperty ;
-        sh:node shape:flow_property ;
+        sh:path uplci:monetaryValuePerUnit ; sh:datatype xsd:double ; sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path uplci:currency ; sh:maxCount 1 ; sh:pattern "^[A-Z]{3}$" ;
+        sh:message "Currency must be an ISO 4217 code such as EUR." ;
+    ] ;
+    sh:property [
+        sh:path uplci:climateChangePerUnit ; sh:datatype xsd:double ; sh:maxCount 1 ;
     ] ;
     sh:sparql [
         a sh:SPARQLConstraint ;
@@ -209,7 +227,27 @@ shape:exchange
         sh:select """
             SELECT $this WHERE {
                 $this uplci:hasProvider ?fg ;
-                      uplci:hasBackgroundProvider ?bg .
+                      uplci:backgroundDatabase ?bg .
+            }""" ;
+    ] ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:message "Background activity name is required when a background database is selected." ;
+        sh:prefixes shape:prefixes ;
+        sh:select """
+            SELECT $this WHERE {
+                $this uplci:backgroundDatabase ?db .
+                FILTER NOT EXISTS { $this uplci:backgroundActivity ?a }
+            }""" ;
+    ] ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:message "A monetary value per unit must state its currency." ;
+        sh:prefixes shape:prefixes ;
+        sh:select """
+            SELECT $this WHERE {
+                $this uplci:monetaryValuePerUnit ?v .
+                FILTER NOT EXISTS { $this uplci:currency ?c }
             }""" ;
     ] ;
     sh:sparql [
@@ -219,7 +257,7 @@ shape:exchange
         sh:select """
             SELECT $this ?unit WHERE {
                 $this uplci:hasExchangeCategory uplci:EnergyInput ;
-                      obo:OBI_0001938/obo:IAO_0000039 ?unit .
+                      qudt:hasUnit ?unit .
                 FILTER (?unit NOT IN (uqudt:KiloW-HR, uqudt:MegaW-HR, uqudt:W-HR,
                                       uqudt:MegaJ, uqudt:GigaJ, uqudt:KiloJ, uqudt:J))
             }""" ;
@@ -231,7 +269,7 @@ shape:exchange
         sh:select """
             SELECT $this ?unit WHERE {
                 $this uplci:hasExchangeCategory ?category ;
-                      obo:OBI_0001938/obo:IAO_0000039 ?unit .
+                      qudt:hasUnit ?unit .
                 FILTER (?category IN (uplci:MaterialInput, uplci:WasteOutput,
                                       uplci:EmissionOutput, uplci:NaturalResourceInput))
                 FILTER (?unit NOT IN (uqudt:KiloGM, uqudt:GM, uqudt:MilliGM, uqudt:TON,
@@ -246,77 +284,12 @@ shape:exchange
         sh:select """
             SELECT $this ?unit WHERE {
                 $this uplci:hasExchangeCategory uplci:PersonnelInput ;
-                      obo:OBI_0001938/obo:IAO_0000039 ?unit .
+                      qudt:hasUnit ?unit .
                 FILTER (?unit NOT IN (uqudt:HR, uqudt:DAY, uqudt:YR, uqudt:MIN))
             }""" ;
     ] ;
     sh:closed false ;
     sh:ignoredProperties ( rdf:type ) .
-
-# ── Amount (scalar value specification, unit mandatory) ───────────────────────
-
-shape:amount
-    a sh:NodeShape ;
-    sh:class obo:OBI_0001931 ;
-    sh:property [
-        sh:path obo:OBI_0001937 ;
-        sh:datatype xsd:double ; sh:minCount 1 ; sh:maxCount 1 ;
-        sh:message "An amount must have exactly one numeric value (xsd:double)." ;
-    ] ;
-    sh:property [
-        sh:path obo:IAO_0000039 ;
-        sh:nodeKind sh:IRI ; sh:minCount 1 ; sh:maxCount 1 ;
-        sh:message "An amount must have exactly one QUDT unit IRI." ;
-    ] .
-
-# ── Flow property ─────────────────────────────────────────────────────────────
-
-shape:flow_property
-    a sh:NodeShape ;
-    sh:class uplci:FlowPropertyDatum ;
-    sh:property [
-        sh:path uplci:hasFlowPropertyType ;
-        sh:minCount 1 ; sh:maxCount 1 ;
-        sh:in ( uplci:MonetaryValuePerUnit uplci:ClimateChangePerUnit uplci:OtherFlowProperty ) ;
-        sh:message "A flow property must have exactly one property type." ;
-    ] ;
-    sh:property [
-        sh:path ( obo:OBI_0001938 obo:OBI_0001937 ) ;
-        sh:datatype xsd:double ; sh:minCount 1 ; sh:maxCount 1 ;
-        sh:message "A flow property must have exactly one numeric value." ;
-    ] ;
-    sh:property [
-        sh:path uplci:currency ;
-        sh:maxCount 1 ; sh:pattern "^[A-Z]{3}$" ;
-        sh:message "Currency must be an ISO 4217 code such as EUR." ;
-    ] ;
-    sh:sparql [
-        a sh:SPARQLConstraint ;
-        sh:message "A monetary flow property must state its currency." ;
-        sh:prefixes shape:prefixes ;
-        sh:select """
-            SELECT $this WHERE {
-                $this uplci:hasFlowPropertyType uplci:MonetaryValuePerUnit .
-                FILTER NOT EXISTS { $this uplci:currency ?c }
-            }""" ;
-    ] .
-
-# ── Background provider ───────────────────────────────────────────────────────
-
-shape:background_provider
-    a sh:NodeShape ;
-    sh:class uplci:BackgroundDatasetReference ;
-    sh:property [
-        sh:path uplci:inDatabase ; sh:nodeKind sh:IRI ; sh:minCount 1 ; sh:maxCount 1 ;
-        sh:message "A background provider must name exactly one database." ;
-    ] ;
-    sh:property [
-        sh:path rdfs:label ; sh:datatype xsd:string ; sh:minCount 1 ; sh:maxCount 1 ;
-        sh:message "A background provider must name the activity." ;
-    ] ;
-    sh:property [
-        sh:path dcterms:identifier ; sh:datatype xsd:string ; sh:maxCount 1 ;
-    ] .
 
 # ── Technology parameter (pmdco:ParameterSpecification) ───────────────────────
 
@@ -343,4 +316,9 @@ shape:technology_parameter
     ] ;
     sh:property [
         sh:path uplci:isScalable ; sh:datatype xsd:boolean ; sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path uplci:hasDataDerivation ; sh:maxCount 1 ;
+        sh:in ( uplci:Measured uplci:Calculated uplci:Estimated uplci:Assumed uplci:FromLiterature uplci:MachineSetting uplci:UnknownDerivation ) ;
+        sh:message "Data derivation must be one of the controlled values (not free text)." ;
     ] .

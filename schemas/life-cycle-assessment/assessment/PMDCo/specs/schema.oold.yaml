@@ -126,6 +126,14 @@ properties:
     options:
       enum_titles: [uplci:LifeCycleAssessmentRun]
 
+  conforms_to:
+    title: Conforms To
+    description: Versioned IRI of this schema; written automatically.
+    type: string
+    readOnly: true
+    const: "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-assessment-PMDCo-v0.1.0/schemas/life-cycle-assessment/assessment/PMDCo/specs/schema.oold.generated.json"
+    default: "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-assessment-PMDCo-v0.1.0/schemas/life-cycle-assessment/assessment/PMDCo/specs/schema.oold.generated.json"
+
   id:
     title: ID
     type: string
@@ -172,7 +180,7 @@ properties:
     type: string
     format: kitem
     x-kitem:
-      ktypeIds: [expert, person]
+      ktypeIds: [expert]
 
   software:
     title: Software / Service

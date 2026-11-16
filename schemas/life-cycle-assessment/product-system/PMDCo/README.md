@@ -5,7 +5,7 @@ inventories that together deliver a functional unit, the inventory that
 delivers it, the system boundary and the background database.
 
 <table>
-<tr><td><strong>Version</strong></td><td><code>0.1.0</code></td></tr>
+<tr><td><strong>Version</strong></td><td><code>0.2.0</code></td></tr>
 <tr><td><strong>Maturity</strong></td><td><code>draft</code></td></tr>
 <tr><td><strong>Ontology pattern</strong></td><td>IAO information content entity with <code>dcterms:hasPart</code> members</td></tr>
 <tr><td><strong>Extends</strong></td><td>—</td></tr>

@@ -9,6 +9,16 @@ Versions follow [Semantic Versioning](https://semver.org/):
 
 ---
 
+## [Unreleased] - 2026-11-16
+
+### Changed
+
+- Operator picker restricted to `expert` KItems.
+
+### Added
+
+- Read-only `conforms_to` property so `dcterms:conformsTo` is written for form input too.
+
 ## [0.1.0] - 2026-11-13
 
 ### Added

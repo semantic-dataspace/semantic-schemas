@@ -4,89 +4,247 @@
   "title": "Unit Process Inventory (Simplified Input)",
   "description": "Flat input format for one unit process life cycle inventory. Produced by hand, by the LCI Excel template importer, or by any other tool; converted to PMDCo/UPLCI OO-LD by transform.simplified.jsonata. Short keywords (category, unit symbol, data_source …) are mapped to IRIs; full IRIs, CURIEs and vocabulary labels are passed through.",
   "type": "object",
-  "required": ["inventory_name", "geography", "access_rights", "outputs"],
+  "required": [
+    "inventory_name",
+    "geography",
+    "access_rights",
+    "outputs"
+  ],
   "additionalProperties": false,
   "$defs": {
     "data_source": {
       "title": "Data Source",
       "description": "How the number was obtained.",
       "type": "string",
-      "examples": ["measured", "calculated", "estimated", "assumption", "literature", "setting", "unknown"]
+      "examples": [
+        "measured",
+        "calculated",
+        "estimated",
+        "assumption",
+        "literature",
+        "setting",
+        "unknown"
+      ]
     },
     "unit": {
       "title": "Unit",
       "description": "Unit symbol (kg, kWh, MJ, h, %, l/h, piece …), QUDT CURIE (uqudt:KiloGM) or full QUDT IRI.",
       "type": "string",
-      "examples": ["kg", "kWh", "MJ", "piece", "uqudt:KiloGM"]
-    },
-    "property": {
-      "type": "object",
-      "required": ["type", "value"],
-      "additionalProperties": false,
-      "properties": {
-        "type":        { "type": "string", "examples": ["monetary_value", "climate_change", "other"] },
-        "name":        { "type": "string", "description": "Name for 'other' properties." },
-        "value":       { "type": "number", "description": "Value per one unit of the flow." },
-        "unit":        { "$ref": "#/$defs/unit" },
-        "currency":    { "type": "string", "pattern": "^[A-Z]{3}$", "description": "ISO 4217; required for monetary_value." },
-        "data_source": { "$ref": "#/$defs/data_source" },
-        "source_note": { "type": "string" }
-      }
+      "examples": [
+        "kg",
+        "kWh",
+        "MJ",
+        "piece",
+        "uqudt:KiloGM"
+      ]
     },
     "background_provider": {
       "type": "object",
-      "required": ["database", "activity_name"],
+      "required": [
+        "database",
+        "activity_name"
+      ],
       "additionalProperties": false,
       "properties": {
-        "database":          { "type": "string", "examples": ["ecoinvent-3.8-consequential", "ecoinvent-3.10-cutoff"] },
-        "activity_name":     { "type": "string", "examples": ["market for electricity, medium voltage"] },
-        "reference_product": { "type": "string" },
-        "geography":         { "type": "string", "examples": ["DE", "RER", "GLO"] },
-        "unit":              { "$ref": "#/$defs/unit" },
-        "uuid":              { "type": "string" }
+        "database": {
+          "type": "string",
+          "examples": [
+            "ecoinvent-3.8-consequential",
+            "ecoinvent-3.10-cutoff"
+          ]
+        },
+        "activity_name": {
+          "type": "string",
+          "examples": [
+            "market for electricity, medium voltage"
+          ]
+        },
+        "reference_product": {
+          "type": "string"
+        },
+        "geography": {
+          "type": "string",
+          "examples": [
+            "DE",
+            "RER",
+            "GLO"
+          ]
+        },
+        "unit": {
+          "$ref": "#/$defs/unit"
+        },
+        "uuid": {
+          "type": "string"
+        }
       }
     },
     "exchange": {
       "type": "object",
-      "required": ["name", "category", "value", "unit"],
+      "required": [
+        "name",
+        "category",
+        "value",
+        "unit"
+      ],
       "properties": {
-        "name":                { "type": "string", "description": "Flow name as recorded." },
-        "value":               { "type": "number", "description": "Amount per reference flow." },
-        "unit":                { "$ref": "#/$defs/unit" },
-        "flow_object":         { "type": "string", "description": "lci-flow vocabulary term (label, CURIE lcif:… or IRI)." },
-        "material":            { "type": "string", "format": "uri", "description": "Material KItem IRI." },
-        "description":         { "type": "string" },
-        "data_source":         { "$ref": "#/$defs/data_source" },
-        "source_note":         { "type": "string" },
-        "scaling_slope":       { "type": "number" },
-        "scaling_base":        { "type": "number" },
-        "provider":            { "type": "string", "format": "uri", "description": "IRI of the foreground inventory supplying this input / treating this output." },
-        "background_provider": { "$ref": "#/$defs/background_provider" },
-        "properties":          { "type": "array", "items": { "$ref": "#/$defs/property" } }
+        "name": {
+          "type": "string",
+          "description": "Flow name as recorded."
+        },
+        "value": {
+          "type": "number",
+          "description": "Amount per reference flow."
+        },
+        "unit": {
+          "$ref": "#/$defs/unit"
+        },
+        "flow_object": {
+          "type": "string",
+          "description": "lci-flow vocabulary term (label, CURIE lcif:… or IRI)."
+        },
+        "material": {
+          "type": "string",
+          "format": "uri",
+          "description": "Material KItem IRI."
+        },
+        "description": {
+          "type": "string"
+        },
+        "data_source": {
+          "$ref": "#/$defs/data_source"
+        },
+        "source_note": {
+          "type": "string"
+        },
+        "scaling_slope": {
+          "type": "number"
+        },
+        "scaling_base": {
+          "type": "number"
+        },
+        "provider": {
+          "type": "string",
+          "format": "uri",
+          "description": "IRI of the foreground inventory supplying this input / treating this output."
+        },
+        "background_provider": {
+          "$ref": "#/$defs/background_provider"
+        },
+        "monetary_value": {
+          "type": "number",
+          "description": "Cost (inputs) or value (outputs) per unit of the flow."
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$",
+          "description": "ISO 4217; required when monetary_value is given."
+        },
+        "monetary_value_source": {
+          "type": "string"
+        },
+        "climate_change": {
+          "type": "number",
+          "description": "kg CO2-eq per unit of the flow."
+        },
+        "climate_change_source": {
+          "type": "string"
+        }
       }
     }
   },
   "properties": {
-    "inventory_name":  { "type": "string", "minLength": 1 },
-    "inventory_id":    { "type": "string", "description": "Optional IRI slug; derived from inventory_name if omitted." },
-    "description":     { "type": "string" },
-    "process":         { "type": "string", "format": "uri", "description": "IRI of the manufacturing-process KItem this inventory is about." },
-    "geography":       { "type": "string", "minLength": 2, "examples": ["DE", "RER", "GLO"] },
-    "site":            { "type": "string" },
-    "date_compiled":   { "type": "string", "format": "date" },
-    "valid_until":     { "type": ["string", "integer"], "pattern": "^[0-9]{4}$" },
-    "access_rights":   { "type": "string", "enum": ["public", "restricted", "confidential"] },
-    "trl":             { "type": "integer", "minimum": 1, "maximum": 9 },
-    "data_generators": { "type": "array", "items": { "type": "string", "format": "uri" } },
-    "data_owner":      { "type": "string", "format": "uri" },
-    "reviewers":       { "type": "array", "items": { "type": "string", "format": "uri" } },
-    "source":          { "type": "string" },
+    "inventory_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "inventory_id": {
+      "type": "string",
+      "description": "Optional IRI slug; derived from inventory_name if omitted."
+    },
+    "description": {
+      "type": "string"
+    },
+    "process": {
+      "type": "string",
+      "format": "uri",
+      "description": "IRI of the manufacturing-process KItem this inventory is about."
+    },
+    "geography": {
+      "type": "string",
+      "minLength": 2,
+      "examples": [
+        "DE",
+        "RER",
+        "GLO"
+      ]
+    },
+    "site": {
+      "type": "string"
+    },
+    "date_compiled": {
+      "type": "string",
+      "format": "date"
+    },
+    "valid_until": {
+      "type": [
+        "string",
+        "integer"
+      ],
+      "pattern": "^[0-9]{4}$"
+    },
+    "access_rights": {
+      "type": "string",
+      "enum": [
+        "public",
+        "restricted",
+        "confidential"
+      ]
+    },
+    "trl": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9
+    },
+    "data_generators": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uri"
+      }
+    },
+    "data_owner": {
+      "type": "string",
+      "format": "uri"
+    },
+    "reviewers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uri"
+      }
+    },
+    "source": {
+      "type": "string"
+    },
     "inputs": {
       "type": "array",
       "items": {
-        "allOf": [{ "$ref": "#/$defs/exchange" }],
+        "allOf": [
+          {
+            "$ref": "#/$defs/exchange"
+          }
+        ],
         "properties": {
-          "category": { "type": "string", "enum": ["material", "energy", "personnel", "service", "natural_resource"] }
+          "category": {
+            "type": "string",
+            "enum": [
+              "material",
+              "energy",
+              "personnel",
+              "service",
+              "natural_resource"
+            ]
+          }
         }
       },
       "default": []
@@ -95,10 +253,25 @@
       "type": "array",
       "minItems": 1,
       "items": {
-        "allOf": [{ "$ref": "#/$defs/exchange" }],
+        "allOf": [
+          {
+            "$ref": "#/$defs/exchange"
+          }
+        ],
         "properties": {
-          "category":          { "type": "string", "enum": ["product", "co_product", "waste", "emission", "other"] },
-          "is_reference_flow": { "type": "boolean" }
+          "category": {
+            "type": "string",
+            "enum": [
+              "product",
+              "co_product",
+              "waste",
+              "emission",
+              "other"
+            ]
+          },
+          "is_reference_flow": {
+            "type": "boolean"
+          }
         }
       }
     },
@@ -106,18 +279,45 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["name", "category"],
+        "required": [
+          "name",
+          "category"
+        ],
         "additionalProperties": false,
         "properties": {
-          "name":           { "type": "string" },
-          "category":       { "type": "string", "enum": ["facility", "process", "operation"] },
-          "parameter_type": { "type": "string", "description": "lci-parameter vocabulary term (label, CURIE lcip:… or IRI)." },
-          "value":          { "type": "number" },
-          "unit":           { "$ref": "#/$defs/unit" },
-          "description":    { "type": "string" },
-          "scalable":       { "type": "boolean" },
-          "data_source":    { "$ref": "#/$defs/data_source" },
-          "source_note":    { "type": "string" }
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "facility",
+              "process",
+              "operation"
+            ]
+          },
+          "parameter_type": {
+            "type": "string",
+            "description": "lci-parameter vocabulary term (label, CURIE lcip:… or IRI)."
+          },
+          "value": {
+            "type": "number"
+          },
+          "unit": {
+            "$ref": "#/$defs/unit"
+          },
+          "description": {
+            "type": "string"
+          },
+          "scalable": {
+            "type": "boolean"
+          },
+          "data_source": {
+            "$ref": "#/$defs/data_source"
+          },
+          "source_note": {
+            "type": "string"
+          }
         }
       },
       "default": []
