@@ -1,0 +1,64 @@
+(
+  /*
+   * LCA Product System (PMDCo / UPLCI): simplified JSON → OO-LD JSON
+   *
+   * Input: system_name*, system_id, description, goal, inventories*[IRI],
+   *        reference_inventory* (IRI), reference_product (IRI), functional_unit*,
+   *        reference_amount {value, unit}, system_boundary, background_database,
+   *        geography, modellers[IRI], owner (IRI), access_rights
+   */
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-product-system-PMDCo-v0.1.0/schemas/life-cycle-assessment/product-system/PMDCo/specs/schema.oold.generated.json";
+
+  $boundary := {
+    "cradle-to-gate":   "uplci:CradleToGate",
+    "gate-to-gate":     "uplci:GateToGate",
+    "cradle-to-grave":  "uplci:CradleToGrave",
+    "cradle-to-cradle": "uplci:CradleToCradle"
+  };
+  $database := {
+    "ecoinvent-3.8-cutoff":          "uplci:Ecoinvent_3_8_Cutoff",
+    "ecoinvent-3.8-apos":            "uplci:Ecoinvent_3_8_APOS",
+    "ecoinvent-3.8-consequential":   "uplci:Ecoinvent_3_8_Consequential",
+    "ecoinvent-3.9.1-cutoff":        "uplci:Ecoinvent_3_9_1_Cutoff",
+    "ecoinvent-3.9.1-apos":          "uplci:Ecoinvent_3_9_1_APOS",
+    "ecoinvent-3.9.1-consequential": "uplci:Ecoinvent_3_9_1_Consequential",
+    "ecoinvent-3.10-cutoff":         "uplci:Ecoinvent_3_10_Cutoff",
+    "ecoinvent-3.10-apos":           "uplci:Ecoinvent_3_10_APOS",
+    "ecoinvent-3.10-consequential":  "uplci:Ecoinvent_3_10_Consequential"
+  };
+  $accessRights := { "public": "accr:PUBLIC", "restricted": "accr:RESTRICTED", "confidential": "accr:NON_PUBLIC" };
+  $unitSymbol := {
+    "kg": "uqudt:KiloGM", "g": "uqudt:GM", "t": "uqudt:TON", "kWh": "uqudt:KiloW-HR", "MJ": "uqudt:MegaJ",
+    "m3": "uqudt:M3", "m^3": "uqudt:M3", "m2": "uqudt:M2", "m^2": "uqudt:M2", "piece": "uqudt:NUM", "item": "uqudt:NUM"
+  };
+  $map1 := function($value, $table) {
+    $exists($value) ? ($exists($lookup($table, $value)) ? $lookup($table, $value) : $value) : undefined
+  };
+  $slug := function($s) { $replace($lowercase($trim($s)), /[^a-z0-9]+/, "-") };
+  $systemId := $exists(system_id) ? system_id : "ps-" & $slug(system_name);
+
+  {
+    "conforms_to":         $schemaUri,
+    "type":                ["uplci:ProductSystem"],
+    "id":                  $systemId,
+    "label":               system_name,
+    "description":         description,
+    "goal":                goal,
+    "has_part":            inventories,
+    "reference_process":   reference_inventory,
+    "reference_product":   reference_product,
+    "functional_unit":     functional_unit,
+    "reference_amount":    $exists(reference_amount) ? {
+                             "type":          ["obo:OBI_0001931"],
+                             "id":            $systemId & "-reference-amount",
+                             "numeric_value": reference_amount.value,
+                             "unit":          $map1(reference_amount.unit, $unitSymbol)
+                           } : undefined,
+    "system_boundary":     $map1(system_boundary, $boundary),
+    "background_database": $map1(background_database, $database),
+    "geography":           geography,
+    "creator":             modellers,
+    "publisher":           owner,
+    "access_rights":       $map1(access_rights, $accessRights)
+  }
+)

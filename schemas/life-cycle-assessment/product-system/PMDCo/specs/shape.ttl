@@ -1,0 +1,115 @@
+# SHACL shape for the LCA Product System schema.
+#
+# Validates:
+#   - label, conformsTo, functional unit present
+#   - at least one member inventory; exactly one reference process, which must be a member
+#   - reference amount = one numeric value + one QUDT unit
+#   - system boundary, background database and access rights from the closed lists
+#
+# Chain consistency across inventories (every provider is a member, no orphan
+# inventories) needs the member inventories in the same graph; see
+# shape:product_system_chain, which only fires when they are loaded.
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix obo:     <http://purl.obolibrary.org/obo/> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix uplci:   <https://w3id.org/dsms/uplci#> .
+@prefix accr:    <http://publications.europa.eu/resource/authority/access-right/> .
+@prefix shape:   <https://w3id.org/dsms/shapes/life-cycle-assessment/product-system/> .
+
+shape:prefixes
+    a owl:Ontology ;
+    sh:declare
+        [ sh:prefix "uplci"   ; sh:namespace "https://w3id.org/dsms/uplci#"^^xsd:anyURI ] ,
+        [ sh:prefix "dcterms" ; sh:namespace "http://purl.org/dc/terms/"^^xsd:anyURI ] .
+
+shape:product_system
+    a sh:NodeShape ;
+    sh:targetClass uplci:ProductSystem ;
+    sh:property [
+        sh:path dcterms:conformsTo ; sh:nodeKind sh:IRI ; sh:minCount 1 ; sh:maxCount 1 ;
+        sh:message "A product system must declare dcterms:conformsTo pointing to the versioned schema IRI." ;
+    ] ;
+    sh:property [
+        sh:path rdfs:label ; sh:datatype xsd:string ; sh:minCount 1 ; sh:maxCount 1 ;
+        sh:message "A product system must have exactly one name." ;
+    ] ;
+    sh:property [
+        sh:path uplci:functionalUnit ; sh:datatype xsd:string ; sh:minCount 1 ; sh:maxCount 1 ;
+        sh:message "A product system must state its functional unit." ;
+    ] ;
+    sh:property [
+        sh:path dcterms:hasPart ; sh:nodeKind sh:IRI ; sh:minCount 1 ;
+        sh:message "A product system must contain at least one unit process inventory." ;
+    ] ;
+    sh:property [
+        sh:path uplci:hasReferenceProcess ; sh:nodeKind sh:IRI ; sh:minCount 1 ; sh:maxCount 1 ;
+        sh:message "A product system must have exactly one reference process." ;
+    ] ;
+    sh:property [
+        sh:path uplci:hasReferenceProduct ; sh:nodeKind sh:IRI ; sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path obo:OBI_0001938 ; sh:maxCount 1 ;
+        sh:node shape:reference_amount ;
+    ] ;
+    sh:property [
+        sh:path uplci:hasSystemBoundary ; sh:maxCount 1 ;
+        sh:in ( uplci:CradleToGate uplci:GateToGate uplci:CradleToGrave uplci:CradleToCradle ) ;
+    ] ;
+    sh:property [
+        sh:path uplci:usesBackgroundDatabase ; sh:maxCount 1 ;
+        sh:in ( uplci:Ecoinvent_3_8_Cutoff uplci:Ecoinvent_3_8_APOS uplci:Ecoinvent_3_8_Consequential
+                uplci:Ecoinvent_3_9_1_Cutoff uplci:Ecoinvent_3_9_1_APOS uplci:Ecoinvent_3_9_1_Consequential
+                uplci:Ecoinvent_3_10_Cutoff uplci:Ecoinvent_3_10_APOS uplci:Ecoinvent_3_10_Consequential ) ;
+        sh:message "Background database must be a known release / system model." ;
+    ] ;
+    sh:property [
+        sh:path dcterms:accessRights ; sh:maxCount 1 ;
+        sh:in ( accr:PUBLIC accr:RESTRICTED accr:NON_PUBLIC ) ;
+    ] ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:message "The reference process {?ref} must also be listed as a member inventory (dcterms:hasPart)." ;
+        sh:prefixes shape:prefixes ;
+        sh:select """
+            SELECT $this ?ref WHERE {
+                $this uplci:hasReferenceProcess ?ref .
+                FILTER NOT EXISTS { $this dcterms:hasPart ?ref }
+            }""" ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .
+
+# Fires only when member inventories are loaded together with the product system.
+shape:product_system_chain
+    a sh:NodeShape ;
+    sh:targetClass uplci:ProductSystem ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:severity sh:Warning ;
+        sh:message "Inventory {?inv} uses foreground provider {?prov}, which is not a member of this product system." ;
+        sh:prefixes shape:prefixes ;
+        sh:select """
+            SELECT $this ?inv ?prov WHERE {
+                $this dcterms:hasPart ?inv .
+                ?inv uplci:hasInput/uplci:hasProvider ?prov .
+                FILTER NOT EXISTS { $this dcterms:hasPart ?prov }
+            }""" ;
+    ] .
+
+shape:reference_amount
+    a sh:NodeShape ;
+    sh:class obo:OBI_0001931 ;
+    sh:property [
+        sh:path obo:OBI_0001937 ; sh:datatype xsd:double ; sh:minCount 1 ; sh:maxCount 1 ;
+        sh:message "Reference amount must have exactly one numeric value." ;
+    ] ;
+    sh:property [
+        sh:path obo:IAO_0000039 ; sh:nodeKind sh:IRI ; sh:minCount 1 ; sh:maxCount 1 ;
+        sh:message "Reference amount must have exactly one QUDT unit." ;
+    ] .

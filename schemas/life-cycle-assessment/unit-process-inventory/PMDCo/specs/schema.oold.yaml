@@ -1,0 +1,678 @@
+# OO-LD Schema for a Unit Process Life Cycle Inventory (UPLCI)
+# Ontologies: PMDCo 3.x / OBI / IAO (backbone), DCAT + Dublin Core (dataset
+#             metadata), QUDT (units), DSMS UPLCI vocabulary (LCA-specific terms,
+#             aligned with the BONSAI core ontology)
+#
+# Graph pattern:
+#
+#   uplci:UnitProcessInventory   (⊑ iao:InformationContentEntity, dcat:Dataset)
+#     rdfs:label / rdfs:comment ─────────────── name / description
+#     iao:IAO_0000136 (is about) ──────────────► ManufacturingProcess KItem   (pmdco:PMD_0000833)
+#     uplci:geography ──────────────────────── "DE" | "RER" | "GLO" …
+#     schema:location ──────────────────────── site, free text
+#     dcterms:created / dcterms:valid ───────── compiled date / valid-until year
+#     dcterms:accessRights ────────────────────► EU access-right NAL (PUBLIC | RESTRICTED | NON_PUBLIC)
+#     dcterms:creator / publisher, uplci:reviewedBy ─► expert / organization KItems
+#     uplci:hasInput  ─┐
+#     uplci:hasOutput ─┴─► uplci:Exchange  (⊑ iao:DataItem)        [embedded, 0..N]
+#         rdfs:label ──────────────────── flow name as recorded
+#         uplci:hasExchangeCategory ─────► uplci:MaterialInput | EnergyInput | … | ProductOutput | WasteOutput | …
+#         uplci:hasFlowObject ───────────► lci-flow vocabulary term (lcif:Electricity …)
+#         iao:IAO_0000136 ───────────────► Material KItem (pmdco:PMD_0000000)      optional
+#         obi:OBI_0001938 ───────────────► obi:ScalarValueSpecification (OBI_0001931)
+#             obi:OBI_0001937 ─── numeric value (xsd:double)
+#             iao:IAO_0000039 ───► QUDT unit
+#         uplci:isReferenceFlow ──────── true on exactly one product output
+#         uplci:scalingSlope / scalingBase   linear amount model (optional)
+#         uplci:hasDataDerivation ───────► uplci:Measured | Calculated | Estimated | …
+#         uplci:sourceNote ───────────── provenance text
+#         uplci:hasProvider ─────────────► UnitProcessInventory KItem (foreground link)
+#         uplci:hasBackgroundProvider ───► uplci:BackgroundDatasetReference (ecoinvent activity) [embedded]
+#         uplci:hasFlowProperty ─────────► uplci:FlowPropertyDatum (cost, climate change per unit) [embedded]
+#     uplci:hasTechnologyParameter ─────► pmdco:ParameterSpecification (PMD_0000013)  [embedded, 0..N]
+#         rdf:type ─────────────────── lci-parameter vocabulary term
+#         rdfs:label, qudt:value, qudt:hasUnit  (same keys as manufacturing/generic/PMDCo)
+#         uplci:hasParameterCategory ───► uplci:FacilityParameter | ProcessParameter | OperationParameter
+#         uplci:isScalable ─────────── xsd:boolean
+#
+# Design notes:
+#   - The inventory is ABOUT a process; it is not the process.  The same physical
+#     process KItem can be described by several inventories (other year, provider,
+#     scale), and the process KItem stays reusable outside LCA.
+#   - Exchanges, flow properties, background references and parameters are owned
+#     by the inventory and therefore embedded (composite).  Materials, processes,
+#     people and other inventories exist independently and are linked by IRI.
+#   - Process chains are NOT stored as separate link lists: they emerge from
+#     `provider` links (input → supplying inventory), exactly like default
+#     providers in openLCA / ILCD.
+#   - Exchange amounts use the PMDCo/OBI value-specification pattern (same as
+#     characterization/generic/PMDCo measured data); technology parameters use
+#     the qudt:value/qudt:hasUnit keys of manufacturing/generic/PMDCo.
+
+"@context":
+  rdf:     "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  rdfs:    "http://www.w3.org/2000/01/rdf-schema#"
+  xsd:     "http://www.w3.org/2001/XMLSchema#"
+  dcterms: "http://purl.org/dc/terms/"
+  dcat:    "http://www.w3.org/ns/dcat#"
+  schema:  "https://schema.org/"
+  obo:     "http://purl.obolibrary.org/obo/"
+  pmdco:   "https://w3id.org/pmd/co/"
+  qudt:    "http://qudt.org/schema/qudt/"
+  uqudt:   "http://qudt.org/vocab/unit/"
+  uplci:   "https://w3id.org/dsms/uplci#"
+  lcif:    "https://w3id.org/dsms/lci-flow#"
+  lcip:    "https://w3id.org/dsms/lci-parameter#"
+  pp:      "https://w3id.org/dsms/process-parameter#"
+  accr:    "http://publications.europa.eu/resource/authority/access-right/"
+  type: "@type"
+  id:   "@id"
+  conforms_to:
+    "@id": "dcterms:conformsTo"
+    "@type": "@id"
+  label:
+    "@id": "rdfs:label"
+  description:
+    "@id": "rdfs:comment"
+
+  # ── inventory metadata ──────────────────────────────────────────────────────
+  describes_process:
+    "@id": "obo:IAO_0000136"          # is about
+    "@type": "@id"
+  geography:
+    "@id": "uplci:geography"
+  site:
+    "@id": "schema:location"
+  date_compiled:
+    "@id": "dcterms:created"
+    "@type": "xsd:date"
+  valid_until:
+    "@id": "dcterms:valid"
+    "@type": "xsd:gYear"
+  access_rights:
+    "@id": "dcterms:accessRights"
+    "@type": "@id"
+  technology_readiness_level:
+    "@id": "uplci:technologyReadinessLevel"
+    "@type": "xsd:integer"
+  creator:
+    "@id": "dcterms:creator"
+    "@type": "@id"
+    "@container": "@set"
+  publisher:
+    "@id": "dcterms:publisher"
+    "@type": "@id"
+  reviewer:
+    "@id": "uplci:reviewedBy"
+    "@type": "@id"
+    "@container": "@set"
+  source:
+    "@id": "dcterms:source"
+
+  # ── exchanges ───────────────────────────────────────────────────────────────
+  inputs:
+    "@id": "uplci:hasInput"
+    "@container": "@set"
+  outputs:
+    "@id": "uplci:hasOutput"
+    "@container": "@set"
+  category:
+    "@id": "uplci:hasExchangeCategory"
+    "@type": "@id"
+  flow_object:
+    "@id": "uplci:hasFlowObject"
+    "@type": "@id"
+  material:
+    "@id": "obo:IAO_0000136"          # is about
+    "@type": "@id"
+  amount:
+    "@id": "obo:OBI_0001938"          # has value specification
+  property_value:
+    "@id": "obo:OBI_0001938"          # has value specification
+  numeric_value:
+    "@id": "obo:OBI_0001937"          # has specified numeric value
+    "@type": "xsd:double"
+  unit:
+    "@id": "obo:IAO_0000039"          # has measurement unit label
+    "@type": "@id"
+  is_reference_flow:
+    "@id": "uplci:isReferenceFlow"
+    "@type": "xsd:boolean"
+  scaling_slope:
+    "@id": "uplci:scalingSlope"
+    "@type": "xsd:double"
+  scaling_base:
+    "@id": "uplci:scalingBase"
+    "@type": "xsd:double"
+  data_derivation:
+    "@id": "uplci:hasDataDerivation"
+    "@type": "@id"
+  source_note:
+    "@id": "uplci:sourceNote"
+  provider:
+    "@id": "uplci:hasProvider"
+    "@type": "@id"
+  background_provider:
+    "@id": "uplci:hasBackgroundProvider"
+  database:
+    "@id": "uplci:inDatabase"
+    "@type": "@id"
+  reference_product:
+    "@id": "uplci:referenceProductName"
+  dataset_uuid:
+    "@id": "dcterms:identifier"
+  properties:
+    "@id": "uplci:hasFlowProperty"
+    "@container": "@set"
+  property_type:
+    "@id": "uplci:hasFlowPropertyType"
+    "@type": "@id"
+  currency:
+    "@id": "uplci:currency"
+
+  # ── technology parameters (keys shared with manufacturing/generic/PMDCo) ────
+  technology_parameters:
+    "@id": "uplci:hasTechnologyParameter"
+    "@container": "@set"
+  parameter_label:
+    "@id": "rdfs:label"
+  parameter_type:
+    "@id": "rdf:type"
+    "@type": "@id"
+  parameter_value:
+    "@id": "qudt:value"
+    "@type": "xsd:double"
+  parameter_unit:
+    "@id": "qudt:hasUnit"
+    "@type": "@id"
+  parameter_category:
+    "@id": "uplci:hasParameterCategory"
+    "@type": "@id"
+  is_scalable:
+    "@id": "uplci:isScalable"
+    "@type": "xsd:boolean"
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: >-
+  Unit process life cycle inventory dataset (UPLCI). Information content entity
+  about a pmdco:ManufacturingProcess, holding normalised input/output exchanges,
+  technology parameters and dataset provenance.
+x-schema-version: '0.1.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-unit-process-inventory-PMDCo-v0.1.0/schemas/life-cycle-assessment/unit-process-inventory/PMDCo/specs/schema.oold.generated.json'
+x-maturity: 'draft'
+title: Unit Process Inventory (LCI)
+description: >-
+  Life cycle inventory of one unit process: every input and output flow
+  quantified per reference flow, the technology behind it, and who compiled it.
+type: object
+required:
+  - type
+  - id
+  - label
+  - geography
+  - access_rights
+  - outputs
+
+$defs:
+
+  value_specification:
+    title: Amount
+    type: object
+    required: [type, id, numeric_value, unit]
+    properties:
+      type:
+        title: Type
+        type: array
+        items: {type: string}
+        readOnly: true
+        const: ["obo:OBI_0001931"]
+        default: ["obo:OBI_0001931"]
+        options:
+          enum_titles: [obi:ScalarValueSpecification]
+      id:
+        title: ID
+        type: string
+        readOnly: true
+        default: amount
+      numeric_value:
+        title: Value
+        description: Quantity per reference flow of the inventory.
+        type: number
+      unit:
+        title: Unit
+        description: Search and select a QUDT unit from the vocabulary service.
+        type: string
+        x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
+
+  data_derivation:
+    title: Data Derivation
+    description: How the number was obtained.
+    type: string
+    enum:
+      - "uplci:Measured"
+      - "uplci:Calculated"
+      - "uplci:Estimated"
+      - "uplci:Assumed"
+      - "uplci:FromLiterature"
+      - "uplci:MachineSetting"
+      - "uplci:UnknownDerivation"
+    options:
+      enum_titles: [measured, calculated, estimated, assumption, literature, machine setting, unknown]
+
+  source_note:
+    title: Source / Note
+    description: Calculation path, literature reference, uncertainty or assumption behind the number.
+    type: string
+    format: textarea
+
+  flow_property:
+    title: Flow Property
+    type: object
+    required: [type, id, property_type, property_value]
+    properties:
+      type:
+        title: Type
+        type: array
+        items: {type: string}
+        readOnly: true
+        const: ["uplci:FlowPropertyDatum"]
+        default: ["uplci:FlowPropertyDatum"]
+      id:
+        title: ID
+        type: string
+        readOnly: true
+        default: property
+      label:
+        title: Property Name
+        description: Optional name for 'other' properties.
+        type: string
+      property_type:
+        title: Property Type
+        type: string
+        enum: ["uplci:MonetaryValuePerUnit", "uplci:ClimateChangePerUnit", "uplci:OtherFlowProperty"]
+        options:
+          enum_titles: ["monetary value per unit", "climate change (kg CO2-eq) per unit", "other"]
+      property_value:
+        title: Value
+        type: object
+        required: [type, id, numeric_value]
+        properties:
+          type:
+            type: array
+            items: {type: string}
+            readOnly: true
+            const: ["obo:OBI_0001931"]
+            default: ["obo:OBI_0001931"]
+          id:
+            type: string
+            readOnly: true
+            default: property-value
+          numeric_value:
+            title: Value
+            description: Value per one unit of the flow.
+            type: number
+          unit:
+            title: Unit
+            description: Optional; implied by the property type (currency for monetary values, kg CO2-eq for climate change).
+            type: string
+            x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
+      currency:
+        title: Currency
+        description: ISO 4217 code; required for monetary values.
+        type: string
+        pattern: "^[A-Z]{3}$"
+        default: EUR
+      data_derivation: {$ref: "#/$defs/data_derivation"}
+      source_note: {$ref: "#/$defs/source_note"}
+
+  background_provider:
+    title: Background Provider
+    description: >-
+      Activity in a background database (e.g. ecoinvent) that supplies this input
+      or treats this output. Only identifying metadata is stored.
+    type: object
+    required: [type, id, database, label]
+    properties:
+      type:
+        type: array
+        items: {type: string}
+        readOnly: true
+        const: ["uplci:BackgroundDatasetReference"]
+        default: ["uplci:BackgroundDatasetReference"]
+      id:
+        type: string
+        readOnly: true
+        default: background-provider
+      database:
+        $ref: "#/$defs/background_database"
+      label:
+        title: Activity Name
+        description: e.g. "market for electricity, medium voltage".
+        type: string
+      reference_product:
+        title: Reference Product
+        type: string
+      geography:
+        title: Geography
+        type: string
+      unit:
+        title: Unit
+        type: string
+        x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
+      dataset_uuid:
+        title: Dataset UUID
+        description: Activity UUID (or activity_product UUID pair) in the database.
+        type: string
+
+  background_database:
+    title: Background Database
+    type: string
+    enum:
+      - "uplci:Ecoinvent_3_8_Cutoff"
+      - "uplci:Ecoinvent_3_8_APOS"
+      - "uplci:Ecoinvent_3_8_Consequential"
+      - "uplci:Ecoinvent_3_9_1_Cutoff"
+      - "uplci:Ecoinvent_3_9_1_APOS"
+      - "uplci:Ecoinvent_3_9_1_Consequential"
+      - "uplci:Ecoinvent_3_10_Cutoff"
+      - "uplci:Ecoinvent_3_10_APOS"
+      - "uplci:Ecoinvent_3_10_Consequential"
+    options:
+      enum_titles:
+        - ecoinvent 3.8 cut-off
+        - ecoinvent 3.8 APOS
+        - ecoinvent 3.8 consequential
+        - ecoinvent 3.9.1 cut-off
+        - ecoinvent 3.9.1 APOS
+        - ecoinvent 3.9.1 consequential
+        - ecoinvent 3.10 cut-off
+        - ecoinvent 3.10 APOS
+        - ecoinvent 3.10 consequential
+
+  exchange:
+    title: Exchange
+    type: object
+    required: [type, id, label, category, amount]
+    properties:
+      type:
+        title: Type
+        type: array
+        items: {type: string}
+        readOnly: true
+        const: ["uplci:Exchange"]
+        default: ["uplci:Exchange"]
+        options:
+          enum_titles: [uplci:Exchange]
+      id:
+        title: ID
+        type: string
+        readOnly: true
+        default: exchange
+      label:
+        title: Flow Name
+        description: Name of the flow as recorded by the data provider (e.g. "Pressling", "Wärmeenergie").
+        type: string
+      flow_object:
+        title: Flow Type
+        description: >-
+          What flows, from the lci-flow vocabulary (e.g. Electricity, Argon).
+          Use for commodities, energy, services and emissions.
+        type: string
+        x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/lci-flow/use-cases/all/terms"
+      material:
+        title: Material
+        description: >-
+          The material KItem this flow consists of. Use for tracked intermediate
+          and final products (e.g. sintered magnet) so that process steps connect
+          through shared material identity.
+        type: string
+        format: kitem
+        x-kitem:
+          ktypeIds: [material]
+      amount: {$ref: "#/$defs/value_specification"}
+      description:
+        title: Specification
+        description: Quality, supply chain, transport, hazard class, destination, planned treatment …
+        type: string
+        format: textarea
+      scaling_slope:
+        title: Scaling Slope
+        description: Scalable part of the amount (amount = slope × reference amount + base).
+        type: number
+      scaling_base:
+        title: Scaling Base
+        description: Fixed, non-scalable part of the amount.
+        type: number
+      data_derivation: {$ref: "#/$defs/data_derivation"}
+      source_note: {$ref: "#/$defs/source_note"}
+      provider:
+        title: Foreground Provider
+        description: >-
+          Inventory in this DSMS whose output supplies this input (or that treats
+          this waste output). Defines the process chain.
+        type: string
+        format: kitem
+        x-kitem:
+          ktypeIds: [unit-process-inventory]
+      background_provider: {$ref: "#/$defs/background_provider"}
+      properties:
+        title: Flow Properties
+        description: Per-unit properties of the flow (cost, climate change).
+        type: array
+        items: {$ref: "#/$defs/flow_property"}
+        default: []
+
+properties:
+
+  type:
+    title: Type
+    type: array
+    items: {type: string}
+    readOnly: true
+    const: ["uplci:UnitProcessInventory"]
+    default: ["uplci:UnitProcessInventory"]
+    options:
+      enum_titles: [uplci:UnitProcessInventory]
+
+  id:
+    title: ID
+    description: Identifier for this inventory; managed by the consumer.
+    type: string
+    readOnly: true
+    default: unit-process-inventory
+
+  label:
+    title: Inventory Name
+    description: e.g. "Sintering and Annealing – recycled NdFeB, IWKS 2026".
+    type: string
+
+  description:
+    title: Process Description
+    description: What the dataset represents, its scope and representativeness.
+    type: string
+    format: textarea
+
+  describes_process:
+    title: Process
+    description: The manufacturing process this inventory is about.
+    type: string
+    format: kitem
+    x-kitem:
+      ktypeIds: [manufacturing-process]
+
+  geography:
+    title: Geography
+    description: ISO 3166-1 alpha-2 country code (DE) or ecoinvent region (RER, GLO, RoW).
+    type: string
+    minLength: 2
+    default: DE
+
+  site:
+    title: Site
+    description: Location of the plant or lab, free text (e.g. "Hanau").
+    type: string
+
+  date_compiled:
+    title: Date of Compilation
+    type: string
+    format: date
+
+  valid_until:
+    title: Valid Until (Year)
+    type: string
+    pattern: "^[0-9]{4}$"
+
+  access_rights:
+    title: Access Rights
+    description: Confidentiality of the dataset (EU access-right vocabulary).
+    type: string
+    enum:
+      - "accr:PUBLIC"
+      - "accr:RESTRICTED"
+      - "accr:NON_PUBLIC"
+    options:
+      enum_titles: [public, restricted, confidential]
+
+  technology_readiness_level:
+    title: TRL
+    type: integer
+    minimum: 1
+    maximum: 9
+
+  creator:
+    title: Data Generator(s)
+    description: Persons who compiled the data.
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds: [expert, person]
+    items: {type: string, format: uri}
+    uniqueItems: true
+    default: []
+
+  publisher:
+    title: Data Owner
+    description: Organisation that provides and owns the data.
+    type: string
+    format: kitem
+    x-kitem:
+      ktypeIds: [organization]
+
+  reviewer:
+    title: Reviewer(s)
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds: [expert, person]
+    items: {type: string, format: uri}
+    uniqueItems: true
+    default: []
+
+  source:
+    title: Data Collection / Source
+    description: Project or data collection the values come from (e.g. "IWKS W4F Project").
+    type: string
+
+  inputs:
+    title: Inputs
+    description: Materials, energy, personnel and services entering the process, per reference flow.
+    type: array
+    items:
+      allOf:
+        - $ref: "#/$defs/exchange"
+      properties:
+        category:
+          title: Category
+          type: string
+          enum:
+            - "uplci:MaterialInput"
+            - "uplci:EnergyInput"
+            - "uplci:PersonnelInput"
+            - "uplci:ServiceInput"
+            - "uplci:NaturalResourceInput"
+          options:
+            enum_titles: [material, energy, personnel, service / generic flow, natural resource]
+    default: []
+
+  outputs:
+    title: Outputs
+    description: Products, co-products, wastes and emissions leaving the process, per reference flow.
+    type: array
+    minItems: 1
+    items:
+      allOf:
+        - $ref: "#/$defs/exchange"
+      properties:
+        category:
+          title: Category
+          type: string
+          enum:
+            - "uplci:ProductOutput"
+            - "uplci:CoProductOutput"
+            - "uplci:WasteOutput"
+            - "uplci:EmissionOutput"
+            - "uplci:OtherOutput"
+          options:
+            enum_titles: [product, co-product / valuable by-product, waste / loss, emission, other]
+        is_reference_flow:
+          title: Reference Flow
+          description: Tick for the one product output all amounts refer to.
+          type: boolean
+          default: false
+    default: []
+
+  technology_parameters:
+    title: Technology Parameters
+    description: Facility, process and operation parameters behind the inventory.
+    type: array
+    items:
+      type: object
+      title: Parameter
+      required: [type, id, parameter_label, parameter_category]
+      properties:
+        type:
+          title: Type
+          type: array
+          items: {type: string}
+          readOnly: true
+          const: ["pmdco:PMD_0000013"]
+          default: ["pmdco:PMD_0000013"]
+          options:
+            enum_titles: [pmdco:ParameterSpecification]
+        id:
+          title: ID
+          type: string
+          readOnly: true
+          default: param-1
+        parameter_label:
+          title: Parameter Name
+          description: Name as recorded (e.g. "Prozessdauer").
+          type: string
+        parameter_type:
+          title: Parameter Type
+          description: Search and select a parameter type (lci-parameter vocabulary).
+          type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/lci-parameter/use-cases/all/terms"
+        parameter_category:
+          title: Category
+          type: string
+          enum: ["uplci:FacilityParameter", "uplci:ProcessParameter", "uplci:OperationParameter"]
+          options:
+            enum_titles: [facility, process, operation]
+        parameter_value:
+          title: Value
+          type: number
+        parameter_unit:
+          title: Unit
+          type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
+        is_scalable:
+          title: Scalable
+          description: Does the parameter scale with throughput?
+          type: boolean
+        description:
+          title: Description
+          type: string
+        data_derivation: {$ref: "#/$defs/data_derivation"}
+        source_note: {$ref: "#/$defs/source_note"}
+    default: []

@@ -1,0 +1,85 @@
+(
+  /*
+   * LCA Assessment Run (UPLCI): simplified JSON → OO-LD JSON
+   *
+   * Input: run_name*, run_id, description, date, product_systems*[IRI],
+   *        raw_result_datasets[IRI], operator (IRI), software,
+   *        background_database, impact_method, pathway_name, pathway_steps[IRI],
+   *        evaluated_pathways, results*[{name, indicator, value*, unit, best_value}]
+   *
+   * `indicator` may be omitted: the reported `name` is then matched against
+   * known service names (MPPM KPI names) or passed on as a vocabulary label.
+   * `unit` is stored as a QUDT unit when known, otherwise as unit text.
+   */
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-assessment-PMDCo-v0.1.0/schemas/life-cycle-assessment/assessment/PMDCo/specs/schema.oold.generated.json";
+
+  $indicatorByName := {
+    "Global Warming Potential - GWP":            "lcai:ClimateChangeTotal",
+    "climate_change_total":                      "lcai:ClimateChangeTotal",
+    "Earnings Before Interest And Taxes - EBIT": "lcai:EBIT",
+    "Substance Concentration Efficiency - SCE":  "lcai:SubstanceConcentrationEfficiency",
+    "Avoided Greenhouse Gas Emission":           "lcai:AvoidedGHGEmission",
+    "Avoided Dilution of Carbon":                "lcai:AvoidedDilutionOfCarbon"
+  };
+  $database := {
+    "ecoinvent-3.8-cutoff":          "uplci:Ecoinvent_3_8_Cutoff",
+    "ecoinvent-3.8-apos":            "uplci:Ecoinvent_3_8_APOS",
+    "ecoinvent-3.8-consequential":   "uplci:Ecoinvent_3_8_Consequential",
+    "ecoinvent-3.9.1-cutoff":        "uplci:Ecoinvent_3_9_1_Cutoff",
+    "ecoinvent-3.9.1-apos":          "uplci:Ecoinvent_3_9_1_APOS",
+    "ecoinvent-3.9.1-consequential": "uplci:Ecoinvent_3_9_1_Consequential",
+    "ecoinvent-3.10-cutoff":         "uplci:Ecoinvent_3_10_Cutoff",
+    "ecoinvent-3.10-apos":           "uplci:Ecoinvent_3_10_APOS",
+    "ecoinvent-3.10-consequential":  "uplci:Ecoinvent_3_10_Consequential"
+  };
+  $method := {
+    "EF 3.0": "uplci:EF_3_0", "EF 3.1": "uplci:EF_3_1",
+    "IPCC 2021 GWP100": "uplci:IPCC_2021_GWP100", "ReCiPe 2016 Midpoint (H)": "uplci:ReCiPe_2016_Midpoint_H"
+  };
+  $qudtUnit := {
+    "%": "uqudt:PERCENT", "kg": "uqudt:KiloGM", "MJ": "uqudt:MegaJ", "kWh": "uqudt:KiloW-HR", "m3": "uqudt:M3"
+  };
+  $map1 := function($value, $table) {
+    $exists($value) ? ($exists($lookup($table, $value)) ? $lookup($table, $value) : $value) : undefined
+  };
+  $slug := function($s) { $replace($lowercase($trim($s)), /[^a-z0-9]+/, "-") };
+  $runId := $exists(run_id) ? run_id : "lca-run-" & $slug(run_name);
+
+  $result := function($r, $i) {(
+    $rid := $runId & "-result-" & $pad($string($i + 1), -2, "0");
+    $isQudt := $exists($r.unit) and ($exists($lookup($qudtUnit, $r.unit)) or $contains($r.unit, ":"));
+    {
+      "type":       ["uplci:IndicatorResult"],
+      "id":         $rid,
+      "label":      $r.name,
+      "indicator":  $exists($r.indicator) ? $r.indicator : $map1($r.name, $indicatorByName),
+      "value": {
+        "type":          ["obo:OBI_0001931"],
+        "id":            $rid & "-value",
+        "numeric_value": $r.value,
+        "unit":          $isQudt ? $map1($r.unit, $qudtUnit) : undefined,
+        "unit_text":     $isQudt ? undefined : $r.unit
+      },
+      "best_value": $r.best_value
+    }
+  )};
+
+  {
+    "conforms_to":              $schemaUri,
+    "type":                     ["uplci:LifeCycleAssessmentRun"],
+    "id":                       $runId,
+    "label":                    run_name,
+    "description":              description,
+    "date":                     date,
+    "has_specified_input":      product_systems,
+    "raw_result":               raw_result_datasets,
+    "operator":                 operator,
+    "software":                 software,
+    "background_database":      $map1(background_database, $database),
+    "impact_method":            $map1(impact_method, $method),
+    "recommended_pathway_name": pathway_name,
+    "recommended_steps":        pathway_steps,
+    "evaluated_pathway_count":  evaluated_pathways,
+    "results":                  [$map(results, $result)]
+  }
+)

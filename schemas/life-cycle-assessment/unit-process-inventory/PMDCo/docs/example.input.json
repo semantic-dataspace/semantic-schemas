@@ -1,0 +1,93 @@
+{
+  "inventory_name": "Sintering and Annealing - recycled NdFeB magnets (ORCHESTER Demo 3)",
+  "inventory_id": "upi-sintering-annealing-demo3",
+  "description": "Sintering and annealing of two 580 g green compacts, corresponding to the maximum capacity of the sintering furnace. Fraunhofer IWKS, data compiled 24/03/2026.",
+  "process": "https://example.org/processes/sintering-and-annealing",
+  "geography": "DE",
+  "site": "Hanau",
+  "date_compiled": "2026-03-24",
+  "valid_until": "2028",
+  "access_rights": "confidential",
+  "data_owner": "https://example.org/organizations/fraunhofer-iwks",
+  "source": "IWKS W4F Project",
+  "inputs": [
+    {
+      "name": "Pressling",
+      "category": "material",
+      "material": "https://example.org/materials/ndfeb-green-compact",
+      "value": 1.15652,
+      "unit": "kg",
+      "description": "zwei Presslinge à 0,57826 kg",
+      "data_source": "calculated",
+      "provider": "https://example.org/lci/upi-pressing-alignment-demo3",
+      "properties": [
+        { "type": "monetary_value", "value": 1.5, "currency": "EUR", "source_note": "Mairec" }
+      ]
+    },
+    {
+      "name": "Argon",
+      "category": "material",
+      "flow_object": "lcif:Argon",
+      "value": 0.0003338,
+      "unit": "kg",
+      "description": "0,20 Liter",
+      "data_source": "calculated",
+      "background_provider": {
+        "database": "ecoinvent-3.8-consequential",
+        "activity_name": "market for argon, liquid",
+        "reference_product": "argon, liquid",
+        "unit": "kg"
+      }
+    },
+    {
+      "name": "Mo-Box",
+      "category": "material",
+      "flow_object": "lcif:SinteringContainer",
+      "value": 1,
+      "unit": "item",
+      "description": "Insgesamt 2 Boxen, pro Pressling eine Box"
+    },
+    {
+      "name": "Wärmeenergie",
+      "category": "energy",
+      "flow_object": "lcif:Heat",
+      "value": 919.08,
+      "unit": "MJ",
+      "description": "255,30 kWh",
+      "data_source": "measured",
+      "properties": [
+        {
+          "type": "climate_change",
+          "value": 0.14113037,
+          "source_note": "ecoinvent v3.8 consequential (Substitution long-term) cumulative LCIA using the EF v3.0 method"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "name": "Sintermagnet",
+      "category": "product",
+      "material": "https://example.org/materials/ndfeb-sintered-magnet",
+      "value": 1.15652,
+      "unit": "kg",
+      "is_reference_flow": true
+    },
+    {
+      "name": "Argon_Emissionen",
+      "category": "emission",
+      "flow_object": "lcif:ArgonToAir",
+      "value": 0.0003338,
+      "unit": "kg",
+      "description": "direkte Emissionen in die Umwelt"
+    }
+  ],
+  "parameters": [
+    { "name": "Kapazität", "category": "facility", "parameter_type": "lcip:Capacity", "value": 2, "unit": "piece", "description": "Anzahl der Presslinge, die im Ofen gesintert werden können" },
+    { "name": "Durchsatz", "category": "facility", "parameter_type": "lcip:Throughput", "value": 0.104191, "unit": "kg/h", "data_source": "calculated" },
+    { "name": "Lebensdauer Mo-Box", "category": "facility", "parameter_type": "lcip:UsageCycles", "value": 2, "unit": "piece", "description": "Mo-Box ist 2-3 mal verwendbar", "data_source": "estimated" },
+    { "name": "Prozessdauer", "category": "facility", "parameter_type": "lcip:ProcessDuration", "value": 11.1, "unit": "h", "data_source": "measured" },
+    { "name": "Volumenstrom Argon", "category": "facility", "parameter_type": "lcip:VolumeFlowRate", "value": 100, "unit": "l/h", "description": "Zufuhr von Argon", "data_source": "setting" },
+    { "name": "Verlust", "category": "facility", "parameter_type": "lcip:MaterialLoss", "value": 0, "unit": "%" }
+  ]
+}
