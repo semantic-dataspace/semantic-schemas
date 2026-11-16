@@ -111,6 +111,17 @@ shape:unit_process_inventory
         sh:node shape:technology_parameter ;
         sh:message "Technology parameters need a name and a category." ;
     ] ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:message "Input {?flow} is 'supplied by' this same inventory; choose the upstream inventory instead." ;
+        sh:prefixes shape:prefixes ;
+        sh:select """
+            SELECT $this ?flow WHERE {
+                $this uplci:hasInput ?x .
+                ?x uplci:hasProvider $this ;
+                   <http://www.w3.org/2000/01/rdf-schema#label> ?flow .
+            }""" ;
+    ] ;
     sh:closed false ;
     sh:ignoredProperties ( rdf:type ) .
 
