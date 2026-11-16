@@ -6,16 +6,11 @@
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "dcterms": "http://purl.org/dc/terms/",
     "dcat": "http://www.w3.org/ns/dcat#",
-    "prov": "http://www.w3.org/ns/prov#",
-    "schema": "https://schema.org/",
     "obo": "http://purl.obolibrary.org/obo/",
     "pmdco": "https://w3id.org/pmd/co/",
     "qudt": "http://qudt.org/schema/qudt/",
     "uqudt": "http://qudt.org/vocab/unit/",
-    "uplci": "https://w3id.org/dsms/uplci#",
-    "lcif": "https://w3id.org/dsms/lci-flow#",
-    "lcip": "https://w3id.org/dsms/lci-parameter#",
-    "pp": "https://w3id.org/dsms/process-parameter#",
+    "uplci": "https://w3id.org/dsms/uplci/",
     "accr": "http://publications.europa.eu/resource/authority/access-right/",
     "type": "@type",
     "id": "@id",
@@ -36,41 +31,17 @@
     "geography": {
       "@id": "uplci:geography"
     },
-    "site": {
-      "@id": "schema:location"
-    },
     "date_compiled": {
       "@id": "dcterms:date",
       "@type": "xsd:date"
-    },
-    "valid_until": {
-      "@id": "dcterms:valid",
-      "@type": "xsd:gYear"
     },
     "access_rights": {
       "@id": "dcterms:accessRights",
       "@type": "@id"
     },
-    "technology_readiness_level": {
-      "@id": "uplci:technologyReadinessLevel",
-      "@type": "xsd:integer"
-    },
-    "data_generator": {
-      "@id": "prov:wasAttributedTo",
-      "@type": "@id",
-      "@container": "@set"
-    },
     "publisher": {
       "@id": "dcterms:publisher",
       "@type": "@id"
-    },
-    "reviewer": {
-      "@id": "uplci:reviewedBy",
-      "@type": "@id",
-      "@container": "@set"
-    },
-    "source": {
-      "@id": "dcterms:source"
     },
     "inputs": {
       "@id": "uplci:hasInput",
@@ -84,14 +55,6 @@
       "@id": "uplci:hasExchangeCategory",
       "@type": "@id"
     },
-    "flow_object": {
-      "@id": "uplci:hasFlowObject",
-      "@type": "@id"
-    },
-    "material": {
-      "@id": "obo:IAO_0000136",
-      "@type": "@id"
-    },
     "amount": {
       "@id": "qudt:value",
       "@type": "xsd:double"
@@ -100,61 +63,16 @@
       "@id": "qudt:hasUnit",
       "@type": "@id"
     },
+    "source_note": {
+      "@id": "uplci:sourceNote"
+    },
     "is_reference_flow": {
       "@id": "uplci:isReferenceFlow",
       "@type": "xsd:boolean"
     },
-    "scaling_slope": {
-      "@id": "uplci:scalingSlope",
-      "@type": "xsd:double"
-    },
-    "scaling_base": {
-      "@id": "uplci:scalingBase",
-      "@type": "xsd:double"
-    },
-    "data_derivation": {
-      "@id": "uplci:hasDataDerivation",
-      "@type": "@id"
-    },
-    "source_note": {
-      "@id": "uplci:sourceNote"
-    },
     "provider": {
       "@id": "uplci:hasProvider",
       "@type": "@id"
-    },
-    "background_database": {
-      "@id": "uplci:backgroundDatabase",
-      "@type": "@id"
-    },
-    "background_activity": {
-      "@id": "uplci:backgroundActivity"
-    },
-    "background_product": {
-      "@id": "uplci:backgroundReferenceProduct"
-    },
-    "background_geography": {
-      "@id": "uplci:backgroundGeography"
-    },
-    "background_dataset_id": {
-      "@id": "uplci:backgroundDatasetId"
-    },
-    "monetary_value": {
-      "@id": "uplci:monetaryValuePerUnit",
-      "@type": "xsd:double"
-    },
-    "currency": {
-      "@id": "uplci:currency"
-    },
-    "monetary_value_source": {
-      "@id": "uplci:monetaryValueSource"
-    },
-    "climate_change": {
-      "@id": "uplci:climateChangePerUnit",
-      "@type": "xsd:double"
-    },
-    "climate_change_source": {
-      "@id": "uplci:climateChangeSource"
     },
     "technology_parameters": {
       "@id": "uplci:hasTechnologyParameter",
@@ -162,10 +80,6 @@
     },
     "parameter_label": {
       "@id": "rdfs:label"
-    },
-    "parameter_type": {
-      "@id": "rdf:type",
-      "@type": "@id"
     },
     "parameter_value": {
       "@id": "qudt:value",
@@ -178,19 +92,15 @@
     "parameter_category": {
       "@id": "uplci:hasParameterCategory",
       "@type": "@id"
-    },
-    "is_scalable": {
-      "@id": "uplci:isScalable",
-      "@type": "xsd:boolean"
     }
   },
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$comment": "Unit process life cycle inventory dataset (UPLCI). Information content entity about a pmdco:ManufacturingProcess, holding normalised input/output exchanges, technology parameters and dataset provenance.",
-  "x-schema-version": "0.2.0",
-  "x-schema-uri": "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-unit-process-inventory-PMDCo-v0.2.0/schemas/life-cycle-assessment/unit-process-inventory/PMDCo/specs/schema.oold.generated.json",
+  "$comment": "Unit process life cycle inventory dataset (UPLCI), minimal profile: the data consumed by the MPPM evaluation service plus process link, chain provider, access rights and data owner.",
+  "x-schema-version": "0.1.0",
+  "x-schema-uri": "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-unit-process-inventory-PMDCo-v0.1.0/schemas/life-cycle-assessment/unit-process-inventory/PMDCo/specs/schema.oold.generated.json",
   "x-maturity": "draft",
   "title": "Unit Process Inventory (LCI)",
-  "description": "Life cycle inventory of one unit process: every input and output flow quantified per reference flow, the technology behind it, and who compiled it.",
+  "description": "Life cycle inventory of one unit process: input and output flows per reference flow and the technology parameters behind them.",
   "type": "object",
   "required": [
     "type",
@@ -225,12 +135,11 @@
       "description": "Versioned IRI of this schema; written automatically.",
       "type": "string",
       "readOnly": true,
-      "const": "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-unit-process-inventory-PMDCo-v0.2.0/schemas/life-cycle-assessment/unit-process-inventory/PMDCo/specs/schema.oold.generated.json",
-      "default": "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-unit-process-inventory-PMDCo-v0.2.0/schemas/life-cycle-assessment/unit-process-inventory/PMDCo/specs/schema.oold.generated.json"
+      "const": "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-unit-process-inventory-PMDCo-v0.1.0/schemas/life-cycle-assessment/unit-process-inventory/PMDCo/specs/schema.oold.generated.json",
+      "default": "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-unit-process-inventory-PMDCo-v0.1.0/schemas/life-cycle-assessment/unit-process-inventory/PMDCo/specs/schema.oold.generated.json"
     },
     "id": {
       "title": "ID",
-      "description": "Identifier for this inventory; managed by the consumer.",
       "type": "string",
       "readOnly": true,
       "default": "unit-process-inventory"
@@ -258,30 +167,19 @@
       }
     },
     "geography": {
-      "title": "Geography",
-      "description": "ISO 3166-1 alpha-2 country code (DE) or ecoinvent region (RER, GLO, RoW).",
+      "title": "Location (Country / Region Code)",
+      "description": "ISO country code (DE) or region (RER, GLO).",
       "type": "string",
       "minLength": 2,
       "default": "DE"
-    },
-    "site": {
-      "title": "Site",
-      "description": "Location of the plant or lab, free text (e.g. \"Hanau\").",
-      "type": "string"
     },
     "date_compiled": {
       "title": "Date of Compilation",
       "type": "string",
       "format": "date"
     },
-    "valid_until": {
-      "title": "Valid Until (Year)",
-      "type": "string",
-      "pattern": "^[0-9]{4}$"
-    },
     "access_rights": {
       "title": "Access Rights",
-      "description": "Confidentiality of the dataset (EU access-right vocabulary).",
       "type": "string",
       "enum": [
         "accr:PUBLIC",
@@ -296,32 +194,8 @@
         ]
       }
     },
-    "technology_readiness_level": {
-      "title": "TRL",
-      "type": "integer",
-      "minimum": 1,
-      "maximum": 9
-    },
-    "data_generator": {
-      "title": "Data Generator(s)",
-      "description": "Persons who compiled the data.",
-      "type": "array",
-      "format": "kitem",
-      "x-kitem": {
-        "ktypeIds": [
-          "expert"
-        ]
-      },
-      "items": {
-        "type": "string",
-        "format": "uri"
-      },
-      "uniqueItems": true,
-      "default": []
-    },
     "publisher": {
       "title": "Data Owner",
-      "description": "Organisation that provides and owns the data.",
       "type": "string",
       "format": "kitem",
       "x-kitem": {
@@ -330,30 +204,9 @@
         ]
       }
     },
-    "reviewer": {
-      "title": "Reviewer(s)",
-      "type": "array",
-      "format": "kitem",
-      "x-kitem": {
-        "ktypeIds": [
-          "expert"
-        ]
-      },
-      "items": {
-        "type": "string",
-        "format": "uri"
-      },
-      "uniqueItems": true,
-      "default": []
-    },
-    "source": {
-      "title": "Data Collection / Source",
-      "description": "Project or data collection the values come from (e.g. \"IWKS W4F Project\").",
-      "type": "string"
-    },
     "inputs": {
       "title": "Inputs",
-      "description": "Materials, energy, personnel and services entering the process, per reference flow.",
+      "description": "Flows entering the process, per reference flow.",
       "type": "array",
       "items": {
         "type": "object",
@@ -368,7 +221,6 @@
         ],
         "properties": {
           "type": {
-            "title": "Type",
             "type": "array",
             "items": {
               "type": "string"
@@ -382,14 +234,12 @@
             ]
           },
           "id": {
-            "title": "ID",
             "type": "string",
             "readOnly": true,
             "default": "input"
           },
           "label": {
-            "title": "Flow Name",
-            "description": "Name as recorded (e.g. \"Pressling\", \"W\u00e4rmeenergie\").",
+            "title": "Name",
             "type": "string"
           },
           "category": {
@@ -399,39 +249,19 @@
               "uplci:MaterialInput",
               "uplci:EnergyInput",
               "uplci:PersonnelInput",
-              "uplci:ServiceInput",
-              "uplci:NaturalResourceInput"
+              "uplci:ServiceInput"
             ],
             "options": {
               "enum_titles": [
-                "material",
+                "input material",
                 "energy",
                 "personnel",
-                "service / generic flow",
-                "natural resource"
-              ]
-            }
-          },
-          "flow_object": {
-            "title": "Flow Type",
-            "description": "What flows (lci-flow vocabulary), e.g. Electricity, Argon.",
-            "type": "string",
-            "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/lci-flow/use-cases/all/terms"
-          },
-          "material": {
-            "title": "Material",
-            "description": "Material KItem this flow consists of (tracked intermediate products).",
-            "type": "string",
-            "format": "kitem",
-            "x-kitem": {
-              "ktypeIds": [
-                "material"
+                "generic flow"
               ]
             }
           },
           "amount": {
-            "title": "Amount",
-            "description": "Quantity per reference flow.",
+            "title": "Value",
             "type": "number"
           },
           "unit": {
@@ -440,52 +270,17 @@
             "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
           },
           "description": {
-            "title": "Specification",
-            "description": "Quality, supply chain, supplier location, transport \u2026",
+            "title": "Description",
             "type": "string"
-          },
-          "data_derivation": {
-            "title": "Data Derivation",
-            "type": "string",
-            "enum": [
-              "uplci:Measured",
-              "uplci:Calculated",
-              "uplci:Estimated",
-              "uplci:Assumed",
-              "uplci:FromLiterature",
-              "uplci:MachineSetting",
-              "uplci:UnknownDerivation"
-            ],
-            "options": {
-              "enum_titles": [
-                "measured",
-                "calculated",
-                "estimated",
-                "assumption",
-                "literature",
-                "machine setting",
-                "unknown"
-              ]
-            }
           },
           "source_note": {
-            "title": "Source / Note",
-            "description": "Calculation path, literature, uncertainty, assumption.",
+            "title": "Reference",
+            "description": "Measured, calculated, estimated, literature source \u2026",
             "type": "string"
           },
-          "scaling_slope": {
-            "title": "Scaling Slope",
-            "description": "Scalable part (amount = slope \u00d7 reference amount + base).",
-            "type": "number"
-          },
-          "scaling_base": {
-            "title": "Scaling Base",
-            "description": "Fixed, non-scalable part of the amount.",
-            "type": "number"
-          },
           "provider": {
-            "title": "Foreground Provider",
-            "description": "Inventory whose output supplies this input. Defines the process chain.",
+            "title": "Supplied By",
+            "description": "Inventory whose output is this input (links the process chain).",
             "type": "string",
             "format": "kitem",
             "x-kitem": {
@@ -493,78 +288,6 @@
                 "unit-process-inventory"
               ]
             }
-          },
-          "background_database": {
-            "title": "Background Database",
-            "description": "Background database of the activity supplying this input (use instead of a foreground provider).",
-            "type": "string",
-            "enum": [
-              "uplci:Ecoinvent_3_8_Cutoff",
-              "uplci:Ecoinvent_3_8_APOS",
-              "uplci:Ecoinvent_3_8_Consequential",
-              "uplci:Ecoinvent_3_9_1_Cutoff",
-              "uplci:Ecoinvent_3_9_1_APOS",
-              "uplci:Ecoinvent_3_9_1_Consequential",
-              "uplci:Ecoinvent_3_10_Cutoff",
-              "uplci:Ecoinvent_3_10_APOS",
-              "uplci:Ecoinvent_3_10_Consequential"
-            ],
-            "options": {
-              "enum_titles": [
-                "ecoinvent 3.8 cut-off",
-                "ecoinvent 3.8 APOS",
-                "ecoinvent 3.8 consequential",
-                "ecoinvent 3.9.1 cut-off",
-                "ecoinvent 3.9.1 APOS",
-                "ecoinvent 3.9.1 consequential",
-                "ecoinvent 3.10 cut-off",
-                "ecoinvent 3.10 APOS",
-                "ecoinvent 3.10 consequential"
-              ]
-            }
-          },
-          "background_activity": {
-            "title": "Background Activity",
-            "description": "Activity name in the background database, e.g. \"market for electricity, medium voltage\".",
-            "type": "string"
-          },
-          "background_product": {
-            "title": "Background Reference Product",
-            "type": "string"
-          },
-          "background_geography": {
-            "title": "Background Geography",
-            "type": "string"
-          },
-          "background_dataset_id": {
-            "title": "Background Dataset ID",
-            "description": "Activity UUID (or activity_product UUID pair).",
-            "type": "string"
-          },
-          "monetary_value": {
-            "title": "Cost per Unit",
-            "description": "Cost or market price per unit of the flow.",
-            "type": "number"
-          },
-          "currency": {
-            "title": "Currency",
-            "description": "ISO 4217 code, e.g. EUR.",
-            "type": "string",
-            "pattern": "^[A-Z]{3}$"
-          },
-          "monetary_value_source": {
-            "title": "Cost Source",
-            "type": "string"
-          },
-          "climate_change": {
-            "title": "Climate Change per Unit (kg CO2-eq)",
-            "description": "Cumulative climate change impact per unit of the flow.",
-            "type": "number"
-          },
-          "climate_change_source": {
-            "title": "Climate Change Source",
-            "description": "e.g. \"ecoinvent 3.8 consequential, EF 3.0\".",
-            "type": "string"
           }
         }
       },
@@ -572,7 +295,7 @@
     },
     "outputs": {
       "title": "Outputs",
-      "description": "Products, co-products, wastes and emissions leaving the process, per reference flow.",
+      "description": "Flows leaving the process, per reference flow.",
       "type": "array",
       "minItems": 1,
       "items": {
@@ -588,7 +311,6 @@
         ],
         "properties": {
           "type": {
-            "title": "Type",
             "type": "array",
             "items": {
               "type": "string"
@@ -602,14 +324,12 @@
             ]
           },
           "id": {
-            "title": "ID",
             "type": "string",
             "readOnly": true,
             "default": "output"
           },
           "label": {
-            "title": "Flow Name",
-            "description": "Name as recorded (e.g. \"Sintermagnet\", \"Schleifschlamm\").",
+            "title": "Name",
             "type": "string"
           },
           "category": {
@@ -625,7 +345,7 @@
             "options": {
               "enum_titles": [
                 "product",
-                "co-product / valuable by-product",
+                "valuable by-product",
                 "waste / loss",
                 "emission",
                 "other"
@@ -634,29 +354,11 @@
           },
           "is_reference_flow": {
             "title": "Reference Flow",
-            "description": "Tick for the one product output all amounts refer to.",
+            "description": "Tick for the one product all values refer to.",
             "type": "boolean"
           },
-          "flow_object": {
-            "title": "Flow Type",
-            "description": "What flows (lci-flow vocabulary), e.g. Metal scrap, Argon (to air).",
-            "type": "string",
-            "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/lci-flow/use-cases/all/terms"
-          },
-          "material": {
-            "title": "Material",
-            "description": "Material KItem this flow consists of (products, recyclable residues).",
-            "type": "string",
-            "format": "kitem",
-            "x-kitem": {
-              "ktypeIds": [
-                "material"
-              ]
-            }
-          },
           "amount": {
-            "title": "Amount",
-            "description": "Quantity per reference flow.",
+            "title": "Value",
             "type": "number"
           },
           "unit": {
@@ -665,124 +367,11 @@
             "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
           },
           "description": {
-            "title": "Specification",
-            "description": "Hazard class, destination, planned treatment \u2026",
+            "title": "Description",
             "type": "string"
-          },
-          "data_derivation": {
-            "title": "Data Derivation",
-            "type": "string",
-            "enum": [
-              "uplci:Measured",
-              "uplci:Calculated",
-              "uplci:Estimated",
-              "uplci:Assumed",
-              "uplci:FromLiterature",
-              "uplci:MachineSetting",
-              "uplci:UnknownDerivation"
-            ],
-            "options": {
-              "enum_titles": [
-                "measured",
-                "calculated",
-                "estimated",
-                "assumption",
-                "literature",
-                "machine setting",
-                "unknown"
-              ]
-            }
           },
           "source_note": {
-            "title": "Source / Note",
-            "type": "string"
-          },
-          "scaling_slope": {
-            "title": "Scaling Slope",
-            "type": "number"
-          },
-          "scaling_base": {
-            "title": "Scaling Base",
-            "type": "number"
-          },
-          "provider": {
-            "title": "Treatment Provider",
-            "description": "Inventory in this DSMS that treats this waste output (optional).",
-            "type": "string",
-            "format": "kitem",
-            "x-kitem": {
-              "ktypeIds": [
-                "unit-process-inventory"
-              ]
-            }
-          },
-          "background_database": {
-            "title": "Background Treatment Database",
-            "description": "Background database of the activity treating this output (use instead of a foreground provider).",
-            "type": "string",
-            "enum": [
-              "uplci:Ecoinvent_3_8_Cutoff",
-              "uplci:Ecoinvent_3_8_APOS",
-              "uplci:Ecoinvent_3_8_Consequential",
-              "uplci:Ecoinvent_3_9_1_Cutoff",
-              "uplci:Ecoinvent_3_9_1_APOS",
-              "uplci:Ecoinvent_3_9_1_Consequential",
-              "uplci:Ecoinvent_3_10_Cutoff",
-              "uplci:Ecoinvent_3_10_APOS",
-              "uplci:Ecoinvent_3_10_Consequential"
-            ],
-            "options": {
-              "enum_titles": [
-                "ecoinvent 3.8 cut-off",
-                "ecoinvent 3.8 APOS",
-                "ecoinvent 3.8 consequential",
-                "ecoinvent 3.9.1 cut-off",
-                "ecoinvent 3.9.1 APOS",
-                "ecoinvent 3.9.1 consequential",
-                "ecoinvent 3.10 cut-off",
-                "ecoinvent 3.10 APOS",
-                "ecoinvent 3.10 consequential"
-              ]
-            }
-          },
-          "background_activity": {
-            "title": "Background Activity",
-            "description": "Activity name in the background database, e.g. \"market for electricity, medium voltage\".",
-            "type": "string"
-          },
-          "background_product": {
-            "title": "Background Reference Product",
-            "type": "string"
-          },
-          "background_geography": {
-            "title": "Background Geography",
-            "type": "string"
-          },
-          "background_dataset_id": {
-            "title": "Background Dataset ID",
-            "description": "Activity UUID (or activity_product UUID pair).",
-            "type": "string"
-          },
-          "monetary_value": {
-            "title": "Value per Unit",
-            "description": "Revenue (or disposal cost, negative) per unit of the flow.",
-            "type": "number"
-          },
-          "currency": {
-            "title": "Currency",
-            "type": "string",
-            "pattern": "^[A-Z]{3}$"
-          },
-          "monetary_value_source": {
-            "title": "Value Source",
-            "type": "string"
-          },
-          "climate_change": {
-            "title": "Climate Change per Unit (kg CO2-eq)",
-            "type": "number"
-          },
-          "climate_change_source": {
-            "title": "Climate Change Source",
+            "title": "Reference",
             "type": "string"
           }
         }
@@ -791,7 +380,6 @@
     },
     "technology_parameters": {
       "title": "Technology Parameters",
-      "description": "Facility, process and operation parameters behind the inventory.",
       "type": "array",
       "items": {
         "type": "object",
@@ -804,7 +392,6 @@
         ],
         "properties": {
           "type": {
-            "title": "Type",
             "type": "array",
             "items": {
               "type": "string"
@@ -815,29 +402,16 @@
             ],
             "default": [
               "pmdco:PMD_0000013"
-            ],
-            "options": {
-              "enum_titles": [
-                "pmdco:ParameterSpecification"
-              ]
-            }
+            ]
           },
           "id": {
-            "title": "ID",
             "type": "string",
             "readOnly": true,
             "default": "parameter"
           },
           "parameter_label": {
-            "title": "Parameter Name",
-            "description": "Name as recorded (e.g. \"Prozessdauer\").",
+            "title": "Name",
             "type": "string"
-          },
-          "parameter_type": {
-            "title": "Parameter Type",
-            "description": "Search and select a parameter type (lci-parameter vocabulary).",
-            "type": "string",
-            "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/lci-parameter/use-cases/all/terms"
           },
           "parameter_category": {
             "title": "Category",
@@ -864,41 +438,12 @@
             "type": "string",
             "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
           },
-          "is_scalable": {
-            "title": "Scalable",
-            "description": "Does the parameter scale with throughput?",
-            "type": "boolean"
-          },
           "description": {
             "title": "Description",
             "type": "string"
           },
-          "data_derivation": {
-            "title": "Data Derivation",
-            "type": "string",
-            "enum": [
-              "uplci:Measured",
-              "uplci:Calculated",
-              "uplci:Estimated",
-              "uplci:Assumed",
-              "uplci:FromLiterature",
-              "uplci:MachineSetting",
-              "uplci:UnknownDerivation"
-            ],
-            "options": {
-              "enum_titles": [
-                "measured",
-                "calculated",
-                "estimated",
-                "assumption",
-                "literature",
-                "machine setting",
-                "unknown"
-              ]
-            }
-          },
           "source_note": {
-            "title": "Source / Note",
+            "title": "Reference",
             "type": "string"
           }
         }

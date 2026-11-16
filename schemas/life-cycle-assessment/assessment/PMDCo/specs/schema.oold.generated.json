@@ -4,11 +4,10 @@
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "dcterms": "http://purl.org/dc/terms/",
-    "prov": "http://www.w3.org/ns/prov#",
     "obo": "http://purl.obolibrary.org/obo/",
     "uqudt": "http://qudt.org/vocab/unit/",
-    "uplci": "https://w3id.org/dsms/uplci#",
-    "lcai": "https://w3id.org/dsms/lca-indicator#",
+    "uplci": "https://w3id.org/dsms/uplci/",
+    "lcai": "https://w3id.org/dsms/lca-indicator/",
     "type": "@type",
     "id": "@id",
     "conforms_to": {
@@ -39,21 +38,6 @@
       "@id": "obo:OBI_0000299",
       "@container": "@set"
     },
-    "operator": {
-      "@id": "prov:wasAssociatedWith",
-      "@type": "@id"
-    },
-    "software": {
-      "@id": "uplci:software"
-    },
-    "background_database": {
-      "@id": "uplci:usesBackgroundDatabase",
-      "@type": "@id"
-    },
-    "impact_method": {
-      "@id": "uplci:usesImpactAssessmentMethod",
-      "@type": "@id"
-    },
     "recommended_pathway_name": {
       "@id": "uplci:recommendedPathwayName"
     },
@@ -61,10 +45,6 @@
       "@id": "uplci:recommendsStep",
       "@type": "@id",
       "@container": "@set"
-    },
-    "evaluated_pathway_count": {
-      "@id": "uplci:evaluatedPathwayCount",
-      "@type": "xsd:integer"
     },
     "indicator": {
       "@id": "uplci:hasIndicator",
@@ -188,54 +168,6 @@
       "uniqueItems": true,
       "default": []
     },
-    "operator": {
-      "title": "Requested By",
-      "type": "string",
-      "format": "kitem",
-      "x-kitem": {
-        "ktypeIds": [
-          "expert"
-        ]
-      }
-    },
-    "software": {
-      "title": "Software / Service",
-      "description": "e.g. \"MPPM 1.0 (Fraunhofer IWKS)\".",
-      "type": "string"
-    },
-    "background_database": {
-      "title": "Background Database",
-      "type": "string",
-      "enum": [
-        "uplci:Ecoinvent_3_8_Cutoff",
-        "uplci:Ecoinvent_3_8_APOS",
-        "uplci:Ecoinvent_3_8_Consequential",
-        "uplci:Ecoinvent_3_9_1_Cutoff",
-        "uplci:Ecoinvent_3_9_1_APOS",
-        "uplci:Ecoinvent_3_9_1_Consequential",
-        "uplci:Ecoinvent_3_10_Cutoff",
-        "uplci:Ecoinvent_3_10_APOS",
-        "uplci:Ecoinvent_3_10_Consequential"
-      ]
-    },
-    "impact_method": {
-      "title": "Impact Assessment Method",
-      "type": "string",
-      "enum": [
-        "uplci:EF_3_0",
-        "uplci:EF_3_1",
-        "uplci:IPCC_2021_GWP100",
-        "uplci:ReCiPe_2016_Midpoint_H"
-      ],
-      "options": {
-        "enum_titles": [
-          "EF 3.0",
-          "EF 3.1",
-          "IPCC 2021 GWP100",
-          "ReCiPe 2016 Midpoint (H)"
-        ]
-      }
-    },
     "recommended_pathway_name": {
       "title": "Recommended Pathway",
       "type": "string"
@@ -255,11 +187,6 @@
       },
       "uniqueItems": true,
       "default": []
-    },
-    "evaluated_pathway_count": {
-      "title": "Number of Evaluated Pathways",
-      "type": "integer",
-      "minimum": 1
     },
     "results": {
       "title": "Indicator Results",

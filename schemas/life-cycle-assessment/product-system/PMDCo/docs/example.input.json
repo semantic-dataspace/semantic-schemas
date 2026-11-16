@@ -2,7 +2,6 @@
   "system_name": "ORCHESTER Demo 3 - recycled NdFeB small magnets via H2 decrepitation",
   "system_id": "ps-orchester-demo3",
   "description": "Magnet-to-magnet recycling route: hydrogen decrepitation of end-of-life magnets, jet milling, pressing and alignment, sintering and annealing, grinding and wire EDM into small magnets.",
-  "goal": "Quantify environmental and economic performance of the short-loop recycling route and identify hotspots.",
   "inventories": [
     "https://example.org/lci/upi-h2-decrepitation-demo3",
     "https://example.org/lci/upi-jet-milling-demo3",
@@ -11,12 +10,10 @@
     "https://example.org/lci/upi-grinding-edm-demo3"
   ],
   "reference_inventory": "https://example.org/lci/upi-grinding-edm-demo3",
-  "reference_product": "https://example.org/materials/ndfeb-small-magnet-ground",
   "functional_unit": "1 kg of ground recycled NdFeB small magnets (Kleinmagnete, geschliffen)",
-  "reference_amount": { "value": 1, "unit": "kg" },
-  "system_boundary": "cradle-to-gate",
-  "background_database": "ecoinvent-3.8-consequential",
-  "geography": "DE",
-  "owner": "https://example.org/organizations/fraunhofer-iwks",
-  "access_rights": "confidential"
+  "reference_amount": {
+    "value": 1,
+    "unit": "kg"
+  },
+  "background_database": "ecoinvent-3.8-consequential"
 }

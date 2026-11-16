@@ -1,36 +1,28 @@
 (
   /*
-   * Unit Process Inventory (PMDCo / UPLCI): simplified JSON → OO-LD JSON
+   * Unit Process Inventory (PMDCo / UPLCI, minimal profile): simplified JSON → OO-LD JSON
    *
    * Input (see schema.simplified.json):
    *   inventory_name*, inventory_id, description, process (IRI), geography*,
-   *   site, date_compiled, valid_until, access_rights* (public|restricted|confidential),
-   *   trl, data_generators[IRI], data_owner (IRI), reviewers[IRI], source,
-   *   inputs[]  / outputs[]  : exchange objects
-   *     name*, category*, value*, unit*, flow_object, material, description,
-   *     data_source, source_note, scaling_slope, scaling_base,
-   *     provider (IRI), background_provider{database*, activity_name*, …},
-   *     monetary_value, currency, monetary_value_source,
-   *     climate_change, climate_change_source,
-   *     is_reference_flow (outputs only)
-   *   parameters[] : name*, category*, parameter_type, value, unit, description,
-   *                  scalable, data_source, source_note
+   *   date_compiled, access_rights* (public|restricted|confidential), data_owner (IRI),
+   *   inputs[]  : name*, category* (material|energy|personnel|service), value*, unit*,
+   *               description, reference, provider (IRI of supplying inventory)
+   *   outputs[] : name*, category* (product|co_product|waste|emission|other), value*, unit*,
+   *               description, reference, is_reference_flow
+   *   parameters[] : name*, category* (facility|process|operation), value, unit,
+   *                  description, reference
    *
-   * Short keywords (e.g. category "energy", unit "kWh", data_source "measured")
-   * are mapped to IRIs/CURIEs below.  Any value that is not a known keyword is
-   * passed through unchanged, so full IRIs, CURIEs and vocabulary labels work
-   * too (labels are resolved later by Schema.resolve_vocabulary()).
+   * Keywords and unit symbols are mapped to IRIs/CURIEs below; anything else
+   * (full IRIs, CURIEs, vocabulary labels) is passed through unchanged.
    */
 
-  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-unit-process-inventory-PMDCo-v0.2.0/schemas/life-cycle-assessment/unit-process-inventory/PMDCo/specs/schema.oold.generated.json";
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-unit-process-inventory-PMDCo-v0.1.0/schemas/life-cycle-assessment/unit-process-inventory/PMDCo/specs/schema.oold.generated.json";
 
-  /* ── keyword → IRI maps ───────────────────────────────────────────────── */
   $inputCategory := {
-    "material":         "uplci:MaterialInput",
-    "energy":           "uplci:EnergyInput",
-    "personnel":        "uplci:PersonnelInput",
-    "service":          "uplci:ServiceInput",
-    "natural_resource": "uplci:NaturalResourceInput"
+    "material":  "uplci:MaterialInput",
+    "energy":    "uplci:EnergyInput",
+    "personnel": "uplci:PersonnelInput",
+    "service":   "uplci:ServiceInput"
   };
   $outputCategory := {
     "product":    "uplci:ProductOutput",
@@ -38,15 +30,6 @@
     "waste":      "uplci:WasteOutput",
     "emission":   "uplci:EmissionOutput",
     "other":      "uplci:OtherOutput"
-  };
-  $derivation := {
-    "measured":   "uplci:Measured",
-    "calculated": "uplci:Calculated",
-    "estimated":  "uplci:Estimated",
-    "assumption": "uplci:Assumed",
-    "literature": "uplci:FromLiterature",
-    "setting":    "uplci:MachineSetting",
-    "unknown":    "uplci:UnknownDerivation"
   };
   $parameterCategory := {
     "facility":  "uplci:FacilityParameter",
@@ -58,18 +41,6 @@
     "restricted":   "accr:RESTRICTED",
     "confidential": "accr:NON_PUBLIC"
   };
-  $database := {
-    "ecoinvent-3.8-cutoff":          "uplci:Ecoinvent_3_8_Cutoff",
-    "ecoinvent-3.8-apos":            "uplci:Ecoinvent_3_8_APOS",
-    "ecoinvent-3.8-consequential":   "uplci:Ecoinvent_3_8_Consequential",
-    "ecoinvent-3.9.1-cutoff":        "uplci:Ecoinvent_3_9_1_Cutoff",
-    "ecoinvent-3.9.1-apos":          "uplci:Ecoinvent_3_9_1_APOS",
-    "ecoinvent-3.9.1-consequential": "uplci:Ecoinvent_3_9_1_Consequential",
-    "ecoinvent-3.10-cutoff":         "uplci:Ecoinvent_3_10_Cutoff",
-    "ecoinvent-3.10-apos":           "uplci:Ecoinvent_3_10_APOS",
-    "ecoinvent-3.10-consequential":  "uplci:Ecoinvent_3_10_Consequential"
-  };
-  /* common unit symbols → QUDT */
   $unitSymbol := {
     "kg": "uqudt:KiloGM", "g": "uqudt:GM", "mg": "uqudt:MilliGM", "t": "uqudt:TON",
     "kWh": "uqudt:KiloW-HR", "MWh": "uqudt:MegaW-HR", "MJ": "uqudt:MegaJ", "GJ": "uqudt:GigaJ",
@@ -95,31 +66,16 @@
 
   $exchange := function($e, $i, $direction, $categories) {
     {
-      "type":                  ["uplci:Exchange"],
-      "id":                    $inventoryId & "-" & $direction & "-" & $pad2($i),
-      "label":                 $e.name,
-      "category":              $map1($e.category, $categories),
-      "is_reference_flow":     $e.is_reference_flow = true ? true : undefined,
-      "flow_object":           $e.flow_object,
-      "material":              $e.material,
-      "amount":                $e.value,
-      "unit":                  $map1($e.unit, $unitSymbol),
-      "description":           $e.description,
-      "data_derivation":       $map1($e.data_source, $derivation),
-      "source_note":           $e.source_note,
-      "scaling_slope":         $e.scaling_slope,
-      "scaling_base":          $e.scaling_base,
-      "provider":              $e.provider,
-      "background_database":   $map1($e.background_provider.database, $database),
-      "background_activity":   $e.background_provider.activity_name,
-      "background_product":    $e.background_provider.reference_product,
-      "background_geography":  $e.background_provider.geography,
-      "background_dataset_id": $e.background_provider.uuid,
-      "monetary_value":        $e.monetary_value,
-      "currency":              $e.currency,
-      "monetary_value_source": $e.monetary_value_source,
-      "climate_change":        $e.climate_change,
-      "climate_change_source": $e.climate_change_source
+      "type":              ["uplci:Exchange"],
+      "id":                $inventoryId & "-" & $direction & "-" & $pad2($i),
+      "label":             $e.name,
+      "category":          $map1($e.category, $categories),
+      "is_reference_flow": $e.is_reference_flow = true ? true : undefined,
+      "amount":            $e.value,
+      "unit":              $map1($e.unit, $unitSymbol),
+      "description":       $e.description,
+      "source_note":       $e.reference,
+      "provider":          $e.provider
     }
   };
 
@@ -128,37 +84,27 @@
       "type":               ["pmdco:PMD_0000013"],
       "id":                 $inventoryId & "-param-" & $pad2($i),
       "parameter_label":    $p.name,
-      "parameter_type":     $p.parameter_type,
       "parameter_category": $map1($p.category, $parameterCategory),
       "parameter_value":    $p.value,
       "parameter_unit":     $map1($p.unit, $unitSymbol),
-      "is_scalable":        $p.scalable,
       "description":        $p.description,
-      "data_derivation":    $map1($p.data_source, $derivation),
-      "source_note":        $p.source_note
+      "source_note":        $p.reference
     }
   };
 
-  /* ── OO-LD output ────────────────────────────────────────────────────── */
   {
-    "conforms_to":                $schemaUri,
-    "type":                       ["uplci:UnitProcessInventory"],
-    "id":                         $inventoryId,
-    "label":                      inventory_name,
-    "description":                description,
-    "describes_process":          process,
-    "geography":                  geography,
-    "site":                       site,
-    "date_compiled":              date_compiled,
-    "valid_until":                $exists(valid_until) ? $string(valid_until) : undefined,
-    "access_rights":              $map1(access_rights, $accessRights),
-    "technology_readiness_level": trl,
-    "data_generator":             data_generators,
-    "publisher":                  data_owner,
-    "reviewer":                   reviewers,
-    "source":                     source,
-    "inputs":                     [$map(inputs,  function($e, $i) { $exchange($e, $i, "in",  $inputCategory)  })],
-    "outputs":                    [$map(outputs, function($e, $i) { $exchange($e, $i, "out", $outputCategory) })],
-    "technology_parameters":      [$map(parameters, $parameter)]
+    "conforms_to":           $schemaUri,
+    "type":                  ["uplci:UnitProcessInventory"],
+    "id":                    $inventoryId,
+    "label":                 inventory_name,
+    "description":           description,
+    "describes_process":     process,
+    "geography":             geography,
+    "date_compiled":         date_compiled,
+    "access_rights":         $map1(access_rights, $accessRights),
+    "publisher":             data_owner,
+    "inputs":                [$map(inputs,  function($e, $i) { $exchange($e, $i, "in",  $inputCategory)  })],
+    "outputs":               [$map(outputs, function($e, $i) { $exchange($e, $i, "out", $outputCategory) })],
+    "technology_parameters": [$map(parameters, $parameter)]
   }
 )

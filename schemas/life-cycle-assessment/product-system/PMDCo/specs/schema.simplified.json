@@ -4,31 +4,69 @@
   "title": "LCA Product System (Simplified Input)",
   "description": "Flat input for an LCA product system; converted to PMDCo/UPLCI OO-LD by transform.simplified.jsonata.",
   "type": "object",
-  "required": ["system_name", "inventories", "reference_inventory", "functional_unit"],
+  "required": [
+    "system_name",
+    "inventories",
+    "reference_inventory",
+    "functional_unit"
+  ],
   "additionalProperties": false,
   "properties": {
-    "system_name":         { "type": "string", "minLength": 1 },
-    "system_id":           { "type": "string" },
-    "description":         { "type": "string" },
-    "goal":                { "type": "string" },
-    "inventories":         { "type": "array", "minItems": 1, "items": { "type": "string", "format": "uri" }, "description": "IRIs of member unit process inventories." },
-    "reference_inventory": { "type": "string", "format": "uri", "description": "Inventory delivering the functional unit; must be one of `inventories`." },
-    "reference_product":   { "type": "string", "format": "uri", "description": "Material KItem IRI of the reference product." },
-    "functional_unit":     { "type": "string" },
+    "system_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "system_id": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "inventories": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "format": "uri"
+      },
+      "description": "IRIs of member unit process inventories."
+    },
+    "reference_inventory": {
+      "type": "string",
+      "format": "uri",
+      "description": "Inventory delivering the functional unit; must be one of `inventories`."
+    },
+    "functional_unit": {
+      "type": "string"
+    },
     "reference_amount": {
       "type": "object",
-      "required": ["value", "unit"],
+      "required": [
+        "value",
+        "unit"
+      ],
       "additionalProperties": false,
       "properties": {
-        "value": { "type": "number", "default": 1 },
-        "unit":  { "type": "string", "examples": ["kg", "piece", "uqudt:KiloGM"] }
+        "value": {
+          "type": "number",
+          "default": 1
+        },
+        "unit": {
+          "type": "string",
+          "examples": [
+            "kg",
+            "piece",
+            "uqudt:KiloGM"
+          ]
+        }
       }
     },
-    "system_boundary":     { "type": "string", "enum": ["cradle-to-gate", "gate-to-gate", "cradle-to-grave", "cradle-to-cradle"] },
-    "background_database": { "type": "string", "examples": ["ecoinvent-3.8-consequential", "ecoinvent-3.10-cutoff"] },
-    "geography":           { "type": "string" },
-    "modellers":           { "type": "array", "items": { "type": "string", "format": "uri" } },
-    "owner":               { "type": "string", "format": "uri" },
-    "access_rights":       { "type": "string", "enum": ["public", "restricted", "confidential"] }
+    "background_database": {
+      "type": "string",
+      "examples": [
+        "ecoinvent-3.8-consequential",
+        "ecoinvent-3.10-cutoff"
+      ]
+    }
   }
 }

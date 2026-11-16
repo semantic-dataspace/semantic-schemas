@@ -3,9 +3,8 @@
    * LCA Assessment Run (UPLCI): simplified JSON → OO-LD JSON
    *
    * Input: run_name*, run_id, description, date, product_systems*[IRI],
-   *        raw_result_datasets[IRI], operator (IRI), software,
-   *        background_database, impact_method, pathway_name, pathway_steps[IRI],
-   *        evaluated_pathways, results*[{name, indicator, value*, unit, best_value}]
+   *        raw_result_datasets[IRI], pathway_name, pathway_steps[IRI],
+   *        results*[{name, indicator, value*, unit, best_value}]
    *
    * `indicator` may be omitted: the reported `name` is then matched against
    * known service names (MPPM KPI names) or passed on as a vocabulary label.
@@ -20,21 +19,6 @@
     "Substance Concentration Efficiency - SCE":  "lcai:SubstanceConcentrationEfficiency",
     "Avoided Greenhouse Gas Emission":           "lcai:AvoidedGHGEmission",
     "Avoided Dilution of Carbon":                "lcai:AvoidedDilutionOfCarbon"
-  };
-  $database := {
-    "ecoinvent-3.8-cutoff":          "uplci:Ecoinvent_3_8_Cutoff",
-    "ecoinvent-3.8-apos":            "uplci:Ecoinvent_3_8_APOS",
-    "ecoinvent-3.8-consequential":   "uplci:Ecoinvent_3_8_Consequential",
-    "ecoinvent-3.9.1-cutoff":        "uplci:Ecoinvent_3_9_1_Cutoff",
-    "ecoinvent-3.9.1-apos":          "uplci:Ecoinvent_3_9_1_APOS",
-    "ecoinvent-3.9.1-consequential": "uplci:Ecoinvent_3_9_1_Consequential",
-    "ecoinvent-3.10-cutoff":         "uplci:Ecoinvent_3_10_Cutoff",
-    "ecoinvent-3.10-apos":           "uplci:Ecoinvent_3_10_APOS",
-    "ecoinvent-3.10-consequential":  "uplci:Ecoinvent_3_10_Consequential"
-  };
-  $method := {
-    "EF 3.0": "uplci:EF_3_0", "EF 3.1": "uplci:EF_3_1",
-    "IPCC 2021 GWP100": "uplci:IPCC_2021_GWP100", "ReCiPe 2016 Midpoint (H)": "uplci:ReCiPe_2016_Midpoint_H"
   };
   $qudtUnit := {
     "%": "uqudt:PERCENT", "kg": "uqudt:KiloGM", "MJ": "uqudt:MegaJ", "kWh": "uqudt:KiloW-HR", "m3": "uqudt:M3"
@@ -73,13 +57,8 @@
     "date":                     date,
     "has_specified_input":      product_systems,
     "raw_result":               raw_result_datasets,
-    "operator":                 operator,
-    "software":                 software,
-    "background_database":      $map1(background_database, $database),
-    "impact_method":            $map1(impact_method, $method),
     "recommended_pathway_name": pathway_name,
     "recommended_steps":        pathway_steps,
-    "evaluated_pathway_count":  evaluated_pathways,
     "results":                  [$map(results, $result)]
   }
 )

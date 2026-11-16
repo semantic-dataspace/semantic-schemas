@@ -4,7 +4,7 @@
 #   - label, conformsTo, functional unit present
 #   - at least one member inventory; exactly one reference process, which must be a member
 #   - reference amount = one number, reference unit = one QUDT unit
-#   - system boundary, background database and access rights from the closed lists
+#   - background database from the closed list
 #
 # Chain consistency across inventories (every provider is a member, no orphan
 # inventories) needs the member inventories in the same graph; see
@@ -19,14 +19,14 @@
 @prefix sh:      <http://www.w3.org/ns/shacl#> .
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 @prefix owl:     <http://www.w3.org/2002/07/owl#> .
-@prefix uplci:   <https://w3id.org/dsms/uplci#> .
+@prefix uplci:   <https://w3id.org/dsms/uplci/> .
 @prefix accr:    <http://publications.europa.eu/resource/authority/access-right/> .
 @prefix shape:   <https://w3id.org/dsms/shapes/life-cycle-assessment/product-system/> .
 
 shape:prefixes
     a owl:Ontology ;
     sh:declare
-        [ sh:prefix "uplci"   ; sh:namespace "https://w3id.org/dsms/uplci#"^^xsd:anyURI ] ,
+        [ sh:prefix "uplci"   ; sh:namespace "https://w3id.org/dsms/uplci/"^^xsd:anyURI ] ,
         [ sh:prefix "dcterms" ; sh:namespace "http://purl.org/dc/terms/"^^xsd:anyURI ] .
 
 shape:product_system
@@ -53,9 +53,6 @@ shape:product_system
         sh:message "A product system must have exactly one reference process." ;
     ] ;
     sh:property [
-        sh:path uplci:hasReferenceProduct ; sh:nodeKind sh:IRI ; sh:maxCount 1 ;
-    ] ;
-    sh:property [
         sh:path qudt:value ; sh:datatype xsd:double ; sh:maxCount 1 ;
         sh:message "Reference amount must be a single number." ;
     ] ;
@@ -64,22 +61,11 @@ shape:product_system
         sh:message "Reference unit must be a single QUDT unit IRI." ;
     ] ;
     sh:property [
-        sh:path prov:wasAttributedTo ; sh:nodeKind sh:IRI ;
-    ] ;
-    sh:property [
-        sh:path uplci:hasSystemBoundary ; sh:maxCount 1 ;
-        sh:in ( uplci:CradleToGate uplci:GateToGate uplci:CradleToGrave uplci:CradleToCradle ) ;
-    ] ;
-    sh:property [
         sh:path uplci:usesBackgroundDatabase ; sh:maxCount 1 ;
         sh:in ( uplci:Ecoinvent_3_8_Cutoff uplci:Ecoinvent_3_8_APOS uplci:Ecoinvent_3_8_Consequential
                 uplci:Ecoinvent_3_9_1_Cutoff uplci:Ecoinvent_3_9_1_APOS uplci:Ecoinvent_3_9_1_Consequential
                 uplci:Ecoinvent_3_10_Cutoff uplci:Ecoinvent_3_10_APOS uplci:Ecoinvent_3_10_Consequential ) ;
         sh:message "Background database must be a known release / system model." ;
-    ] ;
-    sh:property [
-        sh:path dcterms:accessRights ; sh:maxCount 1 ;
-        sh:in ( accr:PUBLIC accr:RESTRICTED accr:NON_PUBLIC ) ;
     ] ;
     sh:sparql [
         a sh:SPARQLConstraint ;

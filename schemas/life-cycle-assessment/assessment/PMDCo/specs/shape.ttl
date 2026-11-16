@@ -4,7 +4,6 @@
 #   - label, conformsTo, at least one input product system (IRI)
 #   - at least one indicator result; each result names an indicator and has one
 #     numeric value with either a QUDT unit or a unit text
-#   - optional settings (database, impact method) from the closed lists
 
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix obo:     <http://purl.obolibrary.org/obo/> .
@@ -13,7 +12,7 @@
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sh:      <http://www.w3.org/ns/shacl#> .
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
-@prefix uplci:   <https://w3id.org/dsms/uplci#> .
+@prefix uplci:   <https://w3id.org/dsms/uplci/> .
 @prefix shape:   <https://w3id.org/dsms/shapes/life-cycle-assessment/assessment/> .
 
 shape:assessment_run
@@ -41,23 +40,7 @@ shape:assessment_run
         sh:message "An assessment run must report at least one indicator result." ;
     ] ;
     sh:property [
-        sh:path prov:wasAssociatedWith ; sh:nodeKind sh:IRI ; sh:maxCount 1 ;
-    ] ;
-    sh:property [
         sh:path uplci:recommendsStep ; sh:nodeKind sh:IRI ;
-    ] ;
-    sh:property [
-        sh:path uplci:evaluatedPathwayCount ; sh:datatype xsd:integer ; sh:maxCount 1 ; sh:minInclusive 1 ;
-    ] ;
-    sh:property [
-        sh:path uplci:usesBackgroundDatabase ; sh:maxCount 1 ;
-        sh:in ( uplci:Ecoinvent_3_8_Cutoff uplci:Ecoinvent_3_8_APOS uplci:Ecoinvent_3_8_Consequential
-                uplci:Ecoinvent_3_9_1_Cutoff uplci:Ecoinvent_3_9_1_APOS uplci:Ecoinvent_3_9_1_Consequential
-                uplci:Ecoinvent_3_10_Cutoff uplci:Ecoinvent_3_10_APOS uplci:Ecoinvent_3_10_Consequential ) ;
-    ] ;
-    sh:property [
-        sh:path uplci:usesImpactAssessmentMethod ; sh:maxCount 1 ;
-        sh:in ( uplci:EF_3_0 uplci:EF_3_1 uplci:IPCC_2021_GWP100 uplci:ReCiPe_2016_Midpoint_H ) ;
     ] ;
     sh:closed false ;
     sh:ignoredProperties ( rdf:type ) .
