@@ -226,7 +226,7 @@
           "indicator": {
             "title": "Indicator",
             "type": "string",
-            "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/lca-indicator/use-cases/base/terms"
+            "x-vocabulary": "https://vocabulary.materials-data.space/api/vocabulary/namespaces/lca-indicator/use-cases/null/terms"
           },
           "value": {
             "title": "Value",

@@ -193,10 +193,10 @@ properties:
         indicator:
           title: Indicator
           type: string
-          # Temporary: "base" instead of "all". The deployed vocabulary service treats
-          # "all" literally for mutable namespaces and returns no terms; switch back to
-          # "all" once the service with the all=null alias is deployed.
-          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/lca-indicator/use-cases/base/terms"
+          # "null" = all terms of the namespace across use cases. "all" is matched
+          # literally for mutable namespaces by the deployed vocabulary service and
+          # returns no terms.
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/lca-indicator/use-cases/null/terms"
         value:
           title: Value
           type: object
