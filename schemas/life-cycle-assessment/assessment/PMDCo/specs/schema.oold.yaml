@@ -193,7 +193,7 @@ properties:
         indicator:
           title: Indicator
           type: string
-          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/lca-indicator/use-cases/all/terms"
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/lca-indicator/use-cases/base/terms"
         value:
           title: Value
           type: object
