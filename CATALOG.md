@@ -9,7 +9,8 @@ All schemas currently available in this repository.
 | Specimen | PMDCo | A physical specimen with its name, mass, abstract material identity (PMDCo duality), and optional link to the semi-finished product it was cut from (PROV-O) | [schemas/specimen/PMDCo/](schemas/specimen/PMDCo/) |
 | Expertise | VIVO | A person's research areas and instrument experience, using VIVO Core predicates | [schemas/expertise/VIVO/](schemas/expertise/VIVO/) |
 | Expertise | schema.org | ~~Deprecated — use Expertise (VIVO) instead~~ | [schemas/expertise/schema.org/](schemas/expertise/schema.org/) |
-| Measurement Device | PMDCo/OBI | A measurement or characterization instrument: name, manufacturer, model, serial number, calibration date | [schemas/measurement-device/PMDCo/](schemas/measurement-device/PMDCo/) |
+| Measurement Device | PMDCo/OBI | A measurement or characterization instrument: name, manufacturer, model, and serial number | [schemas/measurement-device/PMDCo/](schemas/measurement-device/PMDCo/) |
+| Calibration Generic | PMDCo/CHAMEO | A calibration event for a measurement instrument: type, validity window, instrument link, accuracy claims | [schemas/calibration/generic/PMDCo/](schemas/calibration/generic/PMDCo/) |
 | Manufacturing Generic | PMDCo | A single manufacturing process step: inputs, outputs, process chain position, and quantitative conditions | [schemas/manufacturing/generic/PMDCo/](schemas/manufacturing/generic/PMDCo/) |
 | Characterization Generic | PMDCo | Generic base for characterization records (measurements, tests, analyses); extend this to add domain-specific result fields | [schemas/characterization/generic/PMDCo/](schemas/characterization/generic/PMDCo/) |
 | Tensile Test | TTO | Uniaxial tensile test with measured properties (yield strength, tensile strength, elongation, …); standalone schema typed to TTO numeric class IRIs | [schemas/characterization/tensile-test/TTO/](schemas/characterization/tensile-test/TTO/) |
@@ -23,6 +24,7 @@ All schemas currently available in this repository.
 | Mechanical Material Card | PMDCo | Structured dataset collecting elastic constants, discrete mechanical properties, and a fitted constitutive model for FEM use | [schemas/material-card/mechanical/PMDCo/](schemas/material-card/mechanical/PMDCo/) |
 | Dataset | DCAT | Metadata for a single dataset: name, description, keywords, format, dates, license, and optional links to sub-datasets or documents | [schemas/dataset/generic/DCAT/](schemas/dataset/generic/DCAT/) |
 | Dataset Catalog | DCAT | A named collection of datasets (dcat:Catalog) grouping members by campaign or provenance context; extends Dataset | [schemas/dataset/catalog/DCAT/](schemas/dataset/catalog/DCAT/) |
+| DSC Heat-Flow Dataset | PMDCo | DSC heat-flow dataset metadata: instrument provenance, measurement conditions, and column semantic annotations | [schemas/dataset/dsc/PMDCo/](schemas/dataset/dsc/PMDCo/) |
 | Workflow | OBI | Multi-step workflow spanning manufacturing, characterization, and simulation; each step references its domain-specific schema instance by IRI | [schemas/workflow/OBI/](schemas/workflow/OBI/) |
 
 ---

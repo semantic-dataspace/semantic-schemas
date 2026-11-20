@@ -4,7 +4,7 @@
 #   https://github.com/materialdigital/core-ontology/tree/main/patterns/input%20and%20output%20of%20processes
 #
 # Validates:
-#   1. ManufacturingProcess node (PMD_0000029)
+#   1. ManufacturingProcess node (PMD_0000833)
 #      - must have rdfs:label
 #      - must have dcterms:conformsTo
 #      - inputs and outputs must be IRIs
@@ -34,13 +34,13 @@
 
 shape:manufacturing_process
     a sh:NodeShape ;
-    sh:targetClass pmd:PMD_0000029 ;   # ManufacturingProcess
+    sh:targetClass pmd:PMD_0000833 ;   # ManufacturingProcess
     sh:property [
         sh:path dcterms:conformsTo ;
         sh:nodeKind sh:IRI ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
-        sh:message "A ManufacturingProcess must declare dcterms:conformsTo pointing to the versioned schema IRI." ;
+        sh:message "A ManufacturingProcess (PMD_0000833) must declare dcterms:conformsTo pointing to the versioned schema IRI." ;
     ] ;
     sh:property [
         sh:path rdfs:label ;
@@ -65,7 +65,7 @@ shape:manufacturing_process
         sh:message "Each preceded_by value must be an IRI referencing another process node." ;
     ] ;
     sh:property [
-        sh:path pmd:PMD_0000016 ;   # has_process_condition
+        sh:path pmd:PMD_0000009 ;   # has_process_attribute
         sh:node shape:process_condition ;
     ] ;
     sh:closed false ;

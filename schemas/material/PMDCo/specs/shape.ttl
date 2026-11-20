@@ -1,0 +1,84 @@
+# SHACL shape for the PMDCo Material pattern.
+#
+# Validates a Material entity (pmdco:PMD_0000000) as used in the
+# material/PMDCo OO-LD schema.
+#
+# PMDCo pattern:
+#   https://github.com/materialdigital/core-ontology/tree/main/patterns/duality%20object%20material
+#
+# The Material entity is the abstract substance identity.
+# Specimens are temporal states linked via is_state_of (PMD_0000070).
+#
+# Related shapes (load alongside):
+#   chemical-composition/PMDCo/specs/shape.ttl — ChemicalComposition linked via quality_of
+#   specimen/PMDCo/specs/shape.ttl             — Specimen states linked via is_state_of
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dsms:    <https://w3id.org/dsms/material#> .
+@prefix pmd:     <https://w3id.org/pmd/co/> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema:  <https://schema.org/> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix shape:   <https://w3id.org/pmd/co/shapes/material/> .
+@prefix :        <https://w3id.org/pmd/co/shapes/material/> .
+@base            <https://w3id.org/pmd/co/shapes/material/> .
+
+# ── Material node ───────────────────────────────────────────────────────────
+
+shape:material
+    a sh:NodeShape ;
+    sh:targetClass pmd:PMD_0000000 ;   # Material
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A Material must have exactly one rdfs:label." ;
+    ] ;
+    sh:property [
+        sh:path dcterms:title ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:message "Material designation (dcterms:title) must be a single string when present." ;
+    ] ;
+    sh:property [
+        sh:path dsms:hasMaterialClass ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ("Metal" "Ceramic" "Polymer" "Composite" "Coating" "Other") ;
+        sh:message "Material class must be one of: Metal, Ceramic, Polymer, Composite, Coating, Other." ;
+    ] ;
+    sh:property [
+        sh:path dcterms:conformsTo ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:message "Material standard (dcterms:conformsTo) must be a single string when present." ;
+    ] ;
+    sh:property [
+        sh:path dcterms:identifier ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:message "Batch/lot ID (dcterms:identifier) must be a single string when present." ;
+    ] ;
+    sh:property [
+        sh:path schema:provider ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:message "Supplier (schema:provider) must be a single string when present." ;
+    ] ;
+    sh:property [
+        sh:path dsms:hasHeatTreatmentDescription ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:message "Heat treatment description must be a single string when present." ;
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:message "Notes (rdfs:comment) must be a single string when present." ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .

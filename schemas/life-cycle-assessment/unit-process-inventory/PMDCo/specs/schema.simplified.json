@@ -1,0 +1,231 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.simplified.json",
+  "title": "Unit Process Inventory (Simplified Input)",
+  "description": "Flat input for one unit process life cycle inventory (minimal profile: the data consumed by MPPM). Produced by hand or by the LCI Excel template importer; converted to OO-LD by transform.simplified.jsonata. Category keywords and unit symbols are mapped to IRIs; full IRIs and CURIEs are passed through.",
+  "type": "object",
+  "required": [
+    "inventory_name",
+    "geography",
+    "access_rights",
+    "outputs"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "unit": {
+      "type": "string",
+      "description": "Unit symbol (kg, kWh, MJ, h, %, l/h, piece …), QUDT CURIE (uqudt:KiloGM) or full QUDT IRI.",
+      "examples": [
+        "kg",
+        "kWh",
+        "MJ",
+        "piece",
+        "uqudt:KiloGM"
+      ]
+    }
+  },
+  "properties": {
+    "inventory_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "inventory_id": {
+      "type": "string",
+      "description": "Optional IRI slug; derived from inventory_name if omitted."
+    },
+    "description": {
+      "type": "string"
+    },
+    "process": {
+      "type": "string",
+      "format": "uri",
+      "description": "IRI of the manufacturing-process KItem this inventory is about."
+    },
+    "geography": {
+      "type": "string",
+      "minLength": 2,
+      "examples": [
+        "DE",
+        "RER",
+        "GLO"
+      ]
+    },
+    "date_compiled": {
+      "type": "string",
+      "format": "date"
+    },
+    "access_rights": {
+      "type": "string",
+      "enum": [
+        "public",
+        "restricted",
+        "confidential"
+      ]
+    },
+    "data_owner": {
+      "type": "string",
+      "format": "uri"
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "value",
+          "unit"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "material": {
+            "type": "string",
+            "format": "uri",
+            "description": "IRI of the material KItem this flow consists of."
+          },
+          "name": {
+            "type": "string",
+            "description": "Flow name; required only if no material is given (energy, personnel, services)."
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "material",
+              "energy",
+              "personnel",
+              "service"
+            ]
+          },
+          "value": {
+            "type": "number"
+          },
+          "unit": {
+            "$ref": "#/$defs/unit"
+          },
+          "description": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string",
+            "description": "Measured, calculated, estimated, literature …"
+          },
+          "provider": {
+            "type": "string",
+            "format": "uri",
+            "description": "IRI of the inventory whose output is this input."
+          }
+        },
+        "anyOf": [
+          {
+            "required": [
+              "material"
+            ]
+          },
+          {
+            "required": [
+              "name"
+            ]
+          }
+        ]
+      },
+      "default": []
+    },
+    "outputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "value",
+          "unit"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "material": {
+            "type": "string",
+            "format": "uri",
+            "description": "IRI of the material KItem this flow consists of."
+          },
+          "name": {
+            "type": "string",
+            "description": "Flow name; required only if no material is given (energy, personnel, services)."
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "product",
+              "co_product",
+              "waste",
+              "emission",
+              "other"
+            ]
+          },
+          "value": {
+            "type": "number"
+          },
+          "unit": {
+            "$ref": "#/$defs/unit"
+          },
+          "description": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string"
+          },
+          "is_reference_flow": {
+            "type": "boolean"
+          }
+        },
+        "anyOf": [
+          {
+            "required": [
+              "material"
+            ]
+          },
+          {
+            "required": [
+              "name"
+            ]
+          }
+        ]
+      }
+    },
+    "parameters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "category"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "facility",
+              "process",
+              "operation"
+            ]
+          },
+          "value": {
+            "type": "number"
+          },
+          "unit": {
+            "$ref": "#/$defs/unit"
+          },
+          "description": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    }
+  }
+}

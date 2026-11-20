@@ -1,0 +1,30 @@
+{
+  "experiment_name": "AA2618 2hr aged Set 2",
+  "specimen_iri": "https://example.org/specimens/aa2618-2hr-set2",
+  "test_date": "2026-07-16T00:00:00",
+  "instrument_serial": "1000136225",
+  "control_mode": "Constant Strain Rate",
+  "indenter_geometry": "Berkovich",
+  "indenter_material": "Diamond",
+  "analysis_method": "Oliver & Pharr",
+  "test_standard": "ISO 14577-1:2015",
+  "test_conditions": [
+    { "name": "Max Indentation Depth",        "value": 1.0,  "unit": "um" },
+    { "name": "Loading Rate",                  "value": 0.2,  "unit": "1/s" },
+    { "name": "Hold Time at Maximum Load",     "value": 10.0, "unit": "s" },
+    { "name": "Data Acquisition Rate",         "value": 10.0, "unit": "Hz" },
+    { "name": "Assumed Poisson's Ratio",       "value": 0.33, "unit": "-" }
+  ],
+  "test_temperature": 23.0,
+  "test_humidity": 45.0,
+  "unload_fit_range": "40%-98%",
+  "tip_area_function": "Factory calibration — Berkovich area function",
+  "summary_results": [
+    { "name": "Mean Hardness HIT",            "value": 1.450, "unit": "GPa" },
+    { "name": "Std Dev Hardness HIT",          "value": 0.211, "unit": "GPa" },
+    { "name": "Mean Elastic Modulus EIT",      "value": 83.710, "unit": "GPa" },
+    { "name": "Std Dev Elastic Modulus EIT",   "value": 3.907,  "unit": "GPa" },
+    { "name": "Mean Maximum Depth hmax",       "value": 1.004,  "unit": "um" },
+    { "name": "Number of Valid Indentations",  "value": 27,     "unit": "-" }
+  ]
+}

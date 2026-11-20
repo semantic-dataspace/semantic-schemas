@@ -1,0 +1,89 @@
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:   <http://www.w3.org/2004/02/skos/core#> .
+@prefix obi:    <http://purl.obolibrary.org/obo/OBI_> .
+@prefix qudt:   <http://qudt.org/schema/qudt/> .
+@prefix qunit:  <http://qudt.org/vocab/unit/> .
+@prefix :       <https://w3id.org/dsms/DSCMeasurement/> .
+
+# =============================================================================
+# DSMS DSC (Differential Scanning Calorimetry) controlled vocabulary
+#
+# Vocabulary service namespace : dsc-result
+# Use-cases served             : dsc, all
+#
+# All class IRIs: https://w3id.org/dsms/DSCMeasurement/
+# Authoritative definitions live in dsc-heat-flow-measurement.ttl (same namespace).
+# This file exposes the result classes to the vocabulary service.
+#
+# Labels MUST match strings used in schemas and parsers exactly.
+# Change a label only in concert with all consuming schemas and notebooks.
+#
+# Sections:
+#   1. Transition temperatures    (onset, peak, end, Tg, solidus, liquidus)
+#   2. Thermal quantities         (enthalpy, specific heat capacity)
+# =============================================================================
+
+# =============================================================================
+# 1. Transition temperatures
+# =============================================================================
+
+:OnsetTemperature
+    a owl:Class ;
+    rdfs:label "Onset Temperature"@en ;
+    skos:altLabel "T_onset"@en ;
+    skos:definition "Temperature at which a DSC peak begins — extrapolated from the leading slope back to baseline."@en ;
+    qudt:applicableUnit qunit:DEG_C .
+
+:PeakTemperature
+    a owl:Class ;
+    rdfs:label "Peak Temperature"@en ;
+    skos:altLabel "T_peak"@en ;
+    skos:definition "Temperature at the apex of an exothermic or endothermic DSC peak."@en ;
+    qudt:applicableUnit qunit:DEG_C .
+
+:EndTemperature
+    a owl:Class ;
+    rdfs:label "End Temperature"@en ;
+    skos:altLabel "T_end"@en ;
+    skos:definition "Temperature at which the DSC signal returns to baseline after a peak — extrapolated from the trailing slope."@en ;
+    qudt:applicableUnit qunit:DEG_C .
+
+:GlassTransitionTemperature
+    a owl:Class ;
+    rdfs:label "Glass Transition Temperature (Tg)"@en ;
+    skos:altLabel "Tg"@en ;
+    skos:definition "Temperature of the inflection point or half-step in the DSC heat-capacity step for amorphous materials."@en ;
+    qudt:applicableUnit qunit:DEG_C .
+
+:SolidusTemperature
+    a owl:Class ;
+    rdfs:label "Solidus Temperature"@en ;
+    skos:altLabel "T_solidus"@en ;
+    skos:definition "Temperature at which the last solid phase transforms to liquid on heating (endothermic onset)."@en ;
+    qudt:applicableUnit qunit:DEG_C .
+
+:LiquidusTemperature
+    a owl:Class ;
+    rdfs:label "Liquidus Temperature"@en ;
+    skos:altLabel "T_liquidus"@en ;
+    skos:definition "Temperature at which the first solid phase forms on cooling (exothermic onset)."@en ;
+    qudt:applicableUnit qunit:DEG_C .
+
+# =============================================================================
+# 2. Thermal quantities
+# =============================================================================
+
+:Enthalpy
+    a owl:Class ;
+    rdfs:label "Enthalpy of Transformation"@en ;
+    skos:altLabel "ΔH"@en ;
+    skos:definition "Integrated heat flow over a DSC peak, normalised to sample mass. Positive for endothermic, negative for exothermic transformations."@en ;
+    qudt:applicableUnit qunit:J-PER-GM .
+
+:SpecificHeatCapacity
+    a owl:Class ;
+    rdfs:label "Specific Heat Capacity"@en ;
+    skos:altLabel "Cp"@en ;
+    skos:definition "Heat required to raise unit mass of the sample by one degree, determined from DSC vs. sapphire reference or modulated DSC."@en ;
+    qudt:applicableUnit qunit:J-PER-GM-K .

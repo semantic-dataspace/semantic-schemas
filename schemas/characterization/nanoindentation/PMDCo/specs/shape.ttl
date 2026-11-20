@@ -1,0 +1,5 @@
+# SHACL shapes for nanoindentation experiment schema — stub, to be extended
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix chameo: <https://w3id.org/emmo/domain/characterisation-methodology/chameo#> .
+@prefix obi:  <http://purl.obolibrary.org/obo/OBI_> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .

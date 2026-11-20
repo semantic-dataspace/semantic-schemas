@@ -57,12 +57,12 @@
       "@prefix": true
     },
     "qudt": "http://qudt.org/schema/qudt/",
+    "uqudt": "http://qudt.org/vocab/unit/",
     "description": {
       "@id": "rdfs:comment"
     },
-    "has_process_condition": {
-      "@id": "pmdco:PMD_0000016",
-      "@type": "@id",
+    "has_process_attribute": {
+      "@id": "pmdco:PMD_0000009",
       "@container": "@set"
     },
     "parameter_label": {
@@ -73,7 +73,8 @@
       "@type": "xsd:double"
     },
     "parameter_unit": {
-      "@id": "qudt:hasUnit"
+      "@id": "qudt:hasUnit",
+      "@type": "@id"
     },
     "model_type": {
       "@id": "http://purl.org/dc/terms/type"
@@ -107,7 +108,8 @@
       "compatible-versions": [
         "0.1.0",
         "0.2.0",
-        "0.3.0"
+        "0.3.0",
+        "0.4.0"
       ],
       "property": "(base schema via allOf)"
     }
@@ -245,7 +247,7 @@
             ],
             "options": {
               "enum_titles": [
-                "pmdco:ProcessCondition"
+                "pmdco:ParameterSpecification"
               ]
             }
           },

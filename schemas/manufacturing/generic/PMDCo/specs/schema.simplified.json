@@ -71,31 +71,31 @@
         ["https://example.org/processes/pressing-of-fine-powder-batch-1"]
       ]
     },
-    "conditions": {
-      "title": "Process Conditions / Parameters",
-      "description": "Quantitative conditions under which this process is carried out (e.g. temperature, pressure, energy consumption).",
+    "process_attributes": {
+      "title": "Process Attributes / Parameters",
+      "description": "Quantitative parameters and conditions for this process (e.g. temperature, pressure, hold time). Each entry becomes a PMDCo ParameterSpecification node (PMD_0000013) linked via has_process_attribute (PMD_0000009).",
       "type": "array",
       "items": {
-        "title": "Process Condition",
+        "title": "Process Parameter",
         "type": "object",
         "required": ["name"],
         "additionalProperties": false,
         "properties": {
           "name": {
             "title": "Parameter Name",
-            "description": "Name of the process condition (e.g. 'Sintering Temperature', 'Applied Pressure').",
+            "description": "Name of the process parameter (e.g. 'Sintering Temperature', 'Hold Time'). Use the full label including units in the name for qualitative notes (e.g. 'Atmosphere: Air').",
             "type": "string",
-            "examples": ["Sintering Temperature", "Energy Consumption", "Holding Time"]
+            "examples": ["Sintering Temperature", "Hold Time", "Applied Pressure", "Atmosphere: Argon"]
           },
           "value": {
             "title": "Value",
-            "description": "Numeric magnitude of the condition.",
+            "description": "Numeric magnitude of the parameter. Omit for qualitative notes (e.g. 'Atmosphere: Air').",
             "type": "number",
             "examples": [1080, 26, 4.5]
           },
           "unit": {
             "title": "Unit",
-            "description": "Unit of the value (e.g. '°C', 'MPa', 'kWh', 'h').",
+            "description": "Unit of the value. Use SI symbols (°C, h, MPa, bar) or uqudt: CURIEs (uqudt:DEG_C, uqudt:HR). Omit for dimensionless or qualitative parameters.",
             "type": "string",
             "examples": ["°C", "MPa", "kWh", "h", "bar"]
           }
@@ -111,9 +111,10 @@
       "inputs": ["https://example.org/materials/anisotropic-green-compacts-batch-1"],
       "outputs": ["https://example.org/materials/sintered-magnet-batch-1"],
       "preceded_by": ["https://example.org/processes/pressing-of-fine-powder-batch-1"],
-      "conditions": [
+      "process_attributes": [
         { "name": "Sintering Temperature", "value": 1080, "unit": "°C" },
-        { "name": "Energy Consumption",    "value": 26,   "unit": "kWh" }
+        { "name": "Hold Time",             "value":    4, "unit": "h"  },
+        { "name": "Atmosphere: Vacuum" }
       ]
     }
   ]

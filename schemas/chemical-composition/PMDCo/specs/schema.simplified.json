@@ -14,11 +14,15 @@
       "minLength": 1,
       "examples": ["316L Stainless Steel", "AlSi10Mg", "Inconel 718"]
     },
-    "material_id": {
-      "title": "Material ID",
-      "description": "Optional. Identifier for the Material node in the RDF graph. If omitted, derived automatically from material_name (e.g. '316L Stainless Steel' → 'mat-316l-stainless-steel'). The comp_id follows the same pattern with prefix 'chem-comp-'. Override only when you need a specific IRI to match an existing knowledge graph node.",
+    "material_uri": {
+      "title": "Material Kitem URI",
+      "description": "Optional. The canonical IRI of the material kitem in the knowledge graph (e.g. 'https://my-dsms.example.com/knowledge/12345/mat-316l'). When provided, the quality_of triple points directly to this IRI so the composition is properly linked to the existing material kitem. If omitted, a local slug-based IRI is derived from material_name for standalone RDF use.",
       "type": "string",
-      "examples": ["mat-316l", "mat-alsi10mg-batch-a"]
+      "format": "uri",
+      "x-kitem": {},
+      "examples": [
+        "https://dsms.example.com/knowledge/abc123/mat-316l-stainless-steel"
+      ]
     },
     "comp_id": {
       "title": "Composition ID",
@@ -76,6 +80,7 @@
   "examples": [
     {
       "material_name": "316L Stainless Steel",
+      "material_uri": "https://dsms.example.com/knowledge/abc123/mat-316l-stainless-steel",
       "elements": [
         { "symbol": "Fe", "value": 65.345, "unit": "mass%" },
         { "symbol": "Cr", "value": 17.0,   "unit": "mass%" },

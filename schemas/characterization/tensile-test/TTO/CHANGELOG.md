@@ -11,6 +11,27 @@ The schema IRI encodes the minor version: `…/TTO/#v<MAJOR>.<MINOR>.0`.
 
 ---
 
+## [0.3.0] - 2026-10-14
+
+### Changed
+
+- `parameter_type` field: hard-coded `enum` of TTO parameter IRIs
+  (`tto:TTO_0000051`, `pmdco:PMD_0000967`, …) replaced with `x-vocabulary`
+  pointing to the process-parameter vocabulary service. Previously the form
+  offered 4 fixed choices; now all vocabulary terms are searchable. The RDF
+  predicate and ontology mapping are unchanged.
+- `parameter_unit` field: hard-coded `enum` of unit IRIs replaced with
+  `x-vocabulary` → measurement-unit vocabulary service.
+- `result_type` field: hard-coded `enum` of 8 TTO quality class IRIs
+  (Yield Strength, Tensile Strength, …) replaced with `x-vocabulary` →
+  characterization-result/tensile-test vocabulary service. The 8 original IRIs
+  remain valid terms in the vocabulary; the field now also accepts new result
+  types added to the vocabulary without a schema update.
+- `result_unit` field: hard-coded `enum` of unit IRIs replaced with
+  `x-vocabulary` → measurement-unit vocabulary service.
+
+---
+
 ## [0.2.1] - 2026-07-21
 
 ### Changed

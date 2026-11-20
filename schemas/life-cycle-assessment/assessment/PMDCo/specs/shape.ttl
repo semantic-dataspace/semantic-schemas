@@ -1,0 +1,69 @@
+# SHACL shape for the LCA Assessment Run schema.
+#
+# Validates:
+#   - label, conformsTo, at least one input product system (IRI)
+#   - at least one indicator result; each result names an indicator and has one
+#     numeric value with either a QUDT unit or a unit text
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix obo:     <http://purl.obolibrary.org/obo/> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix uplci:   <https://w3id.org/dsms/uplci/> .
+@prefix shape:   <https://w3id.org/dsms/shapes/life-cycle-assessment/assessment/> .
+
+shape:assessment_run
+    a sh:NodeShape ;
+    sh:targetClass uplci:LifeCycleAssessmentRun ;
+    sh:property [
+        sh:path dcterms:conformsTo ; sh:nodeKind sh:IRI ; sh:minCount 1 ; sh:maxCount 1 ;
+        sh:message "An assessment run must declare dcterms:conformsTo pointing to the versioned schema IRI." ;
+    ] ;
+    sh:property [
+        sh:path rdfs:label ; sh:datatype xsd:string ; sh:minCount 1 ; sh:maxCount 1 ;
+        sh:message "An assessment run must have exactly one name." ;
+    ] ;
+    sh:property [
+        sh:path dcterms:date ; sh:datatype xsd:dateTime ; sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path obo:OBI_0000293 ; sh:nodeKind sh:IRI ; sh:minCount 1 ;
+        sh:message "An assessment run must reference at least one product system as input." ;
+    ] ;
+    sh:property [
+        sh:path obo:OBI_0000299 ;
+        sh:qualifiedValueShape [ sh:class uplci:IndicatorResult ] ;
+        sh:qualifiedMinCount 1 ;
+        sh:message "An assessment run must report at least one indicator result." ;
+    ] ;
+    sh:property [
+        sh:path uplci:recommendsStep ; sh:nodeKind sh:IRI ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .
+
+shape:indicator_result
+    a sh:NodeShape ;
+    sh:targetClass uplci:IndicatorResult ;
+    sh:property [
+        sh:path uplci:hasIndicator ; sh:nodeKind sh:IRI ; sh:minCount 1 ; sh:maxCount 1 ;
+        sh:message "Each result must name exactly one indicator from the lca-indicator vocabulary." ;
+    ] ;
+    sh:property [
+        sh:path ( obo:OBI_0001938 obo:OBI_0001937 ) ; sh:datatype xsd:double ; sh:minCount 1 ; sh:maxCount 1 ;
+        sh:message "Each result must have exactly one numeric value." ;
+    ] ;
+    sh:property [
+        sh:path uplci:bestValue ; sh:datatype xsd:double ; sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path obo:OBI_0001938 ;
+        sh:or (
+            [ sh:path obo:IAO_0000039 ; sh:minCount 1 ]
+            [ sh:path uplci:unitText ; sh:minCount 1 ]
+        ) ;
+        sh:message "Each result value needs a QUDT unit or a unit text." ;
+    ] .

@@ -1,0 +1,27 @@
+{
+  "run_name": "MPPM evaluation - ORCHESTER Demo 3",
+  "run_id": "lca-run-orchester-demo3-01",
+  "description": "Indicator values copied from the MPPM example response (EvaluationResult_MPPM_to_ORCHESTER_Beispiel-W4F.json) to illustrate the structure; not a real Demo 3 result.",
+  "date": "2026-11-13T10:00:00",
+  "product_systems": [
+    "https://example.org/lca/ps-orchester-demo3"
+  ],
+  "pathway_name": "Sensor-based sorting cascade 1",
+  "results": [
+    {
+      "name": "Earnings Before Interest And Taxes - EBIT",
+      "value": 128.882,
+      "unit": "Euro"
+    },
+    {
+      "name": "Global Warming Potential - GWP",
+      "value": 2394.1677896979995,
+      "unit": "kg CO2-eq"
+    },
+    {
+      "name": "Substance Concentration Efficiency - SCE",
+      "value": 1000000,
+      "unit": "%"
+    }
+  ]
+}

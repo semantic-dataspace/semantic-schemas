@@ -1,0 +1,174 @@
+# OO-LD Schema for an LCA Product System
+# Ontologies: PMDCo / OBI / IAO (backbone), Dublin Core, DSMS UPLCI vocabulary
+#
+# Graph pattern:
+#
+#   uplci:ProductSystem   (⊑ iao:InformationContentEntity)
+#     rdfs:label / rdfs:comment ─────────── name / description
+#     dcterms:hasPart ─────────────────────► UnitProcessInventory KItems   [1..N]
+#     uplci:hasReferenceProcess ───────────► UnitProcessInventory KItem    [1]   (delivers the functional unit)
+#     uplci:functionalUnit ─────────────── "1 kg ground NdFeB small magnets, ready for use"
+#     qudt:value / qudt:hasUnit ────────── reference amount + QUDT unit (e.g. 1 kg)
+#     uplci:usesBackgroundDatabase ────────► uplci:Ecoinvent_3_8_Consequential | …
+#
+# Design notes:
+#   - The product system does NOT repeat process links.  The chain is the graph of
+#     `uplci:hasProvider` links between the exchanges of its member inventories;
+#     tools (e.g. the MPPM exporter) derive start/end processes and link lists
+#     from it with SPARQL.  Storing links once avoids contradictory duplicates.
+#   - The same inventory can be part of many product systems (route variants,
+#     scenario comparisons); inventories are therefore linked, not embedded.
+#   - Reference amount/unit are flat fields: the form backend always restores the
+#     readOnly type/id of nested objects, so an optional nested object would leave
+#     an empty node.  DSMS writes dcterms:creator itself, so modellers use
+#     prov:wasAttributedTo.
+#   - Minimal profile: only what the MPPM chain needs (members,
+#     reference process, functional unit + amount, background database).
+#   - The KType using this schema is a context anchor, so the product system also
+#     groups its inventories, processes and materials for scoped queries.
+
+"@context":
+  rdfs:    "http://www.w3.org/2000/01/rdf-schema#"
+  xsd:     "http://www.w3.org/2001/XMLSchema#"
+  dcterms: "http://purl.org/dc/terms/"
+  qudt:    "http://qudt.org/schema/qudt/"
+  obo:     "http://purl.obolibrary.org/obo/"
+  uqudt:   "http://qudt.org/vocab/unit/"
+  uplci:   "https://w3id.org/dsms/uplci/"
+  type: "@type"
+  id:   "@id"
+  conforms_to:
+    "@id": "dcterms:conformsTo"
+    "@type": "@id"
+  label:
+    "@id": "rdfs:label"
+  description:
+    "@id": "rdfs:comment"
+  has_part:
+    "@id": "dcterms:hasPart"
+    "@type": "@id"
+    "@container": "@set"
+  reference_process:
+    "@id": "uplci:hasReferenceProcess"
+    "@type": "@id"
+  functional_unit:
+    "@id": "uplci:functionalUnit"
+  reference_amount:
+    "@id": "qudt:value"
+    "@type": "xsd:double"
+  reference_unit:
+    "@id": "qudt:hasUnit"
+    "@type": "@id"
+  background_database:
+    "@id": "uplci:usesBackgroundDatabase"
+    "@type": "@id"
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: >-
+  LCA product system (ISO 14040 §3.28): set of linked unit process inventories
+  delivering a functional unit.
+x-schema-version: '0.1.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-product-system-PMDCo-v0.1.0/schemas/life-cycle-assessment/product-system/PMDCo/specs/schema.oold.generated.json'
+x-maturity: 'draft'
+title: LCA Product System
+description: >-
+  A process chain modelled for LCA: which unit process inventories belong to it,
+  which one delivers the functional unit, and which background database and
+  system boundary apply.
+type: object
+required: [type, id, label, has_part, reference_process, functional_unit]
+
+properties:
+
+  type:
+    title: Type
+    type: array
+    items: {type: string}
+    readOnly: true
+    const: ["uplci:ProductSystem"]
+    default: ["uplci:ProductSystem"]
+    options:
+      enum_titles: [uplci:ProductSystem]
+
+  conforms_to:
+    title: Conforms To
+    description: Versioned IRI of this schema; written automatically.
+    type: string
+    readOnly: true
+    const: "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-product-system-PMDCo-v0.1.0/schemas/life-cycle-assessment/product-system/PMDCo/specs/schema.oold.generated.json"
+    default: "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-product-system-PMDCo-v0.1.0/schemas/life-cycle-assessment/product-system/PMDCo/specs/schema.oold.generated.json"
+
+  id:
+    title: ID
+    type: string
+    readOnly: true
+    default: product-system
+
+  label:
+    title: Name
+    description: e.g. "Demo 3 – H2 decrepitation route to ground small magnets".
+    type: string
+
+  description:
+    title: Description
+    type: string
+    format: textarea
+
+  has_part:
+    title: Unit Process Inventories
+    description: All foreground inventories that belong to this product system.
+    type: array
+    format: kitem
+    x-kitem:
+      ktypeIds: [unit-process-inventory]
+    items: {type: string, format: uri}
+    uniqueItems: true
+    minItems: 1
+
+  reference_process:
+    title: Reference Process
+    description: Inventory whose reference flow delivers the functional unit (last step of the chain).
+    type: string
+    format: kitem
+    x-kitem:
+      ktypeIds: [unit-process-inventory]
+
+  functional_unit:
+    title: Functional Unit
+    description: Quantified performance the system delivers, as text.
+    type: string
+
+  reference_amount:
+    title: Reference Amount
+    description: Quantity of the reference product delivered by the functional unit.
+    type: number
+    default: 1
+
+  reference_unit:
+    title: Reference Unit
+    type: string
+    x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
+
+  background_database:
+    title: Background Database
+    type: string
+    enum:
+      - "uplci:Ecoinvent_3_8_Cutoff"
+      - "uplci:Ecoinvent_3_8_APOS"
+      - "uplci:Ecoinvent_3_8_Consequential"
+      - "uplci:Ecoinvent_3_9_1_Cutoff"
+      - "uplci:Ecoinvent_3_9_1_APOS"
+      - "uplci:Ecoinvent_3_9_1_Consequential"
+      - "uplci:Ecoinvent_3_10_Cutoff"
+      - "uplci:Ecoinvent_3_10_APOS"
+      - "uplci:Ecoinvent_3_10_Consequential"
+    options:
+      enum_titles:
+        - ecoinvent 3.8 cut-off
+        - ecoinvent 3.8 APOS
+        - ecoinvent 3.8 consequential
+        - ecoinvent 3.9.1 cut-off
+        - ecoinvent 3.9.1 APOS
+        - ecoinvent 3.9.1 consequential
+        - ecoinvent 3.10 cut-off
+        - ecoinvent 3.10 APOS
+        - ecoinvent 3.10 consequential

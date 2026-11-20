@@ -2,58 +2,113 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "schema.simplified.json",
   "title": "Specimen (Simplified Input)",
-  "description": "A user-friendly form to describe a physical specimen: its name, mass, material identity, and optional physical source. This input is automatically converted to a standardised RDF representation following the PMDCo duality-object-material pattern and PROV-O provenance pattern.",
+  "description": "User-friendly form for a physical specimen: name, material, dimensions, surface prep, lifecycle state. Automatically converted to PMDCo OO-LD RDF.",
   "type": "object",
   "required": ["specimen_name"],
   "additionalProperties": false,
   "properties": {
     "specimen_name": {
       "title": "Specimen Name",
-      "description": "A human-readable name or identifier for the specimen. Example: '316L Tensile Bar #1', 'AlSi10Mg disc A3'.",
+      "description": "Human-readable name, e.g. 'AA2618 disc #028 (pre-test)'.",
       "type": "string",
       "minLength": 1,
-      "examples": ["316L Tensile Bar #1", "AlSi10Mg disc A3", "Inconel 718 coupon B7"]
-    },
-    "mass_value": {
-      "title": "Mass Value",
-      "description": "Optional. Mass of the specimen as a positive number. If provided, mass_unit must also be given.",
-      "type": "number",
-      "exclusiveMinimum": 0,
-      "examples": [50.3, 1.2, 250.0]
-    },
-    "mass_unit": {
-      "title": "Mass Unit",
-      "description": "Unit for the mass value. Required when mass_value is provided. Choose one of: 'g' (gram), 'kg' (kilogram), 'mg' (milligram).",
-      "type": "string",
-      "enum": ["g", "kg", "mg"],
-      "default": "g"
+      "examples": ["316L Tensile Bar #1", "AlSi10Mg disc A3", "AA2618 disc #028 (pre-test)"]
     },
     "material": {
       "title": "Material",
-      "description": "Abstract alloy or substance identity of this specimen (PMDCo duality pattern). Select an existing material record from the knowledge graph. Can be auto-populated from source when source is set.",
-      "x-kitem": {
-        "ktypeIds": ["material"]
-      },
+      "description": "IRI of the material KItem this specimen is a state of (PMDCo is_state_of).",
+      "x-kitem": {"ktypeIds": ["material"]},
       "type": "string",
       "format": "uri"
     },
     "source": {
       "title": "Source",
-      "description": "The specific semi-finished product (e.g. metal sheet) this specimen was cut or prepared from. Select an existing semi-finished-product record from the knowledge graph.",
-      "x-kitem": {
-        "ktypeIds": ["semi-finished-product"]
-      },
+      "description": "IRI of the semi-finished-product KItem this specimen was cut from (prov:wasDerivedFrom).",
+      "x-kitem": {"ktypeIds": ["semi-finished-product"]},
       "type": "string",
       "format": "uri"
+    },
+    "temporal_state": {
+      "title": "Temporal State",
+      "description": "Lifecycle stage of this specimen.",
+      "type": "string",
+      "enum": ["as-received", "pre-test", "post-test"]
+    },
+    "specimen_form": {
+      "title": "Specimen Form",
+      "description": "Geometric form of the specimen.",
+      "type": "string",
+      "enum": ["Bulk", "Thin Film", "Coating on Substrate", "Cross-section", "Other"]
+    },
+    "surface_preparation": {
+      "title": "Surface Preparation",
+      "description": "Polishing/grinding sequence applied to the specimen surface.",
+      "type": "string",
+      "examples": ["SiC 400→1200 grit, 3µm + 1µm diamond, OPS 30 min"]
+    },
+    "physical_properties": {
+      "title": "Physical Properties",
+      "description": "Dimensional and physical measurements. Add one entry per property.",
+      "type": "array",
+      "default": [],
+      "items": {
+        "title": "Physical Property",
+        "type": "object",
+        "required": ["type", "value", "unit"],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "title": "Property Type",
+            "type": "string",
+            "enum": [
+              "Diameter",
+              "Thickness",
+              "Length",
+              "Width",
+              "Mass",
+              "Surface Roughness Ra",
+              "Surface Roughness Rq"
+            ]
+          },
+          "value": {
+            "title": "Value",
+            "type": "number",
+            "minimum": 0
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string",
+            "enum": ["mm", "um", "nm", "g", "kg", "mg"]
+          }
+        }
+      }
+    },
+    "mass_value": {
+      "title": "Mass Value",
+      "description": "Deprecated — use physical_properties with type 'Mass' instead. Kept for backwards compatibility.",
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "mass_unit": {
+      "title": "Mass Unit",
+      "description": "Deprecated — use physical_properties with type 'Mass' instead.",
+      "type": "string",
+      "enum": ["g", "kg", "mg"],
+      "default": "g"
     }
   },
   "examples": [
     {
-      "specimen_name": "316L Tensile Bar #1",
-      "mass_value": 50.3,
-      "mass_unit": "g",
-      "material": "https://example.org/material-316l",
-      "source": "https://example.org/sheet-42"
+      "specimen_name": "AA2618 2h aged — Disc #028 (pre-test)",
+      "material": "https://my-dsms.example.com/knowledge/abc123/mat-aa2618",
+      "temporal_state": "pre-test",
+      "specimen_form": "Bulk",
+      "surface_preparation": "SiC 400→600→800→1200 grit, diamond 3µm + 1µm, OPS 30 min",
+      "physical_properties": [
+        {"type": "Diameter",  "value": 10.0, "unit": "mm"},
+        {"type": "Thickness", "value": 3.0,  "unit": "mm"},
+        {"type": "Surface Roughness Ra", "value": 5.0, "unit": "nm"}
+      ]
     }
   ]
 }

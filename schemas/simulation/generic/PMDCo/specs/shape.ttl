@@ -58,7 +58,7 @@ shape:simulation_step
         sh:message "Each preceded_by value must be an IRI referencing another process node." ;
     ] ;
     sh:property [
-        sh:path pmd:PMD_0000016 ;   # has_process_condition
+        sh:path pmd:PMD_0000009 ;   # has_process_attribute
         sh:node shape:simulation_parameter ;
     ] ;
     sh:closed false ;

@@ -1,0 +1,113 @@
+(
+  /*
+   * Nanoindentation Dataset (PMDCo): simplified JSON → OO-LD JSON
+   *
+   * Produces a dcat:Dataset document representing one nanoindentation indent:
+   * the digital twin of a single measurement file, with per-indent scalar
+   * results as MeasurementDatum + ScalarValueSpecification nodes.
+   *
+   * Input fields (see schema.simplified.json):
+   *   dataset_name           string   required
+   *   dataset_id             string   optional, derived from dataset_name if omitted
+   *   indent_index           integer  optional (1-based)
+   *   timestamp              string   optional, ISO 8601 date-time
+   *   x_position             number   optional (mm)
+   *   y_position             number   optional (mm)
+   *   format                 string   optional, default "Anton Paar NHT TXT"
+   *   analysis_warnings      string   optional
+   *   results                array    optional
+   *     name                 string   e.g. "Hardness HIT"
+   *     value                number
+   *     unit                 string   "GPa" | "mN" | "um" | "%" | "-" | "uJ"
+   *   columns                array    optional: timeseries column semantic specs
+   *     name                 string   column header as it appears in CSV
+   *     property_iri         string   EMMO nanoindentation property IRI
+   *     unit_iri             string   QUDT unit IRI
+   */
+
+  $schemaUri := "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/kiran/schemas/dataset/nanoindentation/PMDCo/specs/schema.oold.yaml";
+
+  /* ── Short unit code → full QUDT IRI ─────────────────────────────────── */
+  /* Full IRIs pass through _resolve_vocab_value unchanged (IRI match).     */
+  /* Short codes accepted for backward compat with parser output.           */
+  $unitMap := {
+    "GPa":   "http://qudt.org/vocab/unit/GigaPA",
+    "mN":    "http://qudt.org/vocab/unit/MilliN",
+    "um":    "http://qudt.org/vocab/unit/MicroM",
+    "nm":    "http://qudt.org/vocab/unit/NanoM",
+    "um2":   "http://qudt.org/vocab/unit/MicroM2",
+    "mN/um": "http://qudt.org/vocab/unit/MilliN-PER-MicroM",
+    "%":     "http://qudt.org/vocab/unit/PERCENT",
+    "-":     "http://qudt.org/vocab/unit/UNITLESS",
+    "uJ":    "http://qudt.org/vocab/unit/MicroJ",
+    "1/s":   "http://qudt.org/vocab/unit/PER-SEC",
+    "s":     "http://qudt.org/vocab/unit/SEC",
+    "Hz":    "http://qudt.org/vocab/unit/HZ"
+  };
+
+  /* ── Capture document fields as $ vars for use in closures ───────────── */
+  $slug        := $replace($lowercase($trim(dataset_name)), /[^a-z0-9]+/, "-");
+  $dsId        := $exists(dataset_id) ? dataset_id : "nanoindentation-dataset-" & $slug;
+  $specimenIri := $exists(specimen_iri) ? specimen_iri : undefined;
+
+  /* ── Per-indent results: MeasurementDatum + quality individual + ScalarValueSpec ─ */
+  /* quality_type passes the plain label string; the SDK resolves it to the    */
+  /* quality class IRI via the characterization-result vocabulary service.     */
+  $measured := $exists(results) and $count(results) > 0
+    ? $map(results, function($r, $i) {(
+        $rSlug     := $replace($lowercase($trim($r.name)), /[^a-z0-9]+/, "-");
+        $datumBase := $dsId & "-result-" & $rSlug;
+        $unit      := ($lookup($unitMap, $r.unit)) ? $lookup($unitMap, $r.unit) : $r.unit;
+        {
+          "type":  "obo:IAO_0000109",
+          "id":    $datumBase & "-smd",
+          "label": $r.name,
+          "is_about": $exists($specimenIri)
+            ? { "quality_type": $r.name, "id": $datumBase & "-quality", "quality_of": $specimenIri }
+            : { "quality_type": $r.name, "id": $datumBase & "-quality" },
+          "has_value_spec": {
+            "type":         "obo:OBI_0001931",
+            "id":           $datumBase & "-svs",
+            "result_value": $r.value,
+            "result_unit":  $unit
+          }
+        }
+      )})
+    : undefined;
+
+  /* ── Assemble OO-LD output ────────────────────────────────────────────── */
+  $base := {
+    "conforms_to":        $schemaUri,
+    "type":               ["dcat:Dataset"],
+    "id":                 $dsId,
+    "label":              dataset_name
+  };
+
+  $withFormat    := $exists(format)             ? $merge([$base,          {"format":             format}])             : $merge([$base, {"format": "Anton Paar NHT TXT"}]);
+  $withTimestamp := $exists(timestamp)          ? $merge([$withFormat,    {"created":            timestamp}])           : $withFormat;
+  $withIdx       := $exists(indent_index)       ? $merge([$withTimestamp, {"indent_index":       indent_index}])        : $withTimestamp;
+  $withX         := $exists(x_position)         ? $merge([$withIdx,       {"x_position":         x_position}])          : $withIdx;
+  $withY         := $exists(y_position)         ? $merge([$withX,         {"y_position":         y_position}])          : $withX;
+  $withWarnings  := $exists(analysis_warnings)  ? $merge([$withY,         {"analysis_warnings":  analysis_warnings}])  : $withY;
+
+  /* ── Timeseries column semantic specifications ───────────────────────── */
+  $colSpecs := $exists(columns) and $count(columns) > 0
+    ? $map(columns, function($c) {
+        {
+          "id":           $dsId & "-col-" & $replace($lowercase($trim($c.name)), /[^a-z0-9]+/, "-"),
+          "type":         ["csvw:Column"],
+          "col_name":     $c.name,
+          "property_url": $c.property_iri,
+          "has_unit":     $c.unit_iri
+        }
+      })
+    : undefined;
+
+  $withColumns := $exists($colSpecs)
+    ? $merge([$withWarnings, {"timeseries_column": $colSpecs}])
+    : $withWarnings;
+
+  $exists($measured)
+    ? $merge([$withColumns, {"measured_properties": $measured}])
+    : $withColumns
+)

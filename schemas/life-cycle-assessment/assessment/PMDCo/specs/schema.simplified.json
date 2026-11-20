@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.simplified.json",
+  "title": "LCA Assessment Run (Simplified Input)",
+  "description": "Flat input for one LCA evaluation run, e.g. built from an MPPM /evaluate response; converted to UPLCI OO-LD by transform.simplified.jsonata.",
+  "type": "object",
+  "required": [
+    "run_name",
+    "product_systems",
+    "results"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "run_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "product_systems": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "format": "uri"
+      }
+    },
+    "raw_result_datasets": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uri"
+      }
+    },
+    "pathway_name": {
+      "type": "string"
+    },
+    "pathway_steps": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uri"
+      },
+      "description": "Inventory IRIs of the recommended pathway."
+    },
+    "results": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "value"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Indicator name as reported by the service."
+          },
+          "indicator": {
+            "type": "string",
+            "description": "lca-indicator term (label, CURIE lcai:… or IRI); derived from name when omitted."
+          },
+          "value": {
+            "type": "number"
+          },
+          "unit": {
+            "type": "string",
+            "description": "Unit as reported; known symbols become QUDT units, others are kept as text."
+          },
+          "best_value": {
+            "type": "number",
+            "description": "Best value over all evaluated pathways (MPPM maxValue)."
+          }
+        }
+      }
+    }
+  }
+}

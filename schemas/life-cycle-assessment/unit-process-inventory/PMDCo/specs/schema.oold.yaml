@@ -1,0 +1,381 @@
+# OO-LD Schema for a Unit Process Life Cycle Inventory (UPLCI)
+# Ontologies: PMDCo 3.x / OBI / IAO (backbone), Dublin Core, QUDT (units),
+#             DSMS UPLCI vocabulary (LCA-specific terms, aligned with BONSAI)
+#
+# Scope: MINIMAL. Only the data the MPPM evaluation service consumes, plus the
+# few DSMS fields needed to link and protect it (process link, chain provider,
+# access rights, data owner).
+#
+# Graph pattern:
+#
+#   uplci:UnitProcessInventory   (⊑ iao:InformationContentEntity, dcat:Dataset)
+#     rdfs:label / rdfs:comment ─────────────── name / description
+#     iao:IAO_0000136 (is about) ──────────────► ManufacturingProcess KItem   (pmdco:PMD_0000833)
+#     uplci:geography ──────────────────────── "DE" | "RER" | "GLO" …
+#     dcterms:date ─────────────────────────── date of compilation (dataset version)
+#     dcterms:accessRights ────────────────────► EU access-right NAL (PUBLIC | RESTRICTED | NON_PUBLIC)
+#     dcterms:publisher ───────────────────────► organization KItem      (data owner)
+#     uplci:hasInput  ─┐
+#     uplci:hasOutput ─┴─► uplci:Exchange  (⊑ iao:DataItem)        [embedded, 0..N]
+#         iao:IAO_0000136 ──────────────► Material KItem (pmdco:PMD_0000000) the flow consists of
+#         rdfs:label ─────────────────── name, for flows without a material KItem (energy, personnel …)
+#         uplci:hasExchangeCategory ────► uplci:MaterialInput | EnergyInput | … | ProductOutput | WasteOutput | …
+#         qudt:value / qudt:hasUnit ──── amount per reference flow + QUDT unit
+#         rdfs:comment ───────────────── description / specification
+#         uplci:sourceNote ──────────── reference (measured / calculated / literature …)
+#         uplci:isReferenceFlow ──────── true on exactly one product output
+#         uplci:hasProvider ────────────► UnitProcessInventory KItem supplying this input (chain link)
+#     uplci:hasTechnologyParameter ─────► pmdco:ParameterSpecification (PMD_0000013)  [embedded, 0..N]
+#         rdfs:label, qudt:value, qudt:hasUnit, rdfs:comment, uplci:sourceNote
+#         uplci:hasParameterCategory ───► uplci:FacilityParameter | ProcessParameter | OperationParameter
+#
+# Design notes:
+#   - The inventory is ABOUT a process; it is not the process.
+#   - Process chains emerge from `provider` links; no separate link list.
+#   - Form-builder constraints (Orchester/LCA/MODEL.md §5.0): no internal
+#     $ref/allOf, no optional nested objects, no arrays inside array rows,
+#     distinct row id defaults, no DSMS-managed predicates (dcterms:created,
+#     dcterms:creator), conforms_to as read-only const.
+
+"@context":
+  rdf:     "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  rdfs:    "http://www.w3.org/2000/01/rdf-schema#"
+  xsd:     "http://www.w3.org/2001/XMLSchema#"
+  dcterms: "http://purl.org/dc/terms/"
+  dcat:    "http://www.w3.org/ns/dcat#"
+  obo:     "http://purl.obolibrary.org/obo/"
+  pmdco:   "https://w3id.org/pmd/co/"
+  qudt:    "http://qudt.org/schema/qudt/"
+  uqudt:   "http://qudt.org/vocab/unit/"
+  uplci:   "https://w3id.org/dsms/uplci/"
+  accr:    "http://publications.europa.eu/resource/authority/access-right/"
+  type: "@type"
+  id:   "@id"
+  conforms_to:
+    "@id": "dcterms:conformsTo"
+    "@type": "@id"
+  label:
+    "@id": "rdfs:label"
+  description:
+    "@id": "rdfs:comment"
+
+  # ── inventory metadata ──────────────────────────────────────────────────────
+  describes_process:
+    "@id": "obo:IAO_0000136"          # is about
+    "@type": "@id"
+  geography:
+    "@id": "uplci:geography"
+  date_compiled:
+    "@id": "dcterms:date"
+    "@type": "xsd:date"
+  access_rights:
+    "@id": "dcterms:accessRights"
+    "@type": "@id"
+  publisher:
+    "@id": "dcterms:publisher"
+    "@type": "@id"
+
+  # ── exchanges ───────────────────────────────────────────────────────────────
+  inputs:
+    "@id": "uplci:hasInput"
+    "@container": "@set"
+  outputs:
+    "@id": "uplci:hasOutput"
+    "@container": "@set"
+  material:
+    "@id": "obo:IAO_0000136"          # is about
+    "@type": "@id"
+  category:
+    "@id": "uplci:hasExchangeCategory"
+    "@type": "@id"
+  amount:
+    "@id": "qudt:value"
+    "@type": "xsd:double"
+  unit:
+    "@id": "qudt:hasUnit"
+    "@type": "@id"
+  source_note:
+    "@id": "uplci:sourceNote"
+  is_reference_flow:
+    "@id": "uplci:isReferenceFlow"
+    "@type": "xsd:boolean"
+  provider:
+    "@id": "uplci:hasProvider"
+    "@type": "@id"
+
+  # ── technology parameters (keys shared with manufacturing/generic/PMDCo) ────
+  technology_parameters:
+    "@id": "uplci:hasTechnologyParameter"
+    "@container": "@set"
+  parameter_label:
+    "@id": "rdfs:label"
+  parameter_value:
+    "@id": "qudt:value"
+    "@type": "xsd:double"
+  parameter_unit:
+    "@id": "qudt:hasUnit"
+    "@type": "@id"
+  parameter_category:
+    "@id": "uplci:hasParameterCategory"
+    "@type": "@id"
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$comment: >-
+  Unit process life cycle inventory dataset (UPLCI), minimal profile: the data
+  consumed by the MPPM evaluation service plus process link, chain provider,
+  access rights and data owner.
+x-schema-version: '0.1.0'
+x-schema-uri: 'https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-unit-process-inventory-PMDCo-v0.1.0/schemas/life-cycle-assessment/unit-process-inventory/PMDCo/specs/schema.oold.generated.json'
+x-maturity: 'draft'
+title: Unit Process Inventory (LCI)
+description: >-
+  Life cycle inventory of one unit process: input and output flows per
+  reference flow and the technology parameters behind them.
+type: object
+required:
+  - type
+  - id
+  - label
+  - geography
+  - access_rights
+  - outputs
+
+properties:
+
+  type:
+    title: Type
+    type: array
+    items: {type: string}
+    readOnly: true
+    const: ["uplci:UnitProcessInventory"]
+    default: ["uplci:UnitProcessInventory"]
+    options:
+      enum_titles: [uplci:UnitProcessInventory]
+
+  conforms_to:
+    title: Conforms To
+    description: Versioned IRI of this schema; written automatically.
+    type: string
+    readOnly: true
+    const: "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-unit-process-inventory-PMDCo-v0.1.0/schemas/life-cycle-assessment/unit-process-inventory/PMDCo/specs/schema.oold.generated.json"
+    default: "https://raw.githubusercontent.com/semantic-dataspace/semantic-schemas/life-cycle-assessment-unit-process-inventory-PMDCo-v0.1.0/schemas/life-cycle-assessment/unit-process-inventory/PMDCo/specs/schema.oold.generated.json"
+
+  id:
+    title: ID
+    type: string
+    readOnly: true
+    default: unit-process-inventory
+
+  label:
+    title: Inventory Name
+    description: e.g. "Sintering and Annealing – recycled NdFeB, IWKS 2026".
+    type: string
+
+  description:
+    title: Process Description
+    description: What the dataset represents, its scope and representativeness.
+    type: string
+    format: textarea
+
+  describes_process:
+    title: Process
+    description: The manufacturing process this inventory is about.
+    type: string
+    format: kitem
+    x-kitem:
+      ktypeIds: [manufacturing-process]
+
+  geography:
+    title: Location (Country / Region Code)
+    description: ISO country code (DE) or region (RER, GLO).
+    type: string
+    minLength: 2
+    default: DE
+
+  date_compiled:
+    title: Date of Compilation
+    type: string
+    format: date
+
+  access_rights:
+    title: Access Rights
+    type: string
+    enum:
+      - "accr:PUBLIC"
+      - "accr:RESTRICTED"
+      - "accr:NON_PUBLIC"
+    options:
+      enum_titles: [public, restricted, confidential]
+
+  publisher:
+    title: Data Owner
+    type: string
+    format: kitem
+    x-kitem:
+      ktypeIds: [organization]
+
+  inputs:
+    title: Inputs
+    description: Flows entering the process, per reference flow.
+    type: array
+    items:
+      type: object
+      title: Input
+      required: [type, id, category, amount, unit]
+      properties:
+        type:
+          type: array
+          items: {type: string}
+          readOnly: true
+          const: ["uplci:Exchange"]
+          default: ["uplci:Exchange"]
+        id:
+          type: string
+          readOnly: true
+          default: input
+        material:
+          title: Material
+          description: Material KItem this flow consists of. Leave empty for energy, personnel or services and enter a name instead.
+          type: string
+          format: kitem
+          x-kitem:
+            ktypeIds: [material]
+        label:
+          title: Name (if no material)
+          description: e.g. "Electricity", "Wärmeenergie".
+          type: string
+        category:
+          title: Category
+          type: string
+          enum:
+            - "uplci:MaterialInput"
+            - "uplci:EnergyInput"
+            - "uplci:PersonnelInput"
+            - "uplci:ServiceInput"
+          options:
+            enum_titles: [input material, energy, personnel, generic flow]
+        amount:
+          title: Value
+          type: number
+        unit:
+          title: Unit
+          type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
+        description:
+          title: Description
+          type: string
+        source_note:
+          title: Reference
+          description: Measured, calculated, estimated, literature source …
+          type: string
+        provider:
+          title: Supplied By
+          description: Inventory whose output is this input (links the process chain).
+          type: string
+          format: kitem
+          x-kitem:
+            ktypeIds: [unit-process-inventory]
+    default: []
+
+  outputs:
+    title: Outputs
+    description: Flows leaving the process, per reference flow.
+    type: array
+    minItems: 1
+    items:
+      type: object
+      title: Output
+      required: [type, id, category, amount, unit]
+      properties:
+        type:
+          type: array
+          items: {type: string}
+          readOnly: true
+          const: ["uplci:Exchange"]
+          default: ["uplci:Exchange"]
+        id:
+          type: string
+          readOnly: true
+          default: output
+        material:
+          title: Material
+          description: Material KItem this flow consists of. Leave empty for energy, personnel or services and enter a name instead.
+          type: string
+          format: kitem
+          x-kitem:
+            ktypeIds: [material]
+        label:
+          title: Name (if no material)
+          description: e.g. "Electricity", "Wärmeenergie".
+          type: string
+        category:
+          title: Category
+          type: string
+          enum:
+            - "uplci:ProductOutput"
+            - "uplci:CoProductOutput"
+            - "uplci:WasteOutput"
+            - "uplci:EmissionOutput"
+            - "uplci:OtherOutput"
+          options:
+            enum_titles: [product, valuable by-product, waste / loss, emission, other]
+        is_reference_flow:
+          title: Reference Flow
+          description: Tick for the one product all values refer to.
+          type: boolean
+        amount:
+          title: Value
+          type: number
+        unit:
+          title: Unit
+          type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
+        description:
+          title: Description
+          type: string
+        source_note:
+          title: Reference
+          type: string
+    default: []
+
+  technology_parameters:
+    title: Technology Parameters
+    type: array
+    items:
+      type: object
+      title: Parameter
+      required: [type, id, parameter_label, parameter_category]
+      properties:
+        type:
+          type: array
+          items: {type: string}
+          readOnly: true
+          const: ["pmdco:PMD_0000013"]
+          default: ["pmdco:PMD_0000013"]
+        id:
+          type: string
+          readOnly: true
+          default: parameter
+        parameter_label:
+          title: Name
+          type: string
+        parameter_category:
+          title: Category
+          type: string
+          enum: ["uplci:FacilityParameter", "uplci:ProcessParameter", "uplci:OperationParameter"]
+          options:
+            enum_titles: [facility, process, operation]
+        parameter_value:
+          title: Value
+          type: number
+        parameter_unit:
+          title: Unit
+          type: string
+          x-vocabulary: "https://vocabulary.materials-data.space/api/vocabulary/namespaces/measurement-unit/use-cases/base/terms"
+        description:
+          title: Description
+          type: string
+        source_note:
+          title: Reference
+          type: string
+    default: []

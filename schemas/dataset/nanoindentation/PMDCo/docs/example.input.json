@@ -1,0 +1,26 @@
+{
+  "dataset_name": "Indent 001 — AA2618 specimen 1",
+  "description": "Load-displacement curve for indent #1 at grid position (0.00, 0.00) mm.",
+  "indent_index": 1,
+  "timestamp": "2026-02-26T10:15:33Z",
+  "x_position": 0.0,
+  "y_position": 0.0,
+  "format": "Anton Paar NHT TXT",
+  "results": [
+    {
+      "name": "Hardness HIT",
+      "value": 1.45,
+      "unit": "http://qudt.org/vocab/unit/GigaPA"
+    },
+    {
+      "name": "Elastic Modulus EIT",
+      "value": 78.3,
+      "unit": "http://qudt.org/vocab/unit/GigaPA"
+    },
+    {
+      "name": "Maximum Depth hmax",
+      "value": 1980,
+      "unit": "http://qudt.org/vocab/unit/NanoM"
+    }
+  ]
+}

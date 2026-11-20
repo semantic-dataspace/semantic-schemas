@@ -11,6 +11,28 @@ The schema IRI encodes the minor version: `…/generic/PMDCo/#v<MAJOR>.<MINOR>.0
 
 ---
 
+## [0.4.0] - 2026-10-14
+
+### Added
+
+- `measurement_device` field: links a characterization process to a `measurement-device`
+  KItem via `chameo:usesInstrument`. The field is optional; existing records without it
+  remain valid.
+- `chameo` namespace added to `@context` for `chameo:usesInstrument` predicate.
+
+---
+
+## [0.3.0] - 2026-10-08
+
+### Added
+
+- `outputs` field: `has_specified_output` linking to dataset/specimen KItem IRIs.
+- `results` array: `MeasurementDatum` (IAO_0000109) nodes with `ScalarValueSpecification`
+  (OBI_0001931) for queryable scalar results.
+- `measured_properties` key added to `@context` with `obi:OBI_0000299` predicate.
+
+---
+
 ## [0.2.1] - 2026-07-21
 
 ### Changed

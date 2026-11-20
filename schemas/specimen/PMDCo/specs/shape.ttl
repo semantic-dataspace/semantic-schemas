@@ -1,45 +1,26 @@
-# SHACL shape for the PMDCo Specimen pattern.
+# SHACL shape for the PMDCo Specimen (TemporallyQualifiedContinuant) pattern.
 #
-# Combines two PMDCo patterns:
-#
-#   1. Duality Object / Material
-#      https://github.com/materialdigital/core-ontology/tree/main/patterns/duality%20object%20material
-#      (no shape.ttl exists upstream; constraints here are derived from the example data)
-#      schema:material links the specimen to its abstract material identity (alloy,
-#      composition). Optional but recommended for PMDCo compliance.
-#
-#   2. Material Property (Quality): for the Mass quality + ScalarValueSpecification
-#      https://github.com/materialdigital/core-ontology/tree/main/patterns/material%20property%20(quality)
-#
-#   3. Physical provenance (PROV-O)
-#      prov:wasDerivedFrom links the specimen to the specific semi-finished product
-#      (e.g. metal sheet) it was cut or prepared from. When present, schema:material
-#      can be derived transitively via the semi-finished product's own schema:material
-#      link; the UI should offer to auto-populate it.
-#
-# Chemical composition is validated by loading this file alongside:
-#   chemical-composition/PMDCo/specs/shape.ttl
-#
-# That shape already targets pmd:PMD_0000551 (ChemicalComposition) and all its
-# sub-nodes, so no duplication is needed here.
-#
-# NOTE: Requires RDFS inference for subclass-targeted shapes (e.g. MassProportion).
-#   Pass inference="rdfs" to pyshacl.validate().
+# v0.7.0: specimen is typed as BFO_0000030 + PMD_0000068 (TQC).
+# Material link uses PMD_0000070 (is_state_of), not schema:material.
+# Physical properties are quality nodes (RO_0000086 has_quality), each with
+# inheres_in (RO_0000052) back-ref and a ScalarValueSpecification (OBI_0001931)
+# carrying the value (OBI_0001937) and QUDT unit (qudt:hasUnit).
+# Source is now an array (prov:wasDerivedFrom, no maxCount).
 
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix obo:     <http://purl.obolibrary.org/obo/> .
 @prefix pmd:     <https://w3id.org/pmd/co/> .
 @prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix qudt:    <http://qudt.org/schema/qudt/> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix schema:  <https://schema.org/> .
 @prefix sh:      <http://www.w3.org/ns/shacl#> .
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 @prefix shape:   <https://w3id.org/pmd/co/shapes/specimen/> .
 @prefix :        <https://w3id.org/pmd/co/shapes/specimen/> .
 @base            <https://w3id.org/pmd/co/shapes/specimen/> .
 
-# ── Specimen node (Duality Object / Material pattern) ──────────────────────
+# ── Specimen node (TQC: BFO_0000030 + PMD_0000068) ────────────────────────
 
 shape:specimen
     a sh:NodeShape ;
@@ -59,62 +40,58 @@ shape:specimen
         sh:message "A Specimen must have exactly one rdfs:label." ;
     ] ;
     sh:property [
-        sh:path schema:material ;
+        sh:path pmd:PMD_0000070 ;   # is_state_of
         sh:nodeKind sh:IRI ;
         sh:maxCount 1 ;
-        sh:message "schema:material must be a single IRI reference to a material k-item." ;
+        sh:message "material (is_state_of, PMD_0000070) must be a single IRI reference to a material k-item." ;
     ] ;
     sh:property [
         sh:path prov:wasDerivedFrom ;
         sh:nodeKind sh:IRI ;
-        sh:maxCount 1 ;
-        sh:message "prov:wasDerivedFrom must be a single IRI reference to a semi-finished-product k-item." ;
+        sh:message "Each prov:wasDerivedFrom must be an IRI reference to a source k-item." ;
     ] ;
     sh:closed false ;
     sh:ignoredProperties ( rdf:type ) .
 
-# ── Mass quality (Material Property / Quality pattern) ─────────────────────
+# ── Physical property quality node (any PMDCo quality class) ──────────────
+# Targets PMD_0020133 (Mass) explicitly; other quality classes are open.
 
-shape:mass_quality
+shape:physical_property
     a sh:NodeShape ;
-    sh:targetClass pmd:PMD_0020133 ;    # Mass
+    sh:targetClass pmd:PMD_0020133 ;    # Mass (most constrained quality class)
     sh:property [
-        sh:path obo:RO_0000080 ;        # quality_of
+        sh:path obo:RO_0000052 ;        # inheres_in
         sh:nodeKind sh:IRI ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
-        sh:message "A Mass quality must be quality_of exactly one specimen (referenced by IRI)." ;
+        sh:message "A physical property quality must inheres_in exactly one specimen (IRI)." ;
     ] ;
     sh:property [
         sh:path pmd:PMD_0000077 ;       # specified_by_value
-        sh:node shape:mass_scalar_value_specification ;
+        sh:node shape:scalar_value_specification ;
         sh:minCount 0 ;
         sh:maxCount 1 ;
     ] ;
     sh:closed false ;
     sh:ignoredProperties ( rdf:type ) .
 
-shape:mass_scalar_value_specification
+# ── ScalarValueSpecification (OBI_0001931) ─────────────────────────────────
+
+shape:scalar_value_specification
     a sh:NodeShape ;
-    sh:description "A ScalarValueSpecification for mass must carry a positive numeric value and one of the accepted mass unit IRIs." ;
     sh:property [
         sh:path obo:OBI_0001937 ;       # has_specified_numeric_value
         sh:datatype xsd:double ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:minExclusive 0.0 ;
-        sh:message "Mass value must be a positive number." ;
+        sh:message "Physical property value must be a positive number." ;
     ] ;
     sh:property [
-        sh:path obo:IAO_0000039 ;       # has_measurement_unit_label
-        sh:minCount 1 ;
+        sh:path qudt:hasUnit ;          # QUDT unit IRI
+        sh:nodeKind sh:IRI ;
         sh:maxCount 1 ;
-        sh:in (
-            <http://purl.obolibrary.org/obo/UO_0000021>   # gram
-            <http://purl.obolibrary.org/obo/UO_0000022>   # kilogram
-            <http://purl.obolibrary.org/obo/UO_0000023>   # milligram
-        ) ;
-        sh:message "Mass unit must be UO_0000021 (g), UO_0000022 (kg), or UO_0000023 (mg)." ;
+        sh:message "Physical property unit must be a QUDT unit IRI." ;
     ] ;
     sh:closed false ;
     sh:ignoredProperties ( rdf:type ) .

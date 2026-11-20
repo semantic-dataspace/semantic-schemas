@@ -5,6 +5,23 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.4.0] - 2026-10-14
+
+### Changed
+
+- `has_specified_input` field: `x-ktype: [specimen]` annotation replaced by
+  `format: kitem` + `x-kitem: {ktypeIds: [specimen]}`. UI annotation change only;
+  no RDF graph change.
+- `parameter_unit` field inside `has_process_attribute` items: hard-coded `enum`
+  of unit IRIs and `x-depends-on` hints removed. Field now uses
+  `x-vocabulary` pointing to the measurement-unit vocabulary service, allowing
+  any QUDT unit to be selected. Generated unit IRIs in RDF are unchanged;
+  validation is now vocabulary-server-side rather than schema-side.
+- `result_unit` field inside `measured_properties` items: same change as
+  `parameter_unit` — enum replaced with `x-vocabulary`.
+
+---
+
 ## [0.3.1] - 2026-07-21
 
 ### Changed

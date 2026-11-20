@@ -1,0 +1,64 @@
+# SHACL shape for the PMDCo/CHAMEO Calibration Record pattern.
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix schema:  <http://schema.org/> .
+@prefix obi:     <http://purl.obolibrary.org/obo/OBI_> .
+@prefix pmd:     <https://w3id.org/pmd/co/> .
+@prefix chameo:  <https://w3id.org/emmo/domain/characterisation-methodology/chameo#> .
+@prefix qudt:    <http://qudt.org/schema/qudt/> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix shape:   <https://w3id.org/pmd/co/shapes/calibration/generic/> .
+@base            <https://w3id.org/pmd/co/shapes/calibration/generic/> .
+
+shape:calibration
+    a sh:NodeShape ;
+    sh:targetClass chameo:Calibration ;
+    sh:property [
+        sh:path dcterms:conformsTo ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A CalibrationRecord must declare dcterms:conformsTo pointing to the versioned schema IRI." ;
+    ] ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A CalibrationRecord must have exactly one rdfs:label." ;
+    ] ;
+    sh:property [
+        sh:path dcterms:type ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A CalibrationRecord must have exactly one dcterms:type (calibration type)." ;
+    ] ;
+    sh:property [
+        sh:path schema:validFrom ;
+        sh:datatype xsd:date ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A CalibrationRecord must have exactly one schema:validFrom date." ;
+    ] ;
+    sh:property [
+        sh:path schema:validUntil ;
+        sh:datatype xsd:date ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path chameo:usesInstrument ;
+        sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+        sh:message "usesInstrument must reference a single measurement-device IRI." ;
+    ] ;
+    sh:property [
+        sh:path <http://purl.obolibrary.org/obo/OBI_0000293> ;
+        sh:nodeKind sh:IRI ;
+        sh:message "Each has_specified_input (reference standard) must be an IRI." ;
+    ] ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) .

@@ -1,0 +1,12 @@
+{
+  "step_name": "SEM cross-section — AA2618 specimen 1",
+  "description": "Scanning electron microscopy of polished cross-section to characterise grain structure and precipitate distribution.",
+  "technique": "SEM",
+  "magnification": 5000,
+  "accelerating_voltage_kv": 15,
+  "area_analysed_um2": 10000,
+  "etching_method": "Electropolishing — Struers A2",
+  "inputs": ["https://example.org/specimens/aa2618-bar-1-cross-section"],
+  "outputs": ["https://example.org/datasets/sem-aa2618-bar-1"],
+  "measurement_device": "https://example.org/instruments/zeiss-sigma-300"
+}
